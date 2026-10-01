@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/registry/ecosystem_state_pointer_v1.schema.json",
+  "title": "ECOSYSTEM_STATE_POINTER_V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","observed_at","authorities","consumer_bindings","claim_ceiling","freshness_policy"],
+  "properties": {
+    "schema_version": {"const": "ECOSYSTEM_STATE_POINTER_V1"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "authorities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["authority_id","surface","role","object_identity","freshness_state","invalidation_reason"],
+        "properties": {
+          "authority_id": {"type": "string", "minLength": 1},
+          "surface": {"enum": ["GITHUB","NOTION","GOOGLE_DRIVE","RDC_LOCAL","TEKTITE_PUBLIC","OTHER"]},
+          "role": {"type": "string", "minLength": 1},
+          "object_identity": {"type": "string", "minLength": 1},
+          "predecessor_object_identity": {"type": ["string","null"]},
+          "freshness_state": {"enum": ["CURRENT","STALE_SOURCE_ADVANCED","UNVERIFIED","HISTORICAL_SNAPSHOT"]},
+          "invalidation_reason": {"enum": ["NONE","SEMANTIC_SOURCE_CHANGED","NON_SEMANTIC_REPOSITORY_ADVANCE","DEPENDENCY_ADVANCED","MISSING_BINDING","UNVERIFIED"]},
+          "evidence_url": {"type": ["string","null"]}
+        }
+      }
+    },
+    "consumer_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["consumer_id","authority_ids","manifest_path","semantic_material_digest_sha256","freshness_state","invalidation_reason"],
+        "properties": {
+          "consumer_id": {"type": "string", "minLength": 1},
+          "authority_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "manifest_path": {"type": "string", "minLength": 1},
+          "semantic_material_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "freshness_state": {"enum": ["CURRENT","STALE_SOURCE_ADVANCED","UNVERIFIED","HISTORICAL_SNAPSHOT"]},
+          "invalidation_reason": {"enum": ["NONE","SEMANTIC_SOURCE_CHANGED","NON_SEMANTIC_REPOSITORY_ADVANCE","DEPENDENCY_ADVANCED","MISSING_BINDING","UNVERIFIED"]}
+        }
+      }
+    },
+    "claim_ceiling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scientific_n_increment","independent_validation","canonical_dgaf_efficacy","high_assurance","live_repository_mutation","production_executor"],
+      "properties": {
+        "scientific_n_increment": {"const": 0},
+        "independent_validation": {"const": "NOT_ESTABLISHED"},
+        "canonical_dgaf_efficacy": {"const": "NOT_ESTABLISHED"},
+        "high_assurance": {"const": "NOT_AUTHORIZED"},
+        "live_repository_mutation": {"const": "NOT_AUTHORIZED"},
+        "production_executor": {"const": "NOT_ESTABLISHED"}
+      }
+    },
+    "freshness_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["whole_repository_identity_is_provenance","semantic_manifest_controls_material_change","consumer_specific_bindings_required","provenance_fields_excluded_from_semantic_digest","unknown_change_fails_closed"],
+      "properties": {
+        "whole_repository_identity_is_provenance": {"const": true},
+        "semantic_manifest_controls_material_change": {"const": true},
+        "consumer_specific_bindings_required": {"const": true},
+        "provenance_fields_excluded_from_semantic_digest": {"const": true},
+        "unknown_change_fails_closed": {"const": true}
+      }
+    }
+  }
+}

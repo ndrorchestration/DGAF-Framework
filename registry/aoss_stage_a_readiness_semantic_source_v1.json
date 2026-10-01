@@ -1,0 +1,26 @@
+{
+  "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
+  "manifest_id": "AOSS_STAGE_A_READINESS_SEMANTIC_SOURCE_V1",
+  "consumer": "AOSS_STAGE_A_READINESS",
+  "observed_at": "2026-10-01T14:24:26Z",
+  "repository": "ndrorchestration/DGAF-Framework",
+  "repository_commit": "9be30ce5b88df8e0435896e0d62ba4930686b278",
+  "artifacts": [
+    {"path": "registry/aoss_v0_6_acp_measurement_manifest_v1.json", "git_blob_sha1": "1c690abbe2ab451f5081f56c25970eb85b031ce4", "role": "ACP measurement mapping"},
+    {"path": "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json", "git_blob_sha1": "1d2b44acb63f30660253e3c96f1a6cac602d62eb", "role": "artifact replay and receipt contract"},
+    {"path": "registry/aoss_v0_6_stage_a_collection_authorization_v1.json", "git_blob_sha1": "3a5efa22b99e03ef35bea71c261a4bcd681f0e6f", "role": "collection authorization boundary"},
+    {"path": "registry/aoss_v0_6_stage_a_decision_policy_v1.json", "git_blob_sha1": "b93f01af1825e93279e945f7dc07f299daab89bb", "role": "decision policy"},
+    {"path": "registry/aoss_v0_6_stage_a_environment_manifest_v1.json", "git_blob_sha1": "d6d67fc4542d47e22f6f40503335c2e7580b405c", "role": "environment binding"},
+    {"path": "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json", "git_blob_sha1": "80e7ea19a3da601b1a80c4d9c9e89c774f303814", "role": "executable/destination binding"}
+  ],
+  "external_authorities": [
+    {"authority_id": "ACP_SOURCE", "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5", "role": "execution-boundary/control-plane dependency"}
+  ],
+  "non_effects": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED"
+  },
+  "semantic_material_digest_sha256": "1f1cab77c385b6e0202c812faeaf7649843d6fc9c817bdbfe8a8bf6435aeeeac"
+}

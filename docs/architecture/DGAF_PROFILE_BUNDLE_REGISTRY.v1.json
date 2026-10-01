@@ -9,6 +9,7 @@
       "lifecycle": "ACTIVE_REVIEW_BOUND",
       "path_globs": [
         "registry/aoss_v0_6*.json",
+        "registry/aoss_stage_a_readiness_semantic_source_v1.json",
         "schemas/aoss_v0_6*.json",
         "scripts/aoss_stage_a/*.py",
         "scripts/aoss_v0_6*.py"
