@@ -163,9 +163,7 @@ def _is_terminal(status: str) -> bool:
 
 def _upstream_receipt_ids(decisions: Iterable[UpstreamDecision]) -> tuple[str, ...]:
     return tuple(
-        decision.receipt_id
-        for decision in decisions
-        if decision.receipt_id is not None and decision.receipt_id.strip()
+        decision.receipt_id for decision in decisions if decision.receipt_id is not None and decision.receipt_id.strip()
     )
 
 
@@ -260,9 +258,7 @@ def assess_promotion(
         )
 
     upstream = tuple(
-        decision
-        for decision in (evidence, claim_scope, mutation_policy, authority)
-        if decision is not None
+        decision for decision in (evidence, claim_scope, mutation_policy, authority) if decision is not None
     )
     upstream_ids = _upstream_receipt_ids(upstream)
 
@@ -270,9 +266,7 @@ def assess_promotion(
         reason = PromotionReason.EVIDENCE_INSUFFICIENT
     elif policy.require_claim_scope_acceptance and (claim_scope is None or not claim_scope.accepted):
         reason = PromotionReason.CLAIM_SCOPE_INVALID
-    elif policy.require_mutation_policy_acceptance and (
-        mutation_policy is None or not mutation_policy.accepted
-    ):
+    elif policy.require_mutation_policy_acceptance and (mutation_policy is None or not mutation_policy.accepted):
         reason = PromotionReason.MUTATION_POLICY_BLOCKED
     elif policy.require_authority_resolution and (authority is None or not authority.accepted):
         reason = PromotionReason.AUTHORITY_UNRESOLVED
