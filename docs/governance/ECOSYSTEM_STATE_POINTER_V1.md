@@ -48,7 +48,7 @@ Each consumer binding carries:
 - `consumer_id`
 - `authority_ids`
 - `manifest_path`
-- `manifest_digest_sha256`
+- `semantic_material_digest_sha256`
 - `freshness_state`
 - `invalidation_reason`
 
@@ -58,12 +58,16 @@ This separation prevents one authority-level digest from being overloaded across
 
 A semantic-source manifest contains the exact files/blobs/contracts and immutable external authority identities material to one consumer.
 
-The manifest digest is SHA-256 over canonical JSON with:
+The `semantic_material_digest_sha256` is SHA-256 over canonical JSON containing only:
 
-- keys sorted;
-- UTF-8 encoding;
-- compact separators;
-- `manifest_digest_sha256` omitted from the hashed material.
+- `consumer`;
+- `artifacts`;
+- `external_authorities`;
+- `non_effects`.
+
+Keys are sorted, encoding is UTF-8, and compact JSON separators are used.
+
+The provenance envelope — including `schema_version`, `manifest_id`, `observed_at`, `repository`, and `repository_commit` — is deliberately excluded from the semantic-material digest. A timestamp refresh or repository-only advance therefore cannot manufacture a semantic change.
 
 Each repository artifact binds both path and Git blob SHA-1. Path-only manifests are insufficient.
 
@@ -122,7 +126,7 @@ For previous and newly observed pointers:
 
 1. Compare authority object identities.
 2. Resolve the semantic-source manifest for each consumer.
-3. Recompute its deterministic digest from authoritative bindings.
+3. Recompute its deterministic semantic-material digest from authoritative bindings, excluding provenance-envelope fields.
 4. If the consumer digest changed, classify `SEMANTIC_SOURCE_CHANGED`.
 5. If a depended-on authority moved but the consumer digest did not, classify `NON_SEMANTIC_REPOSITORY_ADVANCE`.
 6. If neither changed, classify `NONE`.
