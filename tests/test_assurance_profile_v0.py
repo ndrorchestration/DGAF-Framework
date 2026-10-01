@@ -64,9 +64,7 @@ def test_same_system_profile_can_pass_without_becoming_independent() -> None:
 
 
 def test_required_unknown_dimension_fails_closed() -> None:
-    receipt = evaluate_assurance_profile(
-        _profile(readiness=DimensionStatus.UNKNOWN)
-    )
+    receipt = evaluate_assurance_profile(_profile(readiness=DimensionStatus.UNKNOWN))
 
     assert receipt.passed is False
     assert "readiness/preflight:UNKNOWN" in receipt.unresolved_blockers
@@ -75,9 +73,7 @@ def test_required_unknown_dimension_fails_closed() -> None:
 
 def test_unverified_independence_is_blocking_when_review_required() -> None:
     receipt = evaluate_assurance_profile(
-        _profile(
-            independence_class=IndependenceClass.INDEPENDENT_UNVERIFIED,
-        )
+        _profile(independence_class=IndependenceClass.INDEPENDENT_UNVERIFIED)
     )
 
     assert receipt.passed is False
