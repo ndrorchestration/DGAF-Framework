@@ -62,11 +62,11 @@ runs:
       shell: bash
       env:
         GOVERNED_REPO_REPOSITORY: ${{ inputs.repository }}
-        GOVERNED_REPO_PULL_REQUEST_JSON: ${{ inputs.pull-request-json }}
-        GOVERNED_REPO_CHECK_RUNS_JSON: ${{ inputs.check-runs-json }}
-        GOVERNED_REPO_EXPECTED_BASE_SHA: ${{ inputs.expected-base-sha }}
-        GOVERNED_REPO_EXPECTED_HEAD_SHA: ${{ inputs.expected-head-sha }}
-        GOVERNED_REPO_OBSERVED_AT: ${{ inputs.observed-at }}
-        GOVERNED_REPO_POLICY_JSON: ${{ inputs.policy-json }}
-        GOVERNED_REPO_UPSTREAM_DECISIONS_JSON: ${{ inputs.upstream-decisions-json }}
+        GOVERNED_REPO_PULL_REQUEST_JSON: ${{ inputs['pull-request-json'] }}
+        GOVERNED_REPO_CHECK_RUNS_JSON: ${{ inputs['check-runs-json'] }}
+        GOVERNED_REPO_EXPECTED_BASE_SHA: ${{ inputs['expected-base-sha'] }}
+        GOVERNED_REPO_EXPECTED_HEAD_SHA: ${{ inputs['expected-head-sha'] }}
+        GOVERNED_REPO_OBSERVED_AT: ${{ inputs['observed-at'] }}
+        GOVERNED_REPO_POLICY_JSON: ${{ inputs['policy-json'] }}
+        GOVERNED_REPO_UPSTREAM_DECISIONS_JSON: ${{ inputs['upstream-decisions-json'] }}
       run: python "$GITHUB_ACTION_PATH/run.py"
