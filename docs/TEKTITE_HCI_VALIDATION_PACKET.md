@@ -210,6 +210,8 @@ It does **not** establish:
 
 ## 13. Promotion rule
 
+Before a formal session, record the canonical merged commit containing this packet. Do not substitute a draft-branch SHA or later unrelated repository state.
+
 Do not promote `PC-HCI-002` from its current hold until an eligible unfamiliar-participant record is complete and reviewed against this packet.
 
 If the result is PASS, bind the exact run record to `TT-2026-10-01-023`.  
