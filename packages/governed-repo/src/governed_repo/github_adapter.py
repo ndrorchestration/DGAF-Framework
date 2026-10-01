@@ -31,9 +31,7 @@ def _required_string(mapping: Mapping[str, Any], key: str, context: str) -> str:
     return value
 
 
-def _required_mapping(
-    mapping: Mapping[str, Any], key: str, context: str
-) -> Mapping[str, Any]:
+def _required_mapping(mapping: Mapping[str, Any], key: str, context: str) -> Mapping[str, Any]:
     value = mapping.get(key)
     if not isinstance(value, Mapping):
         raise GitHubAdapterInputError(f"{context}.{key} must be an object")
@@ -52,9 +50,7 @@ def _optional_merge_sha(pull_request: Mapping[str, Any]) -> Optional[str]:
     if value is None:
         return None
     if not isinstance(value, str) or not value.strip():
-        raise GitHubAdapterInputError(
-            "pull_request.merge_commit_sha must be null or a non-empty string"
-        )
+        raise GitHubAdapterInputError("pull_request.merge_commit_sha must be null or a non-empty string")
     return value
 
 
@@ -131,12 +127,8 @@ def gate_receipt_from_check_run(
     head_sha = _required_string(check_run, "head_sha", "check_run")
 
     conclusion = check_run.get("conclusion")
-    if conclusion is not None and (
-        not isinstance(conclusion, str) or not conclusion.strip()
-    ):
-        raise GitHubAdapterInputError(
-            "check_run.conclusion must be null or a non-empty string"
-        )
+    if conclusion is not None and (not isinstance(conclusion, str) or not conclusion.strip()):
+        raise GitHubAdapterInputError("check_run.conclusion must be null or a non-empty string")
 
     effective_observed_at = observed_at
     if effective_observed_at is None:
@@ -146,9 +138,7 @@ def gate_receipt_from_check_run(
                 effective_observed_at = value
                 break
     if not isinstance(effective_observed_at, str) or not effective_observed_at.strip():
-        raise GitHubAdapterInputError(
-            "check_run requires observed_at, completed_at, or started_at"
-        )
+        raise GitHubAdapterInputError("check_run requires observed_at, completed_at, or started_at")
 
     return GateReceipt(
         gate_id=name,
