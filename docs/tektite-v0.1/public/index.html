@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tektite v0.1 — Public Governance Console</title>
+    <meta
+      name="description"
+      content="Tektite v0.1 is a static public governance console for evidence-bound AI-assisted systems."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#home">Home</a>
+        <a href="#console">Governance Console</a>
+        <a href="#ledger">Evidence Ledger</a>
+        <a href="#cases">Case Studies</a>
+        <a href="#services">Services / About</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero panel">
+        <p class="eyebrow">Tektite v0.1</p>
+        <h1>Public governance console for evidence-bound AI systems.</h1>
+        <p class="lede">
+          Tektite shows what happened, what evidence supports it, what claims are currently justified,
+          and what actions remain blocked.
+        </p>
+        <div class="question-card">
+          <span>Core question</span>
+          <strong>What did the system do, what evidence supports it, and what is it authorized to do next?</strong>
+        </div>
+        <div class="notice">
+          <strong>Boundary:</strong> This static shell is display-only. It does not execute actions, mutate repositories,
+          mirror private systems, or establish independent validation.
+        </div>
+      </section>
+
+      <section id="console" class="panel">
+        <div class="section-heading">
+          <p class="eyebrow">Governance Console</p>
+          <h2>Current status snapshot</h2>
+        </div>
+        <div class="status-grid">
+          <article class="status-card positive">
+            <h3>DGAF Claim Discipline</h3>
+            <p class="status">ACTIVE</p>
+            <p>Evidence-bound claim posture is active.</p>
+          </article>
+          <article class="status-card positive">
+            <h3>ACP Queue Reconciliation</h3>
+            <p class="status">ESTABLISHED</p>
+            <p>Queue and boundary documentation are represented in public seed artifacts.</p>
+          </article>
+          <article class="status-card positive">
+            <h3>ACP Boundary Docs</h3>
+            <p class="status">MERGED</p>
+            <p>Documentation/static-data seed is merged to main.</p>
+          </article>
+          <article class="status-card neutral">
+            <h3>Independent Validation</h3>
+            <p class="status">NOT_ESTABLISHED</p>
+            <p>No external validation claim is made.</p>
+          </article>
+          <article class="status-card neutral">
+            <h3>Canonical DGAF Efficacy</h3>
+            <p class="status">NOT_ESTABLISHED</p>
+            <p>No canonical efficacy claim is made.</p>
+          </article>
+          <article class="status-card blocked">
+            <h3>High Assurance</h3>
+            <p class="status">NOT_AUTHORIZED</p>
+            <p>High-Assurance status remains blocked.</p>
+          </article>
+          <article class="status-card blocked">
+            <h3>Live Repository Mutation</h3>
+            <p class="status">NOT_AUTHORIZED</p>
+            <p>This public console does not authorize side effects.</p>
+          </article>
+          <article class="status-card blocked">
+            <h3>Rollback Execution</h3>
+            <p class="status">NOT_AUTHORIZED</p>
+            <p>Rollback execution remains outside the v0.1 public scope.</p>
+          </article>
+          <article class="status-card neutral">
+            <h3>Production Executor</h3>
+            <p class="status">NOT_ESTABLISHED</p>
+            <p>No production executor is established by this release.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <p class="eyebrow">Claim ceilings</p>
+          <h2>Preserved public boundary</h2>
+        </div>
+        <pre class="code-block"><code>SCIENTIFIC_N_INCREMENT=0
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED
+HIGH_ASSURANCE=NOT_AUTHORIZED
+LIVE_REPOSITORY_MUTATION=NOT_AUTHORIZED
+ROLLBACK_EXECUTION=NOT_AUTHORIZED
+PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
+      </section>
+
+      <section id="ledger" class="panel">
+        <div class="section-heading">
+          <p class="eyebrow">Evidence Ledger</p>
+          <h2>Seed public evidence rows</h2>
+        </div>
+        <div class="ledger-list">
+          <article>
+            <h3>ACP PR #145</h3>
+            <p><strong>Supports:</strong> ACP queue classification, dependency map, and executor boundary documentation.</p>
+            <p><strong>Does not support:</strong> live executor authority, rollback execution, production deployment, independent validation, or High-Assurance.</p>
+            <p><strong>Authorization effect:</strong> Executor promotion remains blocked.</p>
+          </article>
+          <article>
+            <h3>DGAF Track A / Epoch 002 status</h3>
+            <p><strong>Supports:</strong> bounded governance-state representation and claim discipline.</p>
+            <p><strong>Does not support:</strong> scientific N increment, independent validation, or canonical efficacy.</p>
+            <p><strong>Authorization effect:</strong> Primary scientific claims remain not authorized.</p>
+          </article>
+          <article>
+            <h3>ACP blockers #117 and #118</h3>
+            <p><strong>Supports:</strong> explicit blocked-transition handling for executor surfaces.</p>
+            <p><strong>Does not support:</strong> resolving object identity, TOCTOU, process identity, or isolation concerns.</p>
+            <p><strong>Authorization effect:</strong> Held executor PRs remain held.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="cases" class="panel">
+        <div class="section-heading">
+          <p class="eyebrow">Case Studies</p>
+          <h2>Minimum public case-study set</h2>
+        </div>
+        <div class="card-grid">
+          <article class="case-card">
+            <h3>ACP PR #145</h3>
+            <p>Documentation reconciliation without executor promotion.</p>
+            <p class="small">Lesson: merged documentation can clarify state without authorizing execution.</p>
+          </article>
+          <article class="case-card">
+            <h3>DGAF Claim Discipline</h3>
+            <p>Evidence ceilings and explicit non-authorization states.</p>
+            <p class="small">Lesson: not-established states are part of the product, not a defect to hide.</p>
+          </article>
+          <article class="case-card">
+            <h3>AI Evidence Audit</h3>
+            <p>Evaluation of provenance, uncertainty, contradiction handling, and reasoning quality.</p>
+            <p class="small">Lesson: correct answers are insufficient without faithful evidence-to-claim structure.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="services" class="panel">
+        <div class="section-heading">
+          <p class="eyebrow">Services / About</p>
+          <h2>Professional translation</h2>
+        </div>
+        <p>
+          Andrew Hensel works on AI systems design, evaluation, agentic governance, and provenance-focused orchestration.
+          The work centers on a practical question: what did the system do, what evidence supports it, and what is it authorized to do next?
+        </p>
+        <ul class="service-list">
+          <li>AI Evidence Audit</li>
+          <li>Evaluation Rubric Design</li>
+          <li>Agentic Workflow Governance Review</li>
+          <li>Provenance and Claim-Quality Review</li>
+          <li>Contradiction-Preservation Benchmark Design</li>
+          <li>Governance Console Prototype Review</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
