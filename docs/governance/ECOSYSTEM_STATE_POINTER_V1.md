@@ -92,15 +92,18 @@ The first candidate manifests are:
 
 ## AOSS binding
 
-The AOSS Stage-A readiness manifest currently binds:
+The AOSS Stage-A readiness manifest uses a conservative transitive semantic closure.
 
-- ACP measurement mapping;
-- artifact replay/receipt contract;
-- collection authorization boundary;
-- decision policy;
-- environment binding;
-- executable/destination binding;
+Its closure basis is:
+
+- the pre-data readiness validator itself;
+- every repository/schema artifact read directly by that validator;
+- executable comparator and decision-policy sources whose Git blobs are checked by the validator;
+- the ACP adapter source referenced by the readiness evidence record;
+- the previously bound collection-authorization, environment, and executable/destination records, retained so an earlier guarded boundary is not silently dropped;
 - exact ACP source authority identity.
+
+A 2026-10-01 transitive audit found the earlier six-artifact manifest under-bound this consumer. The correction is classified as `SEMANTIC_SOURCE_CHANGED` because the manifest's material set changed, not because scientific evidence, external validation, or authorization changed.
 
 It does not treat the Tektite public shell as material to AOSS readiness.
 
