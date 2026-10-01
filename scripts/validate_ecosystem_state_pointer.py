@@ -171,7 +171,8 @@ def validate_live_reconciliation(pointer: dict, live_repository_commit: str, con
     source_commit = pointer.get("snapshot_provenance", {}).get("source_observation_commit")
     if live_repository_commit != source_commit:
         errors.append(
-            "embedded pointer is not repository-tip current: live repository commit differs from source observation commit"
+            "embedded pointer is not repository-tip current: "
+            "live repository commit differs from source observation commit"
         )
     if container_commit == source_commit:
         errors.append("container_commit must not be treated as the source observation commit")
