@@ -35,11 +35,11 @@ jobs:
         shell: bash
         env:
           ELIGIBLE: ${{ steps.eligible.outputs.eligible }}
-          REASON: ${{ steps.eligible.outputs.reason-code }}
-          RECEIPT: ${{ steps.eligible.outputs.promotion-receipt }}
-          MERGE_EXECUTED: ${{ steps.eligible.outputs.merge-executed }}
-          MUTATION_EXECUTED: ${{ steps.eligible.outputs.mutation-executed }}
-          AUTHORIZATION_EFFECT: ${{ steps.eligible.outputs.authorization-effect }}
+          REASON: ${{ steps.eligible.outputs['reason-code'] }}
+          RECEIPT: ${{ steps.eligible.outputs['promotion-receipt'] }}
+          MERGE_EXECUTED: ${{ steps.eligible.outputs['merge-executed'] }}
+          MUTATION_EXECUTED: ${{ steps.eligible.outputs['mutation-executed'] }}
+          AUTHORIZATION_EFFECT: ${{ steps.eligible.outputs['authorization-effect'] }}
         run: |
           set -euo pipefail
           test "$ELIGIBLE" = "true"
@@ -50,6 +50,7 @@ jobs:
           RECEIPT="$RECEIPT" python - <<'PY'
           import json
           import os
+
           payload = json.loads(os.environ["RECEIPT"])
           assert payload["eligible"] is True
           assert payload["merge_executed"] is False
@@ -73,7 +74,7 @@ jobs:
         shell: bash
         env:
           ELIGIBLE: ${{ steps.stale.outputs.eligible }}
-          REASON: ${{ steps.stale.outputs.reason-code }}
+          REASON: ${{ steps.stale.outputs['reason-code'] }}
         run: |
           set -euo pipefail
           test "$ELIGIBLE" = "false"
@@ -95,7 +96,7 @@ jobs:
         shell: bash
         env:
           ELIGIBLE: ${{ steps.missing.outputs.eligible }}
-          REASON: ${{ steps.missing.outputs.reason-code }}
+          REASON: ${{ steps.missing.outputs['reason-code'] }}
         run: |
           set -euo pipefail
           test "$ELIGIBLE" = "false"
@@ -118,7 +119,7 @@ jobs:
         shell: bash
         env:
           ELIGIBLE: ${{ steps.evidence.outputs.eligible }}
-          REASON: ${{ steps.evidence.outputs.reason-code }}
+          REASON: ${{ steps.evidence.outputs['reason-code'] }}
         run: |
           set -euo pipefail
           test "$ELIGIBLE" = "false"
@@ -150,4 +151,5 @@ jobs:
         run: |
           set -euo pipefail
           ! grep -Eiq 'pull-requests:[[:space:]]*write|contents:[[:space:]]*write|actions:[[:space:]]*write' actions/governed-repo/action.yml
-          ! grep -Eiq 'github[_-]?token|secret|merge|push|release|deploy' actions/governed-repo/run.py
+          ! grep -Eiq 'github[_-]?token|GITHUB_TOKEN|secret' actions/governed-repo/action.yml
+          ! grep -Eiq '(^|[[:space:]])(subprocess|requests|urllib)([[:space:]]|$)|api\.github\.com|github[_-]?token|GITHUB_TOKEN|os\.system|git[[:space:]]+(push|merge)|gh[[:space:]]+pr[[:space:]]+merge' actions/governed-repo/run.py
