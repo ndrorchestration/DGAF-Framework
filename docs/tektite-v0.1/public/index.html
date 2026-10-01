@@ -35,6 +35,14 @@
           <span>Core question</span>
           <strong>What did the system do, what evidence supports it, and what is it authorized to do next?</strong>
         </div>
+        <div class="question-card">
+          <span>Plain-language example</span>
+          <strong>A system can finish a task successfully and still remain blocked from the next action if its evidence is stale, incomplete, or outside the allowed scope.</strong>
+        </div>
+        <p class="small">
+          DGAF (Dynamic Governance Agentic Formation) supplies evidence-and-claim governance semantics.
+          ACP (Agent Control Plane) supplies bounded execution-contract semantics. Tektite presents their public-facing state without becoming either authority.
+        </p>
         <div class="notice" role="note" aria-label="Static shell boundary">
           <strong>Boundary:</strong> This static shell is display-only. It does not execute actions, mutate repositories,
           mirror private systems, or establish independent validation.
@@ -154,6 +162,9 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
             the shell into an execution surface or validation result.
           </p>
         </div>
+        <div class="notice" role="note" aria-label="Projection verification path">
+          <strong>Verify this projection:</strong> start with the current repository source, then inspect the public-surface manifest and freshness evidence before treating any status as current. A verification PASS means the expected public surface was reachable and matched its declared stable markers; it does not establish scientific validity, independent validation, efficacy, or execution authority.
+        </div>
         <div class="source-grid">
           <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1166">
             PR #1166 — Tektite v0.1 seed plan
@@ -177,7 +188,8 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
         </div>
         <div class="card-grid">
           <article class="case-card">
-            <h3>ACP PR #145</h3>
+            <h3>Clarifying system state without granting execution</h3>
+            <p><strong>Source:</strong> ACP PR #145</p>
             <p>Documentation reconciliation without executor promotion.</p>
             <p class="small">Lesson: merged documentation can clarify state without authorizing execution.</p>
             <p>
