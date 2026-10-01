@@ -6,23 +6,11 @@
   "repository": "ndrorchestration/DGAF-Framework",
   "repository_commit": "05ba55a33193855394dc4dc69ce6deea375ece93",
   "artifacts": [
-    {
-      "path": "docs/CURRENT_STATE.md",
-      "git_blob_sha1": "6912fd93370c2002f61256425f6e1c081c4e7ce7",
-      "role": "DGAF current-state source"
-    },
-    {
-      "path": "docs/tektite-v0.1/public/index.html",
-      "git_blob_sha1": "c933da4a27ffbfeaabd36cc25d6dfba0bd360926",
-      "role": "public status projection"
-    }
+    {"path": "docs/CURRENT_STATE.md", "git_blob_sha1": "6912fd93370c2002f61256425f6e1c081c4e7ce7", "role": "DGAF current-state source"},
+    {"path": "docs/tektite-v0.1/public/index.html", "git_blob_sha1": "c933da4a27ffbfeaabd36cc25d6dfba0bd360926", "role": "public status projection"}
   ],
   "external_authorities": [
-    {
-      "authority_id": "ACP_SOURCE",
-      "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
-      "role": "ACP status dependency"
-    }
+    {"authority_id": "ACP_SOURCE", "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5", "role": "ACP status dependency"}
   ],
   "non_effects": {
     "scientific_n_increment": 0,
@@ -32,5 +20,5 @@
     "live_repository_mutation": "NOT_AUTHORIZED",
     "production_executor": "NOT_ESTABLISHED"
   },
-  "manifest_digest_sha256": "d59a85a739630bf9c58db3b0b507659d5c9d743122391e8828e3541c980c4f87"
+  "semantic_material_digest_sha256": "2cdd2dc579d377ffd2fa24df4bfc97e8cf33cd2cb08f2670fc189ef8b9d80916"
 }
