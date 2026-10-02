@@ -1,4 +1,5 @@
 import inspect
+import os
 import subprocess
 from dataclasses import replace
 from pathlib import Path
@@ -206,6 +207,7 @@ def test_shallow_acp_checkout_fails_closed(tmp_path):
         check=True,
         capture_output=True,
         text=True,
+        env={**os.environ, "GIT_ALLOW_PROTOCOL": "file"},
     )
 
     with pytest.raises(PreflightError, match="ACP_SHALLOW_REPOSITORY"):
