@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-28
-reconciliation_input_main: 2324e91fe990e43a3c33c16faa12a9f3ad258050
+last_verified: 2026-10-02
+reconciliation_input_main: 86120d604d9eb747a722c33a299898f79808f6ef
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -89,6 +89,9 @@ accepted_aoss_independent_validation_handoff_commit: 92bc930bdd84f6c4258852e764d
 aoss_stage_a_external_review_issue: 929
 aoss_stage_a_independent_validation_handoff: ACCEPTED
 aoss_stage_a_external_review: NOT_EXECUTED
+governed_repo_outside_operator_issue: 1210
+governed_repo_trial_source_sha: c90c74c04583c5a3f23f6a261cf38cd6922c781c
+governed_repo_outside_operator_trial: READY_NOT_SATISFIED
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -117,7 +120,7 @@ The earlier provider-neutral capability-governance proposal in **PR #1041** is n
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `2324e91fe990e43a3c33c16faa12a9f3ad258050` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `86120d604d9eb747a722c33a299898f79808f6ef` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -141,6 +144,7 @@ The earlier provider-neutral capability-governance proposal in **PR #1041** is n
 | Epoch 002 interpretation/adjudication | **EXECUTED / ESTABLISHED · creation-only `INTERPRETATION_NOTE` admitted via PR #872** |
 | Epoch 002 result-admission tooling | **ACCEPTED · CONTENT-ADDRESSED / NON-EXECUTING · PR #835** |
 | Independent validation | **NOT ESTABLISHED** |
+| Governed Repo outside-operator usability gate | **READY FOR ELIGIBLE HUMAN TRIAL / NOT SATISFIED · ISSUE #1210 OPEN · SOURCE `c90c74c04583c5a3f23f6a261cf38cd6922c781c`** |
 | AOSS Stage A outcome collection authorization | **TRUE · BOUNDED · ACCEPTED AUTHORIZATION BASIS** |
 | AOSS Stage A apparatus | **ACCEPTED THROUGH NON-PROMOTING LOCAL TRUST RESULT INTAKE · PR #925** |
 | AOSS Stage A independent-validation handoff | **ACCEPTED · PR #928 · EXTERNAL REVIEW OPERATIONALLY REQUESTABLE** |
@@ -156,6 +160,8 @@ The earlier provider-neutral capability-governance proposal in **PR #1041** is n
 | Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
 | Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
 | DGAF-on-DGAF self-application benchmark (#1022) | **SCAFFOLD / SAME-SYSTEM EXECUTION / SAME-SYSTEM ADJUDICATION ACCEPTED THROUGH #1049 · #1022 OPEN · EXTERNAL REPLAY UNDER #929 OPEN** |
+
+Issue #1210 has satisfied its trial-launch preconditions: the public packet is accepted and binds the exact Governed Repo source above. The remaining gate is execution by one eligible, uninvolved, uncoached technically capable human operator. Same-owner automation, ChatGPT execution, and implementation-author execution do not satisfy this gate. A successful run can establish only bounded outside-operator usability for that operator, documented path, and tested environment; it does not increment canonical scientific N or establish independent scientific validation, canonical DGAF efficacy, production security, or High-Assurance authorization.
 
 No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt and creation-only interpretation note establish bounded, same-system/nonindependent interpretation; they do not establish canonical DGAF efficacy, independent validation, or High-Assurance authorization. The #1022 self-application chain through #1049 is internal same-system engineering evidence only; independent replay and external validation remain outstanding under #929.
 
