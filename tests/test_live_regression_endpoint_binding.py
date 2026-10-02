@@ -7,8 +7,13 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
 CANONICAL_PRODUCTION_URL = "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
-COLD_START_WARNING = (
-    "Audit counters are in-memory and reset on each serverless cold start. " "Wire to Vercel KV for persistence."
+LEGACY_COLD_START_WARNING = (
+    "Audit counters are in-memory and reset on each serverless cold start. "
+    "Wire to Vercel KV for persistence."
+)
+CURRENT_COLD_START_WARNING = (
+    "Audit counters are in-memory and reset on each serverless cold start. "
+    "Configure an admitted durable store before relying on persistent audit state."
 )
 
 
@@ -42,6 +47,8 @@ def test_live_audit_check_does_not_require_cross_request_serverless_counter_pers
     assert "turn_count" not in audit_block
     assert "d.get('status') == 'ok'" in audit_block
     assert "d.get('version') == '1.8.0'" in audit_block
-    assert "d.get('_warning') in (None, expected_warning)" in audit_block
-    assert COLD_START_WARNING in audit_block
+    assert "accepted_warnings = {" in audit_block
+    assert "d.get('_warning') in accepted_warnings" in audit_block
+    assert LEGACY_COLD_START_WARNING in audit_block
+    assert CURRENT_COLD_START_WARNING in audit_block
     assert "audit response contract FAIL" in audit_block
