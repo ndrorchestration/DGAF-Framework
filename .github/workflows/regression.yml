@@ -109,11 +109,15 @@ jobs:
           import os
           import sys
           d = json.loads(os.environ["AUDIT_JSON"])
-          expected_warning = 'Audit counters are in-memory and reset on each serverless cold start. Wire to Vercel KV for persistence.'
+          accepted_warnings = {
+              None,
+              'Audit counters are in-memory and reset on each serverless cold start. Wire to Vercel KV for persistence.',
+              'Audit counters are in-memory and reset on each serverless cold start. Configure an admitted durable store before relying on persistent audit state.',
+          }
           ok = (
               d.get('status') == 'ok'
               and d.get('version') == '1.8.0'
-              and d.get('_warning') in (None, expected_warning)
+              and d.get('_warning') in accepted_warnings
           )
           if not ok:
               print('audit response contract FAIL', file=sys.stderr)
