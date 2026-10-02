@@ -5,6 +5,18 @@
 
 In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
+## Choose an evaluation path
+
+You do not need to read the full repository history before testing DGAF. Pick the depth that matches what you want to inspect:
+
+| Goal | Path | What it establishes |
+| --- | --- | --- |
+| **See the core idea with no setup** | **[Open the 60-second bounded public demo](https://project-7ybao.vercel.app/demo)** | Same-system bounded engineering demonstration only |
+| **Run DGAF locally as a developer** | **[DGAF operator self-test](docs/qa/DGAF_OPERATOR_SELFTEST.md)** | Internal/personal engineering verification for the exact tested environment |
+| **Evaluate usability as an uninvolved technical operator** | **[Governed Repo outside-operator trial](docs/governance/GOVERNED_REPO_OUTSIDE_OPERATOR_TRIAL_V0.md)** | Eligible evidence for the bounded outside-operator usability gate only when performed by a qualifying uninvolved human |
+
+The outside-operator gate is **not yet satisfied**. Issue [#1210](https://github.com/ndrorchestration/DGAF-Framework/issues/1210) requires a technically capable operator who did not implement the system, does not rely on private NDR context, and is not coached through the procedure. ChatGPT, same-owner automation, and implementation-author execution are useful engineering checks but do **not** satisfy that gate.
+
 ## Try the bounded live demo
 
 **[Open the DGAF proof-of-operation demo](https://project-7ybao.vercel.app/demo)**
@@ -42,7 +54,7 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **8. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
-**7. Review the provider-neutral capability-governance design lane.** The current design branch formalizes how agents may obtain and exercise authority across MCP, APIs, SDKs, CLIs, plugins, and connectors without treating any transport or vendor API as the governance model. It separates PDP, PEP, credentials, adapters, data-flow controls, receipts, postconditions, and audit evidence. Draft PR #1041 is prospective/non-authorizing and now demonstrates **12/12 bounded model-check tests PASS** plus **127 passed, 1 skipped** in the broader capability-selected test slice, with bounded G1–G16 invariant slices, the first bounded end-to-end reference transaction, a second non-MCP mock HTTP/OpenAPI-style adapter preserving the same governed `dgaf.local.status` capability identity, fail-closed idempotency/replay semantics, and finite-state/small-state checks spanning authorization order, commit revalidation, composition, recovery, competing idempotency claims, unknown execution outcomes, postconditions, and audit-before-closure; it is not protected-main authority or a production-security claim.
+**9. Review the provider-neutral capability-governance design lane.** The current design branch formalizes how agents may obtain and exercise authority across MCP, APIs, SDKs, CLIs, plugins, and connectors without treating any transport or vendor API as the governance model. It separates PDP, PEP, credentials, adapters, data-flow controls, receipts, postconditions, and audit evidence. Draft PR #1041 is prospective/non-authorizing and now demonstrates **12/12 bounded model-check tests PASS** plus **127 passed, 1 skipped** in the broader capability-selected test slice, with bounded G1–G16 invariant slices, the first bounded end-to-end reference transaction, a second non-MCP mock HTTP/OpenAPI-style adapter preserving the same governed `dgaf.local.status` capability identity, fail-closed idempotency/replay semantics, and finite-state/small-state checks spanning authorization order, commit revalidation, composition, recovery, competing idempotency claims, unknown execution outcomes, postconditions, and audit-before-closure; it is not protected-main authority or a production-security claim.
 
 ### What this demonstrates
 
