@@ -8,8 +8,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
 CANONICAL_PRODUCTION_URL = "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
 LEGACY_COLD_START_WARNING = (
-    "Audit counters are in-memory and reset on each serverless cold start. "
-    "Wire to Vercel KV for persistence."
+    "Audit counters are in-memory and reset on each serverless cold start. " "Wire to Vercel KV for persistence."
 )
 CURRENT_COLD_START_WARNING = (
     "Audit counters are in-memory and reset on each serverless cold start. "
