@@ -193,7 +193,16 @@ def test_shallow_acp_checkout_fails_closed(tmp_path):
     dgaf, acp, bindings = _valid_repositories(tmp_path)
     shallow = tmp_path / "shallow-acp"
     subprocess.run(
-        ["git", "clone", "--depth", "1", acp.as_uri(), str(shallow)],
+        [
+            "git",
+            "-c",
+            "protocol.file.allow=always",
+            "clone",
+            "--depth",
+            "1",
+            acp.as_uri(),
+            str(shallow),
+        ],
         check=True,
         capture_output=True,
         text=True,
