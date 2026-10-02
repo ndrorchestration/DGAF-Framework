@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/blob/main/schemas/assurance_profile_v0.schema.json",
+  "title": "Assurance Profile v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile_id", "source_binding", "measurement_fields", "readiness", "non_effects"],
+  "properties": {
+    "profile_id": {"type": "string", "minLength": 1},
+    "source_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "revision": {"type": "string", "minLength": 1},
+        "source_schema": {"type": ["string", "null"]},
+        "runtime_identity": {"type": ["string", "null"]},
+        "environment_identity": {"type": ["string", "null"]},
+        "executable_identity": {"type": ["string", "null"]},
+        "destination_identity": {"type": ["string", "null"]}
+      }
+    },
+    "measurement_fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "derivation", "freshness_state"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "derivation": {
+            "enum": ["DIRECT", "DERIVED", "UNMEASURED", "NOT_ESTABLISHED"]
+          },
+          "value": {},
+          "source_field": {"type": ["string", "null"]},
+          "unit": {"type": ["string", "null"]},
+          "tolerance": {"type": ["string", "null"]},
+          "freshness_state": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "readiness": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["predicate_id", "status", "evidence"],
+        "properties": {
+          "predicate_id": {"type": "string", "minLength": 1},
+          "status": {
+            "enum": ["BOUND", "PASS", "BLOCKED", "UNMEASURED", "NOT_ESTABLISHED"]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "non_effects": {
+      "type": "array",
+      "contains": {"const": "NO_EXECUTION_AUTHORITY"},
+      "allOf": [
+        {"contains": {"const": "NO_SCIENTIFIC_N_INCREMENT"}},
+        {"contains": {"const": "NO_EFFICACY_EFFECT"}}
+      ]
+    }
+  }
+}
