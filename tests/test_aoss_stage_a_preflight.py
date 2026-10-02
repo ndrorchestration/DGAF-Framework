@@ -1,5 +1,4 @@
 import inspect
-import os
 import subprocess
 from dataclasses import replace
 from pathlib import Path
@@ -194,20 +193,10 @@ def test_shallow_acp_checkout_fails_closed(tmp_path):
     dgaf, acp, bindings = _valid_repositories(tmp_path)
     shallow = tmp_path / "shallow-acp"
     subprocess.run(
-        [
-            "git",
-            "-c",
-            "protocol.file.allow=always",
-            "clone",
-            "--depth",
-            "1",
-            acp.as_uri(),
-            str(shallow),
-        ],
+        ["git", "clone", "--depth", "1", "--no-local", str(acp), str(shallow)],
         check=True,
         capture_output=True,
         text=True,
-        env={**os.environ, "GIT_ALLOW_PROTOCOL": "file"},
     )
 
     with pytest.raises(PreflightError, match="ACP_SHALLOW_REPOSITORY"):
