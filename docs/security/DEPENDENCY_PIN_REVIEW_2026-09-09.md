@@ -64,3 +64,9 @@ Any future dependency update must deliberately update the manifest/lock together
 This remediation changes dependency reproducibility and dependency-scope disclosure only. It does not change Track A preregistration, candidate/freeze identity, custody/blinding, authorization, stopping rules, empirical results, or scientific N.
 
 **Control state remains:** PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED / N=0.
+
+## 2026-10-03 Next.js security remediation candidate
+
+Issue #1258 identifies the root exact pin `next==16.3.4` as below the current patched 16.3.x security level. The bounded remediation candidate updates the direct pin to `16.3.8` and regenerates `package-lock.json` with npm rather than manually editing transitive entries.
+
+This maintenance change is security-scoped only. It does not alter scientific state, outside-operator evidence, canonical efficacy, independent validation, or High-Assurance authorization. Acceptance requires fresh exact-head lockfile, UI-test, build, governance, and hosted validation. The earlier bootstrap provenance in this document remains historical evidence and does not constrain the digest of this reviewed lockfile update.
