@@ -1,20 +1,28 @@
 {
   "schema": "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED",
-  "date": "2026-09-30",
+  "date": "2026-10-03",
   "rule": "Every evidence row must state both what it supports and what it does not support.",
   "entries": [
     {
-      "artifact": "ACP PR #145",
+      "artifact": "ACP PR #156 + PR #159",
       "source_surface": "GitHub",
-      "claim_supported": "ACP queue, dependency, and boundary documentation are merged.",
-      "claim_not_supported": "No executor authority, rollback authority, independent validation, or High-Assurance is established.",
-      "authorization_effect": "Executor PRs remain held.",
-      "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/145"
+      "claim_supported": "A bounded local-test mutation executor and durable local mutation lineage are established for the tested disposable-repository scope.",
+      "claim_not_supported": "No real-project mutation, rollback execution, production execution, trusted-process identity, hostile-local-actor resistance, distributed/global lineage, independent validation, or High-Assurance is established.",
+      "authorization_effect": "Terminal evidence carries no continuing authority; subsequent consequential effects require fresh adjudication and fresh authorization.",
+      "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/159"
+    },
+    {
+      "artifact": "DGAF PR #1257 + Tektite PR #1270",
+      "source_surface": "GitHub",
+      "claim_supported": "Execution receipts are non-authorizing and the Tektite flow exposes fresh adjudication as an explicit next stage.",
+      "claim_not_supported": "No receipt creates follow-on authority, production permission, scientific N increment, independent validation, canonical efficacy, or High-Assurance.",
+      "authorization_effect": "authority_effect=NONE; follow_on_authority=FRESH_ADJUDICATION_REQUIRED.",
+      "public_link": "https://github.com/ndrorchestration/DGAF-Framework/pull/1270"
     },
     {
       "artifact": "DGAF claim ceiling",
       "source_surface": "DGAF governance state",
-      "claim_supported": "Claim ceilings are explicit and active.",
+      "claim_supported": "Scientific and assurance claim ceilings remain explicit.",
       "claim_not_supported": "Independent validation and canonical efficacy remain not established.",
       "authorization_effect": "No scientific or High-Assurance state change.",
       "public_link": "https://github.com/ndrorchestration/DGAF-Framework"
