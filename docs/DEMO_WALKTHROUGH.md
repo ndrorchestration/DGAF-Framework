@@ -24,7 +24,7 @@ The demonstration constructs a bounded action with:
 
 Expected path:
 
-`REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT`
+`REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT → FRESH ADJUDICATION`
 
 The accepted production demonstration executes the bounded ephemeral audit-counter effect and emits an `AAR_EXECUTION_RECEIPT_V1` with `postcondition=VERIFIED`, `authority_effect=NONE`, and `follow_on_authority=FRESH_ADJUDICATION_REQUIRED`.
 
@@ -50,12 +50,13 @@ This distinction is the core behavior to inspect: **capability and a well-formed
 2. **AUTHORITY** — inspect the authorization, delegated scope, expiry, and revocation state.
 3. **ADMISSION** — evaluate the declared predicates and either admit or deny the action.
 4. **EFFECT** — execute only after admission.
-5. **RECEIPT** — retain evidence of what executed and whether the bounded postcondition was verified.
-6. **CLAIM BOUNDARY** — prevent the resulting evidence from silently becoming a stronger scientific or assurance claim.
+5. **RECEIPT** — retain evidence of what executed and whether the bounded postcondition was verified; the receipt has `authority_effect=NONE`.
+6. **FRESH ADJUDICATION** — require a new decision and new authorization before any consequential follow-on action; the prior receipt cannot be reused as authority.
+7. **CLAIM BOUNDARY** — prevent the resulting evidence from silently becoming a stronger scientific or assurance claim.
 
 A compact description is:
 
-> DGAF is not the button. DGAF is the control chain around the button: what the system wants to do, whether it is authorized, whether it executes, what evidence comes back, and what that evidence is allowed to mean.
+> DGAF is not the button. DGAF is the control chain around the button: what the system wants to do, whether it is authorized, whether it executes, what evidence comes back, why that evidence does not authorize the next action, and what that evidence is allowed to mean.
 
 ## Replay-only DGAF → ACP trace
 
