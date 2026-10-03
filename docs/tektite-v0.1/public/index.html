@@ -19,6 +19,7 @@
         <a href="#ledger">Evidence Ledger</a>
         <a href="#sources">Source Links</a>
         <a href="#cases">Case Studies</a>
+        <a href="#review">Reviewer Guide</a>
         <a href="#services">Services / About</a>
       </nav>
     </header>
@@ -35,6 +36,14 @@
           <span>Core question</span>
           <strong>What did the system do, what evidence supports it, and what is it authorized to do next?</strong>
         </div>
+        <div class="question-card">
+          <span>Plain-language example</span>
+          <strong>A completed action can produce valid evidence and still authorize nothing further. Consequential follow-on work requires fresh adjudication and fresh authority.</strong>
+        </div>
+        <p class="small">
+          DGAF supplies evidence, claim, and authorization semantics. ACP supplies bounded execution-contract semantics.
+          Tektite presents their public-facing state without becoming either authority.
+        </p>
         <div class="notice" role="note" aria-label="Static shell boundary">
           <strong>Boundary:</strong> This static shell is display-only. It does not execute actions, mutate repositories,
           mirror private systems, or establish independent validation.
@@ -57,14 +66,19 @@
             <p>Evidence-bound claim posture is active.</p>
           </article>
           <article class="status-card positive">
-            <h3>ACP Queue Reconciliation</h3>
-            <p class="status">ESTABLISHED</p>
-            <p>Queue and boundary documentation are represented in public seed artifacts.</p>
+            <h3>ACP Bounded Local-Test Executor</h3>
+            <p class="status">ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE</p>
+            <p>ACP can execute the tested mutation contract only in explicitly marked disposable repositories under the bounded local-test profile.</p>
           </article>
           <article class="status-card positive">
             <h3>Tektite Static Shell</h3>
             <p class="status">MERGED</p>
             <p>The display-only public shell and local preview guidance are merged to main.</p>
+          </article>
+          <article class="status-card positive">
+            <h3>Post-Execution Authority</h3>
+            <p class="status">FRESH_ADJUDICATION_REQUIRED</p>
+            <p>Execution receipts carry no continuing authority. Protected follow-on effects require fresh adjudication and a new authorization.</p>
           </article>
           <article class="status-card neutral">
             <h3>Independent Validation</h3>
@@ -82,9 +96,9 @@
             <p>High-Assurance status remains blocked.</p>
           </article>
           <article class="status-card blocked">
-            <h3>Live Repository Mutation</h3>
+            <h3>Real-Project Repository Mutation</h3>
             <p class="status">NOT_AUTHORIZED</p>
-            <p>This public console does not authorize side effects.</p>
+            <p>The bounded disposable-test executor does not authorize mutation of real projects.</p>
           </article>
           <article class="status-card blocked">
             <h3>Rollback Execution</h3>
@@ -108,9 +122,13 @@
 INDEPENDENT_VALIDATION=NOT_ESTABLISHED
 CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED
 HIGH_ASSURANCE=NOT_AUTHORIZED
-LIVE_REPOSITORY_MUTATION=NOT_AUTHORIZED
+BOUNDED_LOCAL_TEST_EXECUTOR=ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE
+DURABLE_LOCAL_MUTATION_LINEAGE=ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE
+REAL_PROJECT_MUTATION=NOT_AUTHORIZED
 ROLLBACK_EXECUTION=NOT_AUTHORIZED
-PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
+PRODUCTION_EXECUTOR=NOT_ESTABLISHED
+TRUSTED_PROCESS_IDENTITY=NOT_ESTABLISHED
+HOSTILE_LOCAL_ACTOR_RESISTANCE=NOT_ESTABLISHED</code></pre>
       </section>
 
       <section id="ledger" class="panel" aria-labelledby="ledger-title">
@@ -120,13 +138,12 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
         </div>
         <div class="ledger-list">
           <article>
-            <h3>ACP PR #145</h3>
-            <p><strong>Supports:</strong> ACP queue classification, dependency map, and executor boundary documentation.</p>
+            <h3>ACP PRs #156 and #159</h3>
+            <p><strong>Supports:</strong> a tested disposable-repository mutation executor plus durable local mutation lineage under the bounded local-test profile.</p>
             <p>
-              <strong>Does not support:</strong> live executor authority, rollback execution, production deployment,
-              independent validation, or High-Assurance.
+              <strong>Does not support:</strong> real-project mutation, rollback execution, production deployment, trusted-process identity, hostile-local-actor resistance, independent validation, or High-Assurance.
             </p>
-            <p><strong>Authorization effect:</strong> Executor promotion remains blocked.</p>
+            <p><strong>Authorization effect:</strong> terminal receipts authorize nothing further; a new consequential action requires fresh adjudication and fresh authorization.</p>
           </article>
           <article>
             <h3>DGAF Track A / Epoch 002 status</h3>
@@ -135,12 +152,12 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
             <p><strong>Authorization effect:</strong> Primary scientific claims remain not authorized.</p>
           </article>
           <article>
-            <h3>ACP blockers #117 and #118</h3>
-            <p><strong>Supports:</strong> explicit blocked-transition handling for executor surfaces.</p>
+            <h3>Retained ACP security boundaries</h3>
+            <p><strong>Supports:</strong> explicit disclosure that #117/#118 were closed under a bounded-local-test residual-risk posture rather than by establishing stronger hostile-actor or trusted-process guarantees.</p>
             <p>
-              <strong>Does not support:</strong> resolving object identity, TOCTOU, process identity, or isolation concerns.
+              <strong>Does not support:</strong> elimination of final-path TOCTOU risk, trusted process identity, peer-process tamper resistance, or a High-Assurance process boundary.
             </p>
-            <p><strong>Authorization effect:</strong> Held executor PRs remain held.</p>
+            <p><strong>Authorization effect:</strong> these retained limitations keep real-project and production execution outside the established scope.</p>
           </article>
         </div>
       </section>
@@ -154,7 +171,15 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
             the shell into an execution surface or validation result.
           </p>
         </div>
+        <div class="notice" role="note" aria-label="Projection verification path">
+          <strong>Verify this projection:</strong> inspect the exact public semantic-source snapshot and its source identities before treating a status as current. A projection-verification PASS does not establish scientific validity, independent validation, efficacy, or execution authority.
+        </div>
         <div class="source-grid">
+          <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1257">PR #1257 — receipt authority non-transfer</a>
+          <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1269">PR #1269 — Tektite authority-decay projection</a>
+          <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1270">PR #1270 — explicit fresh-adjudication stage</a>
+          <a href="https://github.com/ndrorchestration/agent-control-plane/pull/156">ACP PR #156 — bounded disposable-repository executor</a>
+          <a href="https://github.com/ndrorchestration/agent-control-plane/pull/159">ACP PR #159 — durable local mutation lineage</a>
           <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1166">
             PR #1166 — Tektite v0.1 seed plan
           </a>
@@ -177,11 +202,11 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
         </div>
         <div class="card-grid">
           <article class="case-card">
-            <h3>ACP PR #145</h3>
-            <p>Documentation reconciliation without executor promotion.</p>
-            <p class="small">Lesson: merged documentation can clarify state without authorizing execution.</p>
+            <h3>Bounded disposable-repository execution</h3>
+            <p>ACP PRs #156 and #159 establish only the tested bounded local-test executor and durable local lineage.</p>
+            <p class="small">Lesson: establishing a narrow effect path does not transfer authority to real projects, production, rollback, or subsequent effects.</p>
             <p>
-              <a href="../case-studies/ACP_PR_145.md">Read the bounded case-study detail</a>
+              <a href="../case-studies/ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md">Read the bounded case-study detail</a>
             </p>
           </article>
           <article class="case-card">
@@ -195,6 +220,15 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
             <p class="small">Lesson: correct answers are insufficient without faithful evidence-to-claim structure.</p>
           </article>
         </div>
+      </section>
+
+      <section id="review" class="panel" aria-labelledby="review-title">
+        <div class="section-heading">
+          <p class="eyebrow">Reviewer Guide</p>
+          <h2 id="review-title">How to read this shell conservatively</h2>
+          <p>The reviewer guide explains status labels, evidence rows, bounded established capabilities, retained limitations, and non-transferable authorization.</p>
+        </div>
+        <p><a href="../REVIEWER_GUIDE.md">Read the Tektite v0.1 public reviewer guide</a></p>
       </section>
 
       <section id="services" class="panel" aria-labelledby="services-title">
