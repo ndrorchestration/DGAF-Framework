@@ -126,19 +126,11 @@ def evaluate_scientific_state_transition(
     prior_n = _int(prior.get("canonical_scientific_n"), "prior_state.canonical_scientific_n")
     if prior_n < 0:
         raise ScientificStateAdmissionError("prior scientific N must be non-negative")
-    prior_independent = _required_text(
-        prior.get("independent_validation"), "prior_state.independent_validation"
-    )
-    prior_efficacy = _required_text(
-        prior.get("canonical_dgaf_efficacy"), "prior_state.canonical_dgaf_efficacy"
-    )
-    prior_high_assurance = _required_text(
-        prior.get("high_assurance"), "prior_state.high_assurance"
-    )
+    prior_independent = _required_text(prior.get("independent_validation"), "prior_state.independent_validation")
+    prior_efficacy = _required_text(prior.get("canonical_dgaf_efficacy"), "prior_state.canonical_dgaf_efficacy")
+    prior_high_assurance = _required_text(prior.get("high_assurance"), "prior_state.high_assurance")
 
-    transition_class = _required_text(
-        candidate.get("transition_class"), "candidate_transition.transition_class"
-    )
+    transition_class = _required_text(candidate.get("transition_class"), "candidate_transition.transition_class")
     if transition_class not in TRANSITION_CLASSES:
         raise ScientificStateAdmissionError("unsupported transition_class")
 
@@ -176,20 +168,14 @@ def evaluate_scientific_state_transition(
     )
 
     raw_refs = _string_list(evidence.get("raw_evidence_refs"), "evidence.raw_evidence_refs")
-    source_ids = _string_list(
-        evidence.get("exact_source_identities"), "evidence.exact_source_identities"
-    )
-    environment_ids = _string_list(
-        evidence.get("environment_identities"), "evidence.environment_identities"
-    )
+    source_ids = _string_list(evidence.get("exact_source_identities"), "evidence.exact_source_identities")
+    environment_ids = _string_list(evidence.get("environment_identities"), "evidence.environment_identities")
     custody_refs = _string_list(evidence.get("custody_refs"), "evidence.custody_refs")
     outcome_generated = _bool(
         evidence.get("outcome_generation_established"),
         "evidence.outcome_generation_established",
     )
-    raw_retained = _bool(
-        evidence.get("raw_evidence_retained"), "evidence.raw_evidence_retained"
-    )
+    raw_retained = _bool(evidence.get("raw_evidence_retained"), "evidence.raw_evidence_retained")
     identity_passed = _bool(
         evidence.get("exact_identity_binding_passed"),
         "evidence.exact_identity_binding_passed",
@@ -198,18 +184,14 @@ def evaluate_scientific_state_transition(
         evidence.get("custody_and_provenance_passed"),
         "evidence.custody_and_provenance_passed",
     )
-    duplicate_passed = _bool(
-        evidence.get("duplicate_check_passed"), "evidence.duplicate_check_passed"
-    )
+    duplicate_passed = _bool(evidence.get("duplicate_check_passed"), "evidence.duplicate_check_passed")
     duplicate_of = evidence.get("duplicate_or_replay_of")
     if duplicate_of is not None:
         _required_text(duplicate_of, "evidence.duplicate_or_replay_of")
     validity_state = _required_text(evidence.get("validity_state"), "evidence.validity_state")
     if validity_state not in {"VALID", "INVALID", "INCONCLUSIVE"}:
         raise ScientificStateAdmissionError("unsupported evidence validity_state")
-    lane_admission = _required_text(
-        evidence.get("lane_specific_admission"), "evidence.lane_specific_admission"
-    )
+    lane_admission = _required_text(evidence.get("lane_specific_admission"), "evidence.lane_specific_admission")
     if lane_admission not in {"ACCEPTED", "REJECTED", "NOT_APPLICABLE", "INCONCLUSIVE"}:
         raise ScientificStateAdmissionError("unsupported lane_specific_admission")
     blockers = _string_list(evidence.get("blocking_defeaters"), "evidence.blocking_defeaters")
@@ -218,18 +200,14 @@ def evaluate_scientific_state_transition(
         independence.get("independence_required_for_transition"),
         "independence.independence_required_for_transition",
     )
-    attribution_verified = _bool(
-        independence.get("attribution_verified"), "independence.attribution_verified"
-    )
+    attribution_verified = _bool(independence.get("attribution_verified"), "independence.attribution_verified")
     relationship_ref = independence.get("relationship_disclosure_ref")
     if relationship_ref is not None:
         _required_text(relationship_ref, "independence.relationship_disclosure_ref")
     independence_ref = independence.get("independence_adjudication_ref")
     if independence_ref is not None:
         _required_text(independence_ref, "independence.independence_adjudication_ref")
-    independence_state = _required_text(
-        independence.get("independence_state"), "independence.independence_state"
-    )
+    independence_state = _required_text(independence.get("independence_state"), "independence.independence_state")
     if independence_state not in {
         "ESTABLISHED",
         "NOT_ESTABLISHED",
@@ -267,9 +245,7 @@ def evaluate_scientific_state_transition(
         result.get("resulting_canonical_dgaf_efficacy"),
         "result.resulting_canonical_dgaf_efficacy",
     )
-    resulting_high_assurance = _required_text(
-        result.get("resulting_high_assurance"), "result.resulting_high_assurance"
-    )
+    resulting_high_assurance = _required_text(result.get("resulting_high_assurance"), "result.resulting_high_assurance")
 
     reasons: list[str] = []
 

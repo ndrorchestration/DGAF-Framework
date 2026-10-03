@@ -12,11 +12,7 @@ from components.scientific_state_admission import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = json.loads(
-    (ROOT / "schemas" / "scientific_state_transition_record.schema.json").read_text(
-        encoding="utf-8"
-    )
-)
+SCHEMA = json.loads((ROOT / "schemas" / "scientific_state_transition_record.schema.json").read_text(encoding="utf-8"))
 
 
 def record(*, transition_class="INDEPENDENT_EMPIRICAL_REPLICATION", delta=1):
@@ -204,9 +200,7 @@ def test_resulting_n_must_equal_prior_plus_delta():
 
 def test_independent_validation_effect_is_separate_and_not_implemented_in_v1():
     candidate = record(transition_class="INDEPENDENT_REVIEW", delta=0)
-    candidate["candidate_transition"]["proposed_independent_validation_effect"] = (
-        "ESTABLISH_BOUNDED_REVIEW"
-    )
+    candidate["candidate_transition"]["proposed_independent_validation_effect"] = "ESTABLISH_BOUNDED_REVIEW"
     candidate["result"]["resulting_independent_validation"] = "BOUNDED_ESTABLISHED"
     decision = verified(candidate)
 

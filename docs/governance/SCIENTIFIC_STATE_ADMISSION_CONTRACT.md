@@ -126,6 +126,7 @@ result:
 ```
 
 The machine schema and fail-closed validator are implemented under issue #1264 in:
+
 - `schemas/scientific_state_transition_record.schema.json`;
 - `components/scientific_state_admission.py`;
 - `tests/test_scientific_state_admission.py`.
