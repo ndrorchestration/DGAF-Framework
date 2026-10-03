@@ -1,50 +1,60 @@
 {
   "schema": "TEKTITE_V0_1_STATUS_SEED",
-  "date": "2026-09-30",
+  "date": "2026-10-03",
   "authority_note": "Tektite projects public status only. It is not a governance authority or execution surface.",
   "current_status": {
     "DGAF_CLAIM_DISCIPLINE": "ACTIVE",
-    "ACP_QUEUE_RECONCILIATION": "ESTABLISHED",
+    "ACP_QUEUE_RECONCILIATION": "SUPERSEDED_BY_CURRENT_MAIN",
     "ACP_BOUNDARY_DOCS": "MERGED",
+    "ACP_BOUNDED_LOCAL_TEST_EXECUTOR": "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
+    "ACP_DURABLE_LOCAL_MUTATION_LINEAGE": "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
+    "POST_EXECUTION_AUTHORITY_EFFECT": "NONE",
+    "FOLLOW_ON_AUTHORITY": "FRESH_ADJUDICATION_REQUIRED",
     "INDEPENDENT_VALIDATION": "NOT_ESTABLISHED",
     "CANONICAL_DGAF_EFFICACY": "NOT_ESTABLISHED",
     "HIGH_ASSURANCE": "NOT_AUTHORIZED",
-    "LIVE_REPOSITORY_MUTATION": "NOT_AUTHORIZED",
+    "REAL_PROJECT_MUTATION": "NOT_AUTHORIZED",
     "ROLLBACK_EXECUTION": "NOT_AUTHORIZED",
     "PRODUCTION_EXECUTOR": "NOT_ESTABLISHED",
-    "PUBLIC_DEMO_SURFACE": "IN_DEVELOPMENT"
+    "TRUSTED_PROCESS_IDENTITY": "NOT_ESTABLISHED",
+    "HOSTILE_LOCAL_ACTOR_RESISTANCE": "NOT_ESTABLISHED",
+    "PUBLIC_DEMO_SURFACE": "STATIC_PROJECTION"
   },
   "latest_milestone": {
-    "title": "ACP PR #145 merged",
-    "date": "2026-09-30",
-    "merge_commit": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
-    "effect": "Documentation-only reconciliation",
+    "title": "ACP PR #159 merged",
+    "date": "2026-10-03",
+    "merge_commit": "cad2ef94f1a690deee741b81ea8bfab8c248cd7d",
+    "effect": "Durable local mutation lineage for the tested disposable-repository bounded executor",
     "supports": [
-      "ACP queue classification",
-      "ACP dependency map",
-      "ACP executor boundary model"
+      "BOUNDED_LOCAL_TEST_EXECUTOR=ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
+      "DURABLE_LOCAL_MUTATION_LINEAGE=ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
+      "fresh adjudication before consequential follow-on effects"
     ],
     "does_not_support": [
-      "Live executor authorization",
+      "Real-project mutation",
       "Rollback execution",
-      "Production executor deployment",
+      "Production execution",
+      "Trusted process identity",
+      "Hostile-local-actor resistance",
+      "Distributed/global lineage",
       "Independent validation",
-      "High-Assurance status"
+      "High-Assurance"
     ],
-    "authorization_effect": "#110, #137, and #139 remain HOLD"
+    "authorization_effect": "Terminal execution evidence carries authority_effect=NONE; follow-on authority requires fresh adjudication and fresh authorization."
   },
-  "active_blockers": [
+  "active_blockers": [],
+  "retained_limitations": [
     {
       "id": "#117",
-      "name": "Filesystem object identity / TOCTOU",
-      "blocks": ["#110", "#137", "#139"],
-      "status": "ACTIVE_BLOCKER"
+      "name": "Filesystem object identity / final-path TOCTOU",
+      "status": "NOT_ESTABLISHED_AS_STRONGER_PROPERTY",
+      "effect": "Retained risk under BOUNDED_LOCAL_TEST; real-project/High-Assurance scope not authorized."
     },
     {
       "id": "#118",
       "name": "Trusted process boundary / identity / isolation",
-      "blocks": ["#110", "#137", "#139"],
-      "status": "ACTIVE_BLOCKER"
+      "status": "NOT_ESTABLISHED_AS_STRONGER_PROPERTY",
+      "effect": "Trusted-process and peer-process tamper resistance remain not established."
     }
   ]
 }
