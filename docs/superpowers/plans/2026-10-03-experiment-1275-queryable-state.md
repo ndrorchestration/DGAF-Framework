@@ -11,6 +11,7 @@
 **Spec:** GitHub issue #1275 and Notion page "Ecosystem Supercharge Program — Falsifiable Experiments".
 
 ## Global Constraints
+
 - SCIENTIFIC_N_INCREMENT=0.
 - INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
 - CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
@@ -19,6 +20,7 @@
 - Unknown currentness fails closed.
 
 ## Review Focus
+
 - Missing consumer binding must be reported, not inferred.
 - Historical snapshot must not be presented as live current state.
 - Receipt evidence must never imply follow-on authority.
@@ -30,10 +32,12 @@
 ### Task 1: Minimal ecosystem query report
 
 **Files:**
+
 - Create: `scripts/query_ecosystem_state.py`
 - Create: `tests/test_query_ecosystem_state.py`
 
 **Interfaces:**
+
 - Produces: `build_report(root: Path, required_consumers: list[str]) -> dict`
 - Produces CLI JSON suitable for later reconciliation tooling.
 
@@ -46,6 +50,7 @@
 ### Task 2: Baseline characterization record
 
 **Files:**
+
 - Create: `docs/experiments/ECOSYSTEM_QUERY_BASELINE_1275.md`
 
 - [ ] Record the eight fixed questions, current source paths, machine support classification, observed gaps, and measurement limitations.
