@@ -157,3 +157,16 @@ def test_reconciliation_rejects_container_source_identity_alias():
 
     with pytest.raises(ValueError, match="container_commit"):
         module.build_report(ROOT, [], reconciliation_evidence=evidence)
+
+
+def test_report_enumerates_tektite_public_claim_evidence_seed_without_claiming_completeness():
+    module = load_module()
+    report = module.build_report(ROOT, [])
+
+    public_claims = report["public_claim_evidence"]
+    assert public_claims["scope"] == "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED_ONLY"
+    assert public_claims["completeness"] == "NOT_ESTABLISHED"
+    assert len(public_claims["entries"]) == 3
+    assert public_claims["missing_public_link_artifacts"] == ["AI Evidence Audit positioning"]
+    assert all("claim_supported" in entry for entry in public_claims["entries"])
+    assert all("claim_not_supported" in entry for entry in public_claims["entries"])

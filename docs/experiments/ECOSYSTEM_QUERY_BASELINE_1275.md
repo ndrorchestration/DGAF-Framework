@@ -164,3 +164,44 @@ The reconciliation tranche improves machine answerability for a narrow subset of
 The tranche does **not** yet solve Questions 1, 3, 4, or 5, and does not fully solve Questions 2, 7, or 8.
 
 Therefore Experiment 1 has demonstrated a bounded reduction in ambiguity around repository-tip freshness, but **program-level benefit remains NOT ESTABLISHED**. Human operational-time and human-review-survival baselines remain unmeasured.
+
+## Public-claim evidence enumeration tranche
+
+The query layer now exposes the existing Tektite v0.1 evidence-ledger seed as a bounded public-claim evidence view.
+
+The output is explicitly labeled:
+
+```text
+scope=TEKTITE_V0_1_EVIDENCE_LEDGER_SEED_ONLY
+completeness=NOT_ESTABLISHED
+```
+
+This prevents the presence of three ledger rows from being interpreted as a complete inventory of every public-facing claim.
+
+The current seed contains three entries, each preserving:
+
+- artifact;
+- source surface;
+- supported claim;
+- explicitly unsupported claim;
+- authorization effect;
+- public link when one exists.
+
+The current seed also exposes one discoverability gap:
+
+```text
+AI Evidence Audit positioning → public_link missing
+```
+
+A missing public link is **not** classified as missing evidence or a false claim. It is reported only as missing public evidence discoverability from this seed.
+
+### Baseline Question 1 update
+
+Question 1 — “Which public-facing claims currently lack direct supporting evidence?” — improves from a manual ledger read to machine enumeration of the **Tektite seed subset**, but remains **PARTIAL** because:
+
+- completeness across all public surfaces is not established;
+- the seed does not prove that every public claim has been registered;
+- public-link presence is not equivalent to evidence validity;
+- broader claim/evidence reconciliation still requires the owning claim/evidence authorities.
+
+Program-level benefit remains NOT ESTABLISHED.

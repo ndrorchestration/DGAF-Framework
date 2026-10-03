@@ -15,6 +15,7 @@ from pathlib import Path
 POINTER_PATH = Path("registry/ecosystem_state_pointer.current.json")
 COMPONENT_REGISTRY_PATH = Path("docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v1.json")
 RECEIPT_SCHEMA_PATH = Path("schemas/execution_receipt.schema.json")
+TEKTITE_LEDGER_PATH = Path("docs/tektite-v0.1/evidence-ledger.seed.json")
 POINTER_VALIDATOR_PATH = Path("scripts/validate_ecosystem_state_pointer.py")
 RECONCILIATION_SCHEMA_VERSION = "ECOSYSTEM_LIVE_RECONCILIATION_V1"
 
@@ -110,6 +111,12 @@ def build_report(
 
     registry = _load_json(root / COMPONENT_REGISTRY_PATH)
     receipt_schema = _load_json(root / RECEIPT_SCHEMA_PATH)
+    tektite_ledger = _load_json(root / TEKTITE_LEDGER_PATH)
+    if tektite_ledger.get("schema") != "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED":
+        raise ValueError("unexpected Tektite evidence ledger schema")
+    ledger_entries = tektite_ledger.get("entries")
+    if not isinstance(ledger_entries, list):
+        raise ValueError("Tektite evidence ledger entries must be an array")
 
     consumers = {
         item["consumer_id"]: {
@@ -157,6 +164,14 @@ def build_report(
         "receipt_authority": {
             "authority_effect": properties["authority_effect"]["const"],
             "follow_on_authority": properties["follow_on_authority"]["const"],
+        },
+        "public_claim_evidence": {
+            "scope": "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED_ONLY",
+            "completeness": "NOT_ESTABLISHED",
+            "entries": ledger_entries,
+            "missing_public_link_artifacts": sorted(
+                entry.get("artifact", "<unnamed>") for entry in ledger_entries if not entry.get("public_link")
+            ),
         },
         "component_registry": {
             "status": registry["status"],
