@@ -48,9 +48,9 @@ observation-row count != canonical scientific N
 
 No evidence object, workflow result, issue comment, CI run, interpretation note, receipt, review, or public-facing status may directly promote canonical scientific state.
 
-A promotion requires a separately admitted **Scientific State Transition Record (SSTR)**.
+A promotion requires a separately admitted **Scientific State Transition Record (Scientific State Transition Record)**.
 
-Absence of a valid SSTR means:
+Absence of a valid Scientific State Transition Record means:
 
 ```text
 SCIENTIFIC_STATE_EFFECT=NONE
@@ -60,7 +60,7 @@ for the candidate evidence under consideration.
 
 ## Scientific State Transition Record
 
-An SSTR MUST bind at least:
+An Scientific State Transition Record MUST bind at least:
 
 ```yaml
 transition_id: <stable id>
@@ -209,7 +209,7 @@ Default:
 SCIENTIFIC_N_INCREMENT=0
 ```
 
-An independent-validation state may change only if the exact governing protocol defines that predicate, independence is established, returned evidence is retained/reverified as required, and an explicit SSTR admits that state effect.
+An independent-validation state may change only if the exact governing protocol defines that predicate, independence is established, returned evidence is retained/reverified as required, and an explicit Scientific State Transition Record admits that state effect.
 
 ### 6. Independent empirical replication
 
@@ -228,7 +228,7 @@ A positive delta requires all of the following:
 - required independence is explicitly adjudicated, not inferred from branding, account count, model count, or physical location;
 - no blocking defeater is active;
 - the lane-specific result/admission process accepts the empirical unit;
-- a separate SSTR explicitly admits the proposed canonical-N delta.
+- a separate Scientific State Transition Record explicitly admits the proposed canonical-N delta.
 
 Even then, efficacy and High-Assurance remain separate effects.
 
@@ -250,7 +250,7 @@ AND protocol_validity == VALID
 AND required_independence == ESTABLISHED
 AND no_blocking_defeater
 AND lane_specific_admission == ACCEPTED
-AND SSTR_adjudication == ADMIT
+AND Scientific State Transition Record_adjudication == ADMIT
 ```
 
 If any required predicate is false, missing, stale, or inconclusive:
@@ -303,7 +303,7 @@ Multiple nominally different agents under the same owner/context do not establis
 
 An independent validation event and a scientific-N increment are separate transitions.
 
-It is valid for an SSTR to admit:
+It is valid for an Scientific State Transition Record to admit:
 
 ```text
 SCIENTIFIC_N_INCREMENT=0
@@ -403,7 +403,7 @@ Current canonical scientific-N effect:
 
 May establish independently reviewed predicates at the scope authorized by the frozen handoff and downstream acceptance rules.
 
-Independent review of existing apparatus/evidence is not automatically a scientific replicate. Any proposed N effect would require a separate empirical protocol and SSTR.
+Independent review of existing apparatus/evidence is not automatically a scientific replicate. Any proposed N effect would require a separate empirical protocol and Scientific State Transition Record.
 
 ## Current project ceiling
 
@@ -424,7 +424,7 @@ HIGH_ASSURANCE=NOT_AUTHORIZED
 - Lane-specific validators remain authoritative for whether their exact evidence satisfies their protocols.
 - `docs/governance/EVIDENCE_GATE_V0.md` governs reusable evidence-admission semantics but does not itself authorize scientific-state promotion.
 - `docs/governance/ALIGNMENT_CONSTRAINT_LEDGER.md` provides broader consequential-action/admission principles and explicitly rejects independence inflation from duplicated or correlated evidence.
-- This contract adds the missing cross-lane rule: **lane evidence can change canonical scientific state only through an explicit admitted SSTR**.
+- This contract adds the missing cross-lane rule: **lane evidence can change canonical scientific state only through an explicit admitted Scientific State Transition Record**.
 
 ## Non-effects
 
