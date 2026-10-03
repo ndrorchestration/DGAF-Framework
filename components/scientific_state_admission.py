@@ -8,7 +8,7 @@ mutates canonical scientific state.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any, Callable, Mapping
 
 SCIENTIFIC_STATE_TRANSITION_SCHEMA_VERSION = "dgaf.scientific-state-transition.v1"
 
@@ -23,6 +23,9 @@ TRANSITION_CLASSES = frozenset(
         "INVALIDATION_RETRACTION",
     }
 )
+
+RecordVerifier = Callable[[Mapping[str, Any]], bool]
+
 
 NON_N_PROMOTING_CLASSES = frozenset(
     {
@@ -93,6 +96,10 @@ def _effect_is_none(value: str) -> bool:
 
 def evaluate_scientific_state_transition(
     record: Mapping[str, Any],
+    *,
+    current_state_verifier: RecordVerifier | None = None,
+    evidence_bundle_verifier: RecordVerifier | None = None,
+    adjudicator_authority_verifier: RecordVerifier | None = None,
 ) -> ScientificStateAdmissionDecision:
     """Evaluate one transition record without mutating project state."""
 
@@ -343,8 +350,27 @@ def evaluate_scientific_state_transition(
         or not _effect_is_none(efficacy_effect)
         or not _effect_is_none(authorization_effect)
     )
+
+    if requested_effect:
+        verifiers = (
+            ("CURRENT_STATE", current_state_verifier),
+            ("EVIDENCE_BUNDLE", evidence_bundle_verifier),
+            ("ADJUDICATOR_AUTHORITY", adjudicator_authority_verifier),
+        )
+        for label, verifier in verifiers:
+            if verifier is None:
+                reasons.append(f"{label}_VERIFIER_REQUIRED")
+                continue
+            try:
+                verified = verifier(root)
+            except Exception:
+                verified = False
+            if verified is not True:
+                reasons.append(f"{label}_VERIFICATION_FAILED")
     if requested_effect and adjudication_decision != "ADMIT":
         reasons.append("PROJECT_LEVEL_EFFECT_REQUIRES_ADMIT_DECISION")
+    if adjudication_decision != "ADMIT":
+        reasons.append(f"ADJUDICATION_{adjudication_decision}")
 
     expected_n = prior_n + proposed_delta
     if expected_n < 0:
