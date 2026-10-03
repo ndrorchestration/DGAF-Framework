@@ -96,8 +96,13 @@ evidence:
   environment_identities: []
   custody_refs: []
   outcome_generation_established: <boolean>
+  raw_evidence_retained: <boolean>
+  exact_identity_binding_passed: <boolean>
+  custody_and_provenance_passed: <boolean>
+  duplicate_check_passed: <boolean>
   duplicate_or_replay_of: <ref or null>
   validity_state: <VALID | INVALID | INCONCLUSIVE>
+  lane_specific_admission: <ACCEPTED | REJECTED | NOT_APPLICABLE | INCONCLUSIVE>
   blocking_defeaters: []
 
 independence:
@@ -120,7 +125,16 @@ result:
   resulting_high_assurance: <state>
 ```
 
-The exact machine schema may be introduced separately. This document defines the semantic contract.
+The machine schema and fail-closed validator are implemented under issue #1264 in:
+- `schemas/scientific_state_transition_record.schema.json`;
+- `components/scientific_state_admission.py`;
+- `tests/test_scientific_state_admission.py`.
+
+The v1 validator intentionally implements canonical-N transitions only. Independent-validation, efficacy, and authorization effects remain separate and fail closed until their own machine semantics are explicitly governed.
+
+For any nonzero or otherwise project-level effect, the v1 validator also requires caller-supplied external verification hooks for current-state identity, the evidence bundle, and adjudicator authority. The transition record cannot establish its own truth merely by asserting that its predicates passed.
+
+The exact machine schema does not itself discover evidence or mutate canonical state. This document remains the semantic contract.
 
 ## Transition classes
 
