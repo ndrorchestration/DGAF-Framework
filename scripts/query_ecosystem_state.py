@@ -43,10 +43,7 @@ def _validate_reconciliation_evidence(pointer: dict, evidence: dict) -> None:
     if set(evidence) != required:
         missing = sorted(required - set(evidence))
         extra = sorted(set(evidence) - required)
-        raise ValueError(
-            "reconciliation evidence fields mismatch: "
-            f"missing={missing} extra={extra}"
-        )
+        raise ValueError("reconciliation evidence fields mismatch: " f"missing={missing} extra={extra}")
     if evidence["schema_version"] != RECONCILIATION_SCHEMA_VERSION:
         raise ValueError(f"schema_version must be {RECONCILIATION_SCHEMA_VERSION}")
     for key in ("observed_at", "evidence_url"):
@@ -65,13 +62,9 @@ def _validate_reconciliation_evidence(pointer: dict, evidence: dict) -> None:
 
     source = pointer["snapshot_provenance"]["source_observation_commit"]
     if evidence["pointer_source_observation_commit"] != source:
-        raise ValueError(
-            "pointer_source_observation_commit must match the embedded pointer"
-        )
+        raise ValueError("pointer_source_observation_commit must match the embedded pointer")
     if evidence["container_commit"] == source:
-        raise ValueError(
-            "container_commit must not be treated as the source observation commit"
-        )
+        raise ValueError("container_commit must not be treated as the source observation commit")
 
 
 def _reconciliation_result(pointer: dict, evidence: dict | None) -> dict:
@@ -132,15 +125,8 @@ def build_report(
 
     snapshot = pointer["snapshot_provenance"]
     live = snapshot["live_reconciliation"]
-    embedded_states = {
-        item["freshness_state"]
-        for item in pointer["authorities"] + pointer["consumer_bindings"]
-    }
-    embedded_scope = (
-        "HISTORICAL_SNAPSHOT"
-        if embedded_states == {"HISTORICAL_SNAPSHOT"}
-        else "MIXED_OR_NON_HISTORICAL"
-    )
+    embedded_states = {item["freshness_state"] for item in pointer["authorities"] + pointer["consumer_bindings"]}
+    embedded_scope = "HISTORICAL_SNAPSHOT" if embedded_states == {"HISTORICAL_SNAPSHOT"} else "MIXED_OR_NON_HISTORICAL"
 
     reconciliation = _reconciliation_result(pointer, reconciliation_evidence)
     if reconciliation["state"] == "REPOSITORY_TIP_MATCH":
@@ -163,9 +149,7 @@ def build_report(
             "source_observation_commit": snapshot["source_observation_commit"],
             "embedded_scope": embedded_scope,
             "live_currentness": live_currentness,
-            "live_reconciliation_required": live[
-                "required_for_repository_tip_currentness"
-            ],
+            "live_reconciliation_required": live["required_for_repository_tip_currentness"],
         },
         "reconciliation": reconciliation,
         "claim_ceiling": pointer["claim_ceiling"],
@@ -177,17 +161,12 @@ def build_report(
         "component_registry": {
             "status": registry["status"],
             "core_component_ids": [item["id"] for item in registry["core_components"]],
-            "assurance_component_ids": [
-                item["id"] for item in registry["assurance_components"]
-            ],
-            "governed_profile_ids": [
-                item["id"] for item in registry["governed_profiles"]
-            ],
+            "assurance_component_ids": [item["id"] for item in registry["assurance_components"]],
+            "governed_profile_ids": [item["id"] for item in registry["governed_profiles"]],
         },
         "gaps": {
             "missing_required_consumers": missing,
-            "requires_dgaf_repository_reconciliation": live_currentness
-            != "DGAF_REPOSITORY_TIP_MATCH_EXTERNAL",
+            "requires_dgaf_repository_reconciliation": live_currentness != "DGAF_REPOSITORY_TIP_MATCH_EXTERNAL",
             "cross_surface_reconciliation_not_established": True,
             "requires_reconciliation": True,
         },
@@ -197,19 +176,13 @@ def build_report(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--root", type=Path, default=Path(__file__).resolve().parents[1]
-    )
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--require-consumer", action="append", default=[])
     parser.add_argument("--reconciliation-evidence", type=Path)
     args = parser.parse_args()
 
     try:
-        reconciliation_evidence = (
-            _load_json(args.reconciliation_evidence)
-            if args.reconciliation_evidence
-            else None
-        )
+        reconciliation_evidence = _load_json(args.reconciliation_evidence) if args.reconciliation_evidence else None
         report = build_report(
             args.root,
             args.require_consumer,
