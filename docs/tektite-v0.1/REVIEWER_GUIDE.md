@@ -33,6 +33,7 @@ Use the labels conservatively:
 
 - `ACTIVE` means a documented discipline or process is present in the public representation.
 - `ESTABLISHED` means the represented documentation or boundary has been created and reconciled within the repository context.
+- `ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE` means only the specifically tested disposable-repository/local-test capability is established; it must not be generalized to real projects or production.
 - `MERGED` means the relevant documentation or static artifact reached `main`.
 - `NOT_ESTABLISHED` means the system does not claim the condition has been shown.
 - `NOT_AUTHORIZED` means the evidence does not permit the transition or action.
@@ -58,9 +59,13 @@ SCIENTIFIC_N_INCREMENT=0
 INDEPENDENT_VALIDATION=NOT_ESTABLISHED
 CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED
 HIGH_ASSURANCE=NOT_AUTHORIZED
-LIVE_REPOSITORY_MUTATION=NOT_AUTHORIZED
+BOUNDED_LOCAL_TEST_EXECUTOR=ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE
+DURABLE_LOCAL_MUTATION_LINEAGE=ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE
+REAL_PROJECT_MUTATION=NOT_AUTHORIZED
 ROLLBACK_EXECUTION=NOT_AUTHORIZED
 PRODUCTION_EXECUTOR=NOT_ESTABLISHED
+TRUSTED_PROCESS_IDENTITY=NOT_ESTABLISHED
+HOSTILE_LOCAL_ACTOR_RESISTANCE=NOT_ESTABLISHED
 ```
 
 ## Public review checklist
