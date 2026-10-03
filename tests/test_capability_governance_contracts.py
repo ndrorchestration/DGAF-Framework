@@ -112,6 +112,8 @@ def test_execution_receipt_preserves_unknown_outcome():
         "timestamp": "2026-09-25T12:30:00Z",
         "postcondition_state": "INCONCLUSIVE",
         "recovery_state": "PENDING",
+        "authority_effect": "NONE",
+        "follow_on_authority": "FRESH_ADJUDICATION_REQUIRED",
     }
     errors = list(validator("execution_receipt.schema.json").iter_errors(receipt))
     assert errors == []

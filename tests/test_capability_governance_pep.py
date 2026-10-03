@@ -183,3 +183,36 @@ def test_unprotected_read_can_dispatch_without_authorization_gate():
     )
     assert result["action"] == "status"
     assert calls == [{"action": "status"}]
+
+
+def test_prior_execution_receipt_blocks_follow_on_without_fresh_adjudication():
+    calls = []
+    prior_receipt = {
+        "authority_effect": "NONE",
+        "follow_on_authority": "FRESH_ADJUDICATION_REQUIRED",
+    }
+    with pytest.raises(EnforcementRefusal, match="fresh adjudication"):
+        governed_dispatch(
+            {"action": "materialize"},
+            base_context(prior_execution_receipt=prior_receipt),
+            dispatcher=counting_dispatcher(calls),
+        )
+    assert calls == []
+
+
+def test_follow_on_dispatch_requires_explicit_fresh_adjudication_completion():
+    calls = []
+    prior_receipt = {
+        "authority_effect": "NONE",
+        "follow_on_authority": "FRESH_ADJUDICATION_REQUIRED",
+    }
+    result = governed_dispatch(
+        {"action": "materialize"},
+        base_context(
+            prior_execution_receipt=prior_receipt,
+            fresh_adjudication_complete=True,
+        ),
+        dispatcher=counting_dispatcher(calls),
+    )
+    assert result["status"] == "PASS"
+    assert calls == [{"action": "materialize"}]

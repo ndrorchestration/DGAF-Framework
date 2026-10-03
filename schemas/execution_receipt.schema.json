@@ -4,7 +4,7 @@
   "title":"DGAF Execution Receipt",
   "type":"object",
   "additionalProperties":false,
-  "required":["schema_version","invocation_id","workflow_id","authorization_id","capability_id","action_digest","attempt","execution_state","executor_identity","timestamp"],
+  "required":["schema_version","invocation_id","workflow_id","authorization_id","capability_id","action_digest","attempt","execution_state","executor_identity","timestamp","authority_effect","follow_on_authority"],
   "properties":{
     "schema_version":{"const":"0.1-draft"},
     "invocation_id":{"type":"string"},
@@ -20,6 +20,8 @@
     "provider_receipt":{"type":["object","null"]},
     "timestamp":{"type":"string","format":"date-time"},
     "postcondition_state":{"enum":["NOT_CHECKED","VERIFIED","FAILED","INCONCLUSIVE"]},
-    "recovery_state":{"enum":["NONE","PENDING","ROLLED_BACK","COMPENSATED","FAILED","ESCALATED"]}
+    "recovery_state":{"enum":["NONE","PENDING","ROLLED_BACK","COMPENSATED","FAILED","ESCALATED"]},
+    "authority_effect":{"const":"NONE"},
+    "follow_on_authority":{"const":"FRESH_ADJUDICATION_REQUIRED"}
   }
 }
