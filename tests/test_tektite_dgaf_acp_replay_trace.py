@@ -32,15 +32,11 @@ def test_canonical_replay_trace_passes() -> None:
             "live DGAF/ACP integration",
         ),
         (
-            lambda value: value["sources"].update(
-                dgaf_authority_semantics_commit="0" * 40
-            ),
+            lambda value: value["sources"].update(dgaf_authority_semantics_commit="0" * 40),
             "DGAF authority source identity",
         ),
         (
-            lambda value: value["sources"].update(
-                acp_execution_semantics_commit="0" * 40
-            ),
+            lambda value: value["sources"].update(acp_execution_semantics_commit="0" * 40),
             "ACP execution source identity",
         ),
         (
@@ -60,46 +56,32 @@ def test_canonical_replay_trace_passes() -> None:
             "fresh adjudication",
         ),
         (
-            lambda value: value["durable_lineage"].update(
-                distributed_global_lineage=True
-            ),
+            lambda value: value["durable_lineage"].update(distributed_global_lineage=True),
             "distributed/global",
         ),
         (
-            lambda value: value["follow_on"].update(
-                next_authorization_state="ISSUED"
-            ),
+            lambda value: value["follow_on"].update(next_authorization_state="ISSUED"),
             "cannot be inherited",
         ),
         (
-            lambda value: value["follow_on"].update(
-                next_effect_state="AUTHORIZED"
-            ),
+            lambda value: value["follow_on"].update(next_effect_state="AUTHORIZED"),
             "blocked pending fresh adjudication",
         ),
         (
-            lambda value: value["claim_boundary"].update(
-                scientific_n_increment=1
-            ),
+            lambda value: value["claim_boundary"].update(scientific_n_increment=1),
             "claim boundary",
         ),
         (
-            lambda value: value["claim_boundary"].update(
-                independent_validation="ESTABLISHED"
-            ),
+            lambda value: value["claim_boundary"].update(independent_validation="ESTABLISHED"),
             "claim boundary",
         ),
         (
-            lambda value: value["claim_boundary"].update(
-                high_assurance="AUTHORIZED"
-            ),
+            lambda value: value["claim_boundary"].update(high_assurance="AUTHORIZED"),
             "claim boundary",
         ),
     ],
 )
-def test_replay_trace_fails_closed_on_claim_or_authority_widening(
-    mutation, message
-) -> None:
+def test_replay_trace_fails_closed_on_claim_or_authority_widening(mutation, message) -> None:
     candidate = deepcopy(trace())
     mutation(candidate)
     with pytest.raises(ReplayTraceValidationError, match=message):
