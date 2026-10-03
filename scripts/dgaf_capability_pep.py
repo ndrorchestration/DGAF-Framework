@@ -49,6 +49,8 @@ class EnforcementContext:
     required_state_guards: dict[str, Any]
     observed_state_guards: dict[str, Any]
     now: datetime
+    prior_execution_receipt: dict[str, Any] | None = None
+    fresh_adjudication_complete: bool = False
 
 
 def required_verification_passes(state: VerificationState) -> bool:
@@ -64,6 +66,14 @@ def approval_separation_passes(state: ApprovalState) -> bool:
 def enforce_before_dispatch(context: EnforcementContext) -> None:
     if not context.protected_side_effect:
         return
+
+    prior_receipt = context.prior_execution_receipt
+    if (
+        prior_receipt is not None
+        and prior_receipt.get("follow_on_authority") == "FRESH_ADJUDICATION_REQUIRED"
+        and not context.fresh_adjudication_complete
+    ):
+        raise EnforcementRefusal("fresh adjudication is required after prior execution")
 
     if not authorization_is_active(
         context.authorization_status,
