@@ -106,3 +106,61 @@ Rerun these same eight questions after adding only the smallest missing reconcil
 - whether a question can be answered from machine-readable state without widening claim scope.
 
 A favorable result permits continuation. Implementation alone does not.
+
+## External reconciliation tranche
+
+Experiment 1 now accepts an externally supplied, non-authorizing reconciliation observation with the following exact fields:
+
+```json
+{
+  "schema_version": "ECOSYSTEM_LIVE_RECONCILIATION_V1",
+  "observed_at": "<observation timestamp>",
+  "pointer_source_observation_commit": "<embedded pointer source SHA>",
+  "live_repository_commit": "<observed DGAF repository tip SHA>",
+  "container_commit": "<commit containing/using the pointer>",
+  "evidence_url": "<provenance reference>"
+}
+```
+
+The contract is intentionally scoped to **DGAF repository-tip reconciliation only**. A successful match does not establish freshness for ACP, Notion, Tektite projections, Drive, runtime state, or any independent-validation claim.
+
+The query therefore reports both:
+
+- `requires_dgaf_repository_reconciliation`; and
+- `cross_surface_reconciliation_not_established`.
+
+It also accepts UTF-8 JSON with or without a BOM so Windows/PowerShell-generated observations remain portable.
+
+### Real observation — 2026-10-03
+
+A Remote Desktop Commander observation of `origin/main` supplied:
+
+- embedded pointer source: `c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91`;
+- observed `origin/main`: `db0256859866605647e3c339ee3646a8f5007ed3`;
+- experiment container/head at observation: `6b06e4cfad22bbd30226abe1d0069ee92dddf1f4`.
+
+The query returned:
+
+```text
+scope=DGAF_REPOSITORY_TIP_ONLY
+state=STALE_SOURCE_ADVANCED
+requires_dgaf_repository_reconciliation=true
+cross_surface_reconciliation_not_established=true
+exit=2
+```
+
+This is the expected fail-closed outcome: the embedded pointer is not current for the observed DGAF repository tip.
+
+No scientific, efficacy, independent-validation, High-Assurance, mutation-authority, or production-executor status changed.
+
+## Post-tranche comparison
+
+The reconciliation tranche improves machine answerability for a narrow subset of the eight baseline questions:
+
+- Question 2 gains an explicit machine-readable indication that Tektite/AOSS consumer bindings are historical relative to the observed DGAF tip rather than silently current.
+- Question 6 remains strongly machine-answerable from receipt schema semantics.
+- Question 8 can now distinguish a concrete DGAF repository-tip mismatch from the broader unresolved Notion/cross-surface comparison problem.
+
+The tranche does **not** yet solve Questions 1, 3, 4, or 5, and does not fully solve Questions 2, 7, or 8.
+
+Therefore Experiment 1 has demonstrated a bounded reduction in ambiguity around repository-tip freshness, but **program-level benefit remains NOT ESTABLISHED**. Human operational-time and human-review-survival baselines remain unmeasured.
