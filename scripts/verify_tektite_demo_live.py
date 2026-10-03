@@ -104,6 +104,10 @@ def main() -> int:
                     failures.append(f"{scenario}: execution receipt missing")
                 elif receipt.get("postcondition") != "VERIFIED":
                     failures.append(f"{scenario}: postcondition not VERIFIED")
+                elif receipt.get("authority_effect") != "NONE":
+                    failures.append(f"{scenario}: receipt authority_effect is not NONE")
+                elif receipt.get("follow_on_authority") != "FRESH_ADJUDICATION_REQUIRED":
+                    failures.append(f"{scenario}: receipt does not require fresh adjudication")
             elif receipt is not None:
                 failures.append(f"{scenario}: denial unexpectedly emitted receipt")
 
