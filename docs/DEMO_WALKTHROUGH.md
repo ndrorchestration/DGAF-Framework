@@ -58,6 +58,27 @@ A compact description is:
 
 > DGAF is not the button. DGAF is the control chain around the button: what the system wants to do, whether it is authorized, whether it executes, what evidence comes back, why that evidence does not authorize the next action, and what that evidence is allowed to mean.
 
+## Replay-only DGAF → ACP trace
+
+Below the interactive DGAF proof, Tektite also shows a separate cross-system trace bound to accepted DGAF and ACP source identities.
+
+This second surface is deliberately **not live execution**. It reads a static local evidence fixture and explains the accepted bounded semantics:
+
+`INTENT → DGAF ADMISSION → BOUNDED AUTHORIZATION → ACP EXECUTION CONTRACT → RECEIPT/POSTCONDITION → DURABLE LOCAL LINEAGE → FRESH DGAF ADJUDICATION REQUIRED → NEXT AUTHORITY NOT ISSUED`
+
+The replay is useful for understanding responsibility boundaries:
+
+- DGAF supplies governance/admission semantics;
+- ACP supplies the bounded disposable-repository execution contract and durable local lineage semantics;
+- the execution receipt has `authority_effect=NONE`;
+- the next consequential action remains blocked until fresh adjudication and a new authorization;
+- ACP local lineage is not presented as a distributed/global lineage oracle;
+- no real-project mutation or rollback authority is created by the replay.
+
+The replay fixture is machine-validated fail-closed. Claims of live ACP execution, real-project mutation, inherited authority, global lineage, scientific-N promotion, independent validation, efficacy, or High-Assurance invalidate the fixture.
+
+Human comprehension of this projection remains a separate evidence question under issue #1224.
+
 ## Deeper failure cases
 
 The same demo also exposes:
