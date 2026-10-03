@@ -1,0 +1,57 @@
+{
+  "schema_version": "TEKTITE_DGAF_ACP_REPLAY_TRACE_V0",
+  "trace_id": "tektite-dgaf-acp-bounded-replay-v0",
+  "evidence_class": "STATIC_REPLAY_OF_ACCEPTED_BOUNDED_SEMANTICS",
+  "live_execution": false,
+  "cross_system_live_integration": false,
+  "sources": {
+    "dgaf_repository": "ndrorchestration/DGAF-Framework",
+    "dgaf_authority_semantics_commit": "afa078fade63c280208ffae6abafa7a110b9860d",
+    "dgaf_tektite_projection_commit": "45dcf701c63812e9484d98e2cf3e8e8368aeab78",
+    "acp_repository": "ndrorchestration/agent-control-plane",
+    "acp_execution_semantics_commit": "cad2ef94f1a690deee741b81ea8bfab8c248cd7d"
+  },
+  "intent": {
+    "action_class": "repo.write_text_file",
+    "target_class": "DISPOSABLE_TEST_REPOSITORY_ONLY",
+    "scenario": "bounded_follow_on_after_prior_terminal_effect"
+  },
+  "dgaf_admission": {
+    "state": "ADMITTED_FOR_REPLAY_EXPLANATION",
+    "authority_effect": "NONE"
+  },
+  "authorization": {
+    "state": "BOUNDED_SINGLE_USE_EXAMPLE",
+    "scope": "BOUNDED_LOCAL_TEST",
+    "next_authorization_state": "NOT_ISSUED"
+  },
+  "acp_execution_contract": {
+    "execution_profile": "BOUNDED_LOCAL_TEST",
+    "state": "REPLAYED_TERMINAL_EXAMPLE",
+    "real_project_mutation_authorized": false,
+    "rollback_execution_authorized": false
+  },
+  "receipt": {
+    "postcondition_state": "VERIFIED",
+    "authority_effect": "NONE",
+    "follow_on_authority": "FRESH_ADJUDICATION_REQUIRED"
+  },
+  "durable_lineage": {
+    "scope": "LOCAL_DISPOSABLE_REPOSITORY_ONLY",
+    "state": "TERMINAL_PREDECESSOR_RECORDED",
+    "distributed_global_lineage": false
+  },
+  "follow_on": {
+    "fresh_dgaf_adjudication": "REQUIRED",
+    "next_authorization_state": "NOT_ISSUED",
+    "next_effect_state": "BLOCKED_PENDING_FRESH_ADJUDICATION"
+  },
+  "claim_boundary": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED",
+    "production_execution": "NOT_ESTABLISHED",
+    "generalized_usability": "NOT_ESTABLISHED"
+  }
+}
