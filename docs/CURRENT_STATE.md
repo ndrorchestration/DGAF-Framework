@@ -101,6 +101,12 @@ This file is the **primary current-facing repository summary**. GitHub is author
 
 The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, presentation/UI state, repository assurance inventory, runtime/deployment state, and historical evidence are separate governance/evidence dimensions. Evidence, authorization, N, verification class, deployment health, catalog membership, and efficacy do not transfer between them without an explicit governed rule.
 
+## Canonical scientific-state transition boundary
+
+Issue #1259 and `docs/governance/SCIENTIFIC_STATE_ADMISSION_CONTRACT.md` define the cross-lane admission boundary for any proposed change to canonical scientific N, independent-validation state, canonical efficacy, or related scientific-state predicates. The contract is non-promoting by itself: `docs/CURRENT_STATE.md` remains the current-facing state authority, and lane-specific validators remain authoritative for their exact evidence. Valid evidence may alter canonical scientific state only through a separately admitted Scientific State Transition Record (SSTR); absent such a record, the candidate evidence has `SCIENTIFIC_STATE_EFFECT=NONE`.
+
+The contract explicitly separates lane statistical units, empirical outcome generation, evidence independence, independent review, usability/HCI evidence, engineering assurance, canonical scientific N, canonical efficacy, and High-Assurance authorization. Counts of seeds, observations, operators, reviewers, agents, replays, or workflows do not become canonical scientific N by arithmetic or implication.
+
 ## Architecture governance — accepted / non-authorizing
 
 Protected main now includes the architecture-classification work accepted through **PR #1089**. The accepted model separates:
