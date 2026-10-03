@@ -65,6 +65,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       action_digest: admission.record.action_digest,
       executed_at: new Date().toISOString(),
       postcondition: postconditionVerified ? 'VERIFIED' : 'FAILED',
+      authority_effect: 'NONE',
+      follow_on_authority: 'FRESH_ADJUDICATION_REQUIRED',
     }
 
     if (!postconditionVerified) {
