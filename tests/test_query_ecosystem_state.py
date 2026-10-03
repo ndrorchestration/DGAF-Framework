@@ -18,15 +18,11 @@ def load_module():
 
 def test_report_preserves_historical_snapshot_and_claim_ceiling():
     module = load_module()
-    report = module.build_report(
-        ROOT, ["AOSS_STAGE_A_READINESS", "TEKTITE_PUBLIC_STATUS"]
-    )
+    report = module.build_report(ROOT, ["AOSS_STAGE_A_READINESS", "TEKTITE_PUBLIC_STATUS"])
 
     assert report["schema_version"] == "ECOSYSTEM_QUERY_REPORT_V1"
     assert report["pointer"]["embedded_scope"] == "HISTORICAL_SNAPSHOT"
-    assert (
-        report["pointer"]["live_currentness"] == "UNVERIFIED_NO_EXTERNAL_RECONCILIATION"
-    )
+    assert report["pointer"]["live_currentness"] == "UNVERIFIED_NO_EXTERNAL_RECONCILIATION"
     assert report["claim_ceiling"] == {
         "scientific_n_increment": 0,
         "independent_validation": "NOT_ESTABLISHED",
@@ -65,15 +61,9 @@ def test_invalid_pointer_refuses_to_build_report(tmp_path):
     ]:
         target = tmp_path / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(
-            (ROOT / relative).read_text(encoding="utf-8"), encoding="utf-8"
-        )
+        target.write_text((ROOT / relative).read_text(encoding="utf-8"), encoding="utf-8")
 
-    pointer = json.loads(
-        (ROOT / "registry/ecosystem_state_pointer.current.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    pointer = json.loads((ROOT / "registry/ecosystem_state_pointer.current.json").read_text(encoding="utf-8"))
     pointer["claim_ceiling"]["independent_validation"] = "ESTABLISHED"
     target = tmp_path / "registry/ecosystem_state_pointer.current.json"
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -97,16 +87,10 @@ def _reconciliation_evidence(pointer_source, live_commit=None):
 
 def test_external_reconciliation_can_establish_repository_tip_currentness():
     module = load_module()
-    pointer = json.loads(
-        (ROOT / "registry/ecosystem_state_pointer.current.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    pointer = json.loads((ROOT / "registry/ecosystem_state_pointer.current.json").read_text(encoding="utf-8"))
     source = pointer["snapshot_provenance"]["source_observation_commit"]
 
-    report = module.build_report(
-        ROOT, [], reconciliation_evidence=_reconciliation_evidence(source)
-    )
+    report = module.build_report(ROOT, [], reconciliation_evidence=_reconciliation_evidence(source))
 
     assert report["pointer"]["live_currentness"] == "DGAF_REPOSITORY_TIP_MATCH_EXTERNAL"
     assert report["reconciliation"]["scope"] == "DGAF_REPOSITORY_TIP_ONLY"
@@ -120,11 +104,7 @@ def test_external_reconciliation_can_establish_repository_tip_currentness():
 
 def test_external_reconciliation_reports_stale_source_advance():
     module = load_module()
-    pointer = json.loads(
-        (ROOT / "registry/ecosystem_state_pointer.current.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    pointer = json.loads((ROOT / "registry/ecosystem_state_pointer.current.json").read_text(encoding="utf-8"))
     source = pointer["snapshot_provenance"]["source_observation_commit"]
 
     report = module.build_report(
@@ -135,10 +115,7 @@ def test_external_reconciliation_reports_stale_source_advance():
 
     assert report["pointer"]["live_currentness"] == "STALE_SOURCE_ADVANCED"
     assert report["reconciliation"]["state"] == "STALE_SOURCE_ADVANCED"
-    assert any(
-        "not repository-tip current" in error
-        for error in report["reconciliation"]["errors"]
-    )
+    assert any("not repository-tip current" in error for error in report["reconciliation"]["errors"])
     assert report["gaps"]["requires_reconciliation"] is True
 
 
@@ -163,11 +140,7 @@ def test_reconciliation_evidence_loader_accepts_utf8_bom(tmp_path):
 
 def test_reconciliation_rejects_malformed_git_identity():
     module = load_module()
-    pointer = json.loads(
-        (ROOT / "registry/ecosystem_state_pointer.current.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    pointer = json.loads((ROOT / "registry/ecosystem_state_pointer.current.json").read_text(encoding="utf-8"))
     source = pointer["snapshot_provenance"]["source_observation_commit"]
     evidence = _reconciliation_evidence(source, live_commit="not-a-git-sha")
 
@@ -177,11 +150,7 @@ def test_reconciliation_rejects_malformed_git_identity():
 
 def test_reconciliation_rejects_container_source_identity_alias():
     module = load_module()
-    pointer = json.loads(
-        (ROOT / "registry/ecosystem_state_pointer.current.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    pointer = json.loads((ROOT / "registry/ecosystem_state_pointer.current.json").read_text(encoding="utf-8"))
     source = pointer["snapshot_provenance"]["source_observation_commit"]
     evidence = _reconciliation_evidence(source)
     evidence["container_commit"] = source
