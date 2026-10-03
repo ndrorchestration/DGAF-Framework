@@ -38,6 +38,13 @@ def _require(condition: bool, message: str) -> None:
         raise ReplayTraceValidationError(message)
 
 
+def _object(trace: dict[str, Any], key: str) -> dict[str, Any]:
+    value = trace.get(key)
+    if not isinstance(value, dict):
+        raise ReplayTraceValidationError(f"{key} must be an object")
+    return value
+
+
 def validate_trace(trace: dict[str, Any]) -> None:
     _require(trace.get("schema_version") == SCHEMA_VERSION, "schema_version mismatch")
     _require(trace.get("evidence_class") == EVIDENCE_CLASS, "evidence_class mismatch")
@@ -47,8 +54,7 @@ def validate_trace(trace: dict[str, Any]) -> None:
         "trace must not claim live DGAF/ACP integration",
     )
 
-    sources = trace.get("sources")
-    _require(isinstance(sources, dict), "sources must be an object")
+    sources = _object(trace, "sources")
     _require(
         sources.get("dgaf_repository") == "ndrorchestration/DGAF-Framework",
         "DGAF repository identity mismatch",
@@ -70,19 +76,16 @@ def validate_trace(trace: dict[str, Any]) -> None:
         "ACP execution source identity mismatch",
     )
 
-    intent = trace.get("intent")
-    _require(isinstance(intent, dict), "intent must be an object")
+    intent = _object(trace, "intent")
     _require(
         intent.get("target_class") == "DISPOSABLE_TEST_REPOSITORY_ONLY",
         "trace must remain disposable-test only",
     )
 
-    admission = trace.get("dgaf_admission")
-    _require(isinstance(admission, dict), "dgaf_admission must be an object")
+    admission = _object(trace, "dgaf_admission")
     _require(admission.get("authority_effect") == "NONE", "admission cannot grant replay authority")
 
-    authorization = trace.get("authorization")
-    _require(isinstance(authorization, dict), "authorization must be an object")
+    authorization = _object(trace, "authorization")
     _require(
         authorization.get("scope") == "BOUNDED_LOCAL_TEST",
         "authorization scope widened beyond bounded local test",
@@ -92,8 +95,7 @@ def validate_trace(trace: dict[str, Any]) -> None:
         "trace cannot pre-issue follow-on authority",
     )
 
-    execution = trace.get("acp_execution_contract")
-    _require(isinstance(execution, dict), "acp_execution_contract must be an object")
+    execution = _object(trace, "acp_execution_contract")
     _require(
         execution.get("execution_profile") == "BOUNDED_LOCAL_TEST",
         "execution profile widened",
@@ -111,16 +113,14 @@ def validate_trace(trace: dict[str, Any]) -> None:
         "rollback execution cannot be authorized",
     )
 
-    receipt = trace.get("receipt")
-    _require(isinstance(receipt, dict), "receipt must be an object")
+    receipt = _object(trace, "receipt")
     _require(receipt.get("authority_effect") == "NONE", "receipt cannot carry authority")
     _require(
         receipt.get("follow_on_authority") == "FRESH_ADJUDICATION_REQUIRED",
         "receipt must require fresh adjudication",
     )
 
-    lineage = trace.get("durable_lineage")
-    _require(isinstance(lineage, dict), "durable_lineage must be an object")
+    lineage = _object(trace, "durable_lineage")
     _require(
         lineage.get("scope") == "LOCAL_DISPOSABLE_REPOSITORY_ONLY",
         "durable lineage scope widened",
@@ -130,8 +130,7 @@ def validate_trace(trace: dict[str, Any]) -> None:
         "local lineage cannot be presented as distributed/global",
     )
 
-    follow_on = trace.get("follow_on")
-    _require(isinstance(follow_on, dict), "follow_on must be an object")
+    follow_on = _object(trace, "follow_on")
     _require(
         follow_on.get("fresh_dgaf_adjudication") == "REQUIRED",
         "fresh DGAF adjudication must remain required",
