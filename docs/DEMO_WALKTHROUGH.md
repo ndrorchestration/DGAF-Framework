@@ -26,7 +26,9 @@ Expected path:
 
 `REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT`
 
-The accepted production demonstration executes the bounded ephemeral audit-counter effect and emits an `AAR_EXECUTION_RECEIPT_V1` with `postcondition=VERIFIED`.
+The accepted production demonstration executes the bounded ephemeral audit-counter effect and emits an `AAR_EXECUTION_RECEIPT_V1` with `postcondition=VERIFIED`, `authority_effect=NONE`, and `follow_on_authority=FRESH_ADJUDICATION_REQUIRED`.
+
+The receipt is execution evidence, not continuing authority. A subsequent consequential action requires a fresh admission/adjudication path and new authority; the successful prior receipt cannot silently authorize the next effect.
 
 ### 2. Revoked authority
 

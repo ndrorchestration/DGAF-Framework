@@ -150,7 +150,7 @@ export function TektiteDemoView() {
       <div className="tektite-reading-key">
         <div><span>Watch</span><strong>REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT</strong></div>
         <div><span>Then check</span><strong>CLAIM BOUNDARY</strong></div>
-        <p>The important behavior is not simply “allow” or “deny.” It is that execution and evidence remain downstream of explicit authority, and the resulting evidence cannot silently promote its own claims.</p>
+        <p>The important behavior is not simply “allow” or “deny.” It is that execution and evidence remain downstream of explicit authority, the resulting receipt carries no continuing authority, and any consequential follow-on action requires fresh adjudication before new authority can be issued.</p>
       </div>
     </section>
 
@@ -189,7 +189,7 @@ export function TektiteDemoView() {
         <span className="tektite-step">04</span><div><span className="eyebrow">EFFECT</span><h3>{executed ? 'Executed' : 'Not executed'}</h3><p>{executed ? 'The bounded ephemeral audit-counter effect completed and its postcondition was checked.' : result ? 'No authorized effect was produced by the denied attempt.' : 'Execution occurs only after admission.'}</p></div>
       </article>
       <article className="panel tektite-stage">
-        <span className="tektite-step">05</span><div><span className="eyebrow">RECEIPT</span><h3>{receipt ? 'Execution evidence emitted' : 'No execution receipt'}</h3><p>{receipt ? <>Receipt <code>{String(receipt.record_id ?? '—')}</code> · postcondition <strong>{String(receipt.postcondition ?? '—')}</strong>.</> : 'A denial does not masquerade as execution evidence.'}</p></div>
+        <span className="tektite-step">05</span><div><span className="eyebrow">RECEIPT</span><h3>{receipt ? 'Execution evidence emitted' : 'No execution receipt'}</h3><p>{receipt ? <>Receipt <code>{String(receipt.record_id ?? '—')}</code> · postcondition <strong>{String(receipt.postcondition ?? '—')}</strong> · authority effect <strong>{String(receipt.authority_effect ?? '—')}</strong> · follow-on <strong>{String(receipt.follow_on_authority ?? '—')}</strong>.</> : 'A denial does not masquerade as execution evidence.'}</p></div>
       </article>
       <article className="panel tektite-stage tektite-claim-stage">
         <span className="tektite-step">06</span><div><span className="eyebrow">CLAIM BOUNDARY</span><h3>What this result is allowed to mean</h3><p>{result ? <>Scientific N +{result.claim_boundary.scientific_n_increment}. Independent validation: <strong>{result.claim_boundary.independent_validation}</strong>. Canonical efficacy: <strong>{result.claim_boundary.canonical_dgaf_efficacy}</strong>. High-Assurance: <strong>{result.claim_boundary.high_assurance}</strong>.</> : 'A successful bounded engineering demonstration does not promote scientific, independent-validation, efficacy, or High-Assurance state.'}</p></div>
