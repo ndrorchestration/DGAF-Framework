@@ -1,8 +1,8 @@
 # Assurance Profiles v0 — extraction boundary
 
-Status: **generic core candidate / bounded same-owner API/conformance portability evidenced at pinned revisions / non-authorizing / distribution not established**
+Status: **generic core accepted / bounded same-owner cross-repository API/conformance portability accepted for one consumer / non-authorizing / repository-local exact-SHA distribution selected**
 
-Controller: #1242.
+Extraction controller: #1242 (completed). Distribution-boundary controller: #1271.
 
 ## Purpose
 
@@ -101,16 +101,25 @@ Those remain profile/research-specific.
 The second-system gate has been exercised for one materially different
 non-AOSS consumer. This is same-owner API/conformance evidence only.
 
-Exact tested identities:
+Accepted identities now include:
 
-- upstream core: DGAF PR #1244 at
-  `8cfea9a073476eae1f4eb964ba9b9c0df704f9b5`;
-- consumer: [ai-prompt-systems-portfolio PR #13](https://github.com/ndrorchestration/ai-prompt-systems-portfolio/pull/13)
-  at `97e2102a0c0c15f11979f60d4f22fddc7f781dd1`;
-- [portability probe run 36940089142](https://github.com/ndrorchestration/ai-prompt-systems-portfolio/actions/runs/36940089142):
-  completed/success;
-- consumer Common Evaluation Object Model run `36940088848` and Public
-  portfolio integrity run `36940088847`: completed/success.
+- generic core: DGAF PR #1244, protected-main merge
+  `86120d604d9eb747a722c33a299898f79808f6ef`;
+- core module Git blob at that merge:
+  `14df8c2bfdb46f49ac6b9f20fcd0a699a131e82d`;
+- schema Git blob at that merge:
+  `68ecf07d20d02709960277f7d72e27dab396c94f`;
+- canonical second-system consumer:
+  [ai-prompt-systems-portfolio PR #13](https://github.com/ndrorchestration/ai-prompt-systems-portfolio/pull/13),
+  reviewed head `0622114945abddde7a2a2a6f4c562797d2f3f503`,
+  merged as `56d3da4106e50632f16a8a263e61f16a06190423`;
+- refreshed consumer exact-head workflows before merge:
+  Assurance Profiles portability probe, Common Evaluation Object Model, and
+  Public portfolio integrity: all SUCCESS.
+
+Historical portability runs remain valid only for their listed identities.
+The accepted consumer merge does not convert same-owner conformance evidence
+into independent validation.
 
 The consumer uses its real prompt/evaluation mapping and fetches the upstream
 core from the immutable source SHA rather than vendoring a separate copy.
@@ -123,16 +132,35 @@ candidate onto current main does not transfer historical CI or consumer
 results to the new head. A refreshed consumer pin requires its own exact-head
 probe; source equivalence alone is not a fresh execution result.
 
-## Next integration decision
+## Distribution boundary
 
-Choose the smallest distribution boundary supported by consumer needs:
+Controller #1271 selects the smallest currently justified distribution shape:
 
-- keep the module internal to DGAF;
-- distribute the schema/spec with a reference library;
-- introduce an isolated Python package only if installation needs justify it.
+**repository-local canonical source + exact accepted commit pinning**.
 
-No packaging or distribution was established by this tranche. Do not create
-a separate repository or service merely because bounded portability passed.
+For v0:
+
+- canonical implementation remains `components/assurance_profiles.py` in DGAF;
+- canonical schema remains `schemas/assurance_profile_v0.schema.json`;
+- consumers pin an immutable accepted DGAF commit rather than `main`;
+- consumers fetch or vendor only under an explicit provenance record and must
+  preserve the source commit identity used for their conformance run;
+- source equivalence, a matching Git blob, or package availability does not
+  transfer CI, validation, or authority from another revision;
+- schema and implementation are treated as one reviewed v0 boundary; a
+  consumer must not silently mix a schema from one accepted revision with
+  implementation from another;
+- superseding the v0 source requires a new accepted DGAF source identity and
+  a fresh consumer conformance run before the new pin is called exercised.
+
+No PyPI package, standalone repository, service, dependency admission, or
+release channel is justified by current consumer needs. A future installation
+or multi-consumer maintenance need may reopen that decision under a separate
+controller.
+
+This choice is intentionally a **distribution constraint**, not a maturity
+promotion. Exact-SHA availability does not establish production readiness,
+certification, independent validation, or support guarantees.
 
 ## Claim ceiling
 
@@ -148,6 +176,7 @@ This core candidate does not establish:
 - commercial demand;
 - product-market fit.
 
-Packaging/distribution remains deferred until the integration decision is
-explicitly reviewed. The bounded historical portability result does not
-establish independent validation or authorize execution.
+Repository-local exact-SHA distribution is the accepted v0 boundary. Package
+publication and standalone extraction remain deferred. The bounded
+same-owner portability result does not establish independent validation or
+authorize execution.
