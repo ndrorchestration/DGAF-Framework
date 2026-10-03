@@ -491,3 +491,20 @@ def test_sqlite_unknown_outcome_blocks_retry_after_restart(tmp_path):
     assert retry.audit_event["decision"] == "ESCALATE"
     assert retry.audit_event["execution_state"] == "EXECUTION_OUTCOME_UNKNOWN"
     assert len(calls) == 1
+
+
+def test_execution_receipt_does_not_transfer_authority():
+    metadata = protected_metadata()
+    result = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: {"status": "PASS"},
+        postcondition=lambda response: True,
+        timestamp=NOW,
+    )
+
+    assert result.execution_receipt["authority_effect"] == "NONE"
+    assert result.execution_receipt["follow_on_authority"] == "FRESH_ADJUDICATION_REQUIRED"
+    validate_result(result)

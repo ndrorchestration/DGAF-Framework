@@ -142,6 +142,8 @@ def _receipt(
         "timestamp": _iso(timestamp),
         "postcondition_state": postcondition_state.value,
         "recovery_state": recovery_state,
+        "authority_effect": "NONE",
+        "follow_on_authority": "FRESH_ADJUDICATION_REQUIRED",
     }
 
 

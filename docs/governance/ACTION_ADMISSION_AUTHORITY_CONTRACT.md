@@ -115,3 +115,13 @@ No component may upgrade `NOT ESTABLISHED` to an affirmative runtime property me
 This specification is architecture/documentation only. It establishes no durable replay implementation, authoritative revocation implementation, production issuer, trust-anchor lifecycle implementation, action-class expansion, materialization authority, primary-analysis authority, efficacy result, independent validation, certification, or High-Assurance promotion.
 
 The controlling scientific/governance boundary remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**. Primary analysis remains **NOT AUTHORIZED / NOT RUN**; canonical efficacy and independent validation remain **NOT ESTABLISHED**.
+## Post-execution authority boundary
+
+An execution receipt records what happened; it is evidence, not continuing authority. Every DGAF execution receipt therefore carries:
+
+- `authority_effect: NONE`
+- `follow_on_authority: FRESH_ADJUDICATION_REQUIRED`
+
+A successful execution, verified postcondition, provider receipt, or closed transaction does not authorize a subsequent consequential action. Any follow-on action must enter a fresh admission/adjudication path with its own current evidence, policy identity, scope, authorization, commit-time revalidation, and replay controls.
+
+Unknown, partial, failed, or inconclusive outcomes remain subject to reconciliation/recovery rules and likewise cannot be treated as inherited authority.
