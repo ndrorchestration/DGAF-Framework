@@ -12,7 +12,6 @@ import json
 import runpy
 from pathlib import Path
 
-
 POINTER_PATH = Path("registry/ecosystem_state_pointer.current.json")
 COMPONENT_REGISTRY_PATH = Path("docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v1.json")
 RECEIPT_SCHEMA_PATH = Path("schemas/execution_receipt.schema.json")
@@ -56,14 +55,8 @@ def build_report(root: Path, required_consumers: list[str]) -> dict:
 
     snapshot = pointer["snapshot_provenance"]
     live = snapshot["live_reconciliation"]
-    embedded_states = {
-        item["freshness_state"] for item in pointer["authorities"] + pointer["consumer_bindings"]
-    }
-    embedded_scope = (
-        "HISTORICAL_SNAPSHOT"
-        if embedded_states == {"HISTORICAL_SNAPSHOT"}
-        else "MIXED_OR_NON_HISTORICAL"
-    )
+    embedded_states = {item["freshness_state"] for item in pointer["authorities"] + pointer["consumer_bindings"]}
+    embedded_scope = "HISTORICAL_SNAPSHOT" if embedded_states == {"HISTORICAL_SNAPSHOT"} else "MIXED_OR_NON_HISTORICAL"
     live_currentness = (
         "UNVERIFIED_NO_EXTERNAL_RECONCILIATION"
         if live["status"] == "NOT_EMBEDDED"
