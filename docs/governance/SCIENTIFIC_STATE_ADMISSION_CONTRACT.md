@@ -133,6 +133,8 @@ The machine schema and fail-closed validator are implemented under issue #1264 i
 
 The v1 validator intentionally implements canonical-N transitions only. Independent-validation, efficacy, and authorization effects remain separate and fail closed until their own machine semantics are explicitly governed.
 
+The v1 machine contract is also deliberately **single-unit per transition record**: `proposed_scientific_n_delta` may be only `-1`, `0`, or `+1`. This prevents one evidence bundle from asserting an unbounded batch N change without a separately governed unit-ledger/cardinality contract. A future batch transition requires an explicit schema and validator extension that binds every counted or retracted unit individually.
+
 For any nonzero or otherwise project-level effect, the v1 validator also requires caller-supplied external verification hooks for current-state identity, the evidence bundle, and adjudicator authority. The transition record cannot establish its own truth merely by asserting that its predicates passed.
 
 The exact machine schema does not itself discover evidence or mutate canonical state. This document remains the semantic contract.

@@ -138,6 +138,10 @@ def evaluate_scientific_state_transition(
         candidate.get("proposed_scientific_n_delta"),
         "candidate_transition.proposed_scientific_n_delta",
     )
+    if proposed_delta not in {-1, 0, 1}:
+        raise ScientificStateAdmissionError(
+            "v1 scientific-state transition records support only one canonical unit per record"
+        )
     independent_effect = _required_text(
         candidate.get("proposed_independent_validation_effect"),
         "candidate_transition.proposed_independent_validation_effect",

@@ -123,6 +123,39 @@ def test_independent_empirical_replication_can_be_record_admissible():
     assert decision.authoritative_state_mutation is False
 
 
+def test_v1_rejects_multi_unit_positive_delta():
+    candidate = record(delta=2)
+    schema_errors = list(jsonschema.Draft202012Validator(SCHEMA).iter_errors(candidate))
+    assert schema_errors
+
+    try:
+        verified(candidate)
+    except ScientificStateAdmissionError as exc:
+        assert "only one canonical unit per record" in str(exc)
+    else:
+        raise AssertionError("v1 must reject batch positive-N transitions")
+
+
+def test_v1_rejects_multi_unit_negative_delta():
+    candidate = record(transition_class="INVALIDATION_RETRACTION", delta=-2)
+    candidate["prior_state"]["canonical_scientific_n"] = 2
+    candidate["result"]["resulting_scientific_n"] = 0
+    candidate["history"] = {
+        "invalidation_of": "sst:historical:batch",
+        "history_preserving": True,
+        "reason": "batch retraction is intentionally unsupported in v1",
+    }
+    schema_errors = list(jsonschema.Draft202012Validator(SCHEMA).iter_errors(candidate))
+    assert schema_errors
+
+    try:
+        verified(candidate)
+    except ScientificStateAdmissionError as exc:
+        assert "only one canonical unit per record" in str(exc)
+    else:
+        raise AssertionError("v1 must reject batch N retractions")
+
+
 def test_same_system_evidence_cannot_increment_canonical_n():
     candidate = record(transition_class="SAME_SYSTEM_NONINDEPENDENT")
     decision = verified(candidate)
