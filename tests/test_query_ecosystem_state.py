@@ -170,3 +170,16 @@ def test_report_enumerates_tektite_public_claim_evidence_seed_without_claiming_c
     assert public_claims["missing_public_link_artifacts"] == ["AI Evidence Audit positioning"]
     assert all("claim_supported" in entry for entry in public_claims["entries"])
     assert all("claim_not_supported" in entry for entry in public_claims["entries"])
+
+
+def test_report_exposes_control_test_reference_scan_as_heuristic_only():
+    module = load_module()
+    report = module.build_report(ROOT, [])
+
+    scan = report["control_test_reference_scan"]
+    assert scan["scope"] == "DIRECT_TEST_REFERENCE_HEURISTIC_ONLY"
+    assert scan["coverage"] == "NOT_ESTABLISHED"
+
+    rows = {(row["component_id"], row["artifact"]): row["direct_test_mentions"] for row in scan["rows"]}
+    assert "tests/test_capability_governance_contracts.py" in rows[("K1", "scripts/dgaf_capability_canonicalize.py")]
+    assert rows[("K8", "docs/EPISTEMIC_EVIDENCE_STANDARD.md")] == []

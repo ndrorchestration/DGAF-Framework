@@ -205,3 +205,44 @@ Question 1 — “Which public-facing claims currently lack direct supporting ev
 - broader claim/evidence reconciliation still requires the owning claim/evidence authorities.
 
 Program-level benefit remains NOT ESTABLISHED.
+
+## Control-to-test reference heuristic tranche
+
+The query layer now automates the same direct-reference heuristic used during the original baseline characterization of core-component primary artifacts.
+
+The output is explicitly labeled:
+
+```text
+scope=DIRECT_TEST_REFERENCE_HEURISTIC_ONLY
+coverage=NOT_ESTABLISHED
+```
+
+The scan:
+
+- reads registered K1–K8 primary artifacts from `DGAF_CORE_COMPONENT_REGISTRY.v1.json`;
+- searches root-level `tests/test_*.py` files for either the full artifact path or artifact stem;
+- reports direct test-file mentions;
+- reports artifacts with no direct mention;
+- excludes `tests/test_query_ecosystem_state.py` so the measurement tool cannot create its own evidence merely by naming an artifact in its tests.
+
+Current result:
+
+```text
+artifacts_without_direct_mentions:
+  docs/EPISTEMIC_EVIDENCE_STANDARD.md
+```
+
+This remains a **candidate coverage gap only**. A direct textual reference is neither necessary nor sufficient proof of meaningful test coverage, and absence of a direct reference is not proof that an artifact is untested.
+
+### Baseline Question 4 update
+
+Question 4 — “Which active controls lack executable tests or retained verification?” — improves from a one-off manual reference scan to repeatable machine output for the registered core-component primary-artifact subset.
+
+It remains **PARTIAL / GAP** because:
+
+- the scan is reference-based, not semantic coverage analysis;
+- assurance components and every governed profile are not yet mapped to executable verification evidence;
+- retained CI/run evidence is not normalized into the same query;
+- no “tested” or “untested” claim is produced from this heuristic alone.
+
+Program-level benefit remains NOT ESTABLISHED.

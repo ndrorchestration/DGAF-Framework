@@ -97,6 +97,37 @@ def _reconciliation_result(pointer: dict, evidence: dict | None) -> dict:
     }
 
 
+def _control_test_reference_scan(root: Path, registry: dict) -> dict:
+    tests_dir = root / "tests"
+    test_sources = {
+        path: path.read_text(encoding="utf-8-sig", errors="ignore")
+        for path in sorted(tests_dir.glob("test_*.py"))
+        if path.name != "test_query_ecosystem_state.py"
+    }
+    rows = []
+    for component in registry["core_components"]:
+        for artifact in component["primary_artifacts"]:
+            needle = Path(artifact).stem
+            mentions = [
+                path.relative_to(root).as_posix()
+                for path, source in test_sources.items()
+                if artifact in source or needle in source
+            ]
+            rows.append(
+                {
+                    "component_id": component["id"],
+                    "artifact": artifact,
+                    "direct_test_mentions": mentions,
+                }
+            )
+    return {
+        "scope": "DIRECT_TEST_REFERENCE_HEURISTIC_ONLY",
+        "coverage": "NOT_ESTABLISHED",
+        "rows": rows,
+        "artifacts_without_direct_mentions": [row["artifact"] for row in rows if not row["direct_test_mentions"]],
+    }
+
+
 def build_report(
     root: Path,
     required_consumers: list[str],
@@ -173,6 +204,7 @@ def build_report(
                 entry.get("artifact", "<unnamed>") for entry in ledger_entries if not entry.get("public_link")
             ),
         },
+        "control_test_reference_scan": _control_test_reference_scan(root, registry),
         "component_registry": {
             "status": registry["status"],
             "core_component_ids": [item["id"] for item in registry["core_components"]],
