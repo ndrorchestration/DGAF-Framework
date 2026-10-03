@@ -8,6 +8,7 @@ const overview = readFileSync('app/components/overview-view.tsx', 'utf8')
 const provider = readFileSync('app/components/dashboard-runtime-provider.tsx', 'utf8')
 const commandCenterLayout = readFileSync('app/(command-center)/layout.tsx', 'utf8')
 const tektiteDemo = readFileSync('app/components/tektite-demo-view.tsx', 'utf8')
+const auditApi = readFileSync('pages/api/audit.ts', 'utf8')
 
 const REQUIRED_ROUTES = [
   ['overview', '/'],
@@ -71,6 +72,11 @@ test('one shared runtime provider owns dashboard polling', () => {
 
 test('legacy local view-state page is removed', () => {
   assert.equal(existsSync('app/page.tsx'), false)
+})
+
+test('Tektite execution receipts are explicitly non-authorizing', () => {
+  assert.match(auditApi, /authority_effect: 'NONE'/)
+  assert.match(auditApi, /follow_on_authority: 'FRESH_ADJUDICATION_REQUIRED'/)
 })
 
 test('Tektite demo exposes a newcomer-first allowed-versus-blocked walkthrough', () => {
