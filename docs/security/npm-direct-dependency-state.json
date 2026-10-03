@@ -3,7 +3,7 @@
   "evidence_class": "NPM_DIRECT_DEPENDENCY_STATE_V1",
   "purpose": "Fail-closed declaration of the exact root npm dependency surface. Any direct dependency change must deliberately update this record and re-pass NPM Lockfile Validation.",
   "dependencies": {
-    "next": "16.3.4",
+    "next": "16.3.8",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
@@ -14,11 +14,12 @@
     "typescript": "5.8.3"
   },
   "latest_scope_adjudication": {
-    "source_pr": 584,
-    "source_merge_commit": "0dcfe07d160eb116cfd9ef8f4d7faf17d6a51fcd",
-    "finding": "PR #584 was presented as a PostCSS update but its rebased diff also changed the direct Next.js dependency from 15.5.24 to 16.3.4.",
-    "disposition": "ACCEPTED_PRE_FREEZE_AFTER_FRESH_EXACT_HEAD_VALIDATION_WITH_SCOPE_DISCLOSURE_REMEDIATION",
-    "validation": "The rebased exact head ae787820b6b6ad914df15401a6dad681e6d16e93 passed all 18 returned workflows, including NPM Lockfile Validation, Governance CI, PPTL CI, DGAF Regression Suite, and PDMAL Pre-Freeze Runner Validation.",
+    "source_issue": 1258,
+    "source_pr": null,
+    "source_merge_commit": null,
+    "finding": "Next.js 16.3.4 is below the current patched 16.3.x security level. Issue #1258 requires an exact-pin update to 16.3.8 with npm-regenerated lockfile and fresh validation.",
+    "disposition": "SECURITY_REMEDIATION_CANDIDATE_PENDING_EXACT_HEAD_VALIDATION",
+    "validation": "Local npm lock regeneration and verification are required before PR publication; hosted exact-head checks remain controlling before acceptance.",
     "scientific_state_effect": "NONE"
   },
   "control_state": "PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED / N=0"
