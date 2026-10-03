@@ -8,6 +8,7 @@ const overview = readFileSync('app/components/overview-view.tsx', 'utf8')
 const provider = readFileSync('app/components/dashboard-runtime-provider.tsx', 'utf8')
 const commandCenterLayout = readFileSync('app/(command-center)/layout.tsx', 'utf8')
 const tektiteDemo = readFileSync('app/components/tektite-demo-view.tsx', 'utf8')
+const auditApi = readFileSync('pages/api/audit.ts', 'utf8')
 
 const REQUIRED_ROUTES = [
   ['overview', '/'],
@@ -73,13 +74,21 @@ test('legacy local view-state page is removed', () => {
   assert.equal(existsSync('app/page.tsx'), false)
 })
 
+test('Tektite execution receipts are explicitly non-authorizing', () => {
+  assert.match(auditApi, /authority_effect: 'NONE'/)
+  assert.match(auditApi, /follow_on_authority: 'FRESH_ADJUDICATION_REQUIRED'/)
+})
+
 test('Tektite demo exposes a newcomer-first allowed-versus-blocked walkthrough', () => {
   assert.match(tektiteDemo, /START HERE · 60 SECOND WALKTHROUGH/)
   assert.match(tektiteDemo, /Run allowed action/)
   assert.match(tektiteDemo, /run\('authorized'\)/)
   assert.match(tektiteDemo, /Run blocked action/)
   assert.match(tektiteDemo, /run\('revoked'\)/)
-  assert.match(tektiteDemo, /REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT/)
+  assert.match(tektiteDemo, /REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT → FRESH ADJUDICATION/)
+  assert.match(tektiteDemo, /NEXT AUTHORITY/)
+  assert.match(tektiteDemo, /Fresh adjudication required/)
+  assert.match(tektiteDemo, /receipt is evidence, not continuing authority/i)
   assert.match(tektiteDemo, /CLAIM BOUNDARY/)
   assert.match(tektiteDemo, /not independent validation or proof of general efficacy/)
 })
