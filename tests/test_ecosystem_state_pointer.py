@@ -146,7 +146,8 @@ def test_tektite_public_status_manifest_covers_public_semantic_closure():
         "docs/tektite-v0.1/public/index.html",
         "docs/tektite-v0.1/status.seed.json",
         "docs/tektite-v0.1/evidence-ledger.seed.json",
-        "docs/tektite-v0.1/case-studies/ACP_PR_145.md",
+        "docs/tektite-v0.1/REVIEWER_GUIDE.md",
+        "docs/tektite-v0.1/case-studies/ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md",
     }
     assert required <= paths
 
