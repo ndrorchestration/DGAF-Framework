@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dgaf.dev/schemas/scientific_state_transition_record.schema.json",
+  "title": "DGAF Scientific State Transition Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "transition_id",
+    "controller_issue",
+    "created_at",
+    "prior_state",
+    "candidate_transition",
+    "protocol",
+    "evidence",
+    "independence",
+    "adjudication",
+    "history",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {"const": "dgaf.scientific-state-transition.v1"},
+    "transition_id": {"type": "string", "minLength": 1},
+    "controller_issue": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "prior_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "current_state_ref",
+        "current_state_digest",
+        "canonical_scientific_n",
+        "independent_validation",
+        "canonical_dgaf_efficacy",
+        "high_assurance"
+      ],
+      "properties": {
+        "current_state_ref": {"type": "string", "minLength": 1},
+        "current_state_digest": {"type": "string", "minLength": 1},
+        "canonical_scientific_n": {"type": "integer", "minimum": 0},
+        "independent_validation": {"type": "string", "minLength": 1},
+        "canonical_dgaf_efficacy": {"type": "string", "minLength": 1},
+        "high_assurance": {"type": "string", "minLength": 1}
+      }
+    },
+    "candidate_transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transition_class",
+        "proposed_scientific_n_delta",
+        "proposed_independent_validation_effect",
+        "proposed_efficacy_effect",
+        "proposed_authorization_effect",
+        "exact_claim_scope"
+      ],
+      "properties": {
+        "transition_class": {
+          "enum": [
+            "ENGINEERING_ASSURANCE",
+            "SAME_SYSTEM_NONINDEPENDENT",
+            "OUTSIDE_OPERATOR_USABILITY",
+            "UNFAMILIAR_USER_HCI",
+            "INDEPENDENT_REVIEW",
+            "INDEPENDENT_EMPIRICAL_REPLICATION",
+            "INVALIDATION_RETRACTION"
+          ]
+        },
+        "proposed_scientific_n_delta": {"type": "integer"},
+        "proposed_independent_validation_effect": {"type": "string", "minLength": 1},
+        "proposed_efficacy_effect": {"type": "string", "minLength": 1},
+        "proposed_authorization_effect": {"type": "string", "minLength": 1},
+        "exact_claim_scope": {"type": "string", "minLength": 1}
+      }
+    },
+    "protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "protocol_revision",
+        "preregistration_or_freeze_ref",
+        "countable_unit_definition",
+        "protocol_explicitly_allows_requested_transition"
+      ],
+      "properties": {
+        "protocol_id": {"type": "string", "minLength": 1},
+        "protocol_revision": {"type": "string", "minLength": 1},
+        "preregistration_or_freeze_ref": {"type": "string", "minLength": 1},
+        "countable_unit_definition": {"type": "string", "minLength": 1},
+        "protocol_explicitly_allows_requested_transition": {"type": "boolean"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_evidence_refs",
+        "exact_source_identities",
+        "environment_identities",
+        "custody_refs",
+        "outcome_generation_established",
+        "raw_evidence_retained",
+        "exact_identity_binding_passed",
+        "custody_and_provenance_passed",
+        "duplicate_check_passed",
+        "duplicate_or_replay_of",
+        "validity_state",
+        "lane_specific_admission",
+        "blocking_defeaters"
+      ],
+      "properties": {
+        "raw_evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "exact_source_identities": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "environment_identities": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "custody_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "outcome_generation_established": {"type": "boolean"},
+        "raw_evidence_retained": {"type": "boolean"},
+        "exact_identity_binding_passed": {"type": "boolean"},
+        "custody_and_provenance_passed": {"type": "boolean"},
+        "duplicate_check_passed": {"type": "boolean"},
+        "duplicate_or_replay_of": {"type": ["string", "null"]},
+        "validity_state": {"enum": ["VALID", "INVALID", "INCONCLUSIVE"]},
+        "lane_specific_admission": {"enum": ["ACCEPTED", "REJECTED", "NOT_APPLICABLE", "INCONCLUSIVE"]},
+        "blocking_defeaters": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "independence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "independence_required_for_transition",
+        "attribution_verified",
+        "relationship_disclosure_ref",
+        "independence_adjudication_ref",
+        "independence_state"
+      ],
+      "properties": {
+        "independence_required_for_transition": {"type": "boolean"},
+        "attribution_verified": {"type": "boolean"},
+        "relationship_disclosure_ref": {"type": ["string", "null"]},
+        "independence_adjudication_ref": {"type": ["string", "null"]},
+        "independence_state": {
+          "enum": ["ESTABLISHED", "NOT_ESTABLISHED", "NOT_APPLICABLE", "INCONCLUSIVE"]
+        }
+      }
+    },
+    "adjudication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adjudicator_authority_ref", "decision", "rationale", "adjudicated_at"],
+      "properties": {
+        "adjudicator_authority_ref": {"type": "string", "minLength": 1},
+        "decision": {"enum": ["ADMIT", "REJECT", "INCONCLUSIVE"]},
+        "rationale": {"type": "string", "minLength": 1},
+        "adjudicated_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["invalidation_of", "history_preserving", "reason"],
+      "properties": {
+        "invalidation_of": {"type": ["string", "null"]},
+        "history_preserving": {"type": "boolean"},
+        "reason": {"type": ["string", "null"]}
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resulting_scientific_n",
+        "resulting_independent_validation",
+        "resulting_canonical_dgaf_efficacy",
+        "resulting_high_assurance"
+      ],
+      "properties": {
+        "resulting_scientific_n": {"type": "integer", "minimum": 0},
+        "resulting_independent_validation": {"type": "string", "minLength": 1},
+        "resulting_canonical_dgaf_efficacy": {"type": "string", "minLength": 1},
+        "resulting_high_assurance": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
