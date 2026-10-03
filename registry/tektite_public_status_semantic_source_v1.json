@@ -2,26 +2,58 @@
   "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
   "manifest_id": "TEKTITE_PUBLIC_STATUS_SEMANTIC_SOURCE_V1",
   "consumer": "TEKTITE_PUBLIC_STATUS",
-  "observed_at": "2026-10-01T23:01:00Z",
+  "observed_at": "2026-10-03T21:32:25Z",
   "repository": "ndrorchestration/DGAF-Framework",
-  "repository_commit": "c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91",
+  "repository_commit": "57ec05bb8630b8e61d2e17c3073658e4cfefaec4",
   "artifacts": [
-    {"path": "docs/CURRENT_STATE.md", "git_blob_sha1": "6912fd93370c2002f61256425f6e1c081c4e7ce7", "role": "DGAF current-state source"},
-    {"path": "docs/tektite-v0.1/public/index.html", "git_blob_sha1": "9d10fb6866cb7d404edf2904e757987ea82677c6", "role": "public status projection"},
-    {"path": "docs/tektite-v0.1/status.seed.json", "git_blob_sha1": "4129aa8068279fcb9bfee5a0cfc6fd5e5591efe5", "role": "public status seed"},
-    {"path": "docs/tektite-v0.1/evidence-ledger.seed.json", "git_blob_sha1": "9e677de9edca0ad90d437df95f86da56f922a2fb", "role": "public evidence-ledger seed"},
-    {"path": "docs/tektite-v0.1/case-studies/ACP_PR_145.md", "git_blob_sha1": "56317f471b93e35df39e87b673de4fcd63c91669", "role": "linked bounded public case study"}
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "git_blob_sha1": "9c9e951f1c440cb101ea67866b1839ad32bd46be",
+      "role": "DGAF current-state source"
+    },
+    {
+      "path": "docs/tektite-v0.1/public/index.html",
+      "git_blob_sha1": "2314db1c85ec98d1036e36a8aa526849861eaa65",
+      "role": "public status projection"
+    },
+    {
+      "path": "docs/tektite-v0.1/status.seed.json",
+      "git_blob_sha1": "17f9f9f1b5bdd9262ba736b5e85506c8c923511c",
+      "role": "public status seed"
+    },
+    {
+      "path": "docs/tektite-v0.1/evidence-ledger.seed.json",
+      "git_blob_sha1": "a8fd576d0e29a61e4217e5cef68b198739486eed",
+      "role": "public evidence-ledger seed"
+    },
+    {
+      "path": "docs/tektite-v0.1/REVIEWER_GUIDE.md",
+      "git_blob_sha1": "3468c714c5669c2b8625d72de6e22e5c4d39827a",
+      "role": "public conservative interpretation guide"
+    },
+    {
+      "path": "docs/tektite-v0.1/case-studies/ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md",
+      "git_blob_sha1": "d9f3a946f3be28446361d6748ebb025a97fa8e73",
+      "role": "linked bounded ACP execution case study"
+    }
   ],
   "external_authorities": [
-    {"authority_id": "ACP_SOURCE", "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5", "role": "ACP status dependency"}
+    {
+      "authority_id": "ACP_SOURCE",
+      "object_identity": "cad2ef94f1a690deee741b81ea8bfab8c248cd7d",
+      "role": "ACP bounded execution and durable local lineage source authority"
+    }
   ],
   "non_effects": {
     "scientific_n_increment": 0,
     "independent_validation": "NOT_ESTABLISHED",
     "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
     "high_assurance": "NOT_AUTHORIZED",
-    "live_repository_mutation": "NOT_AUTHORIZED",
-    "production_executor": "NOT_ESTABLISHED"
+    "real_project_mutation": "NOT_AUTHORIZED",
+    "rollback_execution": "NOT_AUTHORIZED",
+    "production_executor": "NOT_ESTABLISHED",
+    "trusted_process_identity": "NOT_ESTABLISHED",
+    "hostile_local_actor_resistance": "NOT_ESTABLISHED"
   },
-  "semantic_material_digest_sha256": "5444e5576310a85ee84f7cb1005cda1b2e2ad31e805374732cca3fb3d5d911c2"
+  "semantic_material_digest_sha256": "9dd69167df358b8793e38ae9c00329099cefaa400732e8fb27031eaaf8368880"
 }
