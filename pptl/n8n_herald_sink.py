@@ -43,24 +43,24 @@ class N8nHeraldSink:
     HMAC signing, retry backoff, and dead-letter fallback.
     """
 
-    MAX_RETRIES    = 3
-    RETRY_BASE_S   = 0.5      # exponential base: 0.5s, 1.0s, 2.0s
-    FLUSH_INTERVAL = 10.0     # seconds between auto-flush if batch not full
+    MAX_RETRIES = 3
+    RETRY_BASE_S = 0.5  # exponential base: 0.5s, 1.0s, 2.0s
+    FLUSH_INTERVAL = 10.0  # seconds between auto-flush if batch not full
 
     def __init__(
         self,
         webhook_url: str,
         hmac_secret: str = "",
-        batch_size:  int = 20,
-        dry_run:     bool = True,
+        batch_size: int = 20,
+        dry_run: bool = True,
     ) -> None:
         self.webhook_url = webhook_url
         self.hmac_secret = hmac_secret.encode() if hmac_secret else b""
-        self.batch_size  = batch_size
-        self.dry_run     = dry_run
+        self.batch_size = batch_size
+        self.dry_run = dry_run
 
         self._batch: list[dict[str, Any]] = []
-        self._lock  = threading.Lock()
+        self._lock = threading.Lock()
         self._last_flush = time.monotonic()
 
     # ── Sink protocol ──────────────────────────────────────────────────
