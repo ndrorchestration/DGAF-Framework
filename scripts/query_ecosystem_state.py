@@ -16,6 +16,7 @@ POINTER_PATH = Path("registry/ecosystem_state_pointer.current.json")
 COMPONENT_REGISTRY_PATH = Path("docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v1.json")
 RECEIPT_SCHEMA_PATH = Path("schemas/execution_receipt.schema.json")
 TEKTITE_LEDGER_PATH = Path("docs/tektite-v0.1/evidence-ledger.seed.json")
+TEKTITE_STATUS_PATH = Path("docs/tektite-v0.1/status.seed.json")
 POINTER_VALIDATOR_PATH = Path("scripts/validate_ecosystem_state_pointer.py")
 RECONCILIATION_SCHEMA_VERSION = "ECOSYSTEM_LIVE_RECONCILIATION_V1"
 
@@ -128,6 +129,48 @@ def _control_test_reference_scan(root: Path, registry: dict) -> dict:
     }
 
 
+def _tektite_projection_gap_scan(status_seed: dict) -> dict:
+    if status_seed.get("schema") != "TEKTITE_V0_1_STATUS_SEED":
+        raise ValueError("unexpected Tektite status seed schema")
+
+    current_status = status_seed.get("current_status")
+    blockers = status_seed.get("active_blockers")
+    if not isinstance(current_status, dict):
+        raise ValueError("Tektite status seed current_status must be an object")
+    if not isinstance(blockers, list):
+        raise ValueError("Tektite status seed active_blockers must be an array")
+
+    gap_states = {"NOT_ESTABLISHED", "NOT_AUTHORIZED", "IN_DEVELOPMENT"}
+    declared_gap_states = [
+        {"projection": key, "state": value} for key, value in sorted(current_status.items()) if value in gap_states
+    ]
+
+    active_blockers = []
+    for blocker in blockers:
+        if not isinstance(blocker, dict):
+            raise ValueError("Tektite active blocker entries must be objects")
+        if blocker.get("status") == "ACTIVE_BLOCKER":
+            active_blockers.append(
+                {
+                    "id": blocker.get("id"),
+                    "name": blocker.get("name"),
+                    "blocks": blocker.get("blocks", []),
+                    "status": blocker.get("status"),
+                }
+            )
+
+    return {
+        "scope": "TEKTITE_STATUS_SEED_DECLARED_GAPS_ONLY",
+        "dependency_inference": "NOT_PERFORMED",
+        "authority_effect": "NONE",
+        "source_date": status_seed.get("date"),
+        "live_currentness": "NOT_ESTABLISHED",
+        "completeness": "NOT_ESTABLISHED",
+        "declared_gap_states": declared_gap_states,
+        "active_blockers": active_blockers,
+    }
+
+
 def build_report(
     root: Path,
     required_consumers: list[str],
@@ -143,6 +186,7 @@ def build_report(
     registry = _load_json(root / COMPONENT_REGISTRY_PATH)
     receipt_schema = _load_json(root / RECEIPT_SCHEMA_PATH)
     tektite_ledger = _load_json(root / TEKTITE_LEDGER_PATH)
+    tektite_status = _load_json(root / TEKTITE_STATUS_PATH)
     if tektite_ledger.get("schema") != "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED":
         raise ValueError("unexpected Tektite evidence ledger schema")
     ledger_entries = tektite_ledger.get("entries")
@@ -205,6 +249,7 @@ def build_report(
             ),
         },
         "control_test_reference_scan": _control_test_reference_scan(root, registry),
+        "tektite_projection_gap_scan": _tektite_projection_gap_scan(tektite_status),
         "component_registry": {
             "status": registry["status"],
             "core_component_ids": [item["id"] for item in registry["core_components"]],
