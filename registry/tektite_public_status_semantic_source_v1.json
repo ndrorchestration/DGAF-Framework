@@ -2,9 +2,9 @@
   "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
   "manifest_id": "TEKTITE_PUBLIC_STATUS_SEMANTIC_SOURCE_V1",
   "consumer": "TEKTITE_PUBLIC_STATUS",
-  "observed_at": "2026-10-04T19:05:00Z",
+  "observed_at": "2026-10-04T22:49:02Z",
   "repository": "ndrorchestration/DGAF-Framework",
-  "repository_commit": "55a7edc0aaec1a79ee3e129c0078c0200f6e7886",
+  "repository_commit": "c773e2e56a5d1778edf8fbc4f55c3716277ec67c",
   "artifacts": [
     {
       "path": "docs/CURRENT_STATE.md",
@@ -23,7 +23,7 @@
     },
     {
       "path": "docs/tektite-v0.1/evidence-ledger.seed.json",
-      "git_blob_sha1": "7ca25a22a109a1c34f4725cbc66def680f91bf6c",
+      "git_blob_sha1": "8139e25d2811b0bc93a872697ed1caf8620bf86d",
       "role": "public evidence-ledger seed"
     },
     {
@@ -47,5 +47,5 @@
     "live_repository_mutation": "NOT_AUTHORIZED",
     "production_executor": "NOT_ESTABLISHED"
   },
-  "semantic_material_digest_sha256": "1d4ae85a5ecce943f4192c47eac9ffce88745b62ac4bf5d70eccf7bf199e122f"
+  "semantic_material_digest_sha256": "e9188f244db2bc408152f594c3bedd77531effb5cf0b11a0f7ffbf314e64d73d"
 }
