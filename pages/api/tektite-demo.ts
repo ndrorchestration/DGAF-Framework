@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { isTektiteDemoScenario, createTektiteDemoRequest } from '../../app/lib/tektite-demo'
-import { trustedTektiteAuditOrigin } from '../../app/lib/tektite-demo-origin'
+import { isTektiteDemoScenario, createTektiteDemoRequest } from '../../app/lib/tektite-demo.ts'
+import { trustedTektiteAuditOrigin } from '../../app/lib/tektite-demo-origin.ts'
 
 type DemoAttempt = {
   attempt: number
