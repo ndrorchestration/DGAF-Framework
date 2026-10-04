@@ -1,22 +1,21 @@
-"""
-Shared pytest fixtures for PPTL test suite.
+"""Shared pytest fixtures for the PPTL test suite.
 
 Fixture hierarchy:
   herald            — fresh HeraldAgent per test (no sinks)
   herald_with_sink  — HeraldAgent + CaptureSink for assertion
   tmp_jsonl         — temp-file path for JSONLSink tests
 """
+
 from __future__ import annotations
-import os, sys, tempfile, pytest
 
-# Ensure repo root on path so `pptl` is importable without install
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+import pytest
 
-from pptl.herald_agent  import HeraldAgent
+from pptl.herald_agent import HeraldAgent
 
 
 class CaptureSink:
-    """In-memory sink — collects all emitted events for assertion."""
+    """In-memory sink that collects emitted events for assertion."""
+
     def __init__(self):
         self.events: list[dict] = []
         self.closed = False
@@ -38,7 +37,8 @@ class CaptureSink:
 
 
 class BrokenSink:
-    """Sink that always raises — tests Herald isolation."""
+    """Sink that always raises to test Herald isolation."""
+
     def emit(self, event: dict) -> None:
         raise RuntimeError("sink exploded")
 
