@@ -4,8 +4,8 @@ Anchor: S068 | OI-05
 Metrics: TGL gate records present per turn; blocked turns return no response;
          domain auto-wire fires correct premise_check_fn.
 """
-from pptl.orchestrator import IntegratedOrchestrator, OrchestratorConfig
 
+from pptl.orchestrator import IntegratedOrchestrator, OrchestratorConfig
 
 SESSION = "test-s068"
 
@@ -21,6 +21,7 @@ def _make_orchestrator(domain="general", premise_check_fn=None, dry_run=True):
 
 
 # --- Basic turn execution ---
+
 
 def test_clean_turn_passes_tgl():
     orch = _make_orchestrator()
@@ -46,6 +47,7 @@ def test_turn_result_does_not_fabricate_phi_score():
 
 # --- Blocking behaviour ---
 
+
 def test_blocked_turn_returns_no_response():
     # Canonical P-35 check returns False when an invariant is violated.
     orch = _make_orchestrator(premise_check_fn=lambda _text, _invariant: False)
@@ -62,6 +64,7 @@ def test_blocked_turn_has_gate_records():
 
 
 # --- Domain auto-wire ---
+
 
 def test_credit_domain_auto_wires_premise_fn():
     orch = _make_orchestrator(domain="credit")
@@ -85,6 +88,7 @@ def test_general_domain_premise_fn_is_passthrough():
 
 
 # --- Session metadata ---
+
 
 def test_turn_result_carries_session_id():
     orch = _make_orchestrator()
