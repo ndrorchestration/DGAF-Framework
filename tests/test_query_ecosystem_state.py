@@ -166,7 +166,7 @@ def test_report_enumerates_tektite_public_claim_evidence_seed_without_claiming_c
     public_claims = report["public_claim_evidence"]
     assert public_claims["scope"] == "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED_ONLY"
     assert public_claims["completeness"] == "NOT_ESTABLISHED"
-    assert len(public_claims["entries"]) == 3
+    assert len(public_claims["entries"]) == 4
     assert public_claims["missing_public_link_artifacts"] == ["AI Evidence Audit positioning"]
     assert all("claim_supported" in entry for entry in public_claims["entries"])
     assert all("claim_not_supported" in entry for entry in public_claims["entries"])
@@ -207,7 +207,7 @@ def _acp_assertion(assertion_id, value, source_ref="docs/CURRENT_FRONTIER.md"):
     }
 
 
-def test_acp_semantic_observation_reports_match_divergence_and_missing_projection():
+def test_acp_semantic_observation_matches_refreshed_tektite_projection():
     module = load_module()
     report = module.build_report(
         ROOT,
@@ -231,9 +231,44 @@ def test_acp_semantic_observation_reports_match_divergence_and_missing_projectio
 
     rows = {row["assertion_id"]: row for row in semantic["assertions"]}
     assert rows["LIVE_REPOSITORY_MUTATION"]["comparison"] == "MATCH"
-    assert rows["#117"]["comparison"] == "DIVERGENCE"
-    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"]["comparison"] == "NOT_PROJECTED_BY_TEKTITE"
+    assert rows["#117"]["comparison"] == "MATCH"
+    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"]["comparison"] == "MATCH"
     assert rows["#117"]["source_ref"] == "docs/CURRENT_FRONTIER.md"
+
+
+@pytest.mark.parametrize(
+    ("assertion_id", "observed_value", "tektite_value"),
+    [
+        ("HIGH_ASSURANCE", "AUTHORIZED", "NOT_AUTHORIZED"),
+        ("#118", "ACTIVE_BLOCKER", "CLOSED_BY_RETAINED_RISK_DECISION"),
+    ],
+)
+def test_acp_semantic_observation_reports_divergence_without_authority_transfer(
+    assertion_id, observed_value, tektite_value
+):
+    module = load_module()
+    report = module.build_report(
+        ROOT,
+        [],
+        acp_semantic_observation=_acp_semantic_observation(
+            _acp_assertion(assertion_id, observed_value),
+        ),
+    )
+
+    semantic = report["acp_semantic_reconciliation"]
+    assert semantic["assertions"] == [
+        {
+            "assertion_id": assertion_id,
+            "observed_value": observed_value,
+            "tektite_value": tektite_value,
+            "comparison": "DIVERGENCE",
+            "source_ref": "docs/CURRENT_FRONTIER.md",
+        }
+    ]
+    assert semantic["observation_authority"] == "CALLER_SUPPLIED_NOT_REVERIFIED"
+    assert semantic["semantic_authority_effect"] == "NONE"
+    assert report["claim_ceiling"]["high_assurance"] == "NOT_AUTHORIZED"
+    assert report["receipt_authority"]["follow_on_authority"] == "FRESH_ADJUDICATION_REQUIRED"
 
 
 def test_acp_semantic_observation_unknown_assertion_is_unmapped():
@@ -331,5 +366,5 @@ def test_cli_accepts_acp_semantic_observation(tmp_path):
     report = json.loads(result.stdout)
     rows = {row["assertion_id"]: row["comparison"] for row in report["acp_semantic_reconciliation"]["assertions"]}
     assert rows["LIVE_REPOSITORY_MUTATION"] == "MATCH"
-    assert rows["#117"] == "DIVERGENCE"
-    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "NOT_PROJECTED_BY_TEKTITE"
+    assert rows["#117"] == "MATCH"
+    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "MATCH"
