@@ -167,7 +167,9 @@ def test_report_enumerates_tektite_public_claim_evidence_seed_without_claiming_c
     assert public_claims["scope"] == "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED_ONLY"
     assert public_claims["completeness"] == "NOT_ESTABLISHED"
     assert len(public_claims["entries"]) == 4
-    assert public_claims["missing_public_link_artifacts"] == ["AI Evidence Audit positioning"]\n    artifacts = {entry["artifact"] for entry in public_claims["entries"]}\n    assert "ACP PR #156" in artifacts
+    assert public_claims["missing_public_link_artifacts"] == ["AI Evidence Audit positioning"]
+    artifacts = {entry["artifact"] for entry in public_claims["entries"]}
+    assert "ACP PR #156" in artifacts
     assert all("claim_supported" in entry for entry in public_claims["entries"])
     assert all("claim_not_supported" in entry for entry in public_claims["entries"])
 
@@ -214,6 +216,7 @@ def test_acp_semantic_observation_reports_match_divergence_and_missing_projectio
         [],
         acp_semantic_observation=_acp_semantic_observation(
             _acp_assertion("LIVE_REPOSITORY_MUTATION", "NOT_AUTHORIZED"),
+            _acp_assertion("HIGH_ASSURANCE", "AUTHORIZED"),
             _acp_assertion("#117", "CLOSED_BY_RETAINED_RISK_DECISION"),
             _acp_assertion(
                 "BOUNDED_LOCAL_TEST_EXECUTOR",
@@ -231,8 +234,9 @@ def test_acp_semantic_observation_reports_match_divergence_and_missing_projectio
 
     rows = {row["assertion_id"]: row for row in semantic["assertions"]}
     assert rows["LIVE_REPOSITORY_MUTATION"]["comparison"] == "MATCH"
-    assert rows["#117"]["comparison"] == "DIVERGENCE"
-    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"]["comparison"] == "NOT_PROJECTED_BY_TEKTITE"
+    assert rows["HIGH_ASSURANCE"]["comparison"] == "DIVERGENCE"
+    assert rows["#117"]["comparison"] == "NOT_PROJECTED_BY_TEKTITE"
+    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"]["comparison"] == "MATCH"
     assert rows["#117"]["source_ref"] == "docs/CURRENT_FRONTIER.md"
 
 
@@ -331,5 +335,5 @@ def test_cli_accepts_acp_semantic_observation(tmp_path):
     report = json.loads(result.stdout)
     rows = {row["assertion_id"]: row["comparison"] for row in report["acp_semantic_reconciliation"]["assertions"]}
     assert rows["LIVE_REPOSITORY_MUTATION"] == "MATCH"
-    assert rows["#117"] == "DIVERGENCE"
-    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "NOT_PROJECTED_BY_TEKTITE"
+    assert rows["#117"] == "NOT_PROJECTED_BY_TEKTITE"
+    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "MATCH"

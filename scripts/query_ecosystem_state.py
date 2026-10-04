@@ -201,7 +201,7 @@ def _acp_semantic_result(root: Path, observation: dict | None) -> dict:
         if isinstance(item, dict) and isinstance(item.get("id"), str)
     }
 
-    known_not_projected = {"BOUNDED_LOCAL_TEST_EXECUTOR"}
+    known_not_projected = {"#117", "#118"}
     rows = []
     for item in observation["assertions"]:
         assertion_id = item["assertion_id"]
