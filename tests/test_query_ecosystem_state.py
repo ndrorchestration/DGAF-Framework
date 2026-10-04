@@ -183,3 +183,153 @@ def test_report_exposes_control_test_reference_scan_as_heuristic_only():
     rows = {(row["component_id"], row["artifact"]): row["direct_test_mentions"] for row in scan["rows"]}
     assert "tests/test_capability_governance_contracts.py" in rows[("K1", "scripts/dgaf_capability_canonicalize.py")]
     assert rows[("K8", "docs/EPISTEMIC_EVIDENCE_STANDARD.md")] == []
+
+
+def _acp_semantic_observation(*assertions):
+    return {
+        "schema_version": "ACP_SEMANTIC_OBSERVATION_V0_CANDIDATE",
+        "observed_at": "2026-10-04T18:45:00Z",
+        "acp_repository_commit": "e7135323663ebbe025b18b74a13f2d99c14e2b57",
+        "source_refs": [
+            "docs/CURRENT_FRONTIER.md",
+            "docs/acp/ACP_EXECUTOR_BOUNDARY_MODEL.md",
+            "docs/acp/ACP_EXECUTOR_RESIDUAL_RISK_DECISION_2026-10-01.md",
+        ],
+        "assertions": list(assertions),
+    }
+
+
+def _acp_assertion(assertion_id, value, source_ref="docs/CURRENT_FRONTIER.md"):
+    return {
+        "assertion_id": assertion_id,
+        "value": value,
+        "source_ref": source_ref,
+    }
+
+
+def test_acp_semantic_observation_reports_match_divergence_and_missing_projection():
+    module = load_module()
+    report = module.build_report(
+        ROOT,
+        [],
+        acp_semantic_observation=_acp_semantic_observation(
+            _acp_assertion("LIVE_REPOSITORY_MUTATION", "NOT_AUTHORIZED"),
+            _acp_assertion("#117", "CLOSED_BY_RETAINED_RISK_DECISION"),
+            _acp_assertion(
+                "BOUNDED_LOCAL_TEST_EXECUTOR",
+                "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
+            ),
+        ),
+    )
+
+    semantic = report["acp_semantic_reconciliation"]
+    assert semantic["scope"] == "ACP_SEMANTIC_OBSERVATION_ONLY"
+    assert semantic["observation_authority"] == "CALLER_SUPPLIED_NOT_REVERIFIED"
+    assert semantic["semantic_authority_effect"] == "NONE"
+    assert semantic["cross_surface_reconciliation"] == "PARTIAL"
+    assert semantic["completeness"] == "NOT_ESTABLISHED"
+
+    rows = {row["assertion_id"]: row for row in semantic["assertions"]}
+    assert rows["LIVE_REPOSITORY_MUTATION"]["comparison"] == "MATCH"
+    assert rows["#117"]["comparison"] == "DIVERGENCE"
+    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"]["comparison"] == "NOT_PROJECTED_BY_TEKTITE"
+    assert rows["#117"]["source_ref"] == "docs/CURRENT_FRONTIER.md"
+
+
+def test_acp_semantic_observation_unknown_assertion_is_unmapped():
+    module = load_module()
+    report = module.build_report(
+        ROOT,
+        [],
+        acp_semantic_observation=_acp_semantic_observation(
+            _acp_assertion("UNDECLARED_CAPABILITY", "SOMETHING"),
+        ),
+    )
+    rows = report["acp_semantic_reconciliation"]["assertions"]
+    assert rows == [
+        {
+            "assertion_id": "UNDECLARED_CAPABILITY",
+            "observed_value": "SOMETHING",
+            "tektite_value": None,
+            "comparison": "UNMAPPED",
+            "source_ref": "docs/CURRENT_FRONTIER.md",
+        }
+    ]
+
+
+def test_acp_semantic_observation_rejects_unlisted_source_ref():
+    module = load_module()
+    observation = _acp_semantic_observation(
+        _acp_assertion(
+            "HIGH_ASSURANCE",
+            "NOT_AUTHORIZED",
+            source_ref="docs/NOT_LISTED.md",
+        )
+    )
+
+    with pytest.raises(ValueError, match="source_ref"):
+        module.build_report(ROOT, [], acp_semantic_observation=observation)
+
+
+def test_acp_semantic_observation_rejects_duplicate_assertion_ids():
+    module = load_module()
+    observation = _acp_semantic_observation(
+        _acp_assertion("HIGH_ASSURANCE", "NOT_AUTHORIZED"),
+        _acp_assertion("HIGH_ASSURANCE", "NOT_AUTHORIZED"),
+    )
+
+    with pytest.raises(ValueError, match="duplicate assertion_id"):
+        module.build_report(ROOT, [], acp_semantic_observation=observation)
+
+
+def test_acp_semantic_observation_rejects_malformed_commit():
+    module = load_module()
+    observation = _acp_semantic_observation(
+        _acp_assertion("HIGH_ASSURANCE", "NOT_AUTHORIZED"),
+    )
+    observation["acp_repository_commit"] = "not-a-sha"
+
+    with pytest.raises(ValueError, match="acp_repository_commit"):
+        module.build_report(ROOT, [], acp_semantic_observation=observation)
+
+
+def test_cli_accepts_acp_semantic_observation(tmp_path):
+    import subprocess
+    import sys
+
+    path = tmp_path / "acp-semantic.json"
+    path.write_text(
+        json.dumps(
+            _acp_semantic_observation(
+                _acp_assertion("LIVE_REPOSITORY_MUTATION", "NOT_AUTHORIZED"),
+                _acp_assertion("#117", "CLOSED_BY_RETAINED_RISK_DECISION"),
+                _acp_assertion(
+                    "BOUNDED_LOCAL_TEST_EXECUTOR",
+                    "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
+                ),
+            )
+        ),
+        encoding="utf-8",
+    )
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--root",
+            str(ROOT),
+            "--acp-semantic-observation",
+            str(path),
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 2
+    report = json.loads(result.stdout)
+    rows = {row["assertion_id"]: row["comparison"] for row in report["acp_semantic_reconciliation"]["assertions"]}
+    assert rows["LIVE_REPOSITORY_MUTATION"] == "MATCH"
+    assert rows["#117"] == "DIVERGENCE"
+    assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "NOT_PROJECTED_BY_TEKTITE"
