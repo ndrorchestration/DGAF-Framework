@@ -4,19 +4,20 @@ DGAF-Framework · pptl/tests · S068
 """
 
 import hashlib
+
 import pytest
 
 from pptl.procluding_premise import PremiseViolationError
 from pptl.triadic_governance_loop import (
     GateRecord,
     GateResult,
-    TriadicGovernanceLoop,
     TGLHooks,
+    TriadicGovernanceLoop,
     TurnStatus,
 )
 
 
-def make_tgl(hooks: TGLHooks = None) -> TriadicGovernanceLoop:
+def make_tgl(hooks: TGLHooks | None = None) -> TriadicGovernanceLoop:
     return TriadicGovernanceLoop(
         session_id="S068-TEST",
         agent_id="test-amethyst",
