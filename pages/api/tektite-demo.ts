@@ -1,18 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { isTektiteDemoScenario, createTektiteDemoRequest } from '../../app/lib/tektite-demo'
+import { trustedTektiteAuditOrigin } from '../../app/lib/tektite-demo-origin'
 
 type DemoAttempt = {
   attempt: number
   http_status: number
   result: unknown
-}
-
-function requestOrigin(req: NextApiRequest): string {
-  const protocol = String(req.headers['x-forwarded-proto'] ?? 'http').split(',')[0].trim()
-  const host = String(req.headers['x-forwarded-host'] ?? req.headers.host ?? '').split(',')[0].trim()
-  if (!host) throw new Error('TEKTITE_DEMO_HOST_UNAVAILABLE')
-  return `${protocol}://${host}`
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -57,7 +51,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
   }
 
-  const origin = requestOrigin(req)
+  let origin: string
+  try {
+    origin = trustedTektiteAuditOrigin(process.env.TEKTITE_DEMO_AUDIT_ORIGIN)
+  } catch (error) {
+    return res.status(503).json({
+      status: 'blocked',
+      reason: error instanceof Error ? error.message : 'TEKTITE_DEMO_AUDIT_ORIGIN_INVALID',
+      boundary: 'FAIL_CLOSED_NO_DEMO_ISSUANCE',
+    })
+  }
   const attempts: DemoAttempt[] = []
   const count = scenario === 'replay' ? 2 : 1
 
@@ -67,9 +70,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       headers: {
         'content-type': 'application/json',
         'x-tektite-demo-token': internalToken,
-        ...(typeof req.headers['x-vercel-protection-bypass'] === 'string'
-          ? { 'x-vercel-protection-bypass': req.headers['x-vercel-protection-bypass'] }
-          : {}),
       },
       body: JSON.stringify(demo.requestBody),
     })
