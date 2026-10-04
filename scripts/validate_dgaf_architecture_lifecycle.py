@@ -8,7 +8,6 @@ import re
 from pathlib import Path
 from typing import Mapping
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 ACTIVE_NON_AUTHORIZING = "ACTIVE_NON_AUTHORIZING"
