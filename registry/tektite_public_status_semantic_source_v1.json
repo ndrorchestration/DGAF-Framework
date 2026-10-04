@@ -2,18 +2,42 @@
   "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
   "manifest_id": "TEKTITE_PUBLIC_STATUS_SEMANTIC_SOURCE_V1",
   "consumer": "TEKTITE_PUBLIC_STATUS",
-  "observed_at": "2026-10-01T23:01:00Z",
+  "observed_at": "2026-10-04T18:55:39Z",
   "repository": "ndrorchestration/DGAF-Framework",
-  "repository_commit": "c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91",
+  "repository_commit": "b13a8e831e414de7af27535a88f30a193a72fe85",
   "artifacts": [
-    {"path": "docs/CURRENT_STATE.md", "git_blob_sha1": "6912fd93370c2002f61256425f6e1c081c4e7ce7", "role": "DGAF current-state source"},
-    {"path": "docs/tektite-v0.1/public/index.html", "git_blob_sha1": "9d10fb6866cb7d404edf2904e757987ea82677c6", "role": "public status projection"},
-    {"path": "docs/tektite-v0.1/status.seed.json", "git_blob_sha1": "4129aa8068279fcb9bfee5a0cfc6fd5e5591efe5", "role": "public status seed"},
-    {"path": "docs/tektite-v0.1/evidence-ledger.seed.json", "git_blob_sha1": "9e677de9edca0ad90d437df95f86da56f922a2fb", "role": "public evidence-ledger seed"},
-    {"path": "docs/tektite-v0.1/case-studies/ACP_PR_145.md", "git_blob_sha1": "56317f471b93e35df39e87b673de4fcd63c91669", "role": "linked bounded public case study"}
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "git_blob_sha1": "9c9e951f1c440cb101ea67866b1839ad32bd46be",
+      "role": "DGAF current-state source"
+    },
+    {
+      "path": "docs/tektite-v0.1/public/index.html",
+      "git_blob_sha1": "460b3887a90ec8bdafd8a2dc1fad578379be9bf7",
+      "role": "public status projection"
+    },
+    {
+      "path": "docs/tektite-v0.1/status.seed.json",
+      "git_blob_sha1": "02fd115871f9928571dcbf13b1f852151c5dae5d",
+      "role": "public status seed"
+    },
+    {
+      "path": "docs/tektite-v0.1/evidence-ledger.seed.json",
+      "git_blob_sha1": "11379df96bef0187080a874dd4bb75c0e1c20511",
+      "role": "public evidence-ledger seed"
+    },
+    {
+      "path": "docs/tektite-v0.1/case-studies/ACP_PR_145.md",
+      "git_blob_sha1": "56317f471b93e35df39e87b673de4fcd63c91669",
+      "role": "linked bounded public case study"
+    }
   ],
   "external_authorities": [
-    {"authority_id": "ACP_SOURCE", "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5", "role": "ACP status dependency"}
+    {
+      "authority_id": "ACP_SOURCE",
+      "object_identity": "e7135323663ebbe025b18b74a13f2d99c14e2b57",
+      "role": "ACP status dependency"
+    }
   ],
   "non_effects": {
     "scientific_n_increment": 0,
@@ -23,5 +47,5 @@
     "live_repository_mutation": "NOT_AUTHORIZED",
     "production_executor": "NOT_ESTABLISHED"
   },
-  "semantic_material_digest_sha256": "5444e5576310a85ee84f7cb1005cda1b2e2ad31e805374732cca3fb3d5d911c2"
+  "semantic_material_digest_sha256": "ac0c04d88a81d0e2529e8779300904fbf7f66be0351fa8a3751986fc384f1c2b"
 }

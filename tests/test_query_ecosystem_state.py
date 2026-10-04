@@ -166,8 +166,8 @@ def test_report_enumerates_tektite_public_claim_evidence_seed_without_claiming_c
     public_claims = report["public_claim_evidence"]
     assert public_claims["scope"] == "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED_ONLY"
     assert public_claims["completeness"] == "NOT_ESTABLISHED"
-    assert len(public_claims["entries"]) == 3
-    assert public_claims["missing_public_link_artifacts"] == ["AI Evidence Audit positioning"]
+    assert len(public_claims["entries"]) == 4
+    assert public_claims["missing_public_link_artifacts"] == ["AI Evidence Audit positioning"]\n    artifacts = {entry["artifact"] for entry in public_claims["entries"]}\n    assert "ACP PR #156" in artifacts
     assert all("claim_supported" in entry for entry in public_claims["entries"])
     assert all("claim_not_supported" in entry for entry in public_claims["entries"])
 
