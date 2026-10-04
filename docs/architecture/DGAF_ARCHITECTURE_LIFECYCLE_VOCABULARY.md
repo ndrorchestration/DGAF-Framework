@@ -1,6 +1,6 @@
 # DGAF Architecture-Control Lifecycle Vocabulary
 
-**Status:** PROPOSED / DOCUMENT-LIFECYCLE CONTROL / NON-AUTHORIZING  
+**Status:** ACTIVE_NON_AUTHORIZING / DOCUMENT-LIFECYCLE CONTROL / NON-AUTHORIZING  
 **Date:** 2026-09-28  
 **Scope:** architecture-control documents, registries, ADRs, and related classification metadata
 
