@@ -24,6 +24,23 @@ def make_tgl(hooks: TGLHooks = None) -> TriadicGovernanceLoop:
     )
 
 
+def fully_wired_hooks(**overrides) -> TGLHooks:
+    values = {
+        "premise_check_fn": lambda _text, _invariant: True,
+        "scpe_fn": lambda _text, _ctx: GateResult.PASS,
+        "pdmal_fn": lambda _text, _ctx: GateResult.PASS,
+        "demijoul_fn": lambda _text, _ctx: GateResult.PASS,
+        "kappa_fn": lambda _text, _ctx: GateResult.PASS,
+        "sentinel_fn": lambda _text, _ctx: GateResult.PASS,
+        "phi_closure_fn": lambda _text, _ctx: GateResult.PASS,
+        "hpg_fn": lambda _text, _ctx: GateResult.PASS,
+        "apogee_fn": lambda _text, _ctx: GateResult.PASS,
+        "herald_fn": lambda _text, _ctx: GateResult.PASS,
+    }
+    values.update(overrides)
+    return TGLHooks(**values)
+
+
 @pytest.mark.governance
 def test_unwired_required_gates_escalate():
     """Required SKIP states must fail closed to ESCALATE rather than PASS."""
@@ -74,7 +91,7 @@ def test_phi_closure_kill_sets_terminal_kill():
 @pytest.mark.governance
 def test_warn_propagates_to_turn_status():
     """A WARN gate must not be silently reduced to PASS."""
-    hooks = TGLHooks(scpe_fn=lambda text, ctx: GateResult.WARN)
+    hooks = fully_wired_hooks(scpe_fn=lambda _text, _ctx: GateResult.WARN)
     audit = make_tgl(hooks).run_turn("warning")
     assert audit.final_status == TurnStatus.WARN
 
@@ -109,8 +126,8 @@ def test_herald_receives_tgl_turn_audit_event():
     """Herald receives a pre-Herald audit snapshot; final audit is sealed afterward."""
     received = []
 
-    def capture_herald(audit_dict, ctx):
-        received.append(audit_dict)
+    def capture_herald(_text, ctx):
+        received.append(ctx["audit_record"])
         return GateResult.PASS
 
     audit = make_tgl(TGLHooks(herald_fn=capture_herald)).run_turn("test input")
