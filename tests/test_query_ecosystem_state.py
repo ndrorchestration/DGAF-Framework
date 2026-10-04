@@ -183,3 +183,109 @@ def test_report_exposes_control_test_reference_scan_as_heuristic_only():
     rows = {(row["component_id"], row["artifact"]): row["direct_test_mentions"] for row in scan["rows"]}
     assert "tests/test_capability_governance_contracts.py" in rows[("K1", "scripts/dgaf_capability_canonicalize.py")]
     assert rows[("K8", "docs/EPISTEMIC_EVIDENCE_STANDARD.md")] == []
+
+
+def _acp_reconciliation_observation(embedded, live=None):
+    return {
+        "schema_version": "ACP_LIVE_RECONCILIATION_V0_CANDIDATE",
+        "observed_at": "2026-10-04T18:30:00Z",
+        "tektite_embedded_acp_commit": embedded,
+        "live_acp_repository_commit": live or embedded,
+        "evidence_url": "https://github.com/ndrorchestration/agent-control-plane",
+    }
+
+
+def test_acp_reconciliation_reports_source_advance_without_semantic_promotion():
+    module = load_module()
+    embedded = "4d3cdd21a445b765753cb5d36360f643210fe0b5"
+    live = "e7135323663ebbe025b18b74a13f2d99c14e2b57"
+
+    report = module.build_report(
+        ROOT,
+        [],
+        acp_reconciliation_observation=_acp_reconciliation_observation(embedded, live),
+    )
+
+    reconciliation = report["acp_reconciliation"]
+    assert reconciliation["scope"] == "ACP_REPOSITORY_TIP_ONLY"
+    assert reconciliation["state"] == "ACP_SOURCE_ADVANCED"
+    assert reconciliation["semantic_reconciliation"] == "NOT_ESTABLISHED"
+    assert reconciliation["authority_effect"] == "NONE"
+    assert reconciliation["cross_surface_reconciliation"] == "NOT_ESTABLISHED"
+    assert report["gaps"]["requires_acp_repository_reconciliation"] is True
+
+
+def test_acp_reconciliation_tip_match_still_does_not_establish_semantic_currentness():
+    module = load_module()
+    embedded = "4d3cdd21a445b765753cb5d36360f643210fe0b5"
+
+    report = module.build_report(
+        ROOT,
+        [],
+        acp_reconciliation_observation=_acp_reconciliation_observation(embedded),
+    )
+
+    reconciliation = report["acp_reconciliation"]
+    assert reconciliation["state"] == "ACP_REPOSITORY_TIP_MATCH"
+    assert reconciliation["semantic_reconciliation"] == "NOT_ESTABLISHED"
+    assert report["gaps"]["requires_acp_repository_reconciliation"] is False
+    assert report["gaps"]["cross_surface_reconciliation_not_established"] is True
+
+
+def test_acp_reconciliation_must_bind_to_tektite_manifest_identity():
+    module = load_module()
+
+    with pytest.raises(ValueError, match="tektite_embedded_acp_commit"):
+        module.build_report(
+            ROOT,
+            [],
+            acp_reconciliation_observation=_acp_reconciliation_observation("f" * 40),
+        )
+
+
+def test_acp_reconciliation_rejects_malformed_live_sha():
+    module = load_module()
+    embedded = "4d3cdd21a445b765753cb5d36360f643210fe0b5"
+
+    with pytest.raises(ValueError, match="live_acp_repository_commit"):
+        module.build_report(
+            ROOT,
+            [],
+            acp_reconciliation_observation=_acp_reconciliation_observation(
+                embedded,
+                "not-a-sha",
+            ),
+        )
+
+
+def test_cli_accepts_acp_reconciliation_observation(tmp_path):
+    import subprocess
+    import sys
+
+    embedded = "4d3cdd21a445b765753cb5d36360f643210fe0b5"
+    live = "e7135323663ebbe025b18b74a13f2d99c14e2b57"
+    path = tmp_path / "acp-reconciliation.json"
+    path.write_text(
+        json.dumps(_acp_reconciliation_observation(embedded, live)),
+        encoding="utf-8",
+    )
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--root",
+            str(ROOT),
+            "--acp-reconciliation-observation",
+            str(path),
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 2
+    report = json.loads(result.stdout)
+    assert report["acp_reconciliation"]["state"] == "ACP_SOURCE_ADVANCED"
+    assert report["acp_reconciliation"]["semantic_reconciliation"] == "NOT_ESTABLISHED"

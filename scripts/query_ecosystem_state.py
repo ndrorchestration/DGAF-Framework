@@ -16,6 +16,8 @@ POINTER_PATH = Path("registry/ecosystem_state_pointer.current.json")
 COMPONENT_REGISTRY_PATH = Path("docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v1.json")
 RECEIPT_SCHEMA_PATH = Path("schemas/execution_receipt.schema.json")
 TEKTITE_LEDGER_PATH = Path("docs/tektite-v0.1/evidence-ledger.seed.json")
+TEKTITE_SEMANTIC_SOURCE_PATH = Path("registry/tektite_public_status_semantic_source_v1.json")
+ACP_RECONCILIATION_SCHEMA_VERSION = "ACP_LIVE_RECONCILIATION_V0_CANDIDATE"
 POINTER_VALIDATOR_PATH = Path("scripts/validate_ecosystem_state_pointer.py")
 RECONCILIATION_SCHEMA_VERSION = "ECOSYSTEM_LIVE_RECONCILIATION_V1"
 
@@ -128,10 +130,77 @@ def _control_test_reference_scan(root: Path, registry: dict) -> dict:
     }
 
 
+def _validate_acp_reconciliation_observation(manifest: dict, observation: dict) -> None:
+    required = {
+        "schema_version",
+        "observed_at",
+        "tektite_embedded_acp_commit",
+        "live_acp_repository_commit",
+        "evidence_url",
+    }
+    if set(observation) != required:
+        missing = sorted(required - set(observation))
+        extra = sorted(set(observation) - required)
+        raise ValueError(f"ACP reconciliation fields mismatch: missing={missing} extra={extra}")
+    if observation["schema_version"] != ACP_RECONCILIATION_SCHEMA_VERSION:
+        raise ValueError(f"schema_version must be {ACP_RECONCILIATION_SCHEMA_VERSION}")
+    for key in ("observed_at", "evidence_url"):
+        if not isinstance(observation[key], str) or not observation[key]:
+            raise ValueError(f"{key} must be a non-empty string")
+
+    pointer_module = _pointer_module()
+    sha1_re = pointer_module["SHA1_RE"]
+    for key in ("tektite_embedded_acp_commit", "live_acp_repository_commit"):
+        if not isinstance(observation[key], str) or not sha1_re.fullmatch(observation[key]):
+            raise ValueError(f"{key} must be a lowercase 40-character Git SHA")
+
+    authorities = manifest.get("external_authorities")
+    if not isinstance(authorities, list):
+        raise ValueError("Tektite semantic manifest external_authorities must be an array")
+    matches = [item for item in authorities if item.get("authority_id") == "ACP_SOURCE"]
+    if len(matches) != 1:
+        raise ValueError("Tektite semantic manifest must declare exactly one ACP_SOURCE")
+    embedded = matches[0].get("object_identity")
+    if observation["tektite_embedded_acp_commit"] != embedded:
+        raise ValueError("tektite_embedded_acp_commit must match Tektite semantic manifest ACP_SOURCE")
+
+
+def _acp_reconciliation_result(manifest: dict, observation: dict | None) -> dict:
+    base = {
+        "scope": "ACP_REPOSITORY_TIP_ONLY",
+        "semantic_reconciliation": "NOT_ESTABLISHED",
+        "authority_effect": "NONE",
+        "cross_surface_reconciliation": "NOT_ESTABLISHED",
+    }
+    if observation is None:
+        return {
+            **base,
+            "state": "NOT_SUPPLIED",
+            "observed_at": None,
+            "evidence_url": None,
+            "live_acp_repository_commit": None,
+        }
+
+    _validate_acp_reconciliation_observation(manifest, observation)
+    state = (
+        "ACP_REPOSITORY_TIP_MATCH"
+        if observation["tektite_embedded_acp_commit"] == observation["live_acp_repository_commit"]
+        else "ACP_SOURCE_ADVANCED"
+    )
+    return {
+        **base,
+        "state": state,
+        "observed_at": observation["observed_at"],
+        "evidence_url": observation["evidence_url"],
+        "live_acp_repository_commit": observation["live_acp_repository_commit"],
+    }
+
+
 def build_report(
     root: Path,
     required_consumers: list[str],
     reconciliation_evidence: dict | None = None,
+    acp_reconciliation_observation: dict | None = None,
 ) -> dict:
     root = Path(root)
     pointer = _load_json(root / POINTER_PATH)
@@ -143,6 +212,7 @@ def build_report(
     registry = _load_json(root / COMPONENT_REGISTRY_PATH)
     receipt_schema = _load_json(root / RECEIPT_SCHEMA_PATH)
     tektite_ledger = _load_json(root / TEKTITE_LEDGER_PATH)
+    tektite_manifest = _load_json(root / TEKTITE_SEMANTIC_SOURCE_PATH)
     if tektite_ledger.get("schema") != "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED":
         raise ValueError("unexpected Tektite evidence ledger schema")
     ledger_entries = tektite_ledger.get("entries")
@@ -178,6 +248,8 @@ def build_report(
             else "EXTERNAL_RECONCILIATION_PRESENT"
         )
 
+    acp_reconciliation = _acp_reconciliation_result(tektite_manifest, acp_reconciliation_observation)
+
     properties = receipt_schema["properties"]
     report = {
         "schema_version": "ECOSYSTEM_QUERY_REPORT_V1",
@@ -190,6 +262,7 @@ def build_report(
             "live_reconciliation_required": live["required_for_repository_tip_currentness"],
         },
         "reconciliation": reconciliation,
+        "acp_reconciliation": acp_reconciliation,
         "claim_ceiling": pointer["claim_ceiling"],
         "consumers": consumers,
         "receipt_authority": {
@@ -215,6 +288,7 @@ def build_report(
             "missing_required_consumers": missing,
             "requires_dgaf_repository_reconciliation": live_currentness != "DGAF_REPOSITORY_TIP_MATCH_EXTERNAL",
             "cross_surface_reconciliation_not_established": True,
+            "requires_acp_repository_reconciliation": acp_reconciliation["state"] != "ACP_REPOSITORY_TIP_MATCH",
             "requires_reconciliation": True,
         },
     }
@@ -226,14 +300,19 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--require-consumer", action="append", default=[])
     parser.add_argument("--reconciliation-evidence", type=Path)
+    parser.add_argument("--acp-reconciliation-observation", type=Path)
     args = parser.parse_args()
 
     try:
         reconciliation_evidence = _load_json(args.reconciliation_evidence) if args.reconciliation_evidence else None
+        acp_reconciliation_observation = (
+            _load_json(args.acp_reconciliation_observation) if args.acp_reconciliation_observation else None
+        )
         report = build_report(
             args.root,
             args.require_consumer,
             reconciliation_evidence=reconciliation_evidence,
+            acp_reconciliation_observation=acp_reconciliation_observation,
         )
     except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
         print(json.dumps({"error": str(exc)}, indent=2, sort_keys=True))
