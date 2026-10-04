@@ -130,6 +130,49 @@ def _control_test_reference_scan(root: Path, registry: dict) -> dict:
     }
 
 
+def _tektite_projection_gap_scan(root: Path) -> dict:
+    status_seed = _load_json(root / TEKTITE_STATUS_PATH)
+    if status_seed.get("schema") != "TEKTITE_V0_1_STATUS_SEED":
+        raise ValueError("unexpected Tektite status seed schema")
+
+    current_status = status_seed.get("current_status")
+    blockers = status_seed.get("active_blockers")
+    if not isinstance(current_status, dict):
+        raise ValueError("Tektite status seed current_status must be an object")
+    if not isinstance(blockers, list):
+        raise ValueError("Tektite status seed active_blockers must be an array")
+
+    gap_states = {"NOT_ESTABLISHED", "NOT_AUTHORIZED", "IN_DEVELOPMENT"}
+    declared_gap_states = [
+        {"projection": key, "state": value} for key, value in sorted(current_status.items()) if value in gap_states
+    ]
+
+    active_blockers = []
+    for blocker in blockers:
+        if not isinstance(blocker, dict):
+            raise ValueError("Tektite active blocker entries must be objects")
+        if blocker.get("status") == "ACTIVE_BLOCKER":
+            active_blockers.append(
+                {
+                    "id": blocker.get("id"),
+                    "name": blocker.get("name"),
+                    "blocks": blocker.get("blocks", []),
+                    "status": blocker.get("status"),
+                }
+            )
+
+    return {
+        "scope": "TEKTITE_STATUS_SEED_DECLARED_GAPS_ONLY",
+        "dependency_inference": "NOT_PERFORMED",
+        "authority_effect": "NONE",
+        "source_date": status_seed.get("date"),
+        "live_currentness": "NOT_ESTABLISHED",
+        "completeness": "NOT_ESTABLISHED",
+        "declared_gap_states": declared_gap_states,
+        "active_blockers": active_blockers,
+    }
+
+
 def _validate_acp_semantic_observation(observation: dict) -> None:
     required = {"schema_version", "observed_at", "acp_repository_commit", "source_refs", "assertions"}
     if set(observation) != required:
@@ -319,6 +362,7 @@ def build_report(
             ),
         },
         "control_test_reference_scan": _control_test_reference_scan(root, registry),
+        "tektite_projection_gap_scan": _tektite_projection_gap_scan(root),
         "component_registry": {
             "status": registry["status"],
             "core_component_ids": [item["id"] for item in registry["core_components"]],

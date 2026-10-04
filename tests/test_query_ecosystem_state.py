@@ -333,3 +333,59 @@ def test_cli_accepts_acp_semantic_observation(tmp_path):
     assert rows["LIVE_REPOSITORY_MUTATION"] == "MATCH"
     assert rows["#117"] == "DIVERGENCE"
     assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "NOT_PROJECTED_BY_TEKTITE"
+
+
+def test_report_exposes_tektite_declared_unestablished_projection_states():
+    module = load_module()
+    report = module.build_report(ROOT, [])
+
+    scan = report["tektite_projection_gap_scan"]
+    assert scan["scope"] == "TEKTITE_STATUS_SEED_DECLARED_GAPS_ONLY"
+    assert scan["dependency_inference"] == "NOT_PERFORMED"
+    assert scan["authority_effect"] == "NONE"
+    assert scan["source_date"] == "2026-09-30"
+    assert scan["live_currentness"] == "NOT_ESTABLISHED"
+
+    rows = {row["projection"]: row["state"] for row in scan["declared_gap_states"]}
+    assert rows["INDEPENDENT_VALIDATION"] == "NOT_ESTABLISHED"
+    assert rows["CANONICAL_DGAF_EFFICACY"] == "NOT_ESTABLISHED"
+    assert rows["HIGH_ASSURANCE"] == "NOT_AUTHORIZED"
+    assert rows["LIVE_REPOSITORY_MUTATION"] == "NOT_AUTHORIZED"
+    assert rows["ROLLBACK_EXECUTION"] == "NOT_AUTHORIZED"
+    assert rows["PRODUCTION_EXECUTOR"] == "NOT_ESTABLISHED"
+    assert rows["PUBLIC_DEMO_SURFACE"] == "IN_DEVELOPMENT"
+    assert "DGAF_CLAIM_DISCIPLINE" not in rows
+    assert "ACP_QUEUE_RECONCILIATION" not in rows
+
+
+def test_report_exposes_tektite_active_blockers_without_inference():
+    module = load_module()
+    report = module.build_report(ROOT, [])
+
+    scan = report["tektite_projection_gap_scan"]
+    blockers = {row["id"]: row for row in scan["active_blockers"]}
+    assert blockers["#117"]["status"] == "ACTIVE_BLOCKER"
+    assert blockers["#118"]["status"] == "ACTIVE_BLOCKER"
+    assert blockers["#117"]["blocks"] == ["#110", "#137", "#139"]
+    assert blockers["#118"]["blocks"] == ["#110", "#137", "#139"]
+
+
+def test_tektite_projection_gap_scan_rejects_unexpected_status_schema(tmp_path):
+    module = load_module()
+
+    for relative in [
+        "registry/ecosystem_state_pointer.current.json",
+        "docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v1.json",
+        "schemas/execution_receipt.schema.json",
+        "docs/tektite-v0.1/evidence-ledger.seed.json",
+    ]:
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text((ROOT / relative).read_text(encoding="utf-8"), encoding="utf-8")
+
+    target = tmp_path / "docs/tektite-v0.1/status.seed.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps({"schema": "UNEXPECTED"}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Tektite status seed schema"):
+        module.build_report(tmp_path, [])
