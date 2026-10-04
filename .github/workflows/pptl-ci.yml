@@ -16,17 +16,48 @@ env:
 jobs:
   pptl-ci:
     name: PPTL CI
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Assert exact candidate checkout
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
 
       - name: Set up Python 3.12
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
+
+      - name: Bootstrap exact pip resolver
+        run: bash scripts/bootstrap_ci_pip.sh
+
+      - name: Install hash-locked PPTL CI dependencies
+        run: >-
+          python -m pip install
+          --disable-pip-version-check
+          --require-hashes
+          --only-binary=:all:
+          -r requirements-ci-control-plane-py312-ubuntu2404-x64.lock
+
+      - name: Assert bound pandas version
+        run: python -c "import pandas; assert pandas.__version__ == '3.0.5'"
 
       - name: Validate dependency-aware metric provenance
         run: python scripts/lint_provenance.py
 
       - name: Run provenance regression tests
         run: python -m unittest discover -s tests -p 'test_lint_provenance.py' -v
+
+      - name: Run PPTL executable contract suite
+        env:
+          PYTHONPATH: .
+        run: python -m pytest pptl/tests -q

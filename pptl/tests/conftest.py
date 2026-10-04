@@ -1,25 +1,21 @@
-"""
-Shared pytest fixtures for PPTL test suite.
+"""Shared pytest fixtures for the PPTL test suite.
 
 Fixture hierarchy:
   herald            — fresh HeraldAgent per test (no sinks)
   herald_with_sink  — HeraldAgent + CaptureSink for assertion
-  orch              — IntegratedOrchestrator wired to herald_with_sink
   tmp_jsonl         — temp-file path for JSONLSink tests
 """
+
 from __future__ import annotations
-import os, sys, tempfile, pytest
 
-# Ensure repo root on path so `pptl` is importable without install
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+import pytest
 
-from pptl.herald_agent  import HeraldAgent
-from pptl.rag_verifier  import SentinelRAGVerifier
-from pptl.orchestrator  import IntegratedOrchestrator
+from pptl.herald_agent import HeraldAgent
 
 
 class CaptureSink:
-    """In-memory sink — collects all emitted events for assertion."""
+    """In-memory sink that collects emitted events for assertion."""
+
     def __init__(self):
         self.events: list[dict] = []
         self.closed = False
@@ -41,7 +37,8 @@ class CaptureSink:
 
 
 class BrokenSink:
-    """Sink that always raises — tests Herald isolation."""
+    """Sink that always raises to test Herald isolation."""
+
     def emit(self, event: dict) -> None:
         raise RuntimeError("sink exploded")
 
@@ -63,16 +60,6 @@ def herald_with_sink(capture):
     h = HeraldAgent(session_id="test-sess")
     h.register_sink(capture)
     yield h, capture
-
-
-@pytest.fixture
-def orch(herald_with_sink):
-    h, cap = herald_with_sink
-    o = IntegratedOrchestrator(
-        herald     = h,
-        rag_scorer = SentinelRAGVerifier(),
-    )
-    yield o, h, cap
 
 
 @pytest.fixture

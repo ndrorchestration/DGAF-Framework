@@ -20,6 +20,7 @@ Usage:
         dry_run     = False,
     )
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -43,27 +44,31 @@ class N8nHeraldSink:
     HMAC signing, retry backoff, and dead-letter fallback.
     """
 
-    MAX_RETRIES    = 3
-    RETRY_BASE_S   = 0.5      # exponential base: 0.5s, 1.0s, 2.0s
-    FLUSH_INTERVAL = 10.0     # seconds between auto-flush if batch not full
+    MAX_RETRIES = 3
+    RETRY_BASE_S = 0.5  # exponential base: 0.5s, 1.0s, 2.0s
+    FLUSH_INTERVAL = 10.0  # seconds between auto-flush if batch not full
 
     def __init__(
         self,
         webhook_url: str,
         hmac_secret: str = "",
-        batch_size:  int = 20,
-        dry_run:     bool = True,
+        batch_size: int = 20,
+        dry_run: bool = True,
     ) -> None:
         self.webhook_url = webhook_url
         self.hmac_secret = hmac_secret.encode() if hmac_secret else b""
-        self.batch_size  = batch_size
-        self.dry_run     = dry_run
+        self.batch_size = batch_size
+        self.dry_run = dry_run
 
         self._batch: list[dict[str, Any]] = []
-        self._lock  = threading.Lock()
+        self._lock = threading.Lock()
         self._last_flush = time.monotonic()
 
     # ── Sink protocol ──────────────────────────────────────────────────
+
+    def emit(self, event: dict[str, Any]) -> None:
+        """HeraldAgent sink protocol entry point."""
+        self.write(event)
 
     def write(self, event: dict[str, Any]) -> None:
         """Buffer event; flush when batch_size reached or interval elapsed."""
@@ -106,8 +111,8 @@ class N8nHeraldSink:
             logger.info("[N8nHeraldSink dry_run] batch=%d events", len(batch))
             return
 
-        import urllib.request
         import urllib.error
+        import urllib.request
 
         last_exc: Exception | None = None
         for attempt in range(1, self.MAX_RETRIES + 1):
@@ -122,7 +127,8 @@ class N8nHeraldSink:
                     if resp.status < 300:
                         logger.debug(
                             "[N8nHeraldSink] flushed %d events (attempt %d)",
-                            len(batch), attempt,
+                            len(batch),
+                            attempt,
                         )
                         return
                     raise RuntimeError(f"HTTP {resp.status}")
@@ -131,14 +137,17 @@ class N8nHeraldSink:
                 wait = self.RETRY_BASE_S * (2 ** (attempt - 1))
                 logger.warning(
                     "[N8nHeraldSink] attempt %d failed: %s — retrying in %.1fs",
-                    attempt, exc, wait,
+                    attempt,
+                    exc,
+                    wait,
                 )
                 time.sleep(wait)
 
         # Permanent failure — write to dead-letter
         logger.error(
             "[N8nHeraldSink] permanent failure after %d attempts: %s",
-            self.MAX_RETRIES, last_exc,
+            self.MAX_RETRIES,
+            last_exc,
         )
         self._write_dead_letter(batch)
 
@@ -151,7 +160,8 @@ class N8nHeraldSink:
                     fh.write(json.dumps(event, default=str) + "\n")
             logger.warning(
                 "[N8nHeraldSink] %d events written to dead-letter: %s",
-                len(batch), _DEAD_LETTER_PATH,
+                len(batch),
+                _DEAD_LETTER_PATH,
             )
         except Exception as exc:  # noqa: BLE001
             logger.error("[N8nHeraldSink] dead-letter write failed: %s", exc)
