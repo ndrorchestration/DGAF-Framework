@@ -17,6 +17,7 @@ COMPONENT_REGISTRY_PATH = Path("docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v
 RECEIPT_SCHEMA_PATH = Path("schemas/execution_receipt.schema.json")
 TEKTITE_LEDGER_PATH = Path("docs/tektite-v0.1/evidence-ledger.seed.json")
 TEKTITE_STATUS_PATH = Path("docs/tektite-v0.1/status.seed.json")
+TEKTITE_SEMANTIC_SOURCE_PATH = Path("registry/tektite_public_status_semantic_source_v1.json")
 ACP_SEMANTIC_SCHEMA_VERSION = "ACP_SEMANTIC_OBSERVATION_V0_CANDIDATE"
 POINTER_VALIDATOR_PATH = Path("scripts/validate_ecosystem_state_pointer.py")
 RECONCILIATION_SCHEMA_VERSION = "ECOSYSTEM_LIVE_RECONCILIATION_V1"
@@ -228,11 +229,35 @@ def _acp_semantic_result(root: Path, observation: dict | None) -> dict:
             }
         )
 
+    manifest = _load_json(root / TEKTITE_SEMANTIC_SOURCE_PATH)
+    authorities = manifest.get("external_authorities")
+    if not isinstance(authorities, list):
+        raise ValueError("Tektite semantic manifest external_authorities must be an array")
+    acp_sources = [item for item in authorities if isinstance(item, dict) and item.get("authority_id") == "ACP_SOURCE"]
+    if len(acp_sources) != 1:
+        raise ValueError("Tektite semantic manifest must declare exactly one ACP_SOURCE")
+    embedded_acp_commit = acp_sources[0].get("object_identity")
+    sha1_re = _pointer_module()["SHA1_RE"]
+    if not isinstance(embedded_acp_commit, str) or not sha1_re.fullmatch(embedded_acp_commit):
+        raise ValueError(
+            "Tektite semantic manifest ACP_SOURCE object_identity must be a lowercase 40-character Git SHA"
+        )
+
+    observed_acp_commit = observation["acp_repository_commit"]
+    tip_state = "ACP_REPOSITORY_TIP_MATCH" if observed_acp_commit == embedded_acp_commit else "ACP_SOURCE_ADVANCED"
+
     return {
         **base,
         "state": "OBSERVED_PARTIAL",
         "observed_at": observation["observed_at"],
-        "acp_repository_commit": observation["acp_repository_commit"],
+        "acp_repository_commit": observed_acp_commit,
+        "repository_tip_binding": {
+            "scope": "ACP_REPOSITORY_TIP_ONLY",
+            "tektite_embedded_acp_commit": embedded_acp_commit,
+            "observed_acp_repository_commit": observed_acp_commit,
+            "state": tip_state,
+            "semantic_authority_effect": "NONE",
+        },
         "source_refs": observation["source_refs"],
         "assertions": rows,
     }

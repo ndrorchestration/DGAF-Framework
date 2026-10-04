@@ -333,3 +333,38 @@ def test_cli_accepts_acp_semantic_observation(tmp_path):
     assert rows["LIVE_REPOSITORY_MUTATION"] == "MATCH"
     assert rows["#117"] == "DIVERGENCE"
     assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "NOT_PROJECTED_BY_TEKTITE"
+
+
+def test_acp_semantic_observation_binds_repository_tip_to_tektite_manifest():
+    module = load_module()
+    report = module.build_report(
+        ROOT,
+        [],
+        acp_semantic_observation=_acp_semantic_observation(
+            _acp_assertion("LIVE_REPOSITORY_MUTATION", "NOT_AUTHORIZED"),
+        ),
+    )
+
+    binding = report["acp_semantic_reconciliation"]["repository_tip_binding"]
+    assert binding == {
+        "scope": "ACP_REPOSITORY_TIP_ONLY",
+        "tektite_embedded_acp_commit": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
+        "observed_acp_repository_commit": "e7135323663ebbe025b18b74a13f2d99c14e2b57",
+        "state": "ACP_SOURCE_ADVANCED",
+        "semantic_authority_effect": "NONE",
+    }
+
+
+def test_acp_semantic_observation_tip_match_still_does_not_promote_semantics():
+    module = load_module()
+    observation = _acp_semantic_observation(
+        _acp_assertion("LIVE_REPOSITORY_MUTATION", "NOT_AUTHORIZED"),
+    )
+    observation["acp_repository_commit"] = "4d3cdd21a445b765753cb5d36360f643210fe0b5"
+
+    report = module.build_report(ROOT, [], acp_semantic_observation=observation)
+
+    semantic = report["acp_semantic_reconciliation"]
+    assert semantic["repository_tip_binding"]["state"] == "ACP_REPOSITORY_TIP_MATCH"
+    assert semantic["semantic_authority_effect"] == "NONE"
+    assert semantic["completeness"] == "NOT_ESTABLISHED"
