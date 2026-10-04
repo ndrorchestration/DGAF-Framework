@@ -1,15 +1,31 @@
 {
   "schema": "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED",
-  "date": "2026-09-30",
+  "date": "2026-10-04",
   "rule": "Every evidence row must state both what it supports and what it does not support.",
   "entries": [
     {
-      "artifact": "ACP PR #145",
+      "artifact": "ACP PR #145 (historical)",
       "source_surface": "GitHub",
-      "claim_supported": "ACP queue, dependency, and boundary documentation are merged.",
-      "claim_not_supported": "No executor authority, rollback authority, independent validation, or High-Assurance is established.",
-      "authorization_effect": "Executor PRs remain held.",
+      "claim_supported": "At its event time, ACP queue, dependency, and executor-boundary documentation were reconciled.",
+      "claim_not_supported": "It does not describe the later bounded executor or durable-lineage state and is not a current executor authority source.",
+      "authorization_effect": "Historical documentation evidence only; later execution changes require their own evidence.",
       "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/145"
+    },
+    {
+      "artifact": "ACP PR #156",
+      "source_surface": "GitHub",
+      "claim_supported": "Bounded local-test mutation execution is established for the tested disposable-repository scope.",
+      "claim_not_supported": "No real-project mutation, rollback execution, production executor, hostile-local-actor resistance, independent validation, or High-Assurance is established.",
+      "authorization_effect": "Only the tested disposable-repository BOUNDED_LOCAL_TEST execution profile is established.",
+      "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/156"
+    },
+    {
+      "artifact": "ACP PR #159",
+      "source_surface": "GitHub",
+      "claim_supported": "Durable local mutation lineage is established for the tested disposable-repository scope and preserves fresh-adjudication requirements for known prior lineage.",
+      "claim_not_supported": "No distributed/global lineage, real-project mutation authority, rollback execution, production executor, or High-Assurance is established.",
+      "authorization_effect": "No authority transfer; consequential follow-on effects still require fresh adjudication and current authorization.",
+      "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/159"
     },
     {
       "artifact": "DGAF claim ceiling",

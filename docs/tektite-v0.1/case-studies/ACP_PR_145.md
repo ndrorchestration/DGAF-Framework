@@ -1,5 +1,14 @@
 # Tektite v0.1 Case Study: ACP PR #145
 
+## Historical scope note
+
+This case study describes the ACP state associated with PR #145 on 2026-09-30.
+It is retained as event-time evidence. ACP later established a bounded
+disposable-repository executor through PR #156 and durable local mutation
+lineage through PR #159. Statements below about executor promotion being
+blocked must therefore be read as historical to this case, not as current ACP
+status.
+
 ## Purpose
 
 This case study explains why ACP PR #145 is useful public evidence for Tektite v0.1 without overstating what it proves.

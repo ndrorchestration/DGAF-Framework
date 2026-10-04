@@ -1,11 +1,13 @@
 {
   "schema": "TEKTITE_V0_1_STATUS_SEED",
-  "date": "2026-09-30",
+  "date": "2026-10-04",
   "authority_note": "Tektite projects public status only. It is not a governance authority or execution surface.",
   "current_status": {
     "DGAF_CLAIM_DISCIPLINE": "ACTIVE",
     "ACP_QUEUE_RECONCILIATION": "ESTABLISHED",
     "ACP_BOUNDARY_DOCS": "MERGED",
+    "ACP_BOUNDED_LOCAL_TEST_EXECUTOR": "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
+    "ACP_DURABLE_LOCAL_MUTATION_LINEAGE": "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE",
     "INDEPENDENT_VALIDATION": "NOT_ESTABLISHED",
     "CANONICAL_DGAF_EFFICACY": "NOT_ESTABLISHED",
     "HIGH_ASSURANCE": "NOT_AUTHORIZED",
@@ -15,36 +17,49 @@
     "PUBLIC_DEMO_SURFACE": "IN_DEVELOPMENT"
   },
   "latest_milestone": {
-    "title": "ACP PR #145 merged",
-    "date": "2026-09-30",
-    "merge_commit": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
-    "effect": "Documentation-only reconciliation",
+    "title": "ACP PR #159 merged",
+    "date": "2026-10-03",
+    "merge_commit": "cad2ef94f1a690deee741b81ea8bfab8c248cd7d",
+    "effect": "Durable local mutation lineage established for the tested disposable-repository scope.",
     "supports": [
-      "ACP queue classification",
-      "ACP dependency map",
-      "ACP executor boundary model"
+      "Bounded disposable-repository mutation execution remains established under the BOUNDED_LOCAL_TEST profile.",
+      "Known prior local mutation lineage is durably recorded and checked before a later consequential effect.",
+      "Fresh adjudication remains required for follow-on mutation lineage."
     ],
     "does_not_support": [
-      "Live executor authorization",
+      "Real-project repository mutation authority",
       "Rollback execution",
       "Production executor deployment",
+      "Hostile-local-actor resistance",
+      "Trusted process identity",
+      "Distributed or global mutation lineage",
       "Independent validation",
       "High-Assurance status"
     ],
-    "authorization_effect": "#110, #137, and #139 remain HOLD"
+    "authorization_effect": "No broader executor authorization is created; real-project mutation and rollback execution remain NOT_AUTHORIZED."
   },
-  "active_blockers": [
+  "active_blockers": [],
+  "retained_risks": [
     {
       "id": "#117",
       "name": "Filesystem object identity / TOCTOU",
-      "blocks": ["#110", "#137", "#139"],
-      "status": "ACTIVE_BLOCKER"
+      "disposition": "CLOSED_BY_RETAINED_RISK_DECISION",
+      "status": "RETAINED_GAP",
+      "does_not_establish": [
+        "FINAL_PATH_TO_SYSCALL_TOCTOU=ELIMINATED",
+        "HOSTILE_LOCAL_ACTOR_RESISTANCE=ESTABLISHED"
+      ]
     },
     {
       "id": "#118",
       "name": "Trusted process boundary / identity / isolation",
-      "blocks": ["#110", "#137", "#139"],
-      "status": "ACTIVE_BLOCKER"
+      "disposition": "CLOSED_BY_RETAINED_RISK_DECISION",
+      "status": "RETAINED_GAP",
+      "does_not_establish": [
+        "TRUSTED_PROCESS_IDENTITY=ESTABLISHED",
+        "PEER_PROCESS_TAMPER_RESISTANCE=ESTABLISHED",
+        "HIGH_ASSURANCE_PROCESS_BOUNDARY=ESTABLISHED"
+      ]
     }
   ]
 }
