@@ -28,7 +28,7 @@ class OrchestratorConfig:
     """Runtime configuration for IntegratedOrchestrator."""
     session_id: str
     domain: str = "general"  # "credit", "justice", or "general"
-    premise_check_fn: Optional[Callable[[str], bool]] = None
+    premise_check_fn: Optional[Callable[[str, Any], bool]] = None
     phi_threshold: float = 0.618
     herald_sink_url: Optional[str] = None
     dry_run: bool = False
@@ -150,16 +150,26 @@ class IntegratedOrchestrator:
         if domain == "credit":
             from .corpus.inv03_credit_signals import premise_check_fn_credit
 
-            self.config.premise_check_fn = premise_check_fn_credit
-            logger.info("Auto-wired premise_check_fn: credit (INV-03)")
+            self.config.premise_check_fn = (
+                lambda text, _invariant: not premise_check_fn_credit(text)
+            )
+            logger.info(
+                "Auto-wired P-35 invariant-satisfaction adapter: credit (INV-03)"
+            )
         elif domain == "justice":
             from .corpus.inv03_justice_signals import premise_check_fn_justice
 
-            self.config.premise_check_fn = premise_check_fn_justice
-            logger.info("Auto-wired premise_check_fn: justice (INV-03)")
+            self.config.premise_check_fn = (
+                lambda text, _invariant: not premise_check_fn_justice(text)
+            )
+            logger.info(
+                "Auto-wired P-35 invariant-satisfaction adapter: justice (INV-03)"
+            )
         else:
-            self.config.premise_check_fn = lambda _text: False
-            logger.info("Domain '%s': premise_check_fn set to pass-through", domain)
+            self.config.premise_check_fn = lambda _text, _invariant: True
+            logger.info(
+                "Domain '%s': P-35 premise_check_fn set to pass-through", domain
+            )
 
     def _synthesize_response(self, user_input: str, tgl_result: Any) -> str:
         """Placeholder synthesis step; production subclasses may override."""
