@@ -65,6 +65,10 @@ class N8nHeraldSink:
 
     # ── Sink protocol ──────────────────────────────────────────────────
 
+    def emit(self, event: dict[str, Any]) -> None:
+        """HeraldAgent sink protocol entry point."""
+        self.write(event)
+
     def write(self, event: dict[str, Any]) -> None:
         """Buffer event; flush when batch_size reached or interval elapsed."""
         with self._lock:
