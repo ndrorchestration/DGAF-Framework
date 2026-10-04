@@ -236,6 +236,41 @@ def test_acp_semantic_observation_matches_refreshed_tektite_projection():
     assert rows["#117"]["source_ref"] == "docs/CURRENT_FRONTIER.md"
 
 
+@pytest.mark.parametrize(
+    ("assertion_id", "observed_value", "tektite_value"),
+    [
+        ("HIGH_ASSURANCE", "AUTHORIZED", "NOT_AUTHORIZED"),
+        ("#118", "ACTIVE_BLOCKER", "CLOSED_BY_RETAINED_RISK_DECISION"),
+    ],
+)
+def test_acp_semantic_observation_reports_divergence_without_authority_transfer(
+    assertion_id, observed_value, tektite_value
+):
+    module = load_module()
+    report = module.build_report(
+        ROOT,
+        [],
+        acp_semantic_observation=_acp_semantic_observation(
+            _acp_assertion(assertion_id, observed_value),
+        ),
+    )
+
+    semantic = report["acp_semantic_reconciliation"]
+    assert semantic["assertions"] == [
+        {
+            "assertion_id": assertion_id,
+            "observed_value": observed_value,
+            "tektite_value": tektite_value,
+            "comparison": "DIVERGENCE",
+            "source_ref": "docs/CURRENT_FRONTIER.md",
+        }
+    ]
+    assert semantic["observation_authority"] == "CALLER_SUPPLIED_NOT_REVERIFIED"
+    assert semantic["semantic_authority_effect"] == "NONE"
+    assert report["claim_ceiling"]["high_assurance"] == "NOT_AUTHORIZED"
+    assert report["receipt_authority"]["follow_on_authority"] == "FRESH_ADJUDICATION_REQUIRED"
+
+
 def test_acp_semantic_observation_unknown_assertion_is_unmapped():
     module = load_module()
     report = module.build_report(

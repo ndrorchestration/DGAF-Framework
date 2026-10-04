@@ -8,7 +8,7 @@
       "source_surface": "GitHub",
       "claim_supported": "ACP queue, dependency, and boundary documentation are merged.",
       "claim_not_supported": "No executor authority, rollback authority, independent validation, or High-Assurance is established.",
-      "authorization_effect": "Executor PRs remain held.",
+      "authorization_effect": "Historical PR #145 disposition: executor PRs remained held at that event; this row does not assert current queue status or confer follow-on authority.",
       "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/145"
     },
     {
@@ -29,7 +29,7 @@
     },
     {
       "artifact": "ACP bounded local-test executor + retained-risk reconciliation",
-      "source_surface": "GitHub / ACP protected main",
+      "source_surface": "GitHub / ACP main at e7135323663ebbe025b18b74a13f2d99c14e2b57",
       "claim_supported": "A bounded disposable-repository executor and durable local mutation lineage are established for the tested BOUNDED_LOCAL_TEST profile; #117/#118 are closed by explicit retained-risk decision for that profile.",
       "claim_not_supported": "No real-project mutation, rollback execution, production executor, hostile-local-actor resistance, trusted process identity, distributed/global lineage, independent validation, or High-Assurance is established.",
       "authorization_effect": "NONE; consequential follow-on authority still requires fresh adjudication.",
