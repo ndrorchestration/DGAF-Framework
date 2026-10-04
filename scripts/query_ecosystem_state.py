@@ -16,6 +16,8 @@ POINTER_PATH = Path("registry/ecosystem_state_pointer.current.json")
 COMPONENT_REGISTRY_PATH = Path("docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v1.json")
 RECEIPT_SCHEMA_PATH = Path("schemas/execution_receipt.schema.json")
 TEKTITE_LEDGER_PATH = Path("docs/tektite-v0.1/evidence-ledger.seed.json")
+TEKTITE_STATUS_PATH = Path("docs/tektite-v0.1/status.seed.json")
+ACP_SEMANTIC_SCHEMA_VERSION = "ACP_SEMANTIC_OBSERVATION_V0_CANDIDATE"
 POINTER_VALIDATOR_PATH = Path("scripts/validate_ecosystem_state_pointer.py")
 RECONCILIATION_SCHEMA_VERSION = "ECOSYSTEM_LIVE_RECONCILIATION_V1"
 
@@ -128,10 +130,119 @@ def _control_test_reference_scan(root: Path, registry: dict) -> dict:
     }
 
 
+def _validate_acp_semantic_observation(observation: dict) -> None:
+    required = {"schema_version", "observed_at", "acp_repository_commit", "source_refs", "assertions"}
+    if set(observation) != required:
+        missing = sorted(required - set(observation))
+        extra = sorted(set(observation) - required)
+        raise ValueError(f"ACP semantic observation fields mismatch: missing={missing} extra={extra}")
+    if observation["schema_version"] != ACP_SEMANTIC_SCHEMA_VERSION:
+        raise ValueError(f"schema_version must be {ACP_SEMANTIC_SCHEMA_VERSION}")
+    if not isinstance(observation["observed_at"], str) or not observation["observed_at"]:
+        raise ValueError("observed_at must be a non-empty string")
+
+    sha1_re = _pointer_module()["SHA1_RE"]
+    commit = observation["acp_repository_commit"]
+    if not isinstance(commit, str) or not sha1_re.fullmatch(commit):
+        raise ValueError("acp_repository_commit must be a lowercase 40-character Git SHA")
+
+    source_refs = observation["source_refs"]
+    if not isinstance(source_refs, list) or not source_refs:
+        raise ValueError("source_refs must be a non-empty array")
+    if any(not isinstance(ref, str) or not ref for ref in source_refs):
+        raise ValueError("source_refs must contain non-empty strings")
+    if len(set(source_refs)) != len(source_refs):
+        raise ValueError("source_refs must not contain duplicates")
+
+    assertions = observation["assertions"]
+    if not isinstance(assertions, list):
+        raise ValueError("assertions must be an array")
+    seen = set()
+    required_assertion = {"assertion_id", "value", "source_ref"}
+    for item in assertions:
+        if not isinstance(item, dict) or set(item) != required_assertion:
+            raise ValueError("ACP semantic assertion fields are invalid")
+        assertion_id = item["assertion_id"]
+        if not isinstance(assertion_id, str) or not assertion_id:
+            raise ValueError("assertion_id must be a non-empty string")
+        if assertion_id in seen:
+            raise ValueError(f"duplicate assertion_id: {assertion_id}")
+        seen.add(assertion_id)
+        if not isinstance(item["value"], str) or not item["value"]:
+            raise ValueError("assertion value must be a non-empty string")
+        if item["source_ref"] not in source_refs:
+            raise ValueError("assertion source_ref must be listed in source_refs")
+
+
+def _acp_semantic_result(root: Path, observation: dict | None) -> dict:
+    base = {
+        "scope": "ACP_SEMANTIC_OBSERVATION_ONLY",
+        "observation_authority": "CALLER_SUPPLIED_NOT_REVERIFIED",
+        "semantic_authority_effect": "NONE",
+        "cross_surface_reconciliation": "PARTIAL",
+        "completeness": "NOT_ESTABLISHED",
+    }
+    if observation is None:
+        return {**base, "state": "NOT_SUPPLIED", "assertions": []}
+
+    _validate_acp_semantic_observation(observation)
+    status_seed = _load_json(root / TEKTITE_STATUS_PATH)
+    if status_seed.get("schema") != "TEKTITE_V0_1_STATUS_SEED":
+        raise ValueError("unexpected Tektite status seed schema")
+    current_status = status_seed.get("current_status")
+    active_blockers = status_seed.get("active_blockers")
+    if not isinstance(current_status, dict):
+        raise ValueError("Tektite status seed current_status must be an object")
+    if not isinstance(active_blockers, list):
+        raise ValueError("Tektite status seed active_blockers must be an array")
+    blocker_values = {
+        item.get("id"): item.get("status")
+        for item in active_blockers
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+
+    known_not_projected = {"BOUNDED_LOCAL_TEST_EXECUTOR"}
+    rows = []
+    for item in observation["assertions"]:
+        assertion_id = item["assertion_id"]
+        observed_value = item["value"]
+        if assertion_id in current_status:
+            tektite_value = current_status[assertion_id]
+            comparison = "MATCH" if tektite_value == observed_value else "DIVERGENCE"
+        elif assertion_id in blocker_values:
+            tektite_value = blocker_values[assertion_id]
+            comparison = "MATCH" if tektite_value == observed_value else "DIVERGENCE"
+        elif assertion_id in known_not_projected:
+            tektite_value = None
+            comparison = "NOT_PROJECTED_BY_TEKTITE"
+        else:
+            tektite_value = None
+            comparison = "UNMAPPED"
+        rows.append(
+            {
+                "assertion_id": assertion_id,
+                "observed_value": observed_value,
+                "tektite_value": tektite_value,
+                "comparison": comparison,
+                "source_ref": item["source_ref"],
+            }
+        )
+
+    return {
+        **base,
+        "state": "OBSERVED_PARTIAL",
+        "observed_at": observation["observed_at"],
+        "acp_repository_commit": observation["acp_repository_commit"],
+        "source_refs": observation["source_refs"],
+        "assertions": rows,
+    }
+
+
 def build_report(
     root: Path,
     required_consumers: list[str],
     reconciliation_evidence: dict | None = None,
+    acp_semantic_observation: dict | None = None,
 ) -> dict:
     root = Path(root)
     pointer = _load_json(root / POINTER_PATH)
@@ -178,6 +289,8 @@ def build_report(
             else "EXTERNAL_RECONCILIATION_PRESENT"
         )
 
+    acp_semantic_reconciliation = _acp_semantic_result(root, acp_semantic_observation)
+
     properties = receipt_schema["properties"]
     report = {
         "schema_version": "ECOSYSTEM_QUERY_REPORT_V1",
@@ -190,6 +303,7 @@ def build_report(
             "live_reconciliation_required": live["required_for_repository_tip_currentness"],
         },
         "reconciliation": reconciliation,
+        "acp_semantic_reconciliation": acp_semantic_reconciliation,
         "claim_ceiling": pointer["claim_ceiling"],
         "consumers": consumers,
         "receipt_authority": {
@@ -226,14 +340,17 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--require-consumer", action="append", default=[])
     parser.add_argument("--reconciliation-evidence", type=Path)
+    parser.add_argument("--acp-semantic-observation", type=Path)
     args = parser.parse_args()
 
     try:
         reconciliation_evidence = _load_json(args.reconciliation_evidence) if args.reconciliation_evidence else None
+        acp_semantic_observation = _load_json(args.acp_semantic_observation) if args.acp_semantic_observation else None
         report = build_report(
             args.root,
             args.require_consumer,
             reconciliation_evidence=reconciliation_evidence,
+            acp_semantic_observation=acp_semantic_observation,
         )
     except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
         print(json.dumps({"error": str(exc)}, indent=2, sort_keys=True))
