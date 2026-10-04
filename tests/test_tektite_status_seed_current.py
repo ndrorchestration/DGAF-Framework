@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 STATUS = ROOT / "docs" / "tektite-v0.1" / "status.seed.json"
 LEDGER = ROOT / "docs" / "tektite-v0.1" / "evidence-ledger.seed.json"
@@ -17,9 +16,7 @@ def test_current_tektite_seed_projects_bounded_executor_without_wider_authority(
     status = load(STATUS)
 
     assert status["date"] == "2026-10-04"
-    assert status["current_status"]["BOUNDED_LOCAL_TEST_EXECUTOR"] == (
-        "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE"
-    )
+    assert status["current_status"]["BOUNDED_LOCAL_TEST_EXECUTOR"] == ("ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE")
     assert status["current_status"]["LIVE_REPOSITORY_MUTATION"] == "NOT_AUTHORIZED"
     assert status["current_status"]["ROLLBACK_EXECUTION"] == "NOT_AUTHORIZED"
     assert status["current_status"]["PRODUCTION_EXECUTOR"] == "NOT_ESTABLISHED"
