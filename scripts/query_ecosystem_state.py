@@ -191,13 +191,21 @@ def _acp_semantic_result(root: Path, observation: dict | None) -> dict:
         raise ValueError("unexpected Tektite status seed schema")
     current_status = status_seed.get("current_status")
     active_blockers = status_seed.get("active_blockers")
+    retained_risks = status_seed.get("retained_risks", [])
     if not isinstance(current_status, dict):
         raise ValueError("Tektite status seed current_status must be an object")
     if not isinstance(active_blockers, list):
         raise ValueError("Tektite status seed active_blockers must be an array")
+    if not isinstance(retained_risks, list):
+        raise ValueError("Tektite status seed retained_risks must be an array")
     blocker_values = {
         item.get("id"): item.get("status")
         for item in active_blockers
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    retained_risk_values = {
+        item.get("id"): item.get("status")
+        for item in retained_risks
         if isinstance(item, dict) and isinstance(item.get("id"), str)
     }
 
@@ -211,6 +219,9 @@ def _acp_semantic_result(root: Path, observation: dict | None) -> dict:
             comparison = "MATCH" if tektite_value == observed_value else "DIVERGENCE"
         elif assertion_id in blocker_values:
             tektite_value = blocker_values[assertion_id]
+            comparison = "MATCH" if tektite_value == observed_value else "DIVERGENCE"
+        elif assertion_id in retained_risk_values:
+            tektite_value = retained_risk_values[assertion_id]
             comparison = "MATCH" if tektite_value == observed_value else "DIVERGENCE"
         elif assertion_id in known_not_projected:
             tektite_value = None
