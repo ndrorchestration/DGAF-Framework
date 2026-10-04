@@ -49,9 +49,19 @@ result = orch.orchestrate_turn(
 )
 
 print(result.tgl_passed)
+print(result.final_status)
 print(result.gate_records)
 print(result.response)
 ```
+
+The default wrapper wires only the premise hook. Unwired required TGL gates
+produce `ESCALATE`: `tgl_passed=False`, `response=None`, and an explicit
+`blocked_reason`, with gate records retained. `final_status` preserves the
+TGL verdict. Fully wired `PASS` and the existing `WARN` policy permit the
+placeholder response; `KILL`, `KILL_REC`, and `ESCALATE` do not. These wrapper
+results do not grant execution authority. The optional trailing status field
+keeps existing positional `TurnResult` construction compatible; manually
+constructed legacy results may have `final_status=None`.
 
 Custom P-35 premise predicates use the canonical signature
 `(input_text, invariant) -> bool`, where `True` means the invariant is

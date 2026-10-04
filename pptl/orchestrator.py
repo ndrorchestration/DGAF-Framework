@@ -19,6 +19,7 @@ from .triadic_governance_loop import (
     GateResult,
     TGLHooks,
     TriadicGovernanceLoop,
+    TurnStatus,
 )
 
 logger = logging.getLogger(__name__)
@@ -49,6 +50,7 @@ class TurnResult:
     response: Optional[str]
     blocked_reason: Optional[str] = None
     phi_score: Optional[float] = None
+    final_status: Optional[TurnStatus] = None
 
 
 class IntegratedOrchestrator:
@@ -114,6 +116,7 @@ class IntegratedOrchestrator:
                 response=None,
                 blocked_reason=str(exc),
                 phi_score=None,
+                final_status=TurnStatus.KILL,
             )
 
         blocked_reason = None
@@ -122,7 +125,16 @@ class IntegratedOrchestrator:
                 blocked_reason = gate.notes or gate.gate_name
                 break
 
-        tgl_passed = audit.final_status.value in {"PASS", "WARN", "ESCALATE"}
+        if audit.final_status == TurnStatus.ESCALATE:
+            skipped = [
+                gate.gate_name
+                for gate in audit.gate_records
+                if gate.step in self.tgl.REQUIRED_STEPS and gate.result == GateResult.SKIP
+            ]
+            blocked_reason = "ESCALATE: required gates skipped: " + ", ".join(skipped)
+
+        # Retain the existing WARN policy, but never promote ESCALATE to success.
+        tgl_passed = audit.final_status in {TurnStatus.PASS, TurnStatus.WARN}
         response = self._synthesize_response(user_input, audit) if tgl_passed else None
 
         return TurnResult(
@@ -134,6 +146,7 @@ class IntegratedOrchestrator:
             response=response,
             blocked_reason=blocked_reason,
             phi_score=None,
+            final_status=audit.final_status,
         )
 
     # ------------------------------------------------------------------

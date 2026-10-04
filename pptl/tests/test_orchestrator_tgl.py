@@ -5,7 +5,10 @@ Metrics: TGL gate records present per turn; blocked turns return no response;
          domain auto-wire fires correct premise_check_fn.
 """
 
+import pytest
+
 from pptl.orchestrator import IntegratedOrchestrator, OrchestratorConfig
+from pptl.triadic_governance_loop import GateResult, TGLHooks, TurnStatus
 
 SESSION = "test-s068"
 
@@ -23,12 +26,68 @@ def _make_orchestrator(domain="general", premise_check_fn=None, dry_run=True):
 # --- Basic turn execution ---
 
 
-def test_clean_turn_passes_tgl():
+def test_default_turn_preserves_escalation_without_synthesis():
     orch = _make_orchestrator()
+    synthesized = []
+    orch._synthesize_response = lambda text, audit: synthesized.append(text)
     result = orch.orchestrate_turn("What is the weather today?", turn_id="t001")
-    assert result.tgl_passed is True
-    assert result.response is not None
-    assert result.blocked_reason is None
+    assert result.tgl_passed is False
+    assert result.final_status == TurnStatus.ESCALATE
+    assert result.response is None
+    assert result.blocked_reason
+    assert any(g.result == GateResult.SKIP for g in result.gate_records)
+    assert synthesized == []
+
+
+def _wire_required_hooks(orch):
+    orch.tgl.hooks = TGLHooks(
+        premise_check_fn=lambda _text, _invariant: True,
+        scpe_fn=lambda _text, _ctx: GateResult.PASS,
+        pdmal_fn=lambda _text, _ctx: GateResult.PASS,
+        demijoul_fn=lambda _text, _ctx: GateResult.PASS,
+        kappa_fn=lambda _text, _ctx: GateResult.PASS,
+        sentinel_fn=lambda _text, _ctx: GateResult.PASS,
+        phi_closure_fn=lambda _text, _ctx: GateResult.PASS,
+        hpg_fn=lambda _text, _ctx: GateResult.PASS,
+        apogee_fn=lambda _text, _ctx: GateResult.PASS,
+        herald_fn=lambda _text, _ctx: GateResult.PASS,
+    )
+
+
+@pytest.mark.parametrize(
+    "gate_result, status, passed",
+    [
+        (GateResult.PASS, TurnStatus.PASS, True),
+        (GateResult.WARN, TurnStatus.WARN, True),
+        (GateResult.KILL, TurnStatus.KILL, False),
+        (GateResult.SKIP, TurnStatus.ESCALATE, False),
+    ],
+)
+def test_wrapper_preserves_real_tgl_status(gate_result, status, passed):
+    orch = _make_orchestrator()
+    _wire_required_hooks(orch)
+    orch.tgl.hooks.scpe_fn = lambda _text, _ctx: gate_result
+    result = orch.orchestrate_turn("synthetic input", "status-turn")
+    assert result.final_status == status
+    assert result.tgl_passed is passed
+    if passed:
+        assert result.response == "[Governed response] synthetic input"
+        assert result.blocked_reason is None
+    else:
+        assert result.response is None
+        assert result.blocked_reason
+
+
+@pytest.mark.parametrize("bad_hook", [lambda _text, _ctx: "invalid", lambda _text, _ctx: 1 / 0])
+def test_failed_hook_remains_blocked(bad_hook):
+    orch = _make_orchestrator()
+    _wire_required_hooks(orch)
+    orch.tgl.hooks.scpe_fn = bad_hook
+    result = orch.orchestrate_turn("synthetic input", "bad-hook")
+    assert result.final_status == TurnStatus.KILL
+    assert result.tgl_passed is False
+    assert result.response is None
+    assert result.blocked_reason
 
 
 def test_turn_result_has_gate_records():
@@ -53,6 +112,7 @@ def test_blocked_turn_returns_no_response():
     orch = _make_orchestrator(premise_check_fn=lambda _text, _invariant: False)
     result = orch.orchestrate_turn("zip code feature used", turn_id="t004")
     assert result.tgl_passed is False
+    assert result.final_status == TurnStatus.KILL
     assert result.response is None
     assert result.blocked_reason is not None
 
