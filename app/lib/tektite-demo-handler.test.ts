@@ -18,9 +18,11 @@ test('hostile forwarded headers cannot redirect the credentialed audit request',
   process.env.TEKTITE_DEMO_AUDIT_ORIGIN = 'https://trusted.example'
 
   let requestedUrl = ''
+  let requestedRedirect: RequestRedirect | undefined
   let requestedHeaders: Record<string, string> = {}
   globalThis.fetch = (async (input, init) => {
     requestedUrl = String(input)
+    requestedRedirect = init?.redirect
     requestedHeaders = Object.fromEntries(new Headers(init?.headers).entries())
     return new Response(JSON.stringify({ status: 'ok' }), {
       status: 200,
@@ -56,6 +58,7 @@ test('hostile forwarded headers cannot redirect the credentialed audit request',
     await handler(req as never, res as never)
     assert.equal(statusCode, 200)
     assert.equal(requestedUrl, 'https://trusted.example/api/audit')
+    assert.equal(requestedRedirect, 'error', 'credentialed callbacks must reject redirects')
     assert.equal(requestedHeaders['x-tektite-demo-token'], 'test-internal-token')
     assert.equal(requestedHeaders['x-vercel-protection-bypass'], undefined)
     assert.equal((body as { scenario?: string }).scenario, 'authorized')
