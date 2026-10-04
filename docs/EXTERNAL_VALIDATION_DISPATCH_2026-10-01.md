@@ -29,17 +29,23 @@ Use the participant brief:
 
 Participant-facing site:
 
-`https://dynamicgovernanceagenticformation-1ei0gb4sl-ndrorchestration.vercel.app`
+`https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo`
+
+Surface identity:
+
+- DGAF source: `d4d2387cc1f7466a127e57862acf79f7f0e1d9b8`
+- Vercel deployment: `dpl_C1HM4r8nuSkzSK8nxxdL6uTKgXjs`
+- facilitator-sheet rebind merge: `3f76c9a93168eed7b366f51ac16481ae53954e27`
 
 The facilitator should separately use:
 
-[Facilitator run sheet — pinned protocol commit](https://github.com/ndrorchestration/DGAF-Framework/blob/c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91/docs/TEKTITE_HCI_FACILITATOR_RUN_SHEET.md)
+[Facilitator run sheet — current surface rebind](https://github.com/ndrorchestration/DGAF-Framework/blob/3f76c9a93168eed7b366f51ac16481ae53954e27/docs/TEKTITE_HCI_FACILITATOR_RUN_SHEET.md)
 
 [Canonical validation protocol — facilitator only before the run](https://github.com/ndrorchestration/DGAF-Framework/blob/c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91/docs/TEKTITE_HCI_VALIDATION_PACKET.md)
 
 For participant recruitment, share only the participant brief and neutral access instructions; keep the four-stage explanation and scoring material out of the pre-run handoff.
 
-Do not expose facilitator scoring or expected answers before the participant finishes.
+Do not expose facilitator scoring or expected answers before the participant finishes. The participant brief and canonical scoring protocol remain pinned to protocol commit `c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91`; only the participant surface identity and facilitator-sheet binding have been rebound to the current deployment.
 
 ### What the run tests
 
