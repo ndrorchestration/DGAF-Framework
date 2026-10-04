@@ -9,9 +9,11 @@ Controller: issue #1224
 
 Participant surface:
 
-- URL: `https://dynamicgovernanceagenticformation-1ei0gb4sl-ndrorchestration.vercel.app`
-- Vercel deployment: `dpl_EcDrRmUzFaWiGQf9nK6xzxw1LQLV`
-- DGAF source SHA: `d172c1430c7d97fba74b182f4aedf0d6b374d96a`
+- URL: `https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo`
+- Vercel deployment: `dpl_C1HM4r8nuSkzSK8nxxdL6uTKgXjs`
+- DGAF source SHA: `d4d2387cc1f7466a127e57862acf79f7f0e1d9b8`
+- Deployment state at rebind: `READY`
+- Rebind reason: current `/demo` includes the read-only CEP observability projection accepted in PR #1286.
 
 Protocol packet:
 
@@ -19,6 +21,8 @@ Protocol packet:
 - canonical packet commit: record the merged/canonical commit used for the session
 
 If either the participant surface or protocol changes materially, do not reuse this sheet without rebinding the identities.
+
+This rebind changes **surface identity only**. Participant tasks, scoring, eligibility, facilitator constraints, and claim ceilings remain unchanged. The CEP panel is part of the observed surface but is not itself an HCI PASS, authority source, or efficacy result.
 
 ## Before the session
 
@@ -65,9 +69,9 @@ CONDITION: A_STAGED
 TECHNICAL_FAMILIARITY:
 GOVERNANCE_TOOL_FAMILIARITY:
 
-REPOSITORY_SHA: d172c1430c7d97fba74b182f4aedf0d6b374d96a
-VERCEL_DEPLOYMENT: dpl_EcDrRmUzFaWiGQf9nK6xzxw1LQLV
-SURFACE_URL: https://dynamicgovernanceagenticformation-1ei0gb4sl-ndrorchestration.vercel.app
+REPOSITORY_SHA: d4d2387cc1f7466a127e57862acf79f7f0e1d9b8
+VERCEL_DEPLOYMENT: dpl_C1HM4r8nuSkzSK8nxxdL6uTKgXjs
+SURFACE_URL: https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo
 PROTOCOL_PACKET_COMMIT:
 
 SYSTEM_PURPOSE_RAW:
