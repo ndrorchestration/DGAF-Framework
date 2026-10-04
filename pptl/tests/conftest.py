@@ -4,7 +4,6 @@ Shared pytest fixtures for PPTL test suite.
 Fixture hierarchy:
   herald            — fresh HeraldAgent per test (no sinks)
   herald_with_sink  — HeraldAgent + CaptureSink for assertion
-  orch              — IntegratedOrchestrator wired to herald_with_sink
   tmp_jsonl         — temp-file path for JSONLSink tests
 """
 from __future__ import annotations
@@ -14,8 +13,6 @@ import os, sys, tempfile, pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from pptl.herald_agent  import HeraldAgent
-from pptl.rag_verifier  import SentinelRAGVerifier
-from pptl.orchestrator  import IntegratedOrchestrator
 
 
 class CaptureSink:
@@ -63,16 +60,6 @@ def herald_with_sink(capture):
     h = HeraldAgent(session_id="test-sess")
     h.register_sink(capture)
     yield h, capture
-
-
-@pytest.fixture
-def orch(herald_with_sink):
-    h, cap = herald_with_sink
-    o = IntegratedOrchestrator(
-        herald     = h,
-        rag_scorer = SentinelRAGVerifier(),
-    )
-    yield o, h, cap
 
 
 @pytest.fixture
