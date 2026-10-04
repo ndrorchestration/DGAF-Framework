@@ -20,6 +20,7 @@ Usage:
         dry_run     = False,
     )
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -110,8 +111,8 @@ class N8nHeraldSink:
             logger.info("[N8nHeraldSink dry_run] batch=%d events", len(batch))
             return
 
-        import urllib.request
         import urllib.error
+        import urllib.request
 
         last_exc: Exception | None = None
         for attempt in range(1, self.MAX_RETRIES + 1):
@@ -126,7 +127,8 @@ class N8nHeraldSink:
                     if resp.status < 300:
                         logger.debug(
                             "[N8nHeraldSink] flushed %d events (attempt %d)",
-                            len(batch), attempt,
+                            len(batch),
+                            attempt,
                         )
                         return
                     raise RuntimeError(f"HTTP {resp.status}")
@@ -135,14 +137,17 @@ class N8nHeraldSink:
                 wait = self.RETRY_BASE_S * (2 ** (attempt - 1))
                 logger.warning(
                     "[N8nHeraldSink] attempt %d failed: %s — retrying in %.1fs",
-                    attempt, exc, wait,
+                    attempt,
+                    exc,
+                    wait,
                 )
                 time.sleep(wait)
 
         # Permanent failure — write to dead-letter
         logger.error(
             "[N8nHeraldSink] permanent failure after %d attempts: %s",
-            self.MAX_RETRIES, last_exc,
+            self.MAX_RETRIES,
+            last_exc,
         )
         self._write_dead_letter(batch)
 
@@ -155,7 +160,8 @@ class N8nHeraldSink:
                     fh.write(json.dumps(event, default=str) + "\n")
             logger.warning(
                 "[N8nHeraldSink] %d events written to dead-letter: %s",
-                len(batch), _DEAD_LETTER_PATH,
+                len(batch),
+                _DEAD_LETTER_PATH,
             )
         except Exception as exc:  # noqa: BLE001
             logger.error("[N8nHeraldSink] dead-letter write failed: %s", exc)
