@@ -86,14 +86,10 @@ def validate_architecture_lifecycle(
 
         is_adr = Path(relative_path).name.startswith("ADR-")
         if observed in {"ACCEPTED", "REJECTED"} and not is_adr:
-            errors.append(
-                f"{relative_path}: {observed} is reserved for architecture decision records"
-            )
+            errors.append(f"{relative_path}: {observed} is reserved for architecture decision records")
 
         if observed != expected:
-            errors.append(
-                f"{relative_path}: lifecycle {observed!r} != adopted baseline {expected!r}"
-            )
+            errors.append(f"{relative_path}: lifecycle {observed!r} != adopted baseline {expected!r}")
 
     return errors
 
@@ -106,10 +102,7 @@ def main() -> int:
             print(f"ERROR: {error}")
         return 1
 
-    print(
-        "DGAF architecture lifecycle consistency: PASS "
-        f"({len(ADOPTED_BASELINE)} adopted controls)"
-    )
+    print("DGAF architecture lifecycle consistency: PASS " f"({len(ADOPTED_BASELINE)} adopted controls)")
     return 0
 
 
