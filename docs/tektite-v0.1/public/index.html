@@ -59,7 +59,12 @@
           <article class="status-card positive">
             <h3>ACP Queue Reconciliation</h3>
             <p class="status">ESTABLISHED</p>
-            <p>Queue and boundary documentation are represented in public seed artifacts.</p>
+            <p>Current ACP queue and retained-risk semantics are represented in public seed artifacts.</p>
+          </article>
+          <article class="status-card positive">
+            <h3>Bounded Local-Test Executor</h3>
+            <p class="status">ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE</p>
+            <p>The accepted executor is limited to explicitly marked disposable local test repositories; this does not authorize real-project mutation.</p>
           </article>
           <article class="status-card positive">
             <h3>Tektite Static Shell</h3>
@@ -135,12 +140,12 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
             <p><strong>Authorization effect:</strong> Primary scientific claims remain not authorized.</p>
           </article>
           <article>
-            <h3>ACP blockers #117 and #118</h3>
-            <p><strong>Supports:</strong> explicit blocked-transition handling for executor surfaces.</p>
+            <h3>ACP retained risks #117 and #118</h3>
+            <p><strong>Supports:</strong> explicit retained-risk closure for the bounded local-test profile and preservation of stronger unresolved guarantees.</p>
             <p>
-              <strong>Does not support:</strong> resolving object identity, TOCTOU, process identity, or isolation concerns.
+              <strong>Does not support:</strong> hostile-local-actor resistance, trusted process identity, real-project mutation, rollback execution, or production execution.
             </p>
-            <p><strong>Authorization effect:</strong> Held executor PRs remain held.</p>
+            <p><strong>Authorization effect:</strong> None; stronger execution profiles require separate governance and fresh adjudication.</p>
           </article>
         </div>
       </section>
