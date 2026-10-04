@@ -48,8 +48,8 @@ def test_turn_result_does_not_fabricate_phi_score():
 # --- Blocking behaviour ---
 
 def test_blocked_turn_returns_no_response():
-    # Premise check always fires at the constitutional P-35 gate.
-    orch = _make_orchestrator(premise_check_fn=lambda _: True)
+    # Canonical P-35 check returns False when an invariant is violated.
+    orch = _make_orchestrator(premise_check_fn=lambda _text, _invariant: False)
     result = orch.orchestrate_turn("zip code feature used", turn_id="t004")
     assert result.tgl_passed is False
     assert result.response is None
@@ -57,7 +57,7 @@ def test_blocked_turn_returns_no_response():
 
 
 def test_blocked_turn_has_gate_records():
-    orch = _make_orchestrator(premise_check_fn=lambda _: True)
+    orch = _make_orchestrator(premise_check_fn=lambda _text, _invariant: False)
     result = orch.orchestrate_turn("zip code feature used", turn_id="t005")
     assert len(result.gate_records) > 0
 
@@ -68,19 +68,21 @@ def test_credit_domain_auto_wires_premise_fn():
     orch = _make_orchestrator(domain="credit")
     assert orch.config.premise_check_fn is not None
     # Credit fn should fire on known proxy
-    assert orch.config.premise_check_fn("zip code used in model")
+    assert not orch.config.premise_check_fn("zip code used in model", None)
+    assert orch.config.premise_check_fn("standard credit feature", None)
 
 
 def test_justice_domain_auto_wires_premise_fn():
     orch = _make_orchestrator(domain="justice")
     assert orch.config.premise_check_fn is not None
-    assert orch.config.premise_check_fn("compas score for defendant")
+    assert not orch.config.premise_check_fn("compas score for defendant", None)
+    assert orch.config.premise_check_fn("standard justice feature", None)
 
 
 def test_general_domain_premise_fn_is_passthrough():
     orch = _make_orchestrator(domain="general")
     assert orch.config.premise_check_fn is not None
-    assert not orch.config.premise_check_fn("anything at all")
+    assert orch.config.premise_check_fn("anything at all", None)
 
 
 # --- Session metadata ---
