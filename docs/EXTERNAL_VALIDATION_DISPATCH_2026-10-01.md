@@ -25,7 +25,7 @@ Technical expertise is not required.
 
 Use the participant brief:
 
-[Participant brief — pinned protocol commit](https://github.com/ndrorchestration/DGAF-Framework/blob/c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91/docs/TEKTITE_HCI_PARTICIPANT_BRIEF.md)
+[Participant brief — current surface rebind](https://github.com/ndrorchestration/DGAF-Framework/blob/c46b208e4b99fcdbce0b87f745eaaabad72eb7d7/docs/TEKTITE_HCI_PARTICIPANT_BRIEF.md)
 
 Participant-facing site:
 
@@ -45,7 +45,7 @@ The facilitator should separately use:
 
 For participant recruitment, share only the participant brief and neutral access instructions; keep the four-stage explanation and scoring material out of the pre-run handoff.
 
-Do not expose facilitator scoring or expected answers before the participant finishes. The participant brief and canonical scoring protocol remain pinned to protocol commit `c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91`; only the participant surface identity and facilitator-sheet binding have been rebound to the current deployment.
+Do not expose facilitator scoring or expected answers before the participant finishes. The participant task wording and canonical scoring protocol remain frozen from protocol commit `c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91`. The participant brief is surface-rebound at `c46b208e4b99fcdbce0b87f745eaaabad72eb7d7`; the facilitator sheet is surface-rebound at `3f76c9a93168eed7b366f51ac16481ae53954e27`.
 
 ### What the run tests
 
