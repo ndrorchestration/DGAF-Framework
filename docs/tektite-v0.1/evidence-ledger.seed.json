@@ -1,6 +1,6 @@
 {
   "schema": "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED",
-  "date": "2026-09-30",
+  "date": "2026-10-04",
   "rule": "Every evidence row must state both what it supports and what it does not support.",
   "entries": [
     {
@@ -10,6 +10,14 @@
       "claim_not_supported": "No executor authority, rollback authority, independent validation, or High-Assurance is established.",
       "authorization_effect": "Executor PRs remain held.",
       "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/145"
+    },
+    {
+      "artifact": "ACP PR #156",
+      "source_surface": "GitHub",
+      "claim_supported": "Bounded local-test repository mutation executor is established only for the tested disposable-repository scope.",
+      "claim_not_supported": "No real-project mutation, rollback execution, production executor, hostile-local-actor resistance, trusted process identity, independent validation, or High-Assurance is established.",
+      "authorization_effect": "NONE; FRESH_ADJUDICATION_REQUIRED",
+      "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/156"
     },
     {
       "artifact": "DGAF claim ceiling",

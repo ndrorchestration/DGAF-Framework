@@ -1,6 +1,6 @@
 {
   "schema": "TEKTITE_V0_1_STATUS_SEED",
-  "date": "2026-09-30",
+  "date": "2026-10-04",
   "authority_note": "Tektite projects public status only. It is not a governance authority or execution surface.",
   "current_status": {
     "DGAF_CLAIM_DISCIPLINE": "ACTIVE",
@@ -12,39 +12,29 @@
     "LIVE_REPOSITORY_MUTATION": "NOT_AUTHORIZED",
     "ROLLBACK_EXECUTION": "NOT_AUTHORIZED",
     "PRODUCTION_EXECUTOR": "NOT_ESTABLISHED",
-    "PUBLIC_DEMO_SURFACE": "IN_DEVELOPMENT"
+    "PUBLIC_DEMO_SURFACE": "IN_DEVELOPMENT",
+    "BOUNDED_LOCAL_TEST_EXECUTOR": "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE"
   },
   "latest_milestone": {
-    "title": "ACP PR #145 merged",
-    "date": "2026-09-30",
-    "merge_commit": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
-    "effect": "Documentation-only reconciliation",
+    "title": "ACP PR #156 merged",
+    "date": "2026-10-03",
+    "merge_commit": "b975aeb178b07551869ea6e80421e473ecb48593",
+    "effect": "Bounded local-test executor established for tested disposable-repository scope",
     "supports": [
-      "ACP queue classification",
-      "ACP dependency map",
-      "ACP executor boundary model"
+      "Bounded local-test executor",
+      "Disposable-repository mutation only",
+      "Fresh adjudication required for follow-on effects"
     ],
     "does_not_support": [
-      "Live executor authorization",
+      "Real-project repository mutation",
       "Rollback execution",
       "Production executor deployment",
+      "Hostile-local-actor resistance",
+      "Trusted process identity",
       "Independent validation",
       "High-Assurance status"
     ],
-    "authorization_effect": "#110, #137, and #139 remain HOLD"
+    "authorization_effect": "NONE; FRESH_ADJUDICATION_REQUIRED; stronger execution lanes remain unauthorized"
   },
-  "active_blockers": [
-    {
-      "id": "#117",
-      "name": "Filesystem object identity / TOCTOU",
-      "blocks": ["#110", "#137", "#139"],
-      "status": "ACTIVE_BLOCKER"
-    },
-    {
-      "id": "#118",
-      "name": "Trusted process boundary / identity / isolation",
-      "blocks": ["#110", "#137", "#139"],
-      "status": "ACTIVE_BLOCKER"
-    }
-  ]
+  "active_blockers": []
 }

@@ -62,6 +62,11 @@
             <p>Queue and boundary documentation are represented in public seed artifacts.</p>
           </article>
           <article class="status-card positive">
+            <h3>Bounded Local-Test Executor</h3>
+            <p class="status">ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE</p>
+            <p>Disposable-repository mutation is established only for the tested local-test profile. Real-project mutation remains unauthorized.</p>
+          </article>
+          <article class="status-card positive">
             <h3>Tektite Static Shell</h3>
             <p class="status">MERGED</p>
             <p>The display-only public shell and local preview guidance are merged to main.</p>
@@ -135,12 +140,12 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
             <p><strong>Authorization effect:</strong> Primary scientific claims remain not authorized.</p>
           </article>
           <article>
-            <h3>ACP blockers #117 and #118</h3>
-            <p><strong>Supports:</strong> explicit blocked-transition handling for executor surfaces.</p>
+            <h3>ACP PR #156</h3>
+            <p><strong>Supports:</strong> bounded local-test repository mutation for the tested disposable-repository scope.</p>
             <p>
-              <strong>Does not support:</strong> resolving object identity, TOCTOU, process identity, or isolation concerns.
+              <strong>Does not support:</strong> real-project mutation, rollback execution, production deployment, hostile-local-actor resistance, trusted process identity, independent validation, or High-Assurance.
             </p>
-            <p><strong>Authorization effect:</strong> Held executor PRs remain held.</p>
+            <p><strong>Authorization effect:</strong> NONE; fresh adjudication is required for any follow-on effect.</p>
           </article>
         </div>
       </section>
@@ -155,6 +160,9 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
           </p>
         </div>
         <div class="source-grid">
+          <a href="https://github.com/ndrorchestration/agent-control-plane/pull/156">
+            ACP PR #156 - bounded local-test executor
+          </a>
           <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1166">
             PR #1166 — Tektite v0.1 seed plan
           </a>
