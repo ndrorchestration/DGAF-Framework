@@ -24,41 +24,43 @@ Current executable authority resolves through `governance/role_capability_regist
 | `sinks.py` | `JSONLSink`, `StdoutSink`, `N8nWebhookSink` | 5.7 KB |
 | `n8n_herald_sink.py` | Production `N8nHeraldSink` — batching, retry, HMAC, dead-letter | new |
 | `rag_verifier.py` | `SentinelRAGVerifier` — DemiJoule RAG hallucination check | 3.4 KB |
-| `orchestrator.py` | `IntegratedOrchestrator` — Triad-C 3-gate stack | 5.4 KB |
+| `orchestrator.py` | `IntegratedOrchestrator` — config-first adapter over canonical TGL | current |
 
 ---
 
 ## Quick Start
 
+The authoritative IntegratedOrchestrator API is configuration-first and wraps
+the canonical TriadicGovernanceLoop turn contract:
+
 ```python
-from pptl import (
-    HeraldAgent, JSONLSink, StdoutSink,
-    SentinelRAGVerifier, IntegratedOrchestrator
+from pptl.orchestrator import IntegratedOrchestrator, OrchestratorConfig
+
+config = OrchestratorConfig(
+    session_id="sess_001",
+    domain="general",
+    dry_run=True,
 )
-from pptl.n8n_herald_sink import N8nHeraldSink
-import os
+orch = IntegratedOrchestrator(config)
 
-herald = HeraldAgent(session_id="sess_001")
-herald.register_sink(JSONLSink("output/herald_audit.jsonl"))
-herald.register_sink(StdoutSink())
-herald.register_sink(N8nHeraldSink(
-    webhook_url = os.environ["HERALD_N8N_WEBHOOK_URL"],
-    batch_size  = 20,
-    dry_run     = False,
-))
-
-orch = IntegratedOrchestrator(
-    herald   = herald,
-    verifier = SentinelRAGVerifier(),
+result = orch.orchestrate_turn(
+    "Analyze phi-pentagon governance implications.",
+    turn_id="T001",
 )
 
-result = orch.run(
-    task_id = "T001",
-    prompt  = "Analyze phi-pentagon governance implications.",
-)
-print(result["status"])   # "pass"
-herald.close()
+print(result.tgl_passed)
+print(result.gate_records)
+print(result.response)
 ```
+
+Custom P-35 premise predicates use the canonical signature
+`(input_text, invariant) -> bool`, where `True` means the invariant is
+satisfied and `False` causes a fail-fast premise violation. The built-in
+credit and justice signal corpora are detection predicates and are adapted to
+this satisfaction contract by IntegratedOrchestrator.
+
+The historical injected-Herald/RAG constructor and `orch.run(...)` API are
+retired and are not compatibility entry points.
 
 ---
 
@@ -80,22 +82,15 @@ npx ts-node ../../pptl-governance-dashboard/scripts/replay-jsonl.ts \
 
 ---
 
-## Swap Real LLM
+## Extending the governed turn
 
-In `orchestrator.py`, replace `_mock_apogee()`:
+IntegratedOrchestrator is a convenience adapter over the canonical
+TriadicGovernanceLoop. Provider/model execution is not implicitly injected by
+the wrapper. Add or replace model-facing behavior through separately governed
+TGL hooks/adapters and preserve the gate, evidence, and authority contracts.
 
-```python
-import anthropic
-_client = anthropic.Anthropic()
-
-def _mock_apogee(self, prompt: str, round_n: int) -> str:
-    msg = _client.messages.create(
-        model="claude-opus-4-5",
-        max_tokens=512,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return msg.content[0].text
-```
+Do not restore the retired `_mock_apogee()` / `orch.run()` examples as a
+provider integration path.
 
 ---
 
@@ -131,26 +126,23 @@ Full specs: [`docs/NDR_PATTERN_REGISTRY.md`](../docs/NDR_PATTERN_REGISTRY.md)
 
 ## Test Suite
 
+The required `PPTL CI` context executes the complete current PPTL suite after
+installing the repository's hash-locked Python-3.12 dependency set.
+
 ```bash
-# Full suite
-pytest pptl/tests/ -v
-
-# CI-equivalent governance gate
-pytest pptl/tests/ -m governance -v
-
-# Hallu corpus
-pytest pptl/tests/test_orchestrator.py -k "hallu_signal" -v
-
-# Obfuscation strict
-pytest pptl/tests/test_orchestrator.py -k "obfuscation_detected_strict" -v
+PYTHONPATH=. python -m pytest pptl/tests -q
 ```
 
-| Module | Count | Markers |
-|--------|-------|---------|
-| `test_herald_agent.py` | 18 | `unit` |
-| `test_sinks.py` | 10 | `unit`, `integration` |
-| `test_topology.py` | 8 | `unit`, `governance` |
-| `test_orchestrator.py` | ~166+ | `governance`, `integration` |
+Key current contracts include:
+
+- `test_orchestrator_tgl.py` — Config + `orchestrate_turn()` wrapper contract.
+- `test_triadic_governance_loop.py` — canonical TGL sequencing/status/seal behavior.
+- `test_procluding_premise.py` — P-35 invariant-satisfaction predicate semantics.
+- `test_n8n_herald_sink.py` — Herald `emit` protocol, batching, retry, and dead-letter behavior.
+- v1 control-plane/TGL/adversarial/capability/seal suites.
+
+The removed `test_orchestrator.py` suite belonged to the retired
+injected-Herald/RAG `run()` architecture and is not part of the current API.
 
 ---
 
