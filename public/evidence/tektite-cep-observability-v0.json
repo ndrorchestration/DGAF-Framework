@@ -1,0 +1,52 @@
+{
+  "schema_version": "TEKTITE_CEP_OBSERVABILITY_V0",
+  "evidence_class": "STATIC_PROJECTION_OF_ACCEPTED_ACP_CHARACTERIZATION",
+  "live_model_experiment": false,
+  "automatic_tool_gating_enabled": false,
+  "live_context_routing_enabled": false,
+  "sources": {
+    "acp_repository": "ndrorchestration/agent-control-plane",
+    "acp_cep_merge_commit": "cb264a123cb67ada7616ece4b30172f7d5d59a2f",
+    "acp_pr": 160,
+    "catalog_snapshot_sha256": "f9d463a1c8519061087cba30bd648b68357949f20ce932c61c3f99821663b82e",
+    "catalog_snapshot_path": "experiments/context_efficiency/catalogs/github-connector-runtime-2026-10-04.json",
+    "preservation_result_path": "experiments/context_efficiency/results/github-connector-runtime-preservation-2026-10-04.json"
+  },
+  "task": {
+    "capability": "github.status.commit_workflow_runs",
+    "required_tool": "mcp__GitHub__fetch_commit_workflow_runs"
+  },
+  "observed_catalog_measurement": {
+    "control_descriptor_count": 89,
+    "treatment_descriptor_count": 1,
+    "control_serialized_bytes": 121325,
+    "treatment_serialized_bytes": 1021,
+    "bytes_removed": 120304,
+    "byte_reduction_fraction": 0.9915845868534927,
+    "tokenizer": "tiktoken==0.14.0",
+    "encoding": "o200k_base",
+    "control_tokens": 32471,
+    "treatment_tokens": 268,
+    "tokens_removed": 32203,
+    "token_reduction_fraction": 0.9917464814757784,
+    "required_tool_preserved": true
+  },
+  "unobserved_or_not_established": {
+    "live_model_input_token_reduction": "NOT_MEASURED",
+    "live_model_output_token_effect": "NOT_MEASURED",
+    "latency_effect": "NOT_MEASURED",
+    "monetary_cost_effect": "NOT_MEASURED",
+    "task_correctness_effect": "NOT_MEASURED",
+    "task_efficacy": "NOT_ESTABLISHED",
+    "dynamic_tool_selection_behavior": "NOT_ESTABLISHED"
+  },
+  "comparison_boundary": {
+    "evaluation_scope": "BOUNDED_CONTEXT_COST_PRESERVATION_ONLY",
+    "authority_effect": "NONE",
+    "scientific_n_increment": 0,
+    "independent_validation_effect": "NONE",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED"
+  },
+  "projection_boundary": "Read-only Tektite projection of accepted ACP characterization. No live ACP call, model routing, context suppression, tool invocation, execution authority, efficacy promotion, or validation transfer."
+}
