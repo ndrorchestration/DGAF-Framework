@@ -52,9 +52,7 @@ def test_cep_fixture_separates_observed_and_unmeasured_claims() -> None:
 def test_cep_fixture_is_bound_to_accepted_acp_source() -> None:
     data = load_fixture()
     assert data["sources"]["acp_repository"] == "ndrorchestration/agent-control-plane"
-    assert data["sources"]["acp_cep_merge_commit"] == (
-        "cb264a123cb67ada7616ece4b30172f7d5d59a2f"
-    )
+    assert data["sources"]["acp_cep_merge_commit"] == ("cb264a123cb67ada7616ece4b30172f7d5d59a2f")
     assert data["sources"]["catalog_snapshot_sha256"] == (
         "f9d463a1c8519061087cba30bd648b68357949f20ce932c61c3f99821663b82e"
     )
