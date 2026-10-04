@@ -4,7 +4,6 @@ Anchor: S068 | OI-05
 Metrics: TGL gate records present per turn; blocked turns return no response;
          domain auto-wire fires correct premise_check_fn.
 """
-import pytest
 from pptl.orchestrator import IntegratedOrchestrator, OrchestratorConfig
 
 
