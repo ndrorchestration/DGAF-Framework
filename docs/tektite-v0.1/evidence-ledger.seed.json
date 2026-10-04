@@ -1,6 +1,6 @@
 {
   "schema": "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED",
-  "date": "2026-09-30",
+  "date": "2026-10-04",
   "rule": "Every evidence row must state both what it supports and what it does not support.",
   "entries": [
     {
@@ -26,6 +26,14 @@
       "claim_not_supported": "No certification or compliance claim is made.",
       "authorization_effect": "Allowed as public service positioning only.",
       "public_link": ""
+    },
+    {
+      "artifact": "ACP bounded local-test executor + retained-risk reconciliation",
+      "source_surface": "GitHub / ACP protected main",
+      "claim_supported": "A bounded disposable-repository executor and durable local mutation lineage are established for the tested BOUNDED_LOCAL_TEST profile; #117/#118 are closed by explicit retained-risk decision for that profile.",
+      "claim_not_supported": "No real-project mutation, rollback execution, production executor, hostile-local-actor resistance, trusted process identity, distributed/global lineage, independent validation, or High-Assurance is established.",
+      "authorization_effect": "NONE; consequential follow-on authority still requires fresh adjudication.",
+      "public_link": "https://github.com/ndrorchestration/agent-control-plane"
     }
   ]
 }
