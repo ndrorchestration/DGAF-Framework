@@ -12,7 +12,6 @@ import pytest
 
 from pptl.n8n_herald_sink import N8nHeraldSink
 
-
 WEBHOOK = "https://n8n.example.com/webhook/test"
 
 
