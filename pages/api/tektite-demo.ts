@@ -67,6 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   for (let attempt = 1; attempt <= count; attempt += 1) {
     const response = await fetch(`${origin}/api/audit`, {
       method: 'POST',
+      redirect: 'error',
       headers: {
         'content-type': 'application/json',
         'x-tektite-demo-token': internalToken,
