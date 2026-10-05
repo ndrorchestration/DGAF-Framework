@@ -208,6 +208,7 @@ def test_cli_with_linkage_gap_exits_two(tmp_path):
     receipt = json.loads(result.stdout)
     assert receipt["linkage_state"] == "OBSERVED_WITH_LINKAGE_GAPS"
 
+
 CURRENT_PROFILE_FIXTURE = (
     ROOT / "docs/experiments/fixtures/PUBLIC_CLAIM_LINKAGE_GITHUB_PROFILE_2026-10-04.json"
 )
