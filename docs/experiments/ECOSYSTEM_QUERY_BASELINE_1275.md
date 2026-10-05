@@ -40,7 +40,7 @@ The embedded pointer was observed at `2026-10-01T23:01:00Z` against DGAF source 
 ## Eight-question baseline
 
 | # | Question | Current machine support | Baseline finding | Remaining gap |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 1 | Which public-facing claims currently lack direct supporting evidence? | PARTIAL | `CLAIM_EVIDENCE_INDEX.md` and the Tektite evidence ledger encode support/non-support boundaries, but there is no single query that enumerates every public claim against evidence. | Cross-surface public-claim enumeration. |
 | 2 | Which Tektite projections depend on ACP/DGAF capabilities that are not established? | PARTIAL | The Tektite semantic-source manifest and pointer bind DGAF/ACP source authorities and fixed claim ceilings. | Live external reconciliation and explicit query from projected claim to capability state. |
 | 3 | Which current artifacts still describe superseded blockers or architecture? | PARTIAL | Notion search for ACP #117/#118 returns mixed historical/current records; several current records explicitly mark older blocker language as superseded, while historical records retain it for provenance. | Machine distinction between event-time history and current-answer eligibility across all Notion records. |
@@ -246,3 +246,56 @@ It remains **PARTIAL / GAP** because:
 - no “tested” or “untested” claim is produced from this heuristic alone.
 
 Program-level benefit remains NOT ESTABLISHED.
+
+## Notion current-answer routing tranche
+
+Q3 characterization confirmed that page-level currentness is too coarse: a current Notion page may intentionally preserve historical statements for provenance. The experiment therefore does not classify entire pages as current or historical.
+
+The query now accepts an external record-level observation:
+
+```text
+schema=ECOSYSTEM_NOTION_ROUTING_OBSERVATION_V1
+scope=EXTERNAL_NOTION_ROUTING_OBSERVATION_ONLY
+completeness=NOT_ESTABLISHED
+```
+
+Each observed record carries an explicit classification, a current-answer eligibility boolean, a routing basis, and the current authority route. Historical and superseded classifications are forbidden from being marked current-answer eligible.
+
+The observation remains external input rather than a checked-in mirror of Notion. This avoids creating another SSOT and preserves Notion as the registry/control-plane source for its own routing semantics.
+
+### Real Notion characterization — 2026-10-04
+
+The connected Notion workspace explicitly states:
+
+- ACP #117/#118 "active blocker" language is retained as event-time history but is no longer the current interpretation for the bounded lower-assurance disposable-repository profile;
+- the current routing matrix establishes the bounded local-test executor only for its tested opt-in disposable-repository scope;
+- stronger guarantees remain not established;
+- "current beats historical" and Historical & Superseded Records remains the archive/router for provenance.
+
+The external observation therefore classifies:
+
+```text
+acp-117-118-old-blocker-language
+  classification=SUPERSEDED_PROVENANCE
+  current_answer_eligible=false
+
+acp-bounded-local-test-executor
+  classification=CURRENT_BOUNDED_STATE
+  current_answer_eligible=true
+```
+
+These two records are a bounded sample, not a complete Notion inventory.
+
+### Baseline Question 3 update
+
+Question 3 — "Which current artifacts still describe superseded blockers or architecture?" — now has a machine-enforceable distinction between sampled superseded provenance and sampled current bounded state.
+
+It remains **PARTIAL** because:
+
+- the observation covers selected records, not every Notion assertion;
+- page-level labels are intentionally insufficient;
+- current repository truth still requires the owning GitHub/runtime authority where applicable;
+- observation completeness remains `NOT_ESTABLISHED`.
+
+Program-level benefit remains NOT ESTABLISHED.
+
