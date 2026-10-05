@@ -209,9 +209,7 @@ def test_cli_with_linkage_gap_exits_two(tmp_path):
     assert receipt["linkage_state"] == "OBSERVED_WITH_LINKAGE_GAPS"
 
 
-CURRENT_PROFILE_FIXTURE = (
-    ROOT / "docs/experiments/fixtures/PUBLIC_CLAIM_LINKAGE_GITHUB_PROFILE_2026-10-04.json"
-)
+CURRENT_PROFILE_FIXTURE = ROOT / "docs/experiments/fixtures/PUBLIC_CLAIM_LINKAGE_GITHUB_PROFILE_2026-10-04.json"
 
 
 def test_current_github_profile_fixture_preserves_direct_and_summary_only_boundaries():
