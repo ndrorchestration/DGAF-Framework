@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import pytest
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
@@ -51,3 +52,10 @@ def test_live_audit_check_does_not_require_cross_request_serverless_counter_pers
     assert LEGACY_COLD_START_WARNING in audit_block
     assert CURRENT_COLD_START_WARNING in audit_block
     assert "audit response contract FAIL" in audit_block
+
+
+def test_live_regression_job_is_blocking() -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/regression.yml").read_text(encoding="utf-8"))
+
+    live_job = workflow["jobs"]["live-regression"]
+    assert live_job.get("continue-on-error", False) is False

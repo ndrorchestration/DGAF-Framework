@@ -47,7 +47,6 @@ jobs:
           print(f'PSI cubic OK: PSI={PSI:.10f}')
           EOF
   live-regression:
-    continue-on-error: true
     name: Live Regression (Vercel)
     runs-on: ubuntu-latest
     if: >
@@ -127,4 +126,4 @@ jobs:
 
       - name: Notify on live-regression failure
         if: failure()
-        run: echo DGAF live-regression failed run ${{ github.run_id }} Vercel unavailable suite passing via continue-on-error
+        run: echo DGAF live-regression failed run ${{ github.run_id }}; inspect the failed step before classifying the cause
