@@ -207,3 +207,29 @@ def test_cli_with_linkage_gap_exits_two(tmp_path):
     assert result.returncode == 2, result.stderr
     receipt = json.loads(result.stdout)
     assert receipt["linkage_state"] == "OBSERVED_WITH_LINKAGE_GAPS"
+
+CURRENT_PROFILE_FIXTURE = (
+    ROOT / "docs/experiments/fixtures/PUBLIC_CLAIM_LINKAGE_GITHUB_PROFILE_2026-10-04.json"
+)
+
+
+def test_current_github_profile_fixture_preserves_direct_and_summary_only_boundaries():
+    module = load_module()
+    current = json.loads(CURRENT_PROFILE_FIXTURE.read_text(encoding="utf-8"))
+    receipt = module.link_claims(current)
+
+    assert receipt["surface_binding"]["source_commit"] == "4bfd33093b3a2875101d8dd687f6647183538d7b"
+    assert receipt["surface_binding"]["source_blob_sha"] == "63b2836f19f03a2c9203c10e798e74c9e27f9114"
+    assert receipt["claim_count"] == 8
+    assert receipt["direct_linkage_count"] == 6
+    assert receipt["direct_linkage_complete"] is False
+    assert receipt["linkage_state"] == "OBSERVED_WITH_LINKAGE_GAPS"
+    assert receipt["claims_indirect_or_summary_only"] == [
+        "acp-cep-live-pair-absence",
+        "tektite-callback-current-vs-historical-exposure",
+    ]
+    assert receipt["claims_without_direct_evidence"] == []
+    assert receipt["truth_effect"] == "NONE"
+    assert receipt["authorization_effect"] == "NONE"
+    assert receipt["scientific_state_effect"] == "NONE"
+    assert receipt["evidence_authority_effect"] == "NONE"
