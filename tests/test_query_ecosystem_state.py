@@ -368,3 +368,63 @@ def test_cli_accepts_acp_semantic_observation(tmp_path):
     assert rows["LIVE_REPOSITORY_MUTATION"] == "MATCH"
     assert rows["#117"] == "MATCH"
     assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "MATCH"
+
+def _notion_routing_observation():
+    return {
+        "schema_version": "ECOSYSTEM_NOTION_ROUTING_OBSERVATION_V1",
+        "observed_at": "2026-10-04T14:45:00Z",
+        "source_pages": [
+            {
+                "page_id": "3e9f5bad-238b-81f3-979a-f97ff5b149dc",
+                "title": "NDR Ecosystem — SSOT & Lane Routing Matrix",
+                "role": "ROUTING_AUTHORITY",
+            },
+            {
+                "page_id": "3d5f5bad-238b-81b9-9562-d21b7d39903c",
+                "title": "Historical & Superseded Records",
+                "role": "HISTORICAL_ROUTER",
+            },
+        ],
+        "records": [
+            {
+                "record_id": "acp-117-118-old-blocker-language",
+                "subject": "ACP #117/#118 active blocker wording",
+                "classification": "SUPERSEDED_PROVENANCE",
+                "current_answer_eligible": False,
+                "basis": (
+                    "Superseded for the lower-assurance disposable-repository profile; retained as event-time history."
+                ),
+                "current_route": "ACP current repository/OCC state",
+            },
+            {
+                "record_id": "acp-bounded-local-test-executor",
+                "subject": "ACP bounded local test executor",
+                "classification": "CURRENT_BOUNDED_STATE",
+                "current_answer_eligible": True,
+                "basis": ("Current routing matrix establishes only the tested opt-in disposable-repository profile."),
+                "current_route": "ACP current repository/OCC state",
+            },
+        ],
+    }
+
+
+def test_notion_routing_observation_separates_current_from_superseded_records():
+    module = load_module()
+    report = module.build_report(ROOT, [], notion_routing_observation=_notion_routing_observation())
+
+    routing = report["notion_routing"]
+    assert routing["scope"] == "EXTERNAL_NOTION_ROUTING_OBSERVATION_ONLY"
+    assert routing["completeness"] == "NOT_ESTABLISHED"
+    assert routing["current_answer_eligible_record_ids"] == ["acp-bounded-local-test-executor"]
+    assert routing["historical_or_superseded_record_ids"] == ["acp-117-118-old-blocker-language"]
+    assert report["gaps"]["notion_current_answer_eligibility_partial"] is True
+
+
+def test_notion_routing_observation_rejects_historical_record_marked_current():
+    module = load_module()
+    observation = _notion_routing_observation()
+    observation["records"][0]["current_answer_eligible"] = True
+
+    with pytest.raises(ValueError, match="SUPERSEDED_PROVENANCE"):
+        module.build_report(ROOT, [], notion_routing_observation=observation)
+
