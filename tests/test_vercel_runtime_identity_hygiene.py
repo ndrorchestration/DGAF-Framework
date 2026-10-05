@@ -2,8 +2,8 @@
 
 import json
 import os
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
@@ -71,12 +71,17 @@ def test_deployment_verifier_fails_closed_on_health_dashboard_and_audit_contract
 
 def test_deployment_verifier_accepts_current_runtime_audit_warning(tmp_path: Path) -> None:
     curl = tmp_path / "curl"
+    orchestrate_payload = (
+        '{"decision":"PASS","turn":1,"effective_confidence":0.8,'
+        '"psi_cubic_check":true,"trace":[],"evidence":{"status":"PARTIAL"}}'
+    )
+    audit_payload = '{"status":"ok","version":"1.8.0","_warning":"' f"{CURRENT_COLD_START_WARNING}" '"}'
     curl.write_text(
-        """#!/usr/bin/env bash
+        f"""#!/usr/bin/env bash
 case \"$*\" in
-  *'/api/health'*) printf '%s\\n' '{\"status\":\"ok\",\"psi_cubic\":true,\"version\":\"1.8.0\"}' ;;
-  *'/api/orchestrate'*) printf '%s\\n' '{\"decision\":\"PASS\",\"turn\":1,\"effective_confidence\":0.8,\"psi_cubic_check\":true,\"trace\":[],\"evidence\":{\"status\":\"PARTIAL\"}}' ;;
-  *'/api/audit'*) printf '%s\\n' '{\"status\":\"ok\",\"version\":\"1.8.0\",\"_warning\":\"Audit counters are in-memory and reset on each serverless cold start. Configure an admitted durable store before relying on persistent audit state.\"}' ;;
+  *'/api/health'*) printf '%s\\n' '{{\"status\":\"ok\",\"psi_cubic\":true,\"version\":\"1.8.0\"}}' ;;
+  *'/api/orchestrate'*) printf '%s\\n' '{orchestrate_payload}' ;;
+  *'/api/audit'*) printf '%s\\n' '{audit_payload}' ;;
   *) printf '200' ;;
 esac
 """,
