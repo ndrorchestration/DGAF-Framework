@@ -369,6 +369,7 @@ def test_cli_accepts_acp_semantic_observation(tmp_path):
     assert rows["#117"] == "MATCH"
     assert rows["BOUNDED_LOCAL_TEST_EXECUTOR"] == "MATCH"
 
+
 def _notion_routing_observation():
     return {
         "schema_version": "ECOSYSTEM_NOTION_ROUTING_OBSERVATION_V1",
