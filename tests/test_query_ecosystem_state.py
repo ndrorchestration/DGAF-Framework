@@ -428,4 +428,3 @@ def test_notion_routing_observation_rejects_historical_record_marked_current():
 
     with pytest.raises(ValueError, match="SUPERSEDED_PROVENANCE"):
         module.build_report(ROOT, [], notion_routing_observation=observation)
-
