@@ -20,6 +20,9 @@ TEKTITE_STATUS_PATH = Path("docs/tektite-v0.1/status.seed.json")
 ACP_SEMANTIC_SCHEMA_VERSION = "ACP_SEMANTIC_OBSERVATION_V0_CANDIDATE"
 POINTER_VALIDATOR_PATH = Path("scripts/validate_ecosystem_state_pointer.py")
 RECONCILIATION_SCHEMA_VERSION = "ECOSYSTEM_LIVE_RECONCILIATION_V1"
+NOTION_ROUTING_SCHEMA_VERSION = "ECOSYSTEM_NOTION_ROUTING_OBSERVATION_V1"
+NOTION_CURRENT_CLASSES = {"CURRENT_BOUNDED_STATE", "CURRENT_ROUTING_RULE"}
+NOTION_HISTORICAL_CLASSES = {"HISTORICAL_PROVENANCE", "SUPERSEDED_PROVENANCE"}
 
 
 def _load_json(path: Path) -> dict:
@@ -249,11 +252,99 @@ def _acp_semantic_result(root: Path, observation: dict | None) -> dict:
     }
 
 
+def _validate_notion_routing_observation(observation: dict) -> None:
+    required = {"schema_version", "observed_at", "source_pages", "records"}
+    if set(observation) != required:
+        missing = sorted(required - set(observation))
+        extra = sorted(set(observation) - required)
+        raise ValueError(f"Notion routing observation fields mismatch: missing={missing} extra={extra}")
+    if observation["schema_version"] != NOTION_ROUTING_SCHEMA_VERSION:
+        raise ValueError(f"schema_version must be {NOTION_ROUTING_SCHEMA_VERSION}")
+    if not isinstance(observation["observed_at"], str) or not observation["observed_at"]:
+        raise ValueError("Notion routing observed_at must be a non-empty string")
+    if not isinstance(observation["source_pages"], list) or not observation["source_pages"]:
+        raise ValueError("Notion routing source_pages must be a non-empty array")
+    if not isinstance(observation["records"], list):
+        raise ValueError("Notion routing records must be an array")
+
+    source_required = {"page_id", "title", "role"}
+    for source in observation["source_pages"]:
+        if not isinstance(source, dict) or set(source) != source_required:
+            raise ValueError("Notion routing source page fields are invalid")
+        if not all(isinstance(source[key], str) and source[key] for key in source_required):
+            raise ValueError("Notion routing source page values must be non-empty strings")
+
+    record_required = {
+        "record_id",
+        "subject",
+        "classification",
+        "current_answer_eligible",
+        "basis",
+        "current_route",
+    }
+    record_ids = set()
+    allowed = NOTION_CURRENT_CLASSES | NOTION_HISTORICAL_CLASSES
+    for record in observation["records"]:
+        if not isinstance(record, dict) or set(record) != record_required:
+            raise ValueError("Notion routing record fields are invalid")
+        record_id = record["record_id"]
+        if not isinstance(record_id, str) or not record_id:
+            raise ValueError("Notion routing record_id must be a non-empty string")
+        if record_id in record_ids:
+            raise ValueError(f"duplicate Notion routing record_id: {record_id}")
+        record_ids.add(record_id)
+        classification = record["classification"]
+        if classification not in allowed:
+            raise ValueError(f"unsupported Notion routing classification: {classification}")
+        if not isinstance(record["current_answer_eligible"], bool):
+            raise ValueError("Notion routing current_answer_eligible must be boolean")
+        if classification in NOTION_HISTORICAL_CLASSES and record["current_answer_eligible"]:
+            raise ValueError(f"{classification} must not be current-answer eligible")
+        if classification in NOTION_CURRENT_CLASSES and not record["current_answer_eligible"]:
+            raise ValueError(f"{classification} must be current-answer eligible")
+        for key in ("subject", "basis", "current_route"):
+            if not isinstance(record[key], str) or not record[key]:
+                raise ValueError(f"Notion routing {key} must be a non-empty string")
+
+
+def _notion_routing_result(observation: dict | None) -> dict:
+    if observation is None:
+        return {
+            "scope": "EXTERNAL_NOTION_ROUTING_OBSERVATION_ONLY",
+            "state": "NOT_SUPPLIED",
+            "completeness": "NOT_ESTABLISHED",
+            "observed_at": None,
+            "source_pages": [],
+            "records": [],
+            "current_answer_eligible_record_ids": [],
+            "historical_or_superseded_record_ids": [],
+        }
+
+    _validate_notion_routing_observation(observation)
+    current_ids = sorted(record["record_id"] for record in observation["records"] if record["current_answer_eligible"])
+    historical_ids = sorted(
+        record["record_id"]
+        for record in observation["records"]
+        if record["classification"] in NOTION_HISTORICAL_CLASSES
+    )
+    return {
+        "scope": "EXTERNAL_NOTION_ROUTING_OBSERVATION_ONLY",
+        "state": "OBSERVED_PARTIAL",
+        "completeness": "NOT_ESTABLISHED",
+        "observed_at": observation["observed_at"],
+        "source_pages": observation["source_pages"],
+        "records": observation["records"],
+        "current_answer_eligible_record_ids": current_ids,
+        "historical_or_superseded_record_ids": historical_ids,
+    }
+
+
 def build_report(
     root: Path,
     required_consumers: list[str],
     reconciliation_evidence: dict | None = None,
     acp_semantic_observation: dict | None = None,
+    notion_routing_observation: dict | None = None,
 ) -> dict:
     root = Path(root)
     pointer = _load_json(root / POINTER_PATH)
@@ -301,6 +392,7 @@ def build_report(
         )
 
     acp_semantic_reconciliation = _acp_semantic_result(root, acp_semantic_observation)
+    notion_routing = _notion_routing_result(notion_routing_observation)
 
     properties = receipt_schema["properties"]
     report = {
@@ -315,6 +407,7 @@ def build_report(
         },
         "reconciliation": reconciliation,
         "acp_semantic_reconciliation": acp_semantic_reconciliation,
+        "notion_routing": notion_routing,
         "claim_ceiling": pointer["claim_ceiling"],
         "consumers": consumers,
         "receipt_authority": {
@@ -340,6 +433,7 @@ def build_report(
             "missing_required_consumers": missing,
             "requires_dgaf_repository_reconciliation": live_currentness != "DGAF_REPOSITORY_TIP_MATCH_EXTERNAL",
             "cross_surface_reconciliation_not_established": True,
+            "notion_current_answer_eligibility_partial": notion_routing["completeness"] != "ESTABLISHED",
             "requires_reconciliation": True,
         },
     }
@@ -352,16 +446,21 @@ def main() -> int:
     parser.add_argument("--require-consumer", action="append", default=[])
     parser.add_argument("--reconciliation-evidence", type=Path)
     parser.add_argument("--acp-semantic-observation", type=Path)
+    parser.add_argument("--notion-routing-observation", type=Path)
     args = parser.parse_args()
 
     try:
         reconciliation_evidence = _load_json(args.reconciliation_evidence) if args.reconciliation_evidence else None
         acp_semantic_observation = _load_json(args.acp_semantic_observation) if args.acp_semantic_observation else None
+        notion_routing_observation = (
+            _load_json(args.notion_routing_observation) if args.notion_routing_observation else None
+        )
         report = build_report(
             args.root,
             args.require_consumer,
             reconciliation_evidence=reconciliation_evidence,
             acp_semantic_observation=acp_semantic_observation,
+            notion_routing_observation=notion_routing_observation,
         )
     except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
         print(json.dumps({"error": str(exc)}, indent=2, sort_keys=True))
