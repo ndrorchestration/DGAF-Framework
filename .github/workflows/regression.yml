@@ -126,4 +126,4 @@ jobs:
 
       - name: Notify on live-regression failure
         if: failure()
-        run: echo DGAF live-regression failed run ${{ github.run_id }}; inspect the failed step before classifying the cause
+        run: echo "DGAF live-regression failed run ${{ github.run_id }}; inspect the failed step before classifying the cause"
