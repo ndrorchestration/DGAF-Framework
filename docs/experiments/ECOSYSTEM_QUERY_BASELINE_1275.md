@@ -298,3 +298,66 @@ It remains **PARTIAL** because:
 - observation completeness remains `NOT_ESTABLISHED`.
 
 Program-level benefit remains NOT ESTABLISHED.
+
+## Public claim evidence linkage tranche
+
+Q1 uses a read-only derived receipt rather than a canonical public-claim registry.
+
+Contract:
+
+```text
+schema=PUBLIC_CLAIM_LINKAGE_OBSERVATION_V0
+receipt=public-claim.evidence-linkage.v0-candidate
+observation_authority=CALLER_SUPPLIED_NOT_REVERIFIED
+```
+
+The current frozen `github.profile` observation is:
+
+`docs/experiments/fixtures/PUBLIC_CLAIM_LINKAGE_GITHUB_PROFILE_2026-10-04.json`
+
+Current surface binding:
+
+- profile source version: `4bfd33093b3a2875101d8dd687f6647183538d7b`;
+- README blob: `63b2836f19f03a2c9203c10e798e74c9e27f9114`;
+- public-surface manifest state: `RECONCILED / PASS`;
+- `surface_release_gate_effect=NONE`.
+
+The bounded current-profile sample contains eight material observed claim families:
+
+- 6 `DIRECT_EVIDENCE_LINKED`;
+- 2 `INDIRECT_OR_SUMMARY_ONLY`;
+- 0 `NO_DIRECT_EVIDENCE_LINK`;
+- `direct_linkage_complete=false`;
+- `linkage_state=OBSERVED_WITH_LINKAGE_GAPS`.
+
+The two summary-only claims are:
+
+- absence of an accepted live CEP paired provider result;
+- Tektite callback current-remediation versus historical-exposure state.
+
+Those statements currently depend on issue/deployment state that is not representable by the existing project-file-only evidence-reference contract. The experiment therefore preserves them as summary-only rather than manufacturing a direct file link. A typed issue-state reference must be designed and governed separately if later evidence justifies extending the contract.
+
+The directly linked sample covers bounded DGAF Epoch 002 state and claim ceilings, AOSS external-review status, ACP bounded-executor boundaries, the frozen CEP 89→1 / 32,471→268 catalog characterization, and Tektite projection/non-authority boundaries.
+
+All receipt effects remain:
+
+```text
+truth_effect=NONE
+authorization_effect=NONE
+scientific_state_effect=NONE
+evidence_authority_effect=NONE
+```
+
+### Baseline Question 1 update
+
+Question 1 — "Which public-facing claims currently lack direct supporting evidence?" — now has a reproducible bounded answer for the sampled current `github.profile` claim families.
+
+It remains **PARTIAL** because:
+
+- the observation is a bounded material-claim sample, not complete public-profile enumeration;
+- surface `PASS` does not imply claim-evidence completeness;
+- issue/deployment-backed current-state claims remain summary-only under the path-only direct-linkage contract;
+- caller-supplied claim extraction is not itself evidence truth;
+- other public surfaces are not covered by this observation.
+
+Program-level benefit remains NOT ESTABLISHED.
