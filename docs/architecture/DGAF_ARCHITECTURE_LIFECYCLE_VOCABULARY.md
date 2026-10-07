@@ -1,6 +1,6 @@
 # DGAF Architecture-Control Lifecycle Vocabulary
 
-**Status:** PROPOSED / DOCUMENT-LIFECYCLE CONTROL / NON-AUTHORIZING  
+**Status:** ACTIVE_NON_AUTHORIZING / DOCUMENT-LIFECYCLE CONTROL / NON-AUTHORIZING  
 **Date:** 2026-09-28  
 **Scope:** architecture-control documents, registries, ADRs, and related classification metadata
 
@@ -179,7 +179,9 @@ A future validator may check:
 4. separation of lifecycle state from scientific/authorization fields;
 5. current architecture-control files do not retain stale `PROPOSED` labels after explicit adoption.
 
-The validator should remain advisory until historical exclusions and false-positive behavior are understood.
+The current advisory validator is `scripts/validate_dgaf_architecture_lifecycle.py`. It checks an explicit adopted-baseline set rather than recursively promoting every file under `docs/architecture/`. Historical and genuinely proposed material therefore remain outside the baseline unless adoption is separately evidenced.
+
+The validator remains advisory while its baseline coverage, historical exclusions, and false-positive behavior are evaluated.
 
 ## Boundary
 

@@ -1,6 +1,6 @@
 # DGAF Evidence and State Semantic Mapping
 
-**Status:** PROPOSED / SEMANTIC ALIGNMENT / NON-AUTHORIZING
+**Status:** ACTIVE_NON_AUTHORIZING / SEMANTIC ALIGNMENT / NON-AUTHORIZING
 
 ## Purpose
 
