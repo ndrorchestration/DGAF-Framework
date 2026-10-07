@@ -1,0 +1,142 @@
+{
+  "schema_version": "PUBLIC_CLAIM_LINKAGE_OBSERVATION_V0",
+  "surface_binding": {
+    "manifest_schema_version": "NDR_PUBLIC_SURFACE_MANIFEST_V1",
+    "surface_id": "github.profile",
+    "source_repository": "ndrorchestration/ndrorchestration",
+    "source_commit": "4bfd33093b3a2875101d8dd687f6647183538d7b",
+    "source_blob_sha": "63b2836f19f03a2c9203c10e798e74c9e27f9114",
+    "copy_state": "RECONCILED",
+    "release_gate": "PASS",
+    "observed_at": "2026-10-05T01:36:00Z"
+  },
+  "canonical_authorities": {
+    "DGAF": {
+      "repository": "ndrorchestration/DGAF-Framework",
+      "repository_commit": "8a930be859a1052b1a4c65603984117017ced4a6"
+    },
+    "ACP": {
+      "repository": "ndrorchestration/agent-control-plane",
+      "repository_commit": "bd56a747686d775236bb78603bdaf2afc90733cb"
+    },
+    "TEKTITE": {
+      "repository": "ndrorchestration/DGAF-Framework",
+      "repository_commit": "8a930be859a1052b1a4c65603984117017ced4a6"
+    }
+  },
+  "claims": [
+    {
+      "claim_id": "dgaf-epoch-002-bounded-result",
+      "claim_text": "Track A Epoch 002 completed 50 paired seed units / 2,250 blinded observations and is closed for its exact preregistered scope.",
+      "canonical_dependency": "DGAF",
+      "support_state": "DIRECT_EVIDENCE_LINKED",
+      "evidence_refs": [
+        {
+          "repository": "ndrorchestration/DGAF-Framework",
+          "repository_commit": "8a930be859a1052b1a4c65603984117017ced4a6",
+          "path": "docs/CURRENT_STATE.md"
+        }
+      ],
+      "claim_not_supported": "Does not establish canonical DGAF efficacy, independent validation, scientific-N promotion, or High-Assurance authorization.",
+      "basis": "The current DGAF state record directly encodes the bounded Epoch 002 collection and closure state."
+    },
+    {
+      "claim_id": "dgaf-claim-ceilings",
+      "claim_text": "Scientific N remains 0; canonical DGAF efficacy and independent validation are not established; High Assurance is not authorized.",
+      "canonical_dependency": "DGAF",
+      "support_state": "DIRECT_EVIDENCE_LINKED",
+      "evidence_refs": [
+        {
+          "repository": "ndrorchestration/DGAF-Framework",
+          "repository_commit": "8a930be859a1052b1a4c65603984117017ced4a6",
+          "path": "docs/CURRENT_STATE.md"
+        }
+      ],
+      "claim_not_supported": "Does not imply that every DGAF subsystem or experiment shares the same evidence class beyond the recorded ceilings.",
+      "basis": "The current DGAF state record directly carries the canonical claim ceilings."
+    },
+    {
+      "claim_id": "dgaf-aoss-external-review-status",
+      "claim_text": "AOSS Stage A has an accepted independent-validation handoff, while actual external review remains not executed under issue #929.",
+      "canonical_dependency": "DGAF",
+      "support_state": "DIRECT_EVIDENCE_LINKED",
+      "evidence_refs": [
+        {
+          "repository": "ndrorchestration/DGAF-Framework",
+          "repository_commit": "8a930be859a1052b1a4c65603984117017ced4a6",
+          "path": "docs/CURRENT_STATE.md"
+        }
+      ],
+      "claim_not_supported": "An accepted handoff does not establish completed independent validation.",
+      "basis": "The current DGAF state record directly distinguishes accepted handoff from unexecuted external review."
+    },
+    {
+      "claim_id": "acp-bounded-local-test-executor",
+      "claim_text": "ACP has a bounded disposable-repository executor for the tested BOUNDED_LOCAL_TEST profile and does not authorize real-project mutation, rollback execution, production execution, or High Assurance.",
+      "canonical_dependency": "ACP",
+      "support_state": "DIRECT_EVIDENCE_LINKED",
+      "evidence_refs": [
+        {
+          "repository": "ndrorchestration/agent-control-plane",
+          "repository_commit": "bd56a747686d775236bb78603bdaf2afc90733cb",
+          "path": "docs/CURRENT_FRONTIER.md"
+        }
+      ],
+      "claim_not_supported": "Does not establish hostile-local-actor resistance, trusted process identity, distributed/global lineage, or broader mutation authority.",
+      "basis": "ACP CURRENT_FRONTIER directly records the bounded executor scope and retained ceilings."
+    },
+    {
+      "claim_id": "acp-cep-catalog-characterization",
+      "claim_text": "CEP frozen real GitHub connector characterization reduced exposed descriptors from 89 to 1 and serialized o200k_base catalog tokens from 32,471 to 268.",
+      "canonical_dependency": "ACP",
+      "support_state": "DIRECT_EVIDENCE_LINKED",
+      "evidence_refs": [
+        {
+          "repository": "ndrorchestration/agent-control-plane",
+          "repository_commit": "bd56a747686d775236bb78603bdaf2afc90733cb",
+          "path": "experiments/context_efficiency/results/github-connector-runtime-token-2026-10-04.json"
+        }
+      ],
+      "claim_not_supported": "Does not establish live-model prompt reduction, latency or monetary-cost improvement, or task-level efficacy.",
+      "basis": "The frozen ACP result artifact records the exact catalog counts, tokenizer version, token counts, and claim boundary."
+    },
+    {
+      "claim_id": "acp-cep-live-pair-absence",
+      "claim_text": "No accepted live paired provider result exists yet; model-visible dynamic exposure and end-to-end context-efficiency evidence remain unobserved or not established.",
+      "canonical_dependency": "ACP",
+      "support_state": "INDIRECT_OR_SUMMARY_ONLY",
+      "evidence_refs": [],
+      "claim_not_supported": "Runner implementation and no-send tests alone do not prove the global absence of an accepted provider result.",
+      "basis": "Current state is tracked by issue #165, while the existing direct-linkage contract accepts project-local file paths only; retain this claim as summary-only rather than manufacturing a direct link."
+    },
+    {
+      "claim_id": "tektite-projection-non-authority",
+      "claim_text": "Tektite projects bounded public status and the accepted local-test executor boundary without becoming a governance authority or execution surface.",
+      "canonical_dependency": "TEKTITE",
+      "support_state": "DIRECT_EVIDENCE_LINKED",
+      "evidence_refs": [
+        {
+          "repository": "ndrorchestration/DGAF-Framework",
+          "repository_commit": "8a930be859a1052b1a4c65603984117017ced4a6",
+          "path": "docs/tektite-v0.1/status.seed.json"
+        },
+        {
+          "repository": "ndrorchestration/DGAF-Framework",
+          "repository_commit": "8a930be859a1052b1a4c65603984117017ced4a6",
+          "path": "docs/tektite-v0.1/evidence-ledger.seed.json"
+        }
+      ],
+      "claim_not_supported": "Does not authorize real-project mutation, rollback execution, production execution, independent validation, canonical efficacy, or High Assurance.",
+      "basis": "The current Tektite status seed and evidence ledger explicitly project the bounded executor and non-authority ceilings."
+    },
+    {
+      "claim_id": "tektite-callback-current-vs-historical-exposure",
+      "claim_text": "The current Tektite callback uses a fixed server-controlled audit origin with bounded live remediation evidence, while historical pre-fix exposure remains unresolved.",
+      "canonical_dependency": "TEKTITE",
+      "support_state": "INDIRECT_OR_SUMMARY_ONLY",
+      "evidence_refs": [],
+      "claim_not_supported": "Current runtime remediation must not be converted into a claim that historical exposure did or did not occur.",
+      "basis": "The public profile statement is backed by live deployment and issue-state evidence rather than a current project-local file accepted by the path-only linkage contract."
+    }
+  ]
+}
