@@ -1,14 +1,17 @@
 """Guards for current DGAF Vercel runtime identity metadata."""
 
 import json
+import os
+import subprocess
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
 CANONICAL_PRODUCTION_URL = "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
 VERCEL_PROJECT_ID = "prj_euzjAnhqct0wayTWWojizanKN3cX"
-COLD_START_WARNING = (
-    "Audit counters are in-memory and reset on each serverless cold start. " "Wire to Vercel KV for persistence."
+CURRENT_COLD_START_WARNING = (
+    "Audit counters are in-memory and reset on each serverless cold start. "
+    "Configure an admitted durable store before relying on persistent audit state."
 )
 
 
@@ -61,9 +64,47 @@ def test_deployment_verifier_fails_closed_on_health_dashboard_and_audit_contract
     assert "AUDIT=$(curl" in script
     assert "AUDIT_OK=" in script
     assert "d.get('_warning') in (None, expected_warning)" in script
-    assert COLD_START_WARNING in script
+    assert CURRENT_COLD_START_WARNING in script
     assert '"$AUDIT_OK" = "true"' in script
     assert "audit response contract FAIL" in script
+
+
+def test_deployment_verifier_accepts_current_runtime_audit_warning(tmp_path: Path) -> None:
+    curl = tmp_path / "curl"
+    orchestrate_payload = (
+        '{"decision":"PASS","turn":1,"effective_confidence":0.8,'
+        '"psi_cubic_check":true,"trace":[],"evidence":{"status":"PARTIAL"}}'
+    )
+    audit_payload = '{"status":"ok","version":"1.8.0","_warning":"' f"{CURRENT_COLD_START_WARNING}" '"}'
+    curl.write_text(
+        f"""#!/usr/bin/env bash
+case \"$*\" in
+  *'/api/health'*) printf '%s\\n' '{{\"status\":\"ok\",\"psi_cubic\":true,\"version\":\"1.8.0\"}}' ;;
+  *'/api/orchestrate'*) printf '%s\\n' '{orchestrate_payload}' ;;
+  *'/api/audit'*) printf '%s\\n' '{audit_payload}' ;;
+  *) printf '200' ;;
+esac
+""",
+        encoding="utf-8",
+    )
+    curl.chmod(0o755)
+    env = {
+        **os.environ,
+        "PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}",
+        "DGAF_URL": "https://fixture.invalid",
+    }
+
+    completed = subprocess.run(
+        ["bash", str(REPO_ROOT / "scripts" / "verify_deployment.sh")],
+        cwd=REPO_ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert "[DGAF] Verification complete." in completed.stdout
 
 
 def test_ecosystem_registry_binds_current_dgaf_vercel_identity_without_claiming_runtime_truth() -> None:

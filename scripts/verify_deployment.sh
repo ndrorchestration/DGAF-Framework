@@ -48,7 +48,7 @@ echo ""
 echo "[4] GET /api/audit"
 AUDIT=$(curl "${CURL_ARGS[@]}" "$URL/api/audit")
 echo "$AUDIT" | python3 -m json.tool
-AUDIT_OK=$(echo "$AUDIT" | python3 -c "import sys,json; d=json.load(sys.stdin); expected_warning='Audit counters are in-memory and reset on each serverless cold start. Wire to Vercel KV for persistence.'; ok=(d.get('status') == 'ok' and d.get('version') == '1.8.0' and d.get('_warning') in (None, expected_warning)); print(str(ok).lower())")
+AUDIT_OK=$(echo "$AUDIT" | python3 -c "import sys,json; d=json.load(sys.stdin); expected_warning='Audit counters are in-memory and reset on each serverless cold start. Configure an admitted durable store before relying on persistent audit state.'; ok=(d.get('status') == 'ok' and d.get('version') == '1.8.0' and d.get('_warning') in (None, expected_warning)); print(str(ok).lower())")
 [ "$AUDIT_OK" = "true" ] || { echo "  ✗ audit response contract FAIL"; exit 1; }
 echo '  ✓ audit status="ok", version="1.8.0", warning contract valid'
 echo ""
