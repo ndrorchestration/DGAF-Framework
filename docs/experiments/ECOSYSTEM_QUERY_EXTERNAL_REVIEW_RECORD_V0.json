@@ -1,7 +1,8 @@
 {
   "record_class": "ECOSYSTEM_QUERY_EXTERNAL_REVIEW_V0",
   "packet_version": "V0",
-  "packet_source_commit": "7e591bd4042fac00b53208a10400165b96bb9c31",
+  "packet_creation_source_commit": "7e591bd4042fac00b53208a10400165b96bb9c31",
+  "packet_acceptance_commit": "NOT_RECORDED",
   "evaluated_dgaf_commit": "NOT_RECORDED",
   "review_date": "NOT_RECORDED",
   "reviewer": {
