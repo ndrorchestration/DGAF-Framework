@@ -1,0 +1,115 @@
+{
+  "record_class": "ECOSYSTEM_QUERY_EXTERNAL_REVIEW_V0",
+  "packet_version": "V0",
+  "packet_source_commit": "7e591bd4042fac00b53208a10400165b96bb9c31",
+  "evaluated_dgaf_commit": "NOT_RECORDED",
+  "review_date": "NOT_RECORDED",
+  "reviewer": {
+    "coarse_background": "NOT_RECORDED",
+    "relationship_to_project": "NOT_RECORDED",
+    "participated_in_implementation": "NOT_RECORDED",
+    "received_unpublished_author_coaching": "NOT_RECORDED",
+    "conflict_disclosure": "NOT_RECORDED"
+  },
+  "environment": {
+    "operating_system": "NOT_RECORDED",
+    "python_version": "NOT_RECORDED",
+    "notes": ""
+  },
+  "timing": {
+    "human_minutes": "NOT_RECORDED",
+    "timing_method": "NOT_RECORDED"
+  },
+  "question_results": [
+    {
+      "question_id": "Q1",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    },
+    {
+      "question_id": "Q2",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    },
+    {
+      "question_id": "Q3",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    },
+    {
+      "question_id": "Q4",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    },
+    {
+      "question_id": "Q5",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    },
+    {
+      "question_id": "Q6",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    },
+    {
+      "question_id": "Q7",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    },
+    {
+      "question_id": "Q8",
+      "answer_state": "NOT_RECORDED",
+      "answer": "",
+      "sources_consulted": [],
+      "manual_cross_surface_lookups": [],
+      "ambiguities_or_contradictions": [],
+      "potential_overstatement_findings": []
+    }
+  ],
+  "falsification_attempts": [],
+  "artifact_reviews": [],
+  "assistance_log": [],
+  "metrics": {
+    "artifacts_reviewed": 0,
+    "accepted_without_substantive_correction": 0,
+    "human_review_survival_rate": "NOT_COMPUTED",
+    "human_operational_workload_minutes": "NOT_RECORDED"
+  },
+  "final_disposition": "NOT_RECORDED",
+  "final_rationale": "",
+  "non_effects": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED",
+    "program_level_benefit": "NOT_ESTABLISHED_UNTIL_REVIEW_ADJUDICATED"
+  }
+}
