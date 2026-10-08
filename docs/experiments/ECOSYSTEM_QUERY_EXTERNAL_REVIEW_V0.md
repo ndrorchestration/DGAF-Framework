@@ -167,4 +167,3 @@ HIGH_ASSURANCE=NOT_AUTHORIZED
 ```
 
 Use `docs/experiments/ECOSYSTEM_QUERY_EXTERNAL_REVIEW_RECORD_V0.json` as the blank evidence-record template.
-
