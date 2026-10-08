@@ -11,7 +11,9 @@ Packet creation source:
 DGAF_MAIN_AT_PACKET_CREATION=7e591bd4042fac00b53208a10400165b96bb9c31
 ```
 
-The reviewer must record the exact DGAF commit actually evaluated. If protected `main` advances, do not silently substitute a later commit without recording it.
+The reviewer must record the exact DGAF commit actually evaluated.
+
+The evidence record must also record the exact accepted packet commit supplied by controller #1329. The packet creation source above is not the packet acceptance identity; do not treat it as one. If protected `main` advances, do not silently substitute a later commit without recording it.
 
 ## Purpose
 
