@@ -67,6 +67,11 @@
             <p>The accepted executor is limited to explicitly marked disposable local test repositories; this does not authorize real-project mutation.</p>
           </article>
           <article class="status-card positive">
+            <h3>Durable Local Mutation Lineage</h3>
+            <p class="status">ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE</p>
+            <p>Known local mutation history gates follow-on actions in tested disposable repositories. This does not establish distributed/global lineage or continuing authority; consequential follow-on actions require fresh adjudication.</p>
+          </article>
+          <article class="status-card positive">
             <h3>Tektite Static Shell</h3>
             <p class="status">MERGED</p>
             <p>The display-only public shell and local preview guidance are merged to main.</p>
@@ -125,13 +130,13 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
         </div>
         <div class="ledger-list">
           <article>
-            <h3>ACP PR #145</h3>
+            <h3>ACP PR #145 — Historical documentation event</h3>
             <p><strong>Supports:</strong> ACP queue classification, dependency map, and executor boundary documentation.</p>
             <p>
               <strong>Does not support:</strong> live executor authority, rollback execution, production deployment,
               independent validation, or High-Assurance.
             </p>
-            <p><strong>Authorization effect:</strong> Executor promotion remains blocked.</p>
+            <p><strong>Authorization effect:</strong> Historical PR #145 disposition: executor promotion was blocked at that event; this row does not describe the current bounded executor.</p>
           </article>
           <article>
             <h3>DGAF Track A / Epoch 002 status</h3>
@@ -160,6 +165,12 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
           </p>
         </div>
         <div class="source-grid">
+          <a href="https://github.com/ndrorchestration/agent-control-plane/pull/156">
+            ACP PR #156 — Bounded disposable-repository executor
+          </a>
+          <a href="https://github.com/ndrorchestration/agent-control-plane/pull/159">
+            ACP PR #159 — Durable local mutation lineage
+          </a>
           <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1166">
             PR #1166 — Tektite v0.1 seed plan
           </a>
@@ -182,12 +193,17 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
         </div>
         <div class="card-grid">
           <article class="case-card">
-            <h3>ACP PR #145</h3>
+            <h3>ACP PR #145 — Historical documentation event</h3>
             <p>Documentation reconciliation without executor promotion.</p>
             <p class="small">Lesson: merged documentation can clarify state without authorizing execution.</p>
             <p>
               <a href="../case-studies/ACP_PR_145.md">Read the bounded case-study detail</a>
             </p>
+          </article>
+          <article class="case-card">
+            <h3>Bounded Executor and Durable Lineage</h3>
+            <p>Tested disposable-repository capability, retained risks, and fresh adjudication for follow-on actions.</p>
+            <p><a href="../case-studies/ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md">Read the bounded executor case study</a></p>
           </article>
           <article class="case-card">
             <h3>DGAF Claim Discipline</h3>
