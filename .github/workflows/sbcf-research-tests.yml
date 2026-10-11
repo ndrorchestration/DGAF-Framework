@@ -1,6 +1,14 @@
 name: SBCF Research Contract Tests
 
 on:
+  push:
+    branches: ['research/sbcf-*']
+    paths:
+      - 'experiments/sbcf/**'
+      - 'tests/test_sbcf*.py'
+      - 'requirements-ci-py312-ubuntu2404-x64.lock'
+      - 'scripts/bootstrap_ci_pip.sh'
+      - '.github/workflows/sbcf-research-tests.yml'
   pull_request:
     branches: ['research/sbcf-*']
     paths:
