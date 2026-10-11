@@ -86,3 +86,13 @@ Checkpoint disposition: C1 intake extended, C3 executable predicate added, C7 co
 Next ready task: validate these bindings at a real or independently instrumented effect boundary, including revocation/identity changes between planning and commit. Prioritize external source authority and custody recovery obligations already tracked in PR #1339. Do not infer runtime behavior from this deterministic function.
 
 Preserved ceiling: SCIENTIFIC_N_INCREMENT=0; INDEPENDENT_VALIDATION=NOT_ESTABLISHED; CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED; HIGH_ASSURANCE=NOT_AUTHORIZED.
+
+## Verification follow-up — 2026-10-11
+
+All previously observed hosted checks at `61b6d986b919d0185b0916e7e98974cfe98ca177` completed successfully. None supplied a Python matrix for this stacked research base; the existing Python workflow only targets main/develop. The earlier local pytest limitation is preserved above as historical evidence.
+
+Added `.github/workflows/sbcf-research-tests.yml`: pull requests against `research/sbcf-*` run the complete SBCF synthetic test group, including the cross-layer cases. The workflow checks out the candidate head, uses the existing pinned actions and hash-locked Python 3.12 QA toolchain, and runs `python -m pytest tests/test_sbcf*.py -ra` without failure masking. Relevant source/test/toolchain/workflow paths trigger it; documentation-only updates do not. Main/develop continue using the existing broader Python workflow. This focused job is not added as a protected-main required context.
+
+The cross-layer module and test file were formatted; predicate behavior was unchanged. Local verification used Python 3.12.14 with repository-pinned tool versions Black 26.5.1, isort 8.0.1 and pytest 9.1.1: 61 passed, 3 xfailed in the full SBCF test group. Black/isort checks passed. Workflow YAML parsing, branch filter, exact pytest invocation and absence of continue-on-error were checked. Local packages were installed separately for QA; the hosted workflow uses the repository's hash-locked dependency file.
+
+The three strict expected failures remain open: evidence-store snapshot rollback, cross-store crash consistency and coordinated rollback of both host-local stores. They are counterexamples, not successful protections. The focused result does not establish the repository-wide pytest suite, live containment, independent validation or empirical efficacy. Hosted execution of the new job must be observed separately at its resulting exact head.
