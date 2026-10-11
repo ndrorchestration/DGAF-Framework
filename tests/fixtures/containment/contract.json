@@ -1,0 +1,16 @@
+{
+  "schema_version": "SYNTHETIC_CONTAINMENT_CONTRACT_V1",
+  "contract_id": "synthetic-containment-v1",
+  "definition_version": "1",
+  "subject_id": "synthetic-agent",
+  "session_id": "synthetic-session",
+  "environment_id": "synthetic-environment",
+  "required_predicates": [
+    "capabilities_restricted",
+    "workers_covered",
+    "pending_actions_contained",
+    "egress_covered",
+    "persistence_contained"
+  ],
+  "max_age_seconds": 30
+}
