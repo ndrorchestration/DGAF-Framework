@@ -1,8 +1,9 @@
 """Synthetic contract checks; public fixtures are not independent evaluation data."""
+
 import copy
 import json
-from pathlib import Path
 import unittest
+from pathlib import Path
 
 from experiments.sbcf.cross_layer import evaluate
 
@@ -12,23 +13,41 @@ FIXTURES = Path(__file__).parents[1] / "experiments/sbcf/fixtures/cross_layer_v0
 def valid_case():
     return {
         "request": {
-            "subject": "agent-1", "action": "write", "resource": "object-1",
-            "policy": "p1", "run": "r1", "nonce": "n1",
+            "subject": "agent-1",
+            "action": "write",
+            "resource": "object-1",
+            "policy": "p1",
+            "run": "r1",
+            "nonce": "n1",
             "parameter_sources": {"recipient": "address_book"},
         },
         "grant": {
-            "issuer": "broker", "subject": "agent-1", "action": "write",
-            "resource": "object-1", "policy": "p1", "run": "r1", "nonce": "n1",
-            "not_before": 10, "expires_at": 20, "revoked": False,
+            "issuer": "broker",
+            "subject": "agent-1",
+            "action": "write",
+            "resource": "object-1",
+            "policy": "p1",
+            "run": "r1",
+            "nonce": "n1",
+            "not_before": 10,
+            "expires_at": 20,
+            "revoked": False,
         },
         "context": {
-            "resource": "object-1", "policy": "p1", "run": "r1", "nonce": "n1",
-            "now": 15, "regime": "NORMAL", "trusted_issuers": ["broker"],
+            "resource": "object-1",
+            "policy": "p1",
+            "run": "r1",
+            "nonce": "n1",
+            "now": 15,
+            "regime": "NORMAL",
+            "trusted_issuers": ["broker"],
             "parameter_policy": {"recipient": ["address_book"]},
-            "observable": True, "revocation_checked": True,
+            "observable": True,
+            "revocation_checked": True,
         },
         "quarantine": None,
-        "message": "", "local_evidence_label": "UNKNOWN",
+        "message": "",
+        "local_evidence_label": "UNKNOWN",
     }
 
 
@@ -83,8 +102,10 @@ class CrossLayerTests(unittest.TestCase):
 
     def test_unknown_and_malformed_inputs_fail_closed(self):
         for section, field, value in (
-            ("grant", "revoked", "false"), ("grant", "not_before", True),
-            ("context", "now", True), ("context", "observable", "true"),
+            ("grant", "revoked", "false"),
+            ("grant", "not_before", True),
+            ("context", "now", True),
+            ("context", "observable", "true"),
             ("context", "trusted_issuers", "broker"),
             ("request", "parameter_sources", {}),
             ("context", "parameter_policy", {"recipient": "address_book"}),
@@ -102,9 +123,14 @@ class CrossLayerTests(unittest.TestCase):
     def test_quarantine_requires_complete_strict_state(self):
         case = valid_case()
         case["context"]["regime"] = "QUARANTINED"
-        state = {"production_capabilities": 0, "uncontrolled_workers": 0,
-                 "pending_external_actions": 0, "unauthorized_destinations": 0,
-                 "observable": True, "external_attestation": True}
+        state = {
+            "production_capabilities": 0,
+            "uncontrolled_workers": 0,
+            "pending_external_actions": 0,
+            "unauthorized_destinations": 0,
+            "observable": True,
+            "external_attestation": True,
+        }
         case["quarantine"] = state
         self.assertTrue(evaluate(case)["quarantine_predicate"])
         for key in state:
