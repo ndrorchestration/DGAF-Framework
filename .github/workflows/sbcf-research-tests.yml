@@ -7,6 +7,7 @@ on:
       - 'experiments/sbcf/**'
       - 'tests/test_sbcf*.py'
       - 'requirements-ci-py312-ubuntu2404-x64.lock'
+      - 'requirements-sbcf-pytest.lock'
       - 'scripts/bootstrap_ci_pip.sh'
       - '.github/workflows/sbcf-research-tests.yml'
   pull_request:
@@ -15,6 +16,7 @@ on:
       - 'experiments/sbcf/**'
       - 'tests/test_sbcf*.py'
       - 'requirements-ci-py312-ubuntu2404-x64.lock'
+      - 'requirements-sbcf-pytest.lock'
       - 'scripts/bootstrap_ci_pip.sh'
       - '.github/workflows/sbcf-research-tests.yml'
   workflow_dispatch:
@@ -51,8 +53,8 @@ jobs:
 
       - name: Check cross-layer and witness formatting
         run: |
-          python -m black --check --target-version py312 --line-length 120 experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py
-          python -m isort --check-only --profile black experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py
+          python -m black --check --target-version py312 --line-length 120 experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py
+          python -m isort --check-only --profile black experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py
 
       - name: Run complete SBCF synthetic test group
         env:
@@ -69,3 +71,30 @@ jobs:
             echo 'Expected failures retain standalone rollback, evidence-only bypass, and coordinated rollback counterexamples.'
             echo 'No live containment, independent validation, scientific N increment, or release authority is established.'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  sbcf-windows-tests:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: '3.12'
+
+      - name: Install hash-locked dependencies in a fresh test environment
+        run: |
+          python -m venv .sbcf-test-venv
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .\.sbcf-test-venv\Scripts\python.exe -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r requirements-sbcf-pytest.lock
+
+      - name: Run complete SBCF group on Windows
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: >-
+          .\.sbcf-test-venv\Scripts\python.exe -c "import glob, pytest; raise SystemExit(pytest.main(glob.glob('tests/test_sbcf*.py') + ['-q', '-ra']))"

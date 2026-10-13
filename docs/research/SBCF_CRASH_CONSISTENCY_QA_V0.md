@@ -63,4 +63,22 @@ All **15 observed workflows** at code head `a283e17bfbc2696bda372a63eff7153bf2e4
 
 Next action: preserve this failure record during review; publish future dependent code/test migrations as one complete Git commit through a supported multi-file write path. Lower-level SQLite interruption, externally evidenced reconciliation and independent review remain separate open tasks.
 
+## Windows follow-up and resource-lifetime repair — 2026-10-13
+
+RDC on neontic tested an isolated checkout of receipt head `afec9763f90309c840fcffa446153121bcdcdeb9`, leaving the existing dirty DGAF workspace untouched. Windows x64, CPython 3.12.10, SQLite 3.49.1 and pytest 9.1.1 produced **1 failed, 85 passed, 3 xfailed, 37 subtests passed**. The failing case was `test_missing_store_is_not_recreated_during_admission[events.db]`: unlink raised `PermissionError: WinError 32` because the evidence connection remained open. Initial Windows log SHA-256: `41a357bdfa86d3200193bbe590aeeb9d52db0261d8b6971b68369896b42466d4`.
+
+`sqlite3.Connection`'s transaction context commits/rolls back but does not close the connection. `DurableEvidenceVerifier` now uses an outer `contextlib.closing` context for initialization and admission, preserving transaction completion before deterministic connection closure. Admission rules, signed-envelope semantics, counters, schema and expected failures are unchanged. The existing Windows missing-store case is the regression test; it is not weakened or skipped.
+
+With only the durable module changed (source SHA-256 `1f0f1237423bedd32dbd633bbe03470b9991bee9f371eb5817ddae7c9c8165b5`), the complete Windows SBCF group returned **86 passed, 3 xfailed, 37 subtests passed** (exit 0); log SHA-256 `9adbd058e92a064754dcde7032008acafb31f6f2871db21162c188f065559fd8`. Linux Python 3.12.14 full `tests/` returned **2105 passed, 5 skipped, 3 xfailed, 7 warnings, 101 subtests passed** in 34.89 seconds. Formatting/whitespace checks passed. These results identify a modified tree from the parent, not an unchanged parent-head result.
+
+The research workflow now also runs the existing SBCF group on Windows 2022/Python 3.12. Its platform-independent pytest wheel subset is hash-locked from the canonical CI lock, with pytest's Windows-only colorama dependency explicitly pinned and hashed. A fresh virtual environment prevents dependence on preinstalled runner packages; no Linux-specific product dependency lock is applied to Windows. The initial hosted Windows job at `6aded8398a48e512ca6558521fc25b4cbb1192b4` passed but reused preinstalled colorama 0.4.6. That dependency-coverage limitation prompted the fresh-environment refinement. Hosted results must be observed at the resulting exact candidate head and recorded in its draft PR.
+
+### Bounded native SQLite storage-fault observations
+
+A disposable local probe constrained `max_page_count` and installed a test-only padding trigger separately in each store. SQLite itself raised `SQLITE_FULL` (code 13), rather than a mocked exception. In both cases the witnessed admission returned false, admission/high-water/counter state remained unchanged, and removing the trigger permitted one retry while a duplicate was rejected. This exercises SQLite capacity-error handling, not physical disk exhaustion, VFS write/fsync interruption, kernel crash or power loss.
+
+The probe ran at the parent checkout plus the exact durable-source bytes above. Initial probe launch needed its script import path corrected; its own SQLite helper contexts also required deterministic closure for Windows disposable-directory cleanup. Those probe setup failures are separate from the preserved production missing-store failure. Local result SHA-256: `3b6c38dd56d46b67cf4d221282fc0624631c506b4e70dd84c4b8066ec3f5de5a`; probe script SHA-256 `9e1f111524008ef9d53a074728e39053bb121f86d2dc903c12f4421d969c5332`. This is supplementary same-owner verification, not independent validation.
+
+A separate disposable Windows Git fixture reproduced issue #1344's distinction: clean working tree and filtered object equal to committed LF blob `4046bd727402fc1a4dfb9899724f8fd293644a6e`, while raw CRLF blob `0a3e3b3e37d3566317ed559ddd5b08d7b6db4877` differs. Full AOSS preflight was not executed, no candidate/freeze/custody hashes were changed, and issue #1344 remains open in its separate controlled review lane.
+
 SCIENTIFIC_N_INCREMENT=0; INDEPENDENT_VALIDATION=NOT_ESTABLISHED; CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED; HIGH_ASSURANCE=NOT_AUTHORIZED. No live enforcement, scientific inference, release or main merge is established.
