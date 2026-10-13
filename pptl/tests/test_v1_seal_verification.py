@@ -101,7 +101,7 @@ def test_control_plane_rejects_arbitrary_64_character_seal() -> None:
     forged = SimpleNamespace(final_status="PASS", seal_hash="0" * 64)
     plane, task = _evaluating_plane(forged)
 
-    with pytest.raises(ControlPlaneViolation, match="complete canonical sealed evidence"):
+    with pytest.raises(ControlPlaneViolation, match="valid sealed evidence"):
         plane.evaluate_turn("root", "input")
 
     assert task.state is TaskState.ESCALATED
@@ -112,19 +112,17 @@ def test_control_plane_rejects_tampered_audit_after_sealing() -> None:
     audit.gate_records.append(GateRecord(1, "P-31", "SCPE_Prune", GateResult.KILL, "tampered after seal"))
     plane, task = _evaluating_plane(audit)
 
-    with pytest.raises(ControlPlaneViolation, match="complete canonical sealed evidence"):
+    with pytest.raises(ControlPlaneViolation, match="valid sealed evidence"):
         plane.evaluate_turn("root", "input")
 
     assert task.state is TaskState.ESCALATED
 
 
 def test_control_plane_rejects_incomplete_self_sealed_pass() -> None:
-    audit = _sealed_audit(
-        gate_records=[GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS)]
-    )
+    audit = _sealed_audit(gate_records=[GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS)])
     plane, task = _evaluating_plane(audit)
 
-    with pytest.raises(ControlPlaneViolation, match="complete canonical sealed evidence"):
+    with pytest.raises(ControlPlaneViolation, match="valid sealed evidence"):
         plane.evaluate_turn("root", "input")
 
     assert task.state is TaskState.ESCALATED
@@ -147,7 +145,7 @@ def test_control_plane_rejects_duplicate_reordered_or_substituted_gates(gate_rec
     audit = _sealed_audit(gate_records=records)
     plane, task = _evaluating_plane(audit)
 
-    with pytest.raises(ControlPlaneViolation, match="complete canonical sealed evidence"):
+    with pytest.raises(ControlPlaneViolation, match="valid sealed evidence"):
         plane.evaluate_turn("root", "input")
 
     assert task.state is TaskState.ESCALATED
@@ -157,7 +155,7 @@ def test_control_plane_rejects_self_sealed_final_status_override() -> None:
     audit = _sealed_audit(status=TurnStatus.WARN)
     plane, task = _evaluating_plane(audit)
 
-    with pytest.raises(ControlPlaneViolation, match="complete canonical sealed evidence"):
+    with pytest.raises(ControlPlaneViolation, match="valid sealed evidence"):
         plane.evaluate_turn("root", "input")
 
     assert task.state is TaskState.ESCALATED
