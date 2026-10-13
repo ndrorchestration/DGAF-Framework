@@ -1,4 +1,5 @@
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 
@@ -13,7 +14,11 @@ SHA_B = "b" * 64
 SHA_C = "c" * 64
 
 
-def _candidate():
+def _candidate(tmp_path: Path | None = None):
+    root = tmp_path or Path(__file__).resolve().parent
+    driver = root / "source_driver_candidate.py"
+    if not driver.exists():
+        driver.write_bytes(b"# source-driver candidate\n")
     return prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
@@ -23,11 +28,13 @@ def _candidate():
         attempt_id="aoss-stage-a-attempt-0001",
         recipe_catalog_sha256=SHA_B,
         environment_candidate_record_sha256=SHA_C,
+        source_driver_path="scripts/aoss_stage_a/source_driver.py",
+        source_driver_file=driver,
     )
 
 
-def test_non_fixture_candidate_validates_without_acceptance():
-    candidate = _candidate()
+def test_non_fixture_candidate_validates_without_acceptance(tmp_path):
+    candidate = _candidate(tmp_path)
     report = validate_execution_identity_candidate(candidate)
 
     assert report["candidate_validation"] == "PASS_NON_FIXTURE_IDENTITY_CANDIDATE"
@@ -60,16 +67,16 @@ def test_non_fixture_candidate_validates_without_acceptance():
         ),
     ],
 )
-def test_candidate_rejects_fixture_identity_substitution(field, value, error):
-    candidate = _candidate()
+def test_candidate_rejects_fixture_identity_substitution(tmp_path, field, value, error):
+    candidate = _candidate(tmp_path)
     candidate[field] = value
 
     with pytest.raises(ExecutionIdentityCandidateError, match=error):
         validate_execution_identity_candidate(candidate)
 
 
-def test_candidate_rejects_post_inspection_attempt():
-    candidate = _candidate()
+def test_candidate_rejects_post_inspection_attempt(tmp_path):
+    candidate = _candidate(tmp_path)
     candidate["attempt_identity"]["outcome_inspected"] = True
 
     with pytest.raises(
@@ -79,8 +86,8 @@ def test_candidate_rejects_post_inspection_attempt():
         validate_execution_identity_candidate(candidate)
 
 
-def test_candidate_rejects_source_commit_drift():
-    candidate = _candidate()
+def test_candidate_rejects_source_commit_drift(tmp_path):
+    candidate = _candidate(tmp_path)
     candidate["source"]["commit"] = "0" * 40
 
     with pytest.raises(
@@ -90,8 +97,8 @@ def test_candidate_rejects_source_commit_drift():
         validate_execution_identity_candidate(candidate)
 
 
-def test_candidate_rejects_adjudication_prepopulation():
-    candidate = _candidate()
+def test_candidate_rejects_adjudication_prepopulation(tmp_path):
+    candidate = _candidate(tmp_path)
     candidate["adjudication"]["reviewer_identity"] = "self"
 
     with pytest.raises(
@@ -114,8 +121,8 @@ def test_candidate_rejects_adjudication_prepopulation():
         ("scientific_n_increment", 1),
     ],
 )
-def test_candidate_cannot_promote_readiness(field, value):
-    candidate = _candidate()
+def test_candidate_cannot_promote_readiness(tmp_path, field, value):
+    candidate = _candidate(tmp_path)
     candidate[field] = value
 
     with pytest.raises(
@@ -125,8 +132,8 @@ def test_candidate_cannot_promote_readiness(field, value):
         validate_execution_identity_candidate(candidate)
 
 
-def test_candidate_detects_executable_identity_mutation():
-    candidate = _candidate()
+def test_candidate_detects_executable_identity_mutation(tmp_path):
+    candidate = _candidate(tmp_path)
     mutated = deepcopy(candidate)
     mutated["executable_identity"]["interpreter_sha256"] = "not-a-sha"
 
@@ -135,3 +142,56 @@ def test_candidate_detects_executable_identity_mutation():
         match="EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID",
     ):
         validate_execution_identity_candidate(mutated)
+
+
+def test_prepare_rejects_missing_source_driver_file(tmp_path):
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING",
+    ):
+        prepare_execution_identity_candidate(
+            interpreter_path="/opt/python/3.12.3/bin/python",
+            interpreter_sha256=SHA_A,
+            argv=["-m", "definitely_missing_aoss_driver_901"],
+            working_directory="/srv/aoss-stage-a",
+            destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+            attempt_id="aoss-stage-a-attempt-0001",
+            recipe_catalog_sha256=SHA_B,
+            environment_candidate_record_sha256=SHA_C,
+            source_driver_path="scripts/aoss_stage_a/source_driver.py",
+            source_driver_file=tmp_path / "missing.py",
+        )
+
+
+def test_source_driver_digest_is_derived_from_real_file(tmp_path):
+    driver = tmp_path / "driver.py"
+    driver.write_bytes(b"print('candidate')\n")
+    candidate = prepare_execution_identity_candidate(
+        interpreter_path="/opt/python/3.12.3/bin/python",
+        interpreter_sha256=SHA_A,
+        argv=["-m", "aoss_stage_a_driver"],
+        working_directory="/srv/aoss-stage-a",
+        destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+        attempt_id="aoss-stage-a-attempt-0001",
+        recipe_catalog_sha256=SHA_B,
+        environment_candidate_record_sha256=SHA_C,
+        source_driver_path="scripts/aoss_stage_a/source_driver.py",
+        source_driver_file=driver,
+    )
+    assert candidate["source_driver_identity"]["path"] == "scripts/aoss_stage_a/source_driver.py"
+    assert candidate["source_driver_identity"]["sha256"] == __import__("hashlib").sha256(
+        driver.read_bytes()
+    ).hexdigest()
+    report = validate_execution_identity_candidate(candidate)
+    assert report["source_driver_candidate_identity"] == candidate["source_driver_identity"]
+
+
+def test_structural_validation_rejects_removed_source_driver_identity(tmp_path):
+    candidate = _candidate(tmp_path)
+    del candidate["source_driver_identity"]
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_SOURCE_DRIVER_MISSING",
+    ):
+        validate_execution_identity_candidate(candidate)
