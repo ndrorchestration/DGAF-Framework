@@ -75,7 +75,7 @@ def _git(root: Path, *args: str) -> str:
             text=True,
             env=env,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError):
         _fail("SOURCE_DRIVER_GIT_VERIFICATION_FAILED")
     return result.stdout.strip()
 
