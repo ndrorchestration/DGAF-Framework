@@ -18,6 +18,7 @@ EXPECTED_SOURCE_COMMIT = "dbab7c1afafec524ce7c18157de2089cafe79c87"
 EXPECTED_SOURCE_MODULE = "src/agent_control_plane/core.py"
 EXPECTED_SOURCE_MODULE_BLOB = "1341df7296a426b336b76ac6b1e4df67611ec931"
 EXPECTED_RECIPE_CATALOG = "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json"
+EXPECTED_SOURCE_DRIVER_PATH = "scripts/aoss_stage_a/source_driver.py"
 RECORD_TYPE = "AOSS_V0_6_STAGE_A_EXECUTION_IDENTITY_CANDIDATE"
 STATUS = "PROSPECTIVE_NON_FIXTURE_CANDIDATE_NOT_ACCEPTED"
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -82,8 +83,8 @@ def prepare_execution_identity_candidate(
     attempt_id: str,
     recipe_catalog_sha256: str,
     environment_candidate_record_sha256: str,
-    source_driver_path: str,
-    source_driver_file: Path,
+    source_driver_path: str = EXPECTED_SOURCE_DRIVER_PATH,
+    source_driver_file: Path | None = None,
 ) -> dict[str, object]:
     """Prepare a review candidate without accepting any identity."""
 
@@ -104,7 +105,13 @@ def prepare_execution_identity_candidate(
         "EXECUTION_IDENTITY_ENVIRONMENT_CANDIDATE_SHA_INVALID",
     )
     driver_path = _nonempty(source_driver_path, "EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISSING")
-    driver_file = Path(source_driver_file)
+    if driver_path != EXPECTED_SOURCE_DRIVER_PATH:
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISMATCH")
+    driver_file = (
+        Path(source_driver_file)
+        if source_driver_file is not None
+        else Path(__file__).resolve().parents[2] / EXPECTED_SOURCE_DRIVER_PATH
+    )
     if not driver_file.is_file():
         _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING")
     driver_sha256 = hashlib.sha256(driver_file.read_bytes()).hexdigest()
@@ -169,9 +176,9 @@ def prepare_execution_identity_candidate(
 def validate_execution_identity_candidate(
     candidate: Mapping[str, Any],
     *,
-    source_driver_file: Path,
+    source_driver_file: Path | None = None,
 ) -> dict[str, object]:
-    """Validate candidate structure and reverify the exact source-driver file bytes."""
+    """Validate candidate structure and reverify the canonical source-driver file bytes."""
 
     if candidate.get("record_type") != RECORD_TYPE:
         _fail("EXECUTION_IDENTITY_CANDIDATE_TYPE_MISMATCH")
@@ -215,11 +222,17 @@ def validate_execution_identity_candidate(
     if not isinstance(driver_path, str):
         _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISSING")
     _nonempty(driver_path, "EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISSING")
+    if driver_path != EXPECTED_SOURCE_DRIVER_PATH:
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISMATCH")
     driver_sha = driver.get("sha256")
     if not isinstance(driver_sha, str):
         _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_INVALID")
     _validate_sha256(driver_sha, "EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_INVALID")
-    resolved_driver = Path(source_driver_file)
+    resolved_driver = (
+        Path(source_driver_file)
+        if source_driver_file is not None
+        else Path(__file__).resolve().parents[2] / EXPECTED_SOURCE_DRIVER_PATH
+    )
     if not resolved_driver.is_file():
         _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING")
     observed_driver_sha = hashlib.sha256(resolved_driver.read_bytes()).hexdigest()
