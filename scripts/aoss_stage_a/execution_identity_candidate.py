@@ -156,6 +156,10 @@ def prepare_execution_identity_candidate(
             "decision_record_sha256": None,
         },
         "installed_environment_acceptance": "NOT_ESTABLISHED",
+        "source_driver_candidate_identity": {
+            "path": driver_path,
+            "sha256": driver_sha,
+        },
         "source_driver_binding": "NOT_ESTABLISHED",
         "executable_acceptance": "NOT_ESTABLISHED",
         "destination_acceptance": "NOT_ESTABLISHED",
@@ -168,8 +172,10 @@ def prepare_execution_identity_candidate(
 
 def validate_execution_identity_candidate(
     candidate: Mapping[str, Any],
+    *,
+    source_driver_file: Path,
 ) -> dict[str, object]:
-    """Validate exact candidate structure while forbidding self-admission."""
+    """Validate candidate structure and reverify the exact source-driver file bytes."""
 
     if candidate.get("record_type") != RECORD_TYPE:
         _fail("EXECUTION_IDENTITY_CANDIDATE_TYPE_MISMATCH")
@@ -217,6 +223,12 @@ def validate_execution_identity_candidate(
     if not isinstance(driver_sha, str):
         _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_INVALID")
     _validate_sha256(driver_sha, "EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_INVALID")
+    resolved_driver = Path(source_driver_file)
+    if not resolved_driver.is_file():
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING")
+    observed_driver_sha = hashlib.sha256(resolved_driver.read_bytes()).hexdigest()
+    if observed_driver_sha != driver_sha:
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_MISMATCH")
 
     executable = candidate.get("executable_identity")
     if not isinstance(executable, Mapping):
