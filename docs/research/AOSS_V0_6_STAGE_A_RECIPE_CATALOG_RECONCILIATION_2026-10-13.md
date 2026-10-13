@@ -29,10 +29,12 @@ Candidate correction changes only that terminal-event value. The same static
 cross-contract test then passes 2/2.
 
 Historical catalog identity:
+
 - Git blob: `178471a6a871fec5d5a7a6349f6f439af8667284`
 - raw SHA-256: `1c93843dd03cf1e75fff8c390d3ef125d73f3215f77efb0465e19d5998910715`
 
 Candidate catalog identity:
+
 - Git blob: `6382a36a3b2bba25c4e152f475e9dbfb232d3a70`
 - raw SHA-256: `b3c0d883cd9463ec558ee8a3fab3376641b2603eb474a745c119a28d1cd15d77`
 
