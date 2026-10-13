@@ -200,9 +200,9 @@ def test_source_driver_digest_is_derived_from_real_file(tmp_path):
         source_driver_file=driver,
     )
     assert candidate["source_driver_identity"]["path"] == "scripts/aoss_stage_a/source_driver.py"
-    assert candidate["source_driver_identity"]["sha256"] == __import__("hashlib").sha256(
-        driver.read_bytes()
-    ).hexdigest()
+    assert (
+        candidate["source_driver_identity"]["sha256"] == __import__("hashlib").sha256(driver.read_bytes()).hexdigest()
+    )
     report = validate_execution_identity_candidate(candidate, source_driver_file=driver)
     assert report["source_driver_candidate_identity"] == {
         "path": candidate["source_driver_identity"]["path"],
