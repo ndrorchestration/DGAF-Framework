@@ -71,7 +71,7 @@ RDC on neontic tested an isolated checkout of receipt head `afec9763f90309c840fc
 
 With only the durable module changed (source SHA-256 `1f0f1237423bedd32dbd633bbe03470b9991bee9f371eb5817ddae7c9c8165b5`), the complete Windows SBCF group returned **86 passed, 3 xfailed, 37 subtests passed** (exit 0); log SHA-256 `9adbd058e92a064754dcde7032008acafb31f6f2871db21162c188f065559fd8`. Linux Python 3.12.14 full `tests/` returned **2105 passed, 5 skipped, 3 xfailed, 7 warnings, 101 subtests passed** in 34.89 seconds. Formatting/whitespace checks passed. These results identify a modified tree from the parent, not an unchanged parent-head result.
 
-The research workflow now also runs the existing SBCF group on Windows 2022/Python 3.12. Its platform-independent pytest wheel subset is hash-locked from the canonical CI lock; no Linux-specific product dependency lock is applied to Windows. Hosted results must be observed at the resulting exact candidate head and recorded in its draft PR.
+The research workflow now also runs the existing SBCF group on Windows 2022/Python 3.12. Its platform-independent pytest wheel subset is hash-locked from the canonical CI lock, with pytest's Windows-only colorama dependency explicitly pinned and hashed. A fresh virtual environment prevents dependence on preinstalled runner packages; no Linux-specific product dependency lock is applied to Windows. The initial hosted Windows job at `6aded8398a48e512ca6558521fc25b4cbb1192b4` passed but reused preinstalled colorama 0.4.6. That dependency-coverage limitation prompted the fresh-environment refinement. Hosted results must be observed at the resulting exact candidate head and recorded in its draft PR.
 
 ### Bounded native SQLite storage-fault observations
 
