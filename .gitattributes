@@ -7,3 +7,6 @@ docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.jso
 # Keep Windows checkouts byte-identical to the canonical Git blobs.
 requirements-ci.txt text eol=lf
 requirements-ci-*.lock text eol=lf
+
+# Stage-A source-driver identity binds exact raw bytes across host platforms.
+scripts/aoss_stage_a/source_driver.py text eol=lf

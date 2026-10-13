@@ -3,6 +3,7 @@ from copy import deepcopy
 import pytest
 
 from scripts.aoss_stage_a.execution_identity_candidate import (
+    EXPECTED_RECIPE_CATALOG_SHA256,
     prepare_execution_identity_candidate,
 )
 from scripts.aoss_stage_a.external_admission_decision_intake import (
@@ -16,7 +17,6 @@ from scripts.aoss_stage_a.installed_environment_evidence import (
 from scripts.aoss_stage_a.runtime_binding import RuntimeFacts
 
 SHA_A = "a" * 64
-SHA_B = "b" * 64
 SHA_C = "c" * 64
 SHA_D = "d" * 64
 
@@ -43,11 +43,10 @@ def _identity_candidate(environment_candidate):
     return prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
-        argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
         working_directory="/srv/aoss-stage-a",
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
-        recipe_catalog_sha256=SHA_B,
+        recipe_catalog_sha256=EXPECTED_RECIPE_CATALOG_SHA256,
         environment_candidate_record_sha256=record_sha256(environment_candidate),
     )
 
