@@ -17,7 +17,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 SOURCE_REPOSITORY = "ndrorchestration/agent-control-plane"
 SOURCE_COMMIT = "dbab7c1afafec524ce7c18157de2089cafe79c87"
@@ -60,7 +60,7 @@ class SourceDriverError(RuntimeError):
     """Fail-closed source-driver boundary error."""
 
 
-def _fail(code: str) -> None:
+def _fail(code: str) -> NoReturn:
     raise SourceDriverError(code)
 
 
