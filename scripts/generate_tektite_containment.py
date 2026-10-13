@@ -149,7 +149,10 @@ Producer authenticity and independent validation remain unestablished.
 Every result carries no authority; follow-on execution requires fresh adjudication.
 Scientific N +0.</p>
 </div>
-<main id="cases" aria-live="polite"><p>Loading bounded evidence…</p></main>
+<main id="cases" aria-live="polite">
+<h2>Evidence unavailable</h2>
+<p>The replay has not loaded or passed validation. No containment or execution authority is established.</p>
+</main>
 <script type="application/json" id="projection">"""
         + payload
         + """</script>

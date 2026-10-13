@@ -4,18 +4,20 @@
   "evidence_class": "AUTHOR_EXECUTED_SOFTWARE_VERIFICATION",
   "verified_payload_sha256": {
     "app/(command-center)/demo/page.tsx": "a59a79110787b0aad283655188d2ce22501f97ff90279d69c800e49ef38dbbfe",
+    "app/lib/containment-browser.test.ts": "5ef277465c46cb38cebc5f32f9ef076b6e3602d57ecf9370881014dfbf2a8020",
     "app/lib/containment-projection.test.ts": "98b1e7cb1d1e4b33d7ec69fdcc0ce1b532ed537d7232753a61af9af159330a1c",
-    "docs/architecture/CONTAINMENT_ASSESSMENT_V0.md": "3bff5e6835a342d4b69e562eba19ec9e0d96053f8c471c2c65ccc37f131aa637",
-    "docs/superpowers/plans/2026-10-11-containment-admission-execution.md": "f7a7826f32f92db73a464d3edded9a745b17d46a9a865dcdc820d7874f22bab8",
+    "docs/architecture/CONTAINMENT_ASSESSMENT_V0.md": "e71215af68ff00622fa13029653b260e6b549da8acae8df69c2d2c7ee5cc4491",
+    "docs/architecture/CONTAINMENT_ASSESSMENT_V0_REVIEW.md": "72e4ffa73f78406465625b9f60d9c766d9aad91f141f38025fbbea57f6dd15c2",
+    "docs/superpowers/plans/2026-10-11-containment-admission-execution.md": "ab774bce69b5d76147f65689d7aee2b787ddfa5ed672a1ddf2cc03386572ebb7",
     "docs/superpowers/plans/2026-10-11-containment-admission.md": "8494623b20ca7c1474989743e58fb1dc2353d297faf4bea717d124ff3fea146e",
     "docs/superpowers/specs/2026-10-11-containment-admission-design.md": "8039f0a9ae1cde1aad98ec110e6e73b16cf1d211b1e31c014aff6a70d9b1978f",
-    "public/evidence/tektite-containment-v0.html": "f812462c2bd9c005b3736111dd2bdad2c2bcf89f9ad93224a54fc92180d16ef4",
-    "public/evidence/tektite-containment-v0.json": "b0765b2e85582ee9e6583c1e2e67a91aa2d8377a529df0f157c42234407e4f0e",
+    "public/evidence/tektite-containment-v0.html": "ea3baf24d199252a5303bb8a04957c250d11aaeb3695a9af78a08c822a16abad",
+    "public/evidence/tektite-containment-v0.json": "f90f991be9b3ee7218c160e57acfc4b301f7c99459b8f5d896bdba2018698845",
     "public/evidence/tektite-containment-view.d.mts": "2af21990cd213f2104ce9a31bfd12830a3cc01d8b958b70ae2d9bf67ac397890",
-    "public/evidence/tektite-containment-view.mjs": "58040fa7936658f50556858f945cb59b50aea0c05ded8d6c3fc8f6fa14194cc5",
+    "public/evidence/tektite-containment-view.mjs": "0405f0664a9030ad71bb242d1a6228dd871d9bbd461f18c9edac901b47ccf5c4",
     "scripts/dgaf_containment_assessment.py": "d38b08f944a8346d3e5855d41ab87a8e04b2cf9efc2efd799a07d422fabd74a4",
     "scripts/dgaf_containment_observation.py": "0319673de916247547b3ed3d29eda981d037df381bab74238d3380c507215bd0",
-    "scripts/generate_tektite_containment.py": "52105ac7266dc3efe6ce6502ebfcf17131e63f851a005a1504e4f01bc1b67e01",
+    "scripts/generate_tektite_containment.py": "5579973c46c5e25f495ce839989f16c5b23d0435a35b80c9c502c20a7241550e",
     "tests/fixtures/containment/contract.json": "c6e7d0e01801731b93a3df02a9d7c7b1df3b1428562ddc4c3f504e2bcdc8af9d",
     "tests/fixtures/containment/manifest.json": "b63204b38fb24166b0a18dcecc98d6eb1b6fd00a222309bc8fb320749dd9aed4",
     "tests/fixtures/containment/observations/SC-01.json": "e79bc0451dbcd1b5c8c242c5e071f7525a81c3ee499a88588137ec1ab218a9e6",
@@ -25,20 +27,25 @@
     "tests/test_containment_assessment.py": "e1e8bce79442133c4e39f6777ed7549a08c9c2007a241541326f4fd262649028",
     "tests/test_containment_follow_on_boundary.py": "60677bf6861e9f87a09c8971dda3245634a547d2a796fdc1b5f1bffe41d23008",
     "tests/test_containment_observation.py": "b9ace32bde173159fbde8bb0ebb66142d6a3f685e282cc78840544d9a93cc230",
-    "tests/test_containment_projection.py": "66a6c40fc142550712265f55cbd8878b6086c2c330ad906651234e4f69d9ff71"
+    "tests/test_containment_projection.py": "5cd7220f51e601bce9cd6978843b4a2a2924abbea6fa12c4461d8ca50cac8fd2"
   },
   "tests": {
-    "pytest_tests": 2059,
+    "pytest_tests": 2060,
     "skipped": 4,
     "subtests": 146,
-    "ui_tests": 122,
+    "ui_tests": 124,
     "typecheck": "PASS",
     "next_production_build": "PASS",
     "changed_python_quality": "PASS",
     "chromium_desktop_cases": 5,
     "mobile_horizontal_overflow": false,
     "edited_assessment": "REJECTED",
-    "execution_buttons": 0
+    "execution_buttons": 0,
+    "browser_failure_tests": 2,
+    "local_browser_tests_skipped": 0,
+    "unconfigured_browser_tests_skipped": 2,
+    "module_request_failure": "UNAVAILABLE_ZERO_CASES",
+    "retained_html_byte_equivalence": "PASS_NEGATIVE_CONTROL_VERIFIED"
   },
   "commands": [
     "python -m pytest tests/ -q --tb=short --timeout=30",
@@ -50,8 +57,11 @@
     "scope": "aabf116..a56a91e",
     "important_content_digest": "FIXED_TDD",
     "parser_boundary": "REGRADED_IMPORTANT_FIXED_TDD",
-    "module_request_loading_state": "MINOR_DEFERRED",
-    "final_fixes": "AUTHOR_VERIFIED_NO_REREVIEW"
+    "module_request_loading_state": "FIXED_TDD",
+    "final_fixes": "AUTHOR_VERIFIED_NO_REREVIEW",
+    "new_hardening": "AUTHOR_VERIFIED",
+    "non_author_final_candidate_review": "NOT_RECORDED",
+    "human_visual_acceptance": "PENDING"
   },
   "claim_boundary": {
     "scientific_n_increment": 0,
@@ -59,5 +69,72 @@
     "independent_validation": "NOT_ESTABLISHED",
     "live_containment": "NOT_ESTABLISHED",
     "high_assurance": "NOT_AUTHORIZED"
+  },
+  "verification_date": "2026-10-13",
+  "historical_verification": {
+    "candidate_commit": "e8a2ce19b91707c10de74d1f05a7ec7a56376c33",
+    "receipt": {
+      "schema_version": "CONTAINMENT_CANDIDATE_LOCAL_VERIFICATION_V1",
+      "base_commit": "aabf1163515af291dc564bd7564fd12762a898c8",
+      "evidence_class": "AUTHOR_EXECUTED_SOFTWARE_VERIFICATION",
+      "verified_payload_sha256": {
+        "app/(command-center)/demo/page.tsx": "a59a79110787b0aad283655188d2ce22501f97ff90279d69c800e49ef38dbbfe",
+        "app/lib/containment-projection.test.ts": "98b1e7cb1d1e4b33d7ec69fdcc0ce1b532ed537d7232753a61af9af159330a1c",
+        "docs/architecture/CONTAINMENT_ASSESSMENT_V0.md": "3bff5e6835a342d4b69e562eba19ec9e0d96053f8c471c2c65ccc37f131aa637",
+        "docs/superpowers/plans/2026-10-11-containment-admission-execution.md": "f7a7826f32f92db73a464d3edded9a745b17d46a9a865dcdc820d7874f22bab8",
+        "docs/superpowers/plans/2026-10-11-containment-admission.md": "8494623b20ca7c1474989743e58fb1dc2353d297faf4bea717d124ff3fea146e",
+        "docs/superpowers/specs/2026-10-11-containment-admission-design.md": "8039f0a9ae1cde1aad98ec110e6e73b16cf1d211b1e31c014aff6a70d9b1978f",
+        "public/evidence/tektite-containment-v0.html": "f812462c2bd9c005b3736111dd2bdad2c2bcf89f9ad93224a54fc92180d16ef4",
+        "public/evidence/tektite-containment-v0.json": "b0765b2e85582ee9e6583c1e2e67a91aa2d8377a529df0f157c42234407e4f0e",
+        "public/evidence/tektite-containment-view.d.mts": "2af21990cd213f2104ce9a31bfd12830a3cc01d8b958b70ae2d9bf67ac397890",
+        "public/evidence/tektite-containment-view.mjs": "58040fa7936658f50556858f945cb59b50aea0c05ded8d6c3fc8f6fa14194cc5",
+        "scripts/dgaf_containment_assessment.py": "d38b08f944a8346d3e5855d41ab87a8e04b2cf9efc2efd799a07d422fabd74a4",
+        "scripts/dgaf_containment_observation.py": "0319673de916247547b3ed3d29eda981d037df381bab74238d3380c507215bd0",
+        "scripts/generate_tektite_containment.py": "52105ac7266dc3efe6ce6502ebfcf17131e63f851a005a1504e4f01bc1b67e01",
+        "tests/fixtures/containment/contract.json": "c6e7d0e01801731b93a3df02a9d7c7b1df3b1428562ddc4c3f504e2bcdc8af9d",
+        "tests/fixtures/containment/manifest.json": "b63204b38fb24166b0a18dcecc98d6eb1b6fd00a222309bc8fb320749dd9aed4",
+        "tests/fixtures/containment/observations/SC-01.json": "e79bc0451dbcd1b5c8c242c5e071f7525a81c3ee499a88588137ec1ab218a9e6",
+        "tests/fixtures/containment/observations/SC-05.json": "5b311999f03d9becbb8917481060d857567f677c065af864adce288c96df282f",
+        "tests/fixtures/containment/observations/SC-13.json": "bc1166f9fe61b7d3ce7d9ba74f48ebc71f2440c8cc720228932c173f2f20934a",
+        "tests/fixtures/containment/observations/SC-16.json": "e79bc0451dbcd1b5c8c242c5e071f7525a81c3ee499a88588137ec1ab218a9e6",
+        "tests/test_containment_assessment.py": "e1e8bce79442133c4e39f6777ed7549a08c9c2007a241541326f4fd262649028",
+        "tests/test_containment_follow_on_boundary.py": "60677bf6861e9f87a09c8971dda3245634a547d2a796fdc1b5f1bffe41d23008",
+        "tests/test_containment_observation.py": "b9ace32bde173159fbde8bb0ebb66142d6a3f685e282cc78840544d9a93cc230",
+        "tests/test_containment_projection.py": "66a6c40fc142550712265f55cbd8878b6086c2c330ad906651234e4f69d9ff71"
+      },
+      "tests": {
+        "pytest_tests": 2059,
+        "skipped": 4,
+        "subtests": 146,
+        "ui_tests": 122,
+        "typecheck": "PASS",
+        "next_production_build": "PASS",
+        "changed_python_quality": "PASS",
+        "chromium_desktop_cases": 5,
+        "mobile_horizontal_overflow": false,
+        "edited_assessment": "REJECTED",
+        "execution_buttons": 0
+      },
+      "commands": [
+        "python -m pytest tests/ -q --tb=short --timeout=30",
+        "npm run test:ui",
+        "npm run build",
+        "node_modules/.bin/tsc --noEmit"
+      ],
+      "review": {
+        "scope": "aabf116..a56a91e",
+        "important_content_digest": "FIXED_TDD",
+        "parser_boundary": "REGRADED_IMPORTANT_FIXED_TDD",
+        "module_request_loading_state": "MINOR_DEFERRED",
+        "final_fixes": "AUTHOR_VERIFIED_NO_REREVIEW"
+      },
+      "claim_boundary": {
+        "scientific_n_increment": 0,
+        "source_authenticity": "NOT_ESTABLISHED",
+        "independent_validation": "NOT_ESTABLISHED",
+        "live_containment": "NOT_ESTABLISHED",
+        "high_assurance": "NOT_AUTHORIZED"
+      }
+    }
   }
 }

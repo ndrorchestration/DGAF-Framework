@@ -51,3 +51,7 @@ class ProjectionTests(unittest.TestCase):
     def test_retained_projection_matches_recomputed_output(self):
         saved = json.loads((ROOT / "public/evidence/tektite-containment-v0.json").read_text())
         self.assertEqual(saved, build_projection(FIXTURES))
+
+    def test_retained_html_matches_recomputed_output(self):
+        saved = (ROOT / "public/evidence/tektite-containment-v0.html").read_bytes()
+        self.assertEqual(saved, render_html(build_projection(FIXTURES)).encode("utf-8"))

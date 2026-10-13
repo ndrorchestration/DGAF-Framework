@@ -110,9 +110,9 @@ const MEANINGS = {
 export async function mountProjection(doc) {
   const target = doc.getElementById('cases')
   if (!target) return
-  target.replaceChildren()
   try {
     const value = await validateProjection(JSON.parse(doc.getElementById('projection')?.textContent ?? 'null'))
+    target.replaceChildren()
     for (const item of value.cases) {
       const article = element(doc, 'article', '')
       const a = item.assessment
@@ -137,6 +137,7 @@ export async function mountProjection(doc) {
       target.append(article)
     }
   } catch {
+    target.replaceChildren()
     target.append(element(doc, 'h2', 'Evidence unavailable'),
       element(doc, 'p', 'The retained record failed validation. No containment or execution authority is established.'))
   }
