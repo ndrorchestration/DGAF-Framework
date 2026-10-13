@@ -40,4 +40,27 @@ Three strict expected failures remain evidence of limitations, not completed pro
 
 The 2026-10-09 baseline used two commits and demonstrated a split by directly advancing the evidence store. Its passing thread/signature tests did not establish atomicity. This candidate repairs the witnessed admission path within the stated local assumptions and preserves that bypass counterexample.
 
+## Hosted failure audit — 2026-10-13
+
+Three intermediate push runs failed during publication of this candidate. The implementation was uploaded before both legacy test expectations had been migrated. Publishing dependent files in separate commits exposed incomplete intermediate trees to CI; this was a publication sequencing mistake. The first failure remains preserved and is not replaced by the later green result.
+
+| Run / job | Exact input commit | Hosted result | Unmigrated expectations |
+| --- | --- | --- | --- |
+| [38160709486 / 114532837687](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/38160709486/job/114532837687) | `d0d0a4463e4f1908908bcf2137a7d671c54a76a9` | 2 failed, 59 passed, 3 xfailed | Both mismatch tests still expected later admission |
+| [38160710638 / 114532840736](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/38160710638/job/114532840736) | `079be2f644dd3a34c9ecbfa69e57d747e8267e0b` | 2 failed, 84 passed, 3 xfailed | New 25-test harness present; both legacy expectations unchanged |
+| [38160711846 / 114532844515](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/38160711846/job/114532844515) | `3360056055632b3b7287ebdb6280e15a8b8d3eda` | 1 failed, 85 passed, 3 xfailed | Evidence-store rollback test still expected admission of sequence 3 |
+| [38160713056](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/38160713056) | `041c7f1903a5f03c60c0d37f36514e4e37b6eec8` | PASS | Both legacy expectations now require denial |
+
+**Classification:** incomplete test-contract migration at intermediate commits. The workflow executed the exact failing SHA, installed its hash-locked dependencies, passed formatting and returned exit code 1 for failed assertions. It failed closed. The assertion failures do not support an additional implementation repair: each observed `False` is the intended conservative recovery fence. A nonfatal Black target-version warning appeared before pytest; it was not the failed step and the finished workflow already specifies Python 3.12.
+
+**Minimal reproduction:** an untouched worktree at the first failing SHA reproduced **2 failed, 59 passed, 3 xfailed, 37 subtests passed** (exit 1). Changing only `assert admit(verifier, 8)` and `assert admit(make(tmp_path),3)` to their `assert not` forms produced **61 passed, 3 xfailed, 37 subtests passed** (exit 0), with no implementation change. This modified tree is explicitly separate from the immutable first-failure SHA. A fresh run at code head `a283e17bfbc2696bda372a63eff7153bf2e406ba` produced **86 passed, 3 xfailed, 37 subtests passed** (exit 0).
+
+Hosted failures used Ubuntu 24.04 image `20261004.327.1`, Python 3.12.15, pytest 9.1.1 and pluggy 1.6.0. Local reproduction used Python 3.12.14 and a newly installed full hash-locked QA environment; it is not a claim of identical hosted OS or patch version. The previous local virtual environment was absent on resume and was rebuilt before the checks.
+
+The [evidence manifest](sbcf_ci_evidence/2026-10-11/manifest.json) binds input-file SHA-256 values, all failed job steps, three preserved decoded UTF-8 log exports with byte lengths and SHA-256 values, exact reproduction outputs and the two-assertion patch. These are decoded connector exports, not hashes of GitHub's compressed log-download bytes. Direct check-run/annotation endpoints were rejected by the connector allowlist; standalone annotations were not inspected. The accessible job logs contain assertion traces and the terminal exit-code error.
+
+All **15 observed workflows** at code head `a283e17bfbc2696bda372a63eff7153bf2e406ba` completed successfully (10 PR runs, 5 push runs). This includes the previously pending [PDMAL pre-freeze runner 38160736737](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/38160736737). That historical-runtime-evidence job does not independently validate SBCF. Original exact-head SBCF [push run 38160717455](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/38160717455) and [PR run 38160736666](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/38160736666) both passed. A documentation/evidence receipt may follow this verified code head; no implementation, test, fixture or workflow change is needed for this audit.
+
+Next action: preserve this failure record during review; publish future dependent code/test migrations as one complete Git commit through a supported multi-file write path. Lower-level SQLite interruption, externally evidenced reconciliation and independent review remain separate open tasks.
+
 SCIENTIFIC_N_INCREMENT=0; INDEPENDENT_VALIDATION=NOT_ESTABLISHED; CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED; HIGH_ASSURANCE=NOT_AUTHORIZED. No live enforcement, scientific inference, release or main merge is established.
