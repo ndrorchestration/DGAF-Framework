@@ -341,8 +341,8 @@ class ControlPlane:
         audit_valid = self._valid_complete_tgl_audit(result)
         if status is None or not audit_valid:
             self._set_runtime(task, reset_tgl=True)
-            self._escalate(task, "TGL result lacks complete canonical sealed evidence")
-            raise ControlPlaneViolation("TGL result lacks complete canonical sealed evidence")
+            self._escalate(task, "TGL result lacks valid sealed evidence: incomplete or noncanonical audit")
+            raise ControlPlaneViolation("TGL result lacks valid sealed evidence: incomplete or noncanonical audit")
         seal = result.seal_hash
         self._set_runtime(task, tgl_status=status, tgl_seal=seal)
         self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
