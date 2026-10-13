@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from pathlib import Path
 from typing import Any, Mapping, NoReturn, Sequence
 
 EXPECTED_CONTROLLER_ISSUE = 901
@@ -81,6 +82,8 @@ def prepare_execution_identity_candidate(
     attempt_id: str,
     recipe_catalog_sha256: str,
     environment_candidate_record_sha256: str,
+    source_driver_path: str,
+    source_driver_file: Path,
 ) -> dict[str, object]:
     """Prepare a review candidate without accepting any identity."""
 
@@ -100,6 +103,11 @@ def prepare_execution_identity_candidate(
         environment_candidate_record_sha256,
         "EXECUTION_IDENTITY_ENVIRONMENT_CANDIDATE_SHA_INVALID",
     )
+    driver_path = _nonempty(source_driver_path, "EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISSING")
+    driver_file = Path(source_driver_file)
+    if not driver_file.is_file():
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING")
+    driver_sha256 = hashlib.sha256(driver_file.read_bytes()).hexdigest()
 
     if not argv or any(not isinstance(item, str) or not item for item in argv):
         _fail("EXECUTION_IDENTITY_ARGV_INVALID")
@@ -119,6 +127,11 @@ def prepare_execution_identity_candidate(
             "recipe_catalog_sha256": recipe_digest,
         },
         "environment_candidate_record_sha256": environment_digest,
+        "source_driver_identity": {
+            "kind": "EXACT_SOURCE_DRIVER_FILE_CANDIDATE",
+            "path": driver_path,
+            "sha256": driver_sha256,
+        },
         "executable_identity": {
             "kind": "EXACT_PYTHON_PROCESS_CANDIDATE",
             "interpreter_path": interpreter,
@@ -143,6 +156,10 @@ def prepare_execution_identity_candidate(
             "decision_record_sha256": None,
         },
         "installed_environment_acceptance": "NOT_ESTABLISHED",
+        "source_driver_candidate_identity": {
+            "path": driver_path,
+            "sha256": driver_sha,
+        },
         "source_driver_binding": "NOT_ESTABLISHED",
         "executable_acceptance": "NOT_ESTABLISHED",
         "destination_acceptance": "NOT_ESTABLISHED",
@@ -190,6 +207,20 @@ def validate_execution_identity_candidate(
         environment_digest,
         "EXECUTION_IDENTITY_ENVIRONMENT_CANDIDATE_SHA_INVALID",
     )
+
+    driver = candidate.get("source_driver_identity")
+    if not isinstance(driver, Mapping):
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_MISSING")
+    if driver.get("kind") != "EXACT_SOURCE_DRIVER_FILE_CANDIDATE":
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_KIND_MISMATCH")
+    driver_path = driver.get("path")
+    if not isinstance(driver_path, str):
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISSING")
+    _nonempty(driver_path, "EXECUTION_IDENTITY_SOURCE_DRIVER_PATH_MISSING")
+    driver_sha = driver.get("sha256")
+    if not isinstance(driver_sha, str):
+        _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_INVALID")
+    _validate_sha256(driver_sha, "EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_INVALID")
 
     executable = candidate.get("executable_identity")
     if not isinstance(executable, Mapping):
