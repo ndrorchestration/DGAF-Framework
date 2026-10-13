@@ -156,10 +156,6 @@ def prepare_execution_identity_candidate(
             "decision_record_sha256": None,
         },
         "installed_environment_acceptance": "NOT_ESTABLISHED",
-        "source_driver_candidate_identity": {
-            "path": driver_path,
-            "sha256": driver_sha,
-        },
         "source_driver_binding": "NOT_ESTABLISHED",
         "executable_acceptance": "NOT_ESTABLISHED",
         "destination_acceptance": "NOT_ESTABLISHED",
