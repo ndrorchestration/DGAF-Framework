@@ -35,7 +35,10 @@ def _candidate(tmp_path: Path | None = None):
 
 def test_non_fixture_candidate_validates_without_acceptance(tmp_path):
     candidate = _candidate(tmp_path)
-    report = validate_execution_identity_candidate(candidate)
+    report = validate_execution_identity_candidate(
+        candidate,
+        source_driver_file=tmp_path / "source_driver_candidate.py",
+    )
 
     assert report["candidate_validation"] == "PASS_NON_FIXTURE_IDENTITY_CANDIDATE"
     assert report["installed_environment_acceptance"] == "NOT_ESTABLISHED"
@@ -72,7 +75,10 @@ def test_candidate_rejects_fixture_identity_substitution(tmp_path, field, value,
     candidate[field] = value
 
     with pytest.raises(ExecutionIdentityCandidateError, match=error):
-        validate_execution_identity_candidate(candidate)
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
 
 
 def test_candidate_rejects_post_inspection_attempt(tmp_path):
@@ -83,7 +89,10 @@ def test_candidate_rejects_post_inspection_attempt(tmp_path):
         ExecutionIdentityCandidateError,
         match="EXECUTION_IDENTITY_OUTCOME_ALREADY_INSPECTED",
     ):
-        validate_execution_identity_candidate(candidate)
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
 
 
 def test_candidate_rejects_source_commit_drift(tmp_path):
@@ -94,7 +103,10 @@ def test_candidate_rejects_source_commit_drift(tmp_path):
         ExecutionIdentityCandidateError,
         match="EXECUTION_IDENTITY_SOURCE_COMMIT_MISMATCH",
     ):
-        validate_execution_identity_candidate(candidate)
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
 
 
 def test_candidate_rejects_adjudication_prepopulation(tmp_path):
@@ -105,7 +117,10 @@ def test_candidate_rejects_adjudication_prepopulation(tmp_path):
         ExecutionIdentityCandidateError,
         match="EXECUTION_IDENTITY_ADJUDICATION_PREMATURE",
     ):
-        validate_execution_identity_candidate(candidate)
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
 
 
 @pytest.mark.parametrize(
@@ -129,7 +144,10 @@ def test_candidate_cannot_promote_readiness(tmp_path, field, value):
         ExecutionIdentityCandidateError,
         match=f"EXECUTION_IDENTITY_BOUNDARY_DRIFT_{field.upper()}",
     ):
-        validate_execution_identity_candidate(candidate)
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
 
 
 def test_candidate_detects_executable_identity_mutation(tmp_path):
@@ -141,7 +159,10 @@ def test_candidate_detects_executable_identity_mutation(tmp_path):
         ExecutionIdentityCandidateError,
         match="EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID",
     ):
-        validate_execution_identity_candidate(mutated)
+        validate_execution_identity_candidate(
+            mutated,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
 
 
 def test_prepare_rejects_missing_source_driver_file(tmp_path):
@@ -182,8 +203,11 @@ def test_source_driver_digest_is_derived_from_real_file(tmp_path):
     assert candidate["source_driver_identity"]["sha256"] == __import__("hashlib").sha256(
         driver.read_bytes()
     ).hexdigest()
-    report = validate_execution_identity_candidate(candidate)
-    assert report["source_driver_candidate_identity"] == candidate["source_driver_identity"]
+    report = validate_execution_identity_candidate(candidate, source_driver_file=driver)
+    assert report["source_driver_candidate_identity"] == {
+        "path": candidate["source_driver_identity"]["path"],
+        "sha256": candidate["source_driver_identity"]["sha256"],
+    }
 
 
 def test_structural_validation_rejects_removed_source_driver_identity(tmp_path):
@@ -194,4 +218,33 @@ def test_structural_validation_rejects_removed_source_driver_identity(tmp_path):
         ExecutionIdentityCandidateError,
         match="EXECUTION_IDENTITY_SOURCE_DRIVER_MISSING",
     ):
-        validate_execution_identity_candidate(candidate)
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
+
+
+def test_validation_rejects_missing_driver_even_if_candidate_is_handcrafted(tmp_path):
+    candidate = _candidate(tmp_path)
+    (tmp_path / "source_driver_candidate.py").unlink()
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING",
+    ):
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
+
+
+def test_validation_rejects_substituted_driver_bytes(tmp_path):
+    candidate = _candidate(tmp_path)
+    driver = tmp_path / "source_driver_candidate.py"
+    driver.write_bytes(b"# substituted bytes\n")
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_SOURCE_DRIVER_SHA_MISMATCH",
+    ):
+        validate_execution_identity_candidate(candidate, source_driver_file=driver)
