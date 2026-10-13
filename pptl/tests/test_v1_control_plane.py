@@ -17,13 +17,7 @@ from pptl.control_plane import (
 )
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.state_identity import StateRegistry, canonical_state, state_id
-from pptl.triadic_governance_loop import (
-    GateRecord,
-    GateResult,
-    TriadicGovernanceLoop,
-    TurnAuditRecord,
-    TurnStatus,
-)
+from pptl.triadic_governance_loop import GateRecord, GateResult, TriadicGovernanceLoop, TurnAuditRecord, TurnStatus
 
 VALID_SEAL = "0" * 64
 
