@@ -17,7 +17,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 SOURCE_REPOSITORY = "ndrorchestration/agent-control-plane"
 SOURCE_COMMIT = "dbab7c1afafec524ce7c18157de2089cafe79c87"
