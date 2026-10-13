@@ -1,4 +1,4 @@
-# Platform-independent pytest wheel subset copied from the canonical CI lock.
+# Platform-independent pytest wheels from the canonical CI lock, plus Windows colorama.
 # Scope: SBCF standard-library synthetic tests on Windows; no product dependencies.
 iniconfig==2.3.0 \
     --hash=sha256:f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12
@@ -10,3 +10,5 @@ pygments==2.21.0 \
     --hash=sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9
 pytest==9.1.1 \
     --hash=sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c
+colorama==0.4.6 ; sys_platform == "win32" \
+    --hash=sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6
