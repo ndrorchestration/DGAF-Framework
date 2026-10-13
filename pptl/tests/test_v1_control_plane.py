@@ -17,18 +17,35 @@ from pptl.control_plane import (
 )
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.state_identity import StateRegistry, canonical_state, state_id
-from pptl.triadic_governance_loop import TurnAuditRecord, TurnStatus
+from pptl.triadic_governance_loop import GateRecord, GateResult, TriadicGovernanceLoop, TurnAuditRecord, TurnStatus
 
 VALID_SEAL = "0" * 64
 
 
 def tgl_result(status: str) -> TurnAuditRecord:
+    records = [
+        GateRecord(step, pattern, gate_name, GateResult.PASS)
+        for step, pattern, gate_name in TriadicGovernanceLoop.GATE_MANIFEST
+    ]
+    if status == "WARN":
+        records[1] = GateRecord(1, "P-31", "SCPE_Prune", GateResult.WARN)
+    elif status == "ESCALATE":
+        records[1] = GateRecord(1, "P-31", "SCPE_Prune", GateResult.SKIP)
+    elif status == "KILL":
+        records = [
+            GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS),
+            GateRecord(1, "P-31", "SCPE_Prune", GateResult.KILL),
+            GateRecord(9, "P-01", "Herald_FanOut", GateResult.PASS),
+        ]
+    elif status != "PASS":
+        raise ValueError(f"unsupported canonical test status: {status}")
+
     audit = TurnAuditRecord(
         session_id="control-plane-test",
         turn_index=1,
         agent_id="test-agent",
         input_hash="a" * 64,
-        gate_records=[],
+        gate_records=records,
         final_status=TurnStatus(status),
         timestamp="2026-09-17T00:00:00+00:00",
     )
