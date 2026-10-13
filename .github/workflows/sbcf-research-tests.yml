@@ -87,13 +87,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install hash-locked platform-independent test dependencies
-        run: >-
-          python -m pip install --disable-pip-version-check
-          --require-hashes --only-binary=:all: -r requirements-sbcf-pytest.lock
+      - name: Install hash-locked dependencies in a fresh test environment
+        run: |
+          python -m venv .sbcf-test-venv
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .\.sbcf-test-venv\Scripts\python.exe -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r requirements-sbcf-pytest.lock
 
       - name: Run complete SBCF group on Windows
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: >-
-          python -c "import glob, pytest; raise SystemExit(pytest.main(glob.glob('tests/test_sbcf*.py') + ['-q', '-ra']))"
+          .\.sbcf-test-venv\Scripts\python.exe -c "import glob, pytest; raise SystemExit(pytest.main(glob.glob('tests/test_sbcf*.py') + ['-q', '-ra']))"
