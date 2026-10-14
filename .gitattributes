@@ -7,4 +7,9 @@ docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.jso
 # Keep Windows checkouts byte-identical to the canonical Git blobs.
 requirements-ci.txt text eol=lf
 requirements-ci-*.lock text eol=lf
+
+# AOSS Stage-A runtime/source identities are bound to exact repository bytes.
 requirements-aoss-stage-a.lock text eol=lf
+scripts/aoss_v0_6_acp_adapter.py text eol=lf
+scripts/aoss_v0_6_stage_a_decision_policy.py text eol=lf
+scripts/aoss_v0_6_stage_a_acp_direct_baseline.py text eol=lf
