@@ -15,7 +15,6 @@ CATALOG_FILE = ROOT / "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v
 CATALOG_SHA = hashlib.sha256(CATALOG_FILE.read_bytes()).hexdigest()
 
 SHA_A = "a" * 64
-SHA_B = "b" * 64
 SHA_C = "c" * 64
 
 

@@ -10,6 +10,7 @@ requirements-ci-*.lock text eol=lf
 
 # AOSS Stage-A runtime/source identities are bound to exact repository bytes.
 requirements-aoss-stage-a.lock text eol=lf
+registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json text eol=lf
 scripts/aoss_v0_6_acp_adapter.py text eol=lf
 scripts/aoss_v0_6_stage_a_decision_policy.py text eol=lf
 scripts/aoss_v0_6_stage_a_acp_direct_baseline.py text eol=lf

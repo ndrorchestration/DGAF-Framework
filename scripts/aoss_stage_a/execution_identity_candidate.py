@@ -130,6 +130,7 @@ def prepare_execution_identity_candidate(
     environment_candidate_record_sha256: str,
     source_driver_path: str = EXPECTED_SOURCE_DRIVER_PATH,
     source_driver_file: Path | None = None,
+    recipe_catalog_file: Path | None = None,
 ) -> dict[str, object]:
     """Prepare a review candidate without accepting any identity."""
 
@@ -145,6 +146,16 @@ def prepare_execution_identity_candidate(
         recipe_catalog_sha256,
         "EXECUTION_IDENTITY_RECIPE_CATALOG_SHA_INVALID",
     )
+    catalog_file = (
+        Path(recipe_catalog_file)
+        if recipe_catalog_file is not None
+        else Path(__file__).resolve().parents[2] / EXPECTED_RECIPE_CATALOG
+    )
+    if not catalog_file.is_file():
+        _fail("EXECUTION_IDENTITY_RECIPE_CATALOG_FILE_MISSING")
+    observed_recipe_digest = hashlib.sha256(catalog_file.read_bytes()).hexdigest()
+    if observed_recipe_digest != recipe_digest:
+        _fail("EXECUTION_IDENTITY_RECIPE_CATALOG_SHA_MISMATCH")
     environment_digest = _validate_sha256(
         environment_candidate_record_sha256,
         "EXECUTION_IDENTITY_ENVIRONMENT_CANDIDATE_SHA_INVALID",
@@ -221,6 +232,7 @@ def validate_execution_identity_candidate(
     candidate: Mapping[str, Any],
     *,
     source_driver_file: Path | None = None,
+    recipe_catalog_file: Path | None = None,
 ) -> dict[str, object]:
     """Validate candidate structure and reverify the canonical source-driver file bytes."""
 
@@ -248,6 +260,16 @@ def validate_execution_identity_candidate(
     if not isinstance(recipe_digest, str):
         _fail("EXECUTION_IDENTITY_RECIPE_CATALOG_SHA_INVALID")
     _validate_sha256(recipe_digest, "EXECUTION_IDENTITY_RECIPE_CATALOG_SHA_INVALID")
+    resolved_catalog = (
+        Path(recipe_catalog_file)
+        if recipe_catalog_file is not None
+        else Path(__file__).resolve().parents[2] / EXPECTED_RECIPE_CATALOG
+    )
+    if not resolved_catalog.is_file():
+        _fail("EXECUTION_IDENTITY_RECIPE_CATALOG_FILE_MISSING")
+    observed_recipe_digest = hashlib.sha256(resolved_catalog.read_bytes()).hexdigest()
+    if observed_recipe_digest != recipe_digest:
+        _fail("EXECUTION_IDENTITY_RECIPE_CATALOG_SHA_MISMATCH")
 
     environment_digest = candidate.get("environment_candidate_record_sha256")
     if not isinstance(environment_digest, str):
