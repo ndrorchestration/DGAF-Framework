@@ -61,6 +61,15 @@ def _validate_sha256(value: str, code: str) -> str:
     return value
 
 
+def _validate_driver_argv(argv: Sequence[str], driver_path: str) -> list[str]:
+    if not argv or any(not isinstance(item, str) or not item for item in argv):
+        _fail("EXECUTION_IDENTITY_ARGV_INVALID")
+    values = list(argv)
+    if values[0] != driver_path:
+        _fail("EXECUTION_IDENTITY_ARGV_DRIVER_MISMATCH")
+    return values
+
+
 def _reject_fixture_uri(uri: str) -> None:
     lowered = uri.lower()
     if lowered.startswith("fixture://") or "synthetic-fixture" in lowered:
@@ -116,8 +125,7 @@ def prepare_execution_identity_candidate(
         _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING")
     driver_sha256 = hashlib.sha256(driver_file.read_bytes()).hexdigest()
 
-    if not argv or any(not isinstance(item, str) or not item for item in argv):
-        _fail("EXECUTION_IDENTITY_ARGV_INVALID")
+    argv_values = _validate_driver_argv(argv, driver_path)
     _reject_fixture_uri(destination)
     _reject_fixture_attempt(attempt)
 
@@ -143,7 +151,7 @@ def prepare_execution_identity_candidate(
             "kind": "EXACT_PYTHON_PROCESS_CANDIDATE",
             "interpreter_path": interpreter,
             "interpreter_sha256": interpreter_digest,
-            "argv": list(argv),
+            "argv": argv_values,
             "working_directory": workdir,
         },
         "destination_identity": {
@@ -253,8 +261,9 @@ def validate_execution_identity_candidate(
         _fail("EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID")
     _validate_sha256(interpreter_sha, "EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID")
     argv = executable.get("argv")
-    if not isinstance(argv, list) or not argv or any(not isinstance(item, str) or not item for item in argv):
+    if not isinstance(argv, list):
         _fail("EXECUTION_IDENTITY_ARGV_INVALID")
+    _validate_driver_argv(argv, driver_path)
     workdir = executable.get("working_directory")
     if not isinstance(workdir, str):
         _fail("EXECUTION_IDENTITY_WORKDIR_MISSING")
