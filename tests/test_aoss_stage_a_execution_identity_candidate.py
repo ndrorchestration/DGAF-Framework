@@ -22,7 +22,7 @@ def _candidate(tmp_path: Path | None = None):
     return prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
-        argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
+        argv=["scripts/aoss_stage_a/source_driver.py", "--plan", "stage-a"],
         working_directory="/srv/aoss-stage-a",
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
@@ -165,6 +165,42 @@ def test_candidate_detects_executable_identity_mutation(tmp_path):
         )
 
 
+def test_prepare_rejects_argv_not_bound_to_source_driver(tmp_path):
+    driver = tmp_path / "driver.py"
+    driver.write_bytes(b"# real source driver\n")
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_ARGV_DRIVER_MISMATCH",
+    ):
+        prepare_execution_identity_candidate(
+            interpreter_path="/opt/python/3.12.3/bin/python",
+            interpreter_sha256=SHA_A,
+            argv=["-m", "definitely_missing_aoss_driver_901"],
+            working_directory="/srv/aoss-stage-a",
+            destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+            attempt_id="aoss-stage-a-attempt-0001",
+            recipe_catalog_sha256=SHA_B,
+            environment_candidate_record_sha256=SHA_C,
+            source_driver_path="scripts/aoss_stage_a/source_driver.py",
+            source_driver_file=driver,
+        )
+
+
+def test_validation_rejects_argv_driver_substitution(tmp_path):
+    candidate = _candidate(tmp_path)
+    candidate["executable_identity"]["argv"] = ["-m", "definitely_missing_aoss_driver_901"]
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_ARGV_DRIVER_MISMATCH",
+    ):
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=tmp_path / "source_driver_candidate.py",
+        )
+
+
 def test_prepare_rejects_missing_source_driver_file(tmp_path):
     with pytest.raises(
         ExecutionIdentityCandidateError,
@@ -190,7 +226,7 @@ def test_source_driver_digest_is_derived_from_real_file(tmp_path):
     candidate = prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
-        argv=["-m", "aoss_stage_a_driver"],
+        argv=["scripts/aoss_stage_a/source_driver.py"],
         working_directory="/srv/aoss-stage-a",
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
