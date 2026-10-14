@@ -266,7 +266,8 @@ def execute_recipe(acp_root: Path, recipe_class: str, *, run_id: str) -> dict[st
 def write_result_exclusive(result: dict[str, Any], destination: Path) -> str:
     data = _canonical_bytes(result)
     destination = Path(destination)
-    destination.parent.mkdir(parents=True, exist_ok=True)
+    if not destination.parent.is_dir():
+        _fail("SOURCE_DRIVER_DESTINATION_PARENT_MISSING")
     try:
         with destination.open("xb") as handle:
             handle.write(data)
