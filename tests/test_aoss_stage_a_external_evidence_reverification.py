@@ -53,7 +53,17 @@ def _fixtures():
     identity = prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
-        argv=["scripts/aoss_stage_a/source_driver.py", "--plan", "stage-a"],
+        argv=[
+        "scripts/aoss_stage_a/source_driver.py",
+        "--acp-root",
+        "/srv/agent-control-plane",
+        "--recipe-class",
+        "normal_completion",
+        "--run-id",
+        "run-0001",
+        "--output",
+        "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
+    ],
         working_directory=str(ROOT),
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
