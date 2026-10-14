@@ -43,7 +43,7 @@ def _identity_candidate(environment_candidate):
     return prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
-        argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
+        argv=["scripts/aoss_stage_a/source_driver.py", "--plan", "stage-a"],
         working_directory="/srv/aoss-stage-a",
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
