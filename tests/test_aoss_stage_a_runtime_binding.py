@@ -110,3 +110,8 @@ def test_platform_is_observed_but_not_silently_frozen_by_this_tranche() -> None:
 
 def test_contract_location_is_stable() -> None:
     assert CONTRACT_REL == "registry/aoss_v0_6_stage_a_runtime_binding_v1.json"
+
+
+def test_stage_a_lock_is_lf_normalized_by_repository_policy() -> None:
+    attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8").splitlines()
+    assert "requirements-aoss-stage-a.lock text eol=lf" in attributes
