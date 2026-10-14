@@ -1,3 +1,4 @@
+from pathlib import Path
 from copy import deepcopy
 
 import pytest
@@ -14,6 +15,8 @@ from scripts.aoss_stage_a.installed_environment_evidence import (
     capture_installed_environment_evidence_candidate,
 )
 from scripts.aoss_stage_a.runtime_binding import RuntimeFacts
+
+ROOT = Path(__file__).resolve().parents[1]
 
 SHA_A = "a" * 64
 SHA_B = "b" * 64
@@ -44,7 +47,7 @@ def _identity_candidate(environment_candidate):
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
         argv=["scripts/aoss_stage_a/source_driver.py", "--plan", "stage-a"],
-        working_directory="/srv/aoss-stage-a",
+        working_directory=str(ROOT),
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
         recipe_catalog_sha256=SHA_B,
