@@ -89,6 +89,23 @@ def test_exclusive_result_write_refuses_overwrite(tmp_path):
         source_driver.write_result_exclusive(result, destination)
 
 
+def test_result_write_requires_preexisting_parent(tmp_path):
+    destination = tmp_path / "reserved-attempt" / "result.json"
+    result = {
+        "record_type": "AOSS_V0_6_STAGE_A_SOURCE_DRIVER_RESULT",
+        "collection_authorized": False,
+        "scientific_n_increment": 0,
+    }
+
+    with pytest.raises(
+        source_driver.SourceDriverError,
+        match="SOURCE_DRIVER_DESTINATION_PARENT_MISSING",
+    ):
+        source_driver.write_result_exclusive(result, destination)
+
+    assert not destination.parent.exists()
+
+
 def test_unknown_recipe_fails_before_any_acp_load(monkeypatch):
     called = False
 
