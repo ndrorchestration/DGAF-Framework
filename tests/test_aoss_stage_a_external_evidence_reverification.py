@@ -1,6 +1,6 @@
-from pathlib import Path
 import hashlib
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 
@@ -24,7 +24,9 @@ from scripts.aoss_stage_a.runtime_binding import RuntimeFacts
 ROOT = Path(__file__).resolve().parents[1]
 
 SHA_A = "a" * 64
-SHA_B = hashlib.sha256((ROOT / "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest()
+SHA_B = hashlib.sha256(
+    (ROOT / "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()
+).hexdigest()
 EXTERNAL_BYTES = b'{"decision":"ACCEPT","scope":"stage-a-admission"}\n'
 ATTRIBUTION_BYTES = b'{"reviewer":"external-reviewer:example","role":"reviewer"}\n'
 
@@ -54,16 +56,16 @@ def _fixtures():
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
         argv=[
-        "scripts/aoss_stage_a/source_driver.py",
-        "--acp-root",
-        "/srv/agent-control-plane",
-        "--recipe-class",
-        "normal_completion",
-        "--run-id",
-        "run-0001",
-        "--output",
-        "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
-    ],
+            "scripts/aoss_stage_a/source_driver.py",
+            "--acp-root",
+            "/srv/agent-control-plane",
+            "--recipe-class",
+            "normal_completion",
+            "--run-id",
+            "run-0001",
+            "--output",
+            "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
+        ],
         working_directory=str(ROOT),
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
