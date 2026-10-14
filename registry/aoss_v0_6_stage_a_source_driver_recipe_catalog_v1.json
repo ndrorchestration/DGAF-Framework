@@ -20,7 +20,7 @@
     {"class": "cancellation", "synthetic_terminal_event": "task.cancelled", "expected_boundary": "non-collecting fixture only"},
     {"class": "exact_budget_success", "synthetic_terminal_event": "task.completed", "expected_boundary": "non-collecting fixture only"},
     {"class": "budget_exhaustion", "synthetic_terminal_event": "task.budget_exhausted", "expected_boundary": "non-collecting fixture only"},
-    {"class": "suppressed_budget_exception_fail_closed", "synthetic_terminal_event": "task.failed", "expected_boundary": "non-collecting fixture only"},
+    {"class": "suppressed_budget_exception_fail_closed", "synthetic_terminal_event": "task.budget_exhausted", "expected_boundary": "non-collecting fixture only"},
     {"class": "missing_event", "synthetic_terminal_event": null, "expected_boundary": "hold and exclude until accepted eligibility mapping"},
     {"class": "reordered_exported_events", "synthetic_terminal_event": "task.completed", "expected_boundary": "source-order ambiguity holds"},
     {"class": "duplicate_replayed_event", "synthetic_terminal_event": "task.completed", "expected_boundary": "duplicate identity requires invalidation"},
