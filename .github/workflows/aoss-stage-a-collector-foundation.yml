@@ -74,6 +74,7 @@ jobs:
             tests/test_aoss_stage_a_policy_input_mapping.py \
             tests/test_aoss_stage_a_runtime_binding.py \
             tests/test_aoss_stage_a_source_driver_binding.py \
+            tests/test_aoss_stage_a_source_driver.py \
             tests/test_aoss_stage_a_executable_destination_binding.py \
             tests/test_aoss_stage_a_ingest_freshness.py \
             tests/test_aoss_stage_a_replay.py \
@@ -300,11 +301,11 @@ jobs:
           candidate = prepare_execution_identity_candidate(
               interpreter_path="/opt/python/3.12.3/bin/python",
               interpreter_sha256="a" * 64,
-              argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
-              working_directory="/srv/aoss-stage-a",
+              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", "/srv/agent-control-plane", "--recipe-class", "normal_completion", "--run-id", "run-0001", "--output", "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json"],
+              working_directory=str(__import__("pathlib").Path.cwd()),
               destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
               attempt_id="aoss-stage-a-attempt-0001",
-              recipe_catalog_sha256="b" * 64,
+              recipe_catalog_sha256=__import__("hashlib").sha256(__import__("pathlib").Path("registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest(),
               environment_candidate_record_sha256="c" * 64,
           )
           report = validate_execution_identity_candidate(candidate)
@@ -341,11 +342,11 @@ jobs:
           identity = prepare_execution_identity_candidate(
               interpreter_path="/opt/python/3.12.3/bin/python",
               interpreter_sha256="a" * 64,
-              argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
-              working_directory="/srv/aoss-stage-a",
+              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", "/srv/agent-control-plane", "--recipe-class", "normal_completion", "--run-id", "run-0001", "--output", "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json"],
+              working_directory=str(__import__("pathlib").Path.cwd()),
               destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
               attempt_id="aoss-stage-a-attempt-0001",
-              recipe_catalog_sha256="b" * 64,
+              recipe_catalog_sha256=__import__("hashlib").sha256(__import__("pathlib").Path("registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest(),
               environment_candidate_record_sha256=record_sha256(environment),
           )
           intake = prepare_external_admission_decision_intake(
@@ -407,11 +408,11 @@ jobs:
           identity = prepare_execution_identity_candidate(
               interpreter_path="/opt/python/3.12.3/bin/python",
               interpreter_sha256="a" * 64,
-              argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
-              working_directory="/srv/aoss-stage-a",
+              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", "/srv/agent-control-plane", "--recipe-class", "normal_completion", "--run-id", "run-0001", "--output", "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json"],
+              working_directory=str(__import__("pathlib").Path.cwd()),
               destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
               attempt_id="aoss-stage-a-attempt-0001",
-              recipe_catalog_sha256="b" * 64,
+              recipe_catalog_sha256=__import__("hashlib").sha256(__import__("pathlib").Path("registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest(),
               environment_candidate_record_sha256=record_sha256(environment),
           )
           intake = prepare_external_admission_decision_intake(

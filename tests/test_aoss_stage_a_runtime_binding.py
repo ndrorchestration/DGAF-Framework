@@ -116,6 +116,7 @@ def test_stage_a_byte_bound_text_is_lf_normalized_by_repository_policy() -> None
     attributes = set((ROOT / ".gitattributes").read_text(encoding="utf-8").splitlines())
     assert {
         "requirements-aoss-stage-a.lock text eol=lf",
+        "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json text eol=lf",
         "scripts/aoss_v0_6_acp_adapter.py text eol=lf",
         "scripts/aoss_v0_6_stage_a_decision_policy.py text eol=lf",
         "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py text eol=lf",
