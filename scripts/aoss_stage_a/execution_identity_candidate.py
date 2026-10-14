@@ -61,12 +61,22 @@ def _validate_sha256(value: str, code: str) -> str:
     return value
 
 
-def _validate_driver_argv(argv: Sequence[str], driver_path: str) -> list[str]:
+def _validate_driver_argv(
+    argv: Sequence[str],
+    driver_path: str,
+    working_directory: str,
+    driver_file: Path,
+) -> list[str]:
     if not argv or any(not isinstance(item, str) or not item for item in argv):
         _fail("EXECUTION_IDENTITY_ARGV_INVALID")
     values = list(argv)
     if values[0] != driver_path:
         _fail("EXECUTION_IDENTITY_ARGV_DRIVER_MISMATCH")
+    workdir = Path(working_directory)
+    if not workdir.is_dir():
+        _fail("EXECUTION_IDENTITY_WORKDIR_NOT_DIRECTORY")
+    if (workdir / values[0]).resolve() != Path(driver_file).resolve():
+        _fail("EXECUTION_IDENTITY_ARGV_DRIVER_RESOLUTION_MISMATCH")
     return values
 
 
@@ -125,7 +135,7 @@ def prepare_execution_identity_candidate(
         _fail("EXECUTION_IDENTITY_SOURCE_DRIVER_FILE_MISSING")
     driver_sha256 = hashlib.sha256(driver_file.read_bytes()).hexdigest()
 
-    argv_values = _validate_driver_argv(argv, driver_path)
+    argv_values = _validate_driver_argv(argv, driver_path, workdir, driver_file)
     _reject_fixture_uri(destination)
     _reject_fixture_attempt(attempt)
 
@@ -260,14 +270,14 @@ def validate_execution_identity_candidate(
     if not isinstance(interpreter_sha, str):
         _fail("EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID")
     _validate_sha256(interpreter_sha, "EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID")
-    argv = executable.get("argv")
-    if not isinstance(argv, list):
-        _fail("EXECUTION_IDENTITY_ARGV_INVALID")
-    _validate_driver_argv(argv, driver_path)
     workdir = executable.get("working_directory")
     if not isinstance(workdir, str):
         _fail("EXECUTION_IDENTITY_WORKDIR_MISSING")
-    _nonempty(workdir, "EXECUTION_IDENTITY_WORKDIR_MISSING")
+    workdir = _nonempty(workdir, "EXECUTION_IDENTITY_WORKDIR_MISSING")
+    argv = executable.get("argv")
+    if not isinstance(argv, list):
+        _fail("EXECUTION_IDENTITY_ARGV_INVALID")
+    _validate_driver_argv(argv, driver_path, workdir, resolved_driver)
 
     destination = candidate.get("destination_identity")
     if not isinstance(destination, Mapping):
