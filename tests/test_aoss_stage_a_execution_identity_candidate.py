@@ -83,7 +83,7 @@ def test_candidate_rejects_fixture_identity_substitution(tmp_path, field, value,
     with pytest.raises(ExecutionIdentityCandidateError, match=error):
         validate_execution_identity_candidate(
             candidate,
-            source_driver_file=driver,
+            source_driver_file=_driver(tmp_path),
         )
 
 
@@ -299,7 +299,7 @@ def test_validation_rejects_missing_driver_even_if_candidate_is_handcrafted(tmp_
     ):
         validate_execution_identity_candidate(
             candidate,
-            source_driver_file=_driver(tmp_path),
+            source_driver_file=driver,
         )
 
 
