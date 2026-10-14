@@ -22,6 +22,25 @@ EXPECTED_SOURCE_DRIVER_PATH = "scripts/aoss_stage_a/source_driver.py"
 RECORD_TYPE = "AOSS_V0_6_STAGE_A_EXECUTION_IDENTITY_CANDIDATE"
 STATUS = "PROSPECTIVE_NON_FIXTURE_CANDIDATE_NOT_ACCEPTED"
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_EXPECTED_DRIVER_FLAGS = ("--acp-root", "--recipe-class", "--run-id", "--output")
+_EXPECTED_RECIPE_CLASSES = {
+    "normal_completion",
+    "policy_denial",
+    "unknown_capability_rejection",
+    "handler_failure",
+    "cancellation",
+    "exact_budget_success",
+    "budget_exhaustion",
+    "suppressed_budget_exception_fail_closed",
+    "missing_event",
+    "reordered_exported_events",
+    "duplicate_replayed_event",
+    "stale_timestamp",
+    "malformed_manifest",
+    "mismatched_run_id",
+    "source_order_ambiguity",
+    "missing_authority_evidence",
+}
 
 
 class ExecutionIdentityCandidateError(ValueError):
@@ -72,6 +91,13 @@ def _validate_driver_argv(
     values = list(argv)
     if values[0] != driver_path:
         _fail("EXECUTION_IDENTITY_ARGV_DRIVER_MISMATCH")
+    if len(values) != 9 or tuple(values[1::2]) != _EXPECTED_DRIVER_FLAGS:
+        _fail("EXECUTION_IDENTITY_ARGV_SHAPE_MISMATCH")
+    option_values = dict(zip(values[1::2], values[2::2], strict=True))
+    if any(not value.strip() for value in option_values.values()):
+        _fail("EXECUTION_IDENTITY_ARGV_INVALID")
+    if option_values["--recipe-class"] not in _EXPECTED_RECIPE_CLASSES:
+        _fail("EXECUTION_IDENTITY_ARGV_RECIPE_NOT_FROZEN")
     workdir = Path(working_directory)
     if not workdir.is_dir():
         _fail("EXECUTION_IDENTITY_WORKDIR_NOT_DIRECTORY")
