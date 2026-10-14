@@ -28,7 +28,17 @@ def _candidate(tmp_path: Path | None = None):
     return prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
-        argv=["scripts/aoss_stage_a/source_driver.py", "--plan", "stage-a"],
+        argv=[
+            "scripts/aoss_stage_a/source_driver.py",
+            "--acp-root",
+            "/srv/agent-control-plane",
+            "--recipe-class",
+            "normal_completion",
+            "--run-id",
+            "run-0001",
+            "--output",
+            "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
+        ],
         working_directory=str(root),
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
@@ -206,6 +216,27 @@ def test_validation_rejects_argv_driver_substitution(tmp_path):
         )
 
 
+def test_prepare_rejects_non_driver_cli_shape(tmp_path):
+    driver = _driver(tmp_path)
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_ARGV_SHAPE_MISMATCH",
+    ):
+        prepare_execution_identity_candidate(
+            interpreter_path="/opt/python/3.12.3/bin/python",
+            interpreter_sha256=SHA_A,
+            argv=["scripts/aoss_stage_a/source_driver.py", "--plan", "stage-a"],
+            working_directory=str(tmp_path),
+            destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+            attempt_id="aoss-stage-a-attempt-0001",
+            recipe_catalog_sha256=SHA_B,
+            environment_candidate_record_sha256=SHA_C,
+            source_driver_path="scripts/aoss_stage_a/source_driver.py",
+            source_driver_file=driver,
+        )
+
+
 def test_prepare_rejects_workdir_that_resolves_to_different_driver(tmp_path):
     driver = _driver(tmp_path)
     wrong_root = tmp_path / "wrong-root"
@@ -218,7 +249,17 @@ def test_prepare_rejects_workdir_that_resolves_to_different_driver(tmp_path):
         prepare_execution_identity_candidate(
             interpreter_path="/opt/python/3.12.3/bin/python",
             interpreter_sha256=SHA_A,
-            argv=["scripts/aoss_stage_a/source_driver.py"],
+            argv=[
+            "scripts/aoss_stage_a/source_driver.py",
+            "--acp-root",
+            "/srv/agent-control-plane",
+            "--recipe-class",
+            "normal_completion",
+            "--run-id",
+            "run-0001",
+            "--output",
+            "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
+        ],
             working_directory=str(wrong_root),
             destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
             attempt_id="aoss-stage-a-attempt-0001",
@@ -254,7 +295,17 @@ def test_source_driver_digest_is_derived_from_real_file(tmp_path):
     candidate = prepare_execution_identity_candidate(
         interpreter_path="/opt/python/3.12.3/bin/python",
         interpreter_sha256=SHA_A,
-        argv=["scripts/aoss_stage_a/source_driver.py"],
+        argv=[
+            "scripts/aoss_stage_a/source_driver.py",
+            "--acp-root",
+            "/srv/agent-control-plane",
+            "--recipe-class",
+            "normal_completion",
+            "--run-id",
+            "run-0001",
+            "--output",
+            "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
+        ],
         working_directory=str(tmp_path),
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
