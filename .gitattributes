@@ -13,3 +13,4 @@ requirements-aoss-stage-a.lock text eol=lf
 scripts/aoss_v0_6_acp_adapter.py text eol=lf
 scripts/aoss_v0_6_stage_a_decision_policy.py text eol=lf
 scripts/aoss_v0_6_stage_a_acp_direct_baseline.py text eol=lf
+scripts/aoss_stage_a/source_driver.py text eol=lf
