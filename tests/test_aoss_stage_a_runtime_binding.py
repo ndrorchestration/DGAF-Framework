@@ -119,4 +119,5 @@ def test_stage_a_byte_bound_text_is_lf_normalized_by_repository_policy() -> None
         "scripts/aoss_v0_6_acp_adapter.py text eol=lf",
         "scripts/aoss_v0_6_stage_a_decision_policy.py text eol=lf",
         "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py text eol=lf",
+        "scripts/aoss_stage_a/source_driver.py text eol=lf",
     } <= attributes
