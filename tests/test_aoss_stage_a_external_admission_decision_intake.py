@@ -1,4 +1,5 @@
 from pathlib import Path
+import hashlib
 from copy import deepcopy
 
 import pytest
@@ -19,7 +20,7 @@ from scripts.aoss_stage_a.runtime_binding import RuntimeFacts
 ROOT = Path(__file__).resolve().parents[1]
 
 SHA_A = "a" * 64
-SHA_B = "b" * 64
+SHA_B = hashlib.sha256((ROOT / "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest()
 SHA_C = "c" * 64
 SHA_D = "d" * 64
 

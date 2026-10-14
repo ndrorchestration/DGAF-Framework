@@ -1,4 +1,5 @@
 from copy import deepcopy
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -8,6 +9,10 @@ from scripts.aoss_stage_a.execution_identity_candidate import (
     prepare_execution_identity_candidate,
     validate_execution_identity_candidate,
 )
+
+ROOT = Path(__file__).resolve().parents[1]
+CATALOG_FILE = ROOT / "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json"
+CATALOG_SHA = hashlib.sha256(CATALOG_FILE.read_bytes()).hexdigest()
 
 SHA_A = "a" * 64
 SHA_B = "b" * 64
@@ -42,7 +47,7 @@ def _candidate(tmp_path: Path | None = None):
         working_directory=str(root),
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
-        recipe_catalog_sha256=SHA_B,
+        recipe_catalog_sha256=CATALOG_SHA,
         environment_candidate_record_sha256=SHA_C,
         source_driver_path="scripts/aoss_stage_a/source_driver.py",
         source_driver_file=driver,
@@ -181,6 +186,53 @@ def test_candidate_detects_executable_identity_mutation(tmp_path):
         )
 
 
+def test_prepare_rejects_recipe_catalog_sha_mismatch(tmp_path):
+    driver = _driver(tmp_path)
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_RECIPE_CATALOG_SHA_MISMATCH",
+    ):
+        prepare_execution_identity_candidate(
+            interpreter_path="/opt/python/3.12.3/bin/python",
+            interpreter_sha256=SHA_A,
+            argv=[
+                "scripts/aoss_stage_a/source_driver.py",
+                "--acp-root",
+                "/srv/agent-control-plane",
+                "--recipe-class",
+                "normal_completion",
+                "--run-id",
+                "run-0001",
+                "--output",
+                "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
+            ],
+            working_directory=str(tmp_path),
+            destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+            attempt_id="aoss-stage-a-attempt-0001",
+            recipe_catalog_sha256="b" * 64,
+            environment_candidate_record_sha256=SHA_C,
+            source_driver_path="scripts/aoss_stage_a/source_driver.py",
+            source_driver_file=driver,
+        )
+
+
+def test_validation_rejects_substituted_recipe_catalog(tmp_path):
+    candidate = _candidate(tmp_path)
+    substituted = tmp_path / "catalog.json"
+    substituted.write_bytes(CATALOG_FILE.read_bytes() + b" ")
+
+    with pytest.raises(
+        ExecutionIdentityCandidateError,
+        match="EXECUTION_IDENTITY_RECIPE_CATALOG_SHA_MISMATCH",
+    ):
+        validate_execution_identity_candidate(
+            candidate,
+            source_driver_file=_driver(tmp_path),
+            recipe_catalog_file=substituted,
+        )
+
+
 def test_prepare_rejects_argv_not_bound_to_source_driver(tmp_path):
     driver = _driver(tmp_path)
 
@@ -195,7 +247,7 @@ def test_prepare_rejects_argv_not_bound_to_source_driver(tmp_path):
             working_directory=str(tmp_path),
             destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
             attempt_id="aoss-stage-a-attempt-0001",
-            recipe_catalog_sha256=SHA_B,
+            recipe_catalog_sha256=CATALOG_SHA,
             environment_candidate_record_sha256=SHA_C,
             source_driver_path="scripts/aoss_stage_a/source_driver.py",
             source_driver_file=driver,
@@ -230,7 +282,7 @@ def test_prepare_rejects_non_driver_cli_shape(tmp_path):
             working_directory=str(tmp_path),
             destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
             attempt_id="aoss-stage-a-attempt-0001",
-            recipe_catalog_sha256=SHA_B,
+            recipe_catalog_sha256=CATALOG_SHA,
             environment_candidate_record_sha256=SHA_C,
             source_driver_path="scripts/aoss_stage_a/source_driver.py",
             source_driver_file=driver,
@@ -263,7 +315,7 @@ def test_prepare_rejects_workdir_that_resolves_to_different_driver(tmp_path):
             working_directory=str(wrong_root),
             destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
             attempt_id="aoss-stage-a-attempt-0001",
-            recipe_catalog_sha256=SHA_B,
+            recipe_catalog_sha256=CATALOG_SHA,
             environment_candidate_record_sha256=SHA_C,
             source_driver_path="scripts/aoss_stage_a/source_driver.py",
             source_driver_file=driver,
@@ -282,7 +334,7 @@ def test_prepare_rejects_missing_source_driver_file(tmp_path):
             working_directory=str(tmp_path),
             destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
             attempt_id="aoss-stage-a-attempt-0001",
-            recipe_catalog_sha256=SHA_B,
+            recipe_catalog_sha256=CATALOG_SHA,
             environment_candidate_record_sha256=SHA_C,
             source_driver_path="scripts/aoss_stage_a/source_driver.py",
             source_driver_file=tmp_path / "scripts" / "aoss_stage_a" / "source_driver.py",
@@ -309,7 +361,7 @@ def test_source_driver_digest_is_derived_from_real_file(tmp_path):
         working_directory=str(tmp_path),
         destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
         attempt_id="aoss-stage-a-attempt-0001",
-        recipe_catalog_sha256=SHA_B,
+        recipe_catalog_sha256=CATALOG_SHA,
         environment_candidate_record_sha256=SHA_C,
         source_driver_path="scripts/aoss_stage_a/source_driver.py",
         source_driver_file=driver,
