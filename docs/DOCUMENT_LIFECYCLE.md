@@ -48,7 +48,7 @@ A later record must not retroactively change the epistemic meaning of an earlier
 | `docs/PROJECT_STATUS.md` | DERIVATIVE | Both | Compatibility summary; must defer to CURRENT_STATE for live gate truth |
 | `docs/ui/UI_CURRENT_STATE.md` | DERIVATIVE | Presentation/documentation | Current UI/interface projection index; must defer to CURRENT_STATE and active controllers for live gate truth |
 | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` | HISTORICAL | Historical audit | Preserves the 2026-08-20 pre-authorization gap audit; not a current gate list |
-| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / HISTORICAL-IDENTITY CONTRACT | Audit/control | Accepted PR #928 historical reviewer handoff; remains event-time evidence and must be paired with the accepted current identity addendum for review of the current implementation |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted PR #928 historical reviewer handoff; remains event-time evidence and must be paired with the accepted current identity addendum for review of the current implementation |
 | `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_IDENTITY_REFRESH_2026-10-15.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted via PR #1354; rebinds the current reviewer packet to evaluated implementation `9054fc14…` without rewriting historical #928 or establishing external review |
 | `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | HISTORICAL / SUPERSEDED | Historical control snapshot | Preserves the 2026-09-06 pre-authorization/final-candidate reconstruction state; live state belongs to CURRENT_STATE and active controllers |
 | `docs/governance/CURRENT_STATE_2026-09-01.md` | HISTORICAL | Historical control snapshot | Preserves September 1 state and identities; present project state belongs to `docs/CURRENT_STATE.md` |
@@ -182,7 +182,7 @@ For a review of the current accepted Stage-A implementation identity, the active
 
 | Document / controller | Lifecycle | Authority / role |
 | --- | --- | --- |
-| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / HISTORICAL-IDENTITY CONTRACT | Accepted historical handoff from PR #928; preserves the identities and procedure accepted at that event time |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Accepted historical handoff from PR #928; preserves the identities and procedure accepted at that event time |
 | `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_IDENTITY_REFRESH_2026-10-15.md` | ACTIVE / DERIVATIVE | Accepted current identity addendum from PR #1354; binds packet acceptance `abcf09d3c8fa4784023d23c9265d3cacf706a4ab` to evaluated implementation `9054fc14f4cb8ef7a1b627338b363ee3d9987bd1` without claiming review execution |
 | GitHub Issue #901 | ACTIVE | Stage-A collection-execution-readiness controller; acceptance predicates remain fail-closed |
 | GitHub Issue #929 | ACTIVE | External reviewer engagement and returned-evidence controller |
