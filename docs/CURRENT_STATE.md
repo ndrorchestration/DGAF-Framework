@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-10-02
-reconciliation_input_main: 86120d604d9eb747a722c33a299898f79808f6ef
+last_verified: 2026-10-15
+reconciliation_input_main: abcf09d3c8fa4784023d23c9265d3cacf706a4ab
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -86,6 +86,9 @@ accepted_aoss_local_trust_result_intake_pr: 925
 accepted_aoss_local_trust_result_intake_commit: c6bf7007879c778ab46570eba598c4792e9d53bd
 accepted_aoss_independent_validation_handoff_pr: 928
 accepted_aoss_independent_validation_handoff_commit: 92bc930bdd84f6c4258852e764d3e42019e41342
+accepted_aoss_current_identity_addendum_pr: 1354
+accepted_aoss_current_identity_addendum_commit: abcf09d3c8fa4784023d23c9265d3cacf706a4ab
+aoss_stage_a_evaluated_implementation_target: 9054fc14f4cb8ef7a1b627338b363ee3d9987bd1
 aoss_stage_a_external_review_issue: 929
 aoss_stage_a_independent_validation_handoff: ACCEPTED
 aoss_stage_a_external_review: NOT_EXECUTED
@@ -168,7 +171,8 @@ The earlier provider-neutral capability-governance proposal in **PR #1041** is n
 | Governed Repo outside-operator usability gate | **READY FOR ELIGIBLE HUMAN TRIAL / NOT SATISFIED · ISSUE #1210 OPEN · SOURCE `c90c74c04583c5a3f23f6a261cf38cd6922c781c`** |
 | AOSS Stage A outcome collection authorization | **TRUE · BOUNDED · ACCEPTED AUTHORIZATION BASIS** |
 | AOSS Stage A apparatus | **ACCEPTED THROUGH NON-PROMOTING LOCAL TRUST RESULT INTAKE · PR #925** |
-| AOSS Stage A independent-validation handoff | **ACCEPTED · PR #928 · EXTERNAL REVIEW OPERATIONALLY REQUESTABLE** |
+| AOSS Stage A independent-validation handoff | **HISTORICAL HANDOFF ACCEPTED · PR #928** |
+| AOSS Stage A current reviewer identity addendum | **ACCEPTED · PR #1354 · PACKET COMMIT `abcf09d3…` · EVALUATED IMPLEMENTATION `9054fc14…`** |
 | AOSS Stage A external review | **NOT EXECUTED · CONTROLLER #929 OPEN** |
 | AOSS Stage A operator self-test | **PR #1012 · INTERNAL ENGINEERING VALIDATION ONLY · Windows operator run PASS (19/19) on 2026-09-26 · #1022 · NOT EXTERNAL REVIEW** |
 | AOSS Stage A reviewer attribution / independence | **NOT VERIFIED LOCALLY** |
@@ -192,7 +196,7 @@ Issue #901 controls the current AOSS v0.6 Stage-A execution-readiness lane. Boun
 
 ### Accepted apparatus sequence
 
-Protected main now contains the accepted Stage-A apparatus chain through PR #925, plus the independent-validation handoff accepted via PR #928:
+Protected main now contains the accepted Stage-A apparatus chain through PR #925, the historical independent-validation handoff accepted via PR #928, and the current reviewer identity addendum accepted via PR #1354:
 
 - #900 — non-collecting collector/preflight/custody foundation;
 - #903/#910 — fail-closed telemetry-to-`PolicyInput` mapping and frozen source-driver contract;
@@ -209,17 +213,18 @@ Protected main now contains the accepted Stage-A apparatus chain through PR #925
 - #923 — blocked local-adjudication candidate;
 - #924 — inert local trust-review evidence packet;
 - #925 — non-promoting local trust adjudication-result intake;
-- #928 — independent-validation handoff package binding exact DGAF/ACP identities, reviewer independence disclosure, verification procedure, required returned-evidence fields, custody/replay/no-retry checks, and claim ceiling without performing the review.
+- #928 — historical independent-validation handoff package binding exact DGAF/ACP identities, reviewer independence disclosure, verification procedure, required returned-evidence fields, custody/replay/no-retry checks, and claim ceiling without performing the review;
+- #1354 — accepted current reviewer identity addendum preserving #928 as historical evidence while rebinding the packet to evaluated implementation `9054fc14f4cb8ef7a1b627338b363ee3d9987bd1`; packet acceptance commit `abcf09d3c8fa4784023d23c9265d3cacf706a4ab`.
 
 The design invariant across this chain is that **evidence, verification, acceptance, authorization, execution, and scientific claim promotion are distinct events**. A reported external or local `ACCEPT`/`VERIFIED` finding remains evidence until a separately authorized acceptance transition establishes the corresponding local predicate.
 
 ### External-review phase
 
-Issue #929 now controls actual independent reviewer engagement and returned evidence. The accepted #928 handoff makes independent validation operationally requestable, but no reviewer has yet been verified as independent and no external review result has been accepted.
+Issue #929 now controls actual independent reviewer engagement and returned evidence. For a current review, the accepted historical #928 handoff and accepted 2026-10-15 identity addendum from #1354 must be read together. The packet is operationally requestable, but no reviewer has yet been verified as independent and no external review result has been accepted.
 
 The next evidence-changing sequence is:
 
-`candidate reviewer → conflict/relationship disclosure → accepted handoff delivery → independently retained returned evidence → local cryptographic reverification → separate reviewer-attribution/independence adjudication → separate environment/executable/destination acceptance → possible later collection-execution-readiness transition under #901`.
+`candidate reviewer → conflict/relationship disclosure → historical #928 handoff + accepted #1354 identity addendum delivery → independently retained returned evidence → local cryptographic reverification → separate reviewer-attribution/independence adjudication → separate environment/executable/destination acceptance → possible later collection-execution-readiness transition under #901`.
 
 Internal CI, fixtures, same-system replay, project-owner self-review, or another DGAF-authored packet cannot satisfy #929.
 
