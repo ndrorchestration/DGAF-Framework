@@ -4,7 +4,7 @@
   "controller_issue": 901,
   "status": "PROPOSED_NON_COLLECTING_SYNTHETIC_ONLY",
   "recipe_version": "AOSS_V0_6_STAGE_A_SYNTHETIC_RECIPE_CATALOG_V1",
-  "execution_status": "NO_SOURCE_DRIVER_IMPLEMENTED",
+  "execution_status": "SOURCE_DRIVER_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
   "recipe_boundary": {
     "source_repository": "ndrorchestration/agent-control-plane",
     "source_commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
