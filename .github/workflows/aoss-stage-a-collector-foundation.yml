@@ -75,6 +75,7 @@ jobs:
             tests/test_aoss_stage_a_runtime_binding.py \
             tests/test_aoss_stage_a_source_driver_binding.py \
             tests/test_aoss_stage_a_source_driver.py \
+            tests/test_aoss_stage_a_source_driver_recipe_catalog.py \
             tests/test_aoss_stage_a_executable_destination_binding.py \
             tests/test_aoss_stage_a_ingest_freshness.py \
             tests/test_aoss_stage_a_replay.py \
