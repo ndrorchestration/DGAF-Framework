@@ -24,6 +24,8 @@ def test_current_surfaces_preserve_external_review_boundary():
     for text in (current, project, ui, readme):
         assert "canonical DGAF efficacy" in text
         assert "NOT ESTABLISHED" in text
+        assert "#928" in text
+        assert "#1354" in text
 
     assert "Issue #929" in current
     assert "Issue #929" in ui
@@ -100,12 +102,14 @@ def test_machine_readable_current_authority_fixture_does_not_route_to_stale_pdma
 def test_claim_evidence_index_routes_live_truth_to_current_state():
     claims = (ROOT / "docs" / "CLAIM_EVIDENCE_INDEX.md").read_text(encoding="utf-8")
 
-    assert "**Current reconciliation:** 2026-09-22" in claims
+    assert "**Current reconciliation:** 2026-10-15" in claims
     assert "**Live project-state authority is `docs/CURRENT_STATE.md`**" in claims
     assert "Issue #929 owns the next external evidence-changing transition" in claims
     assert "| Claim | Recorded / exact-scope status |" in claims
     assert "CLOSED_FOR_EXACT_PREREGISTERED_SCOPE" in claims
-    assert "HANDOFF ACCEPTED / EXTERNAL REVIEW NOT EXECUTED" in claims
+    assert "HISTORICAL HANDOFF + CURRENT IDENTITY ADDENDUM ACCEPTED / EXTERNAL REVIEW NOT EXECUTED" in claims
+    assert "packet acceptance `abcf09d3…`" in claims
+    assert "evaluated implementation `9054fc14…`" in claims
 
 
 def test_canonical_technical_overview_does_not_present_legacy_pdmal_as_live_state():
