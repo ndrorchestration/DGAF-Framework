@@ -45,7 +45,7 @@ def test_recipe_catalog_matches_frozen_ground_truth_and_fixture_terminals():
 def test_recipe_catalog_remains_non_collecting_and_non_authorizing():
     catalog = _load(CATALOG)
     assert catalog["status"] == "PROPOSED_NON_COLLECTING_SYNTHETIC_ONLY"
-    assert catalog["execution_status"] == "NO_SOURCE_DRIVER_IMPLEMENTED"
+    assert catalog["execution_status"] == "SOURCE_DRIVER_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED"
     assert catalog["recipe_boundary"]["driver_import_allowed"] is False
     assert catalog["recipe_boundary"]["acp_execution_allowed"] is False
     assert catalog["collection_execution_readiness"] == "NOT_ESTABLISHED"
