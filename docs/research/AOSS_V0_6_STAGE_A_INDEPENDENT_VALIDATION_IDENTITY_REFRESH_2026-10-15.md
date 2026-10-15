@@ -21,8 +21,8 @@ Frozen ACP target remains:
 
 This document does **not** rewrite or supersede the historical facts recorded by
 the accepted #928 handoff. It is a scoped identity refresh for a reviewer
-evaluating the later protected-main implementation after PRs #1350, #1353,
-#1352 and #1356 were admitted.
+evaluating the later protected-main implementation after PRs `#1350`, `#1353`,
+`#1352`, and `#1356` were admitted.
 
 The original handoff and this addendum must be read together for that current
 implementation target. Neither document establishes reviewer independence,
