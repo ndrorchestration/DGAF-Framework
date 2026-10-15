@@ -1,8 +1,8 @@
 # DGAF UI / Interface Current State
 
-**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-23  
+**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-10-15  
 **Authority class:** PRESENTATION / DOCUMENTATION ONLY  
-**Reconciliation input:** protected `main` `3ba57706b75ed32d1cbae0a2fddd220a0cd1da20`  
+**Reconciliation input:** protected `main` `abcf09d3c8fa4784023d23c9265d3cacf706a4ab`  
 **Scientific/control effect:** NONE  
 **Canonical High-Assurance boundary:** `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
@@ -30,11 +30,12 @@ The modeled Epoch 002 lifecycle is now closed for its exact preregistered scope 
 
 ## AOSS Stage-A external-review truth the interface must project
 
-The current DGAF evidence frontier is no longer another internally generated apparatus tranche. Protected main contains the accepted Stage-A non-promoting apparatus chain through PR #925 and the independent-validation handoff through PR #928.
+The current DGAF evidence frontier is no longer another internally generated apparatus tranche. Protected main contains the accepted Stage-A non-promoting apparatus chain through PR #925, the historical independent-validation handoff through PR #928, and the accepted current reviewer identity addendum through PR #1354.
 
 The interface must preserve all of the following simultaneously:
 
-- independent-validation handoff: ACCEPTED;
+- historical independent-validation handoff: ACCEPTED via PR #928;
+- current reviewer identity addendum: ACCEPTED via PR #1354, with packet acceptance `abcf09d3…` and evaluated implementation `9054fc14…` kept distinct;
 - external review: NOT EXECUTED;
 - reviewer attribution: NOT VERIFIED LOCALLY;
 - reviewer independence: NOT VERIFIED LOCALLY;
@@ -47,7 +48,7 @@ The interface must preserve all of the following simultaneously:
 - canonical DGAF efficacy: NOT ESTABLISHED;
 - High-Assurance: NOT AUTHORIZED.
 
-GitHub Issue #929 owns actual reviewer engagement and independently retained evidence return. The UI may expose that frontier, returned-evidence state, blockers, and later local adjudication results, but it must not equate a signed/authentic reviewer record with accepted local trust or independent validation.
+GitHub Issue #929 owns actual reviewer engagement and independently retained evidence return. For current-review navigation, the UI must route to the historical #928 handoff together with the accepted #1354 identity addendum; neither artifact may be presented as executed review evidence. The UI may expose that frontier, returned-evidence state, blockers, and later local adjudication results, but it must not equate a signed/authentic reviewer record with accepted local trust or independent validation.
 
 Internal CI, same-system replay, fixtures, owner self-review, or another DGAF-authored packet cannot be presented as satisfying #929.
 
