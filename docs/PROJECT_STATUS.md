@@ -16,7 +16,7 @@ This lane is **prospective / non-authorizing** until separately accepted into pr
 
 ## Current hard boundary
 
-This 2026-09-26 compatibility reconciliation was refreshed against protected `main` `bfaab36af0ee1c233ce5e2cb3186475ce86cd61a`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This compatibility reconciliation was refreshed on 2026-10-15 against protected `main` `abcf09d3c8fa4784023d23c9265d3cacf706a4ab`. Exact current protected-main identity must still be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -52,12 +52,13 @@ These accepted records preserve separate event boundaries. Materialization, its 
 
 ## AOSS Stage-A external-review frontier
 
-Protected main now contains the accepted non-promoting Stage-A assurance/apparatus chain through PR #925 and the independent-validation handoff through PR #928. Issue #929 controls actual external reviewer engagement and independently retained evidence return.
+Protected main now contains the accepted non-promoting Stage-A assurance/apparatus chain through PR #925, the historical independent-validation handoff through PR #928, and the accepted current reviewer identity addendum through PR #1354. Issue #929 controls actual external reviewer engagement and independently retained evidence return.
 
 Current bounded state:
 
 - Stage-A outcome collection authorization: **TRUE / BOUNDED**;
-- independent-validation handoff: **ACCEPTED**;
+- historical independent-validation handoff: **ACCEPTED · PR #928**;
+- current reviewer identity addendum: **ACCEPTED · PR #1354 · packet commit `abcf09d3…` · evaluated implementation `9054fc14…`**;
 - external review: **NOT EXECUTED**;
 - reviewer attribution: **NOT VERIFIED LOCALLY**;
 - reviewer independence: **NOT VERIFIED LOCALLY**;
@@ -68,7 +69,7 @@ Current bounded state:
 - collection execution readiness: **NOT ESTABLISHED**;
 - Stage-A scientific-N increment: **0**.
 
-The accepted handoff makes an independent review operationally requestable; it does not establish that an independent reviewer has been engaged or that independent validation exists. Internal CI, fixtures, same-system replay, owner self-review, or another DGAF-authored packet cannot satisfy Issue #929.
+The accepted current reviewer packet consists of the historical #928 handoff plus the accepted #1354 identity addendum for evaluated implementation `9054fc14f4cb8ef7a1b627338b363ee3d9987bd1`. Together they make a current review operationally requestable; they do not establish that an independent reviewer has been engaged or that independent validation exists. Internal CI, fixtures, same-system replay, owner self-review, or another DGAF-authored packet cannot satisfy Issue #929.
 
 ## Accepted repository presentation state
 
