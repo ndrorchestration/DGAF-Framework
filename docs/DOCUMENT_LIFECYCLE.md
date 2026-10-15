@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL documentation control
-last_verified: 2026-09-22
-reconciliation_input_main: f99e9e0464625711ac7c9daba0e65de4a6c277a7
+last_verified: 2026-10-15
+reconciliation_input_main: abcf09d3c8fa4784023d23c9265d3cacf706a4ab
 ---
 
 # Documentation Lifecycle Registry
@@ -48,7 +48,8 @@ A later record must not retroactively change the epistemic meaning of an earlier
 | `docs/PROJECT_STATUS.md` | DERIVATIVE | Both | Compatibility summary; must defer to CURRENT_STATE for live gate truth |
 | `docs/ui/UI_CURRENT_STATE.md` | DERIVATIVE | Presentation/documentation | Current UI/interface projection index; must defer to CURRENT_STATE and active controllers for live gate truth |
 | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` | HISTORICAL | Historical audit | Preserves the 2026-08-20 pre-authorization gap audit; not a current gate list |
-| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted external-review handoff; operationally requestable, but does not establish an external review result or independent validation |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted PR #928 historical reviewer handoff; remains event-time evidence and must be paired with the accepted current identity addendum for review of the current implementation |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_IDENTITY_REFRESH_2026-10-15.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted via PR #1354; rebinds the current reviewer packet to evaluated implementation `9054fc14…` without rewriting historical #928 or establishing external review |
 | `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | HISTORICAL / SUPERSEDED | Historical control snapshot | Preserves the 2026-09-06 pre-authorization/final-candidate reconstruction state; live state belongs to CURRENT_STATE and active controllers |
 | `docs/governance/CURRENT_STATE_2026-09-01.md` | HISTORICAL | Historical control snapshot | Preserves September 1 state and identities; present project state belongs to `docs/CURRENT_STATE.md` |
 | `docs/governance/CURRENT_CANDIDATE_POST_KICKOFF_CONTROL_2026-09-01.md` | HISTORICAL | Historical candidate/control record | Preserves the September 1 candidate and completion-control boundary; does not designate present candidates or state |
@@ -171,3 +172,40 @@ HIGH_ASSURANCE=NOT_AUTHORIZED
 ```
 
 This lifecycle update is documentation-only. It does not grant reviewer independence, execution admission, collection readiness, scientific-N promotion, canonical DGAF efficacy, or High-Assurance authorization.
+
+## 2026-10-15 — AOSS Stage-A current reviewer-packet documentation state
+
+The 2026-09-22 section above remains historical event-time documentation. It is not rewritten by this later reconciliation.
+
+For a review of the current accepted Stage-A implementation identity, the active reviewer-facing packet is intentionally two-part:
+
+| Document / controller | Lifecycle | Authority / role |
+| --- | --- | --- |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Accepted historical handoff from PR #928; preserves the identities and procedure accepted at that event time |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_IDENTITY_REFRESH_2026-10-15.md` | ACTIVE / DERIVATIVE | Accepted current identity addendum from PR #1354; binds packet acceptance `abcf09d3c8fa4784023d23c9265d3cacf706a4ab` to evaluated implementation `9054fc14f4cb8ef7a1b627338b363ee3d9987bd1` without claiming review execution |
+| GitHub Issue #901 | ACTIVE | Stage-A collection-execution-readiness controller; acceptance predicates remain fail-closed |
+| GitHub Issue #929 | ACTIVE | External reviewer engagement and returned-evidence controller |
+
+A current reviewer must use the historical handoff and the accepted identity addendum together. The addendum is not a substitute for independently retained reviewer evidence, installed-environment acceptance, executable/source-driver acceptance, destination/attempt acceptance, reviewer-attribution verification, or reviewer-independence verification.
+
+Current external-review boundary remains:
+
+```text
+CURRENT_REVIEW_PACKET=ACCEPTED
+CURRENT_PACKET_ACCEPTANCE_COMMIT=abcf09d3c8fa4784023d23c9265d3cacf706a4ab
+CURRENT_EVALUATED_IMPLEMENTATION=9054fc14f4cb8ef7a1b627338b363ee3d9987bd1
+EXTERNAL_REVIEW=NOT_EXECUTED
+reviewer_attribution_verified=false
+independence_verified=false
+INSTALLED_ENVIRONMENT_ACCEPTANCE=NOT_ESTABLISHED
+SOURCE_DRIVER_BINDING=NOT_ESTABLISHED
+EXECUTABLE_ACCEPTANCE=NOT_ESTABLISHED
+DESTINATION_ACCEPTANCE=NOT_ESTABLISHED
+execution_allowed=false
+COLLECTION_EXECUTION_READINESS=NOT_ESTABLISHED
+SCIENTIFIC_N_INCREMENT=0
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED
+HIGH_ASSURANCE=NOT_AUTHORIZED
+```
+
+This reconciliation is documentation-only and creates no execution, trust, scientific, or validation promotion.
