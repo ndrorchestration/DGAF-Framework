@@ -1,9 +1,9 @@
 {
   "schema_version": "ECOSYSTEM_STATE_POINTER_V1",
-  "observed_at": "2026-10-01T23:01:00Z",
+  "observed_at": "2026-10-16T21:36:51Z",
   "snapshot_provenance": {
     "storage_mode": "IN_REPOSITORY_SNAPSHOT",
-    "source_observation_commit": "c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91",
+    "source_observation_commit": "0e09ae555136fb9d433c7294f445e0b656c7e705",
     "container_commit": null,
     "container_commit_binding": "EXTERNAL_ONLY",
     "live_reconciliation": {
@@ -19,21 +19,21 @@
       "authority_id": "DGAF_SOURCE",
       "surface": "GITHUB",
       "role": "Exact source, CI, evidence and commit identity",
-      "object_identity": "c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91",
-      "predecessor_object_identity": "561654322231b83da34498bfc1c3a69d46738cc9",
+      "object_identity": "0e09ae555136fb9d433c7294f445e0b656c7e705",
+      "predecessor_object_identity": "c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91",
       "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "NONE",
-      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/commit/c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91"
+      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/commit/0e09ae555136fb9d433c7294f445e0b656c7e705"
     },
     {
       "authority_id": "ACP_SOURCE",
       "surface": "GITHUB",
       "role": "Execution-boundary and control-plane source authority",
-      "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
-      "predecessor_object_identity": null,
+      "object_identity": "e7135323663ebbe025b18b74a13f2d99c14e2b57",
+      "predecessor_object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
       "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "NONE",
-      "evidence_url": "https://github.com/ndrorchestration/agent-control-plane/commit/4d3cdd21a445b765753cb5d36360f643210fe0b5"
+      "evidence_url": "https://github.com/ndrorchestration/agent-control-plane/commit/e7135323663ebbe025b18b74a13f2d99c14e2b57"
     },
     {
       "authority_id": "TEKTITE_PUBLIC_SNAPSHOT",
@@ -75,7 +75,7 @@
         "ACP_SOURCE"
       ],
       "manifest_path": "registry/tektite_public_status_semantic_source_v1.json",
-      "semantic_material_digest_sha256": "5444e5576310a85ee84f7cb1005cda1b2e2ad31e805374732cca3fb3d5d911c2",
+      "semantic_material_digest_sha256": "e9188f244db2bc408152f594c3bedd77531effb5cf0b11a0f7ffbf314e64d73d",
       "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "SEMANTIC_SOURCE_CHANGED"
     }
