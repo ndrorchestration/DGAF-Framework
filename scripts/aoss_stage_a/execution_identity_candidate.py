@@ -145,7 +145,7 @@ def _verify_crossbindings(
     output = Path(options["--output"])
     if not output.is_absolute():
         output = Path(workdir) / output
-    if not output.parent.is_dir():
+    if ".." in output.parts or not output.parent.is_dir():
         _fail("EXECUTION_IDENTITY_OUTPUT_PARENT_MISSING")
     if output.exists() or output.is_symlink():
         _fail("EXECUTION_IDENTITY_OUTPUT_ALREADY_EXISTS")

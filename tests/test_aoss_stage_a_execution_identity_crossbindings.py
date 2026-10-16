@@ -248,9 +248,11 @@ def test_validation_rejects_dangling_output_symlink(tmp_path):
         identity.validate_execution_identity_candidate(candidate)
 
 
-def test_prepare_rejects_missing_lexical_output_parent(tmp_path):
+@pytest.mark.parametrize("component", ["missing", "reserved"])
+def test_prepare_rejects_unresolved_output_parent_traversal(tmp_path, component):
     kwargs = _kwargs(tmp_path)
-    output = tmp_path / "missing" / ".." / "result.json"
+    (tmp_path / "reserved").mkdir()
+    output = tmp_path / component / ".." / "result.json"
     kwargs["argv"][-1] = str(output)
     kwargs["destination_uri"] = output.resolve().as_uri()
     with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_OUTPUT_PARENT_MISSING"):
