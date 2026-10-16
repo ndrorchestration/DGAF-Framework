@@ -1,0 +1,15 @@
+# Containment assessment admission and Tektite projection
+
+Purpose: make the reviewed semantic assessment usable in DGAF and visible in Tektite while preserving the synthetic evidence ceiling. The user requested continuous execution of the next ready work on 2026-10-11; routine design and implementation choices proceed without further checkpoints.
+
+DGAF base: `aabf1163515af291dc564bd7564fd12762a898c8`. ACP source inspection: `bd56a747686d775236bb78603bdaf2afc90733cb`. Existing SBCF draft #1339 was inspected at `4756929bfe9fb2fa8d42c49a86708f3f1caa5229`; it contains shared-key and witness prototypes. This candidate neither modifies that branch nor introduces a dependency on its unmerged trust mechanisms.
+
+The existing pure assessment moves to `scripts/dgaf_containment_assessment.py`, using the repository's unchanged canonicalizer. Observation intake accepts raw UTF-8 JSON bytes and an expected SHA256 supplied separately by the caller. Missing/malformed/mismatching expected digests, duplicate JSON keys, invalid UTF-8, non-finite constants, non-object roots and records over 64 KiB raise AssessmentInputError before assessment. A digest match establishes exact-byte integrity relative to the supplied pin; it does not authenticate a producer or establish independent custody. Result adds observation_digest, integrity_binding=EXPECTED_DIGEST_MATCH, source_authenticity=NOT_ESTABLISHED. No fallback accepts an unbound observation.
+
+Fixtures pin raw observation files in a checked-in manifest. A deterministic generator assesses SC-01/05/13/16 at a fixed fixture clock and feeds the resulting SC-01 record to the existing protected-side-effect PEP. SC-28 records actual refusal and zero callbacks. A Tektite static page renders these records with meaning, reasons, exact definition and evidence binding, and explicit authority limits. It is linked from the existing demo without modifying its live demonstration or accepted replay. Browser validation rejects malformed or promoted projections; rendering uses textContent.
+
+Every assessment has authority_effect=NONE, follow_on_authority=FRESH_ADJUDICATION_REQUIRED, execution_permitted=false, scientific_n_increment=0. Projection claims: live containment and source authenticity NOT_ESTABLISHED, independent validation NOT_ESTABLISHED, canonical efficacy NOT_ESTABLISHED, high assurance NOT_AUTHORIZED, live integration NOT_RUN. Fixed-time replay is never presented as current monitoring.
+
+Acceptance: existing 26 assessment/boundary tests still pass; new intake tests exercise digest and malformed-input failure classes; projection generation is deterministic; browser tests prove five cases, fail-closed malformed input, no execution action and safe text rendering. A draft repository candidate preserves protected main and research gates. Full repository/Next build checks are reported separately from focused source-snapshot tests.
+
+Deferred: authenticated producers and trust-anchor distribution, durable receipt admission, OS/network containment, live ACP/AOSS integration, independent review and scientific evaluation.

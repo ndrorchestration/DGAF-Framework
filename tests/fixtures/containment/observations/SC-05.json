@@ -1,0 +1,21 @@
+{
+  "schema_version": "SYNTHETIC_CONTAINMENT_OBSERVATION_V1",
+  "evidence_class": "SYNTHETIC",
+  "subject_id": "synthetic-agent",
+  "session_id": "synthetic-session",
+  "environment_id": "synthetic-environment",
+  "contract_digest": "sha256:0b6375d5af4003c24c01116d6b1c970a1ff445bdb9c3898850ec64fdbdc2c185",
+  "observed_at": "2026-10-11T07:59:50Z",
+  "time_basis": "SNAPSHOT",
+  "predicate_results": {
+    "capabilities_restricted": "ESTABLISHED",
+    "workers_covered": "UNKNOWN",
+    "pending_actions_contained": "ESTABLISHED",
+    "egress_covered": "ESTABLISHED",
+    "persistence_contained": "ESTABLISHED"
+  },
+  "evidence_ids": [
+    "synthetic:evidence-1"
+  ],
+  "blocking_defeaters": []
+}
