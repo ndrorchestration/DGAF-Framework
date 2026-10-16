@@ -14,8 +14,9 @@ from typing import Any, Mapping, NoReturn, Sequence
 
 from scripts.aoss_stage_a.source_driver import (
     SourceDriverError,
-    verify_frozen_acp_checkout,
 )
+from scripts.aoss_stage_a.source_driver import _git as _acp_git
+from scripts.aoss_stage_a.source_driver import verify_frozen_acp_checkout
 
 EXPECTED_CONTROLLER_ISSUE = 901
 EXPECTED_SOURCE_REPOSITORY = "ndrorchestration/agent-control-plane"
@@ -114,6 +115,8 @@ def _validate_driver_argv(
 def _verify_frozen_acp_checkout(path: Path) -> None:
     try:
         verify_frozen_acp_checkout(path)
+        if Path(_acp_git(path, "rev-parse", "--show-toplevel")).resolve() != path.resolve():
+            _fail("EXECUTION_IDENTITY_ACP_ROOT_PATH_MISMATCH")
     except SourceDriverError as exc:
         raise ExecutionIdentityCandidateError("EXECUTION_IDENTITY_ACP_CHECKOUT_INVALID") from exc
 
@@ -146,13 +149,13 @@ def _verify_crossbindings(
     output = Path(options["--output"])
     if not output.is_absolute():
         output = Path(workdir) / output
+    if not output.parent.is_dir():
+        _fail("EXECUTION_IDENTITY_OUTPUT_PARENT_MISSING")
     if output.exists() or output.is_symlink():
         _fail("EXECUTION_IDENTITY_OUTPUT_ALREADY_EXISTS")
     output = output.resolve()
     if output.as_uri() != destination:
         _fail("EXECUTION_IDENTITY_OUTPUT_DESTINATION_MISMATCH")
-    if not output.parent.is_dir():
-        _fail("EXECUTION_IDENTITY_OUTPUT_PARENT_MISSING")
     _verify_frozen_acp_checkout(root)
 
 

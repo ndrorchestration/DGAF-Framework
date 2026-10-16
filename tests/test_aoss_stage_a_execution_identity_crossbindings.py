@@ -246,3 +246,37 @@ def test_validation_rejects_dangling_output_symlink(tmp_path):
     candidate["destination_identity"]["uri"] = output.resolve().as_uri()
     with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_OUTPUT_ALREADY_EXISTS"):
         identity.validate_execution_identity_candidate(candidate)
+
+
+def test_prepare_rejects_missing_lexical_output_parent(tmp_path):
+    kwargs = _kwargs(tmp_path)
+    output = tmp_path / "missing" / ".." / "result.json"
+    kwargs["argv"][-1] = str(output)
+    kwargs["destination_uri"] = output.resolve().as_uri()
+    with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_OUTPUT_PARENT_MISSING"):
+        identity.prepare_execution_identity_candidate(**kwargs)
+
+
+def test_prepare_rejects_nested_directory_as_acp_checkout(tmp_path, monkeypatch):
+    import subprocess
+
+    import scripts.aoss_stage_a.source_driver as driver_module
+
+    kwargs = _kwargs(tmp_path)
+    acp = Path(kwargs["argv"][2])
+    module = acp / driver_module.SOURCE_MODULE
+    module.parent.mkdir(parents=True)
+    module.write_text("# Git identity fixture; never imported\n")
+
+    def git(*args):
+        return subprocess.check_output(["git", "-C", str(acp), *args], text=True).strip()
+
+    git("init")
+    git("add", ".")
+    git("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "fixture")
+    monkeypatch.setattr(driver_module, "SOURCE_COMMIT", git("rev-parse", "HEAD"))
+    monkeypatch.setattr(driver_module, "SOURCE_MODULE_BLOB", git("rev-parse", f"HEAD:{driver_module.SOURCE_MODULE}"))
+    monkeypatch.setattr(identity, "_verify_frozen_acp_checkout", REAL_ACP_VERIFIER)
+    kwargs["argv"][2] = str(acp / "src")
+    with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_ACP_ROOT_PATH_MISMATCH"):
+        identity.prepare_execution_identity_candidate(**kwargs)
