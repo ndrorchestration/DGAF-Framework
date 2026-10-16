@@ -2,34 +2,39 @@
   "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
   "manifest_id": "TEKTITE_PUBLIC_STATUS_SEMANTIC_SOURCE_V1",
   "consumer": "TEKTITE_PUBLIC_STATUS",
-  "observed_at": "2026-10-04T22:49:02Z",
+  "observed_at": "2026-10-08T01:36:31.222035Z",
   "repository": "ndrorchestration/DGAF-Framework",
-  "repository_commit": "c773e2e56a5d1778edf8fbc4f55c3716277ec67c",
+  "repository_commit": "98f955ecc31a40202d4b01523aff1769f59b1498",
   "artifacts": [
     {
       "path": "docs/CURRENT_STATE.md",
-      "git_blob_sha1": "9c9e951f1c440cb101ea67866b1839ad32bd46be",
+      "git_blob_sha1": "74291beff465fa3511b6c31940336e6a320a2b98",
       "role": "DGAF current-state source"
     },
     {
       "path": "docs/tektite-v0.1/public/index.html",
-      "git_blob_sha1": "a5de432fe80ad4f50cb40a1b315a055214b1d5ef",
+      "git_blob_sha1": "2d0a48935383ec702bd3f44b03d7c222ec93dacf",
       "role": "public status projection"
     },
     {
       "path": "docs/tektite-v0.1/status.seed.json",
-      "git_blob_sha1": "6b7ce61717c6725bcb610a0c4d6b7b9228779117",
+      "git_blob_sha1": "0703dc272651762daabf048a177c3b7fd8af65c4",
       "role": "public status seed"
     },
     {
       "path": "docs/tektite-v0.1/evidence-ledger.seed.json",
-      "git_blob_sha1": "8139e25d2811b0bc93a872697ed1caf8620bf86d",
+      "git_blob_sha1": "5c56985850c3f36da4e0e5400d2ec432c2ac9a2d",
       "role": "public evidence-ledger seed"
     },
     {
       "path": "docs/tektite-v0.1/case-studies/ACP_PR_145.md",
-      "git_blob_sha1": "56317f471b93e35df39e87b673de4fcd63c91669",
+      "git_blob_sha1": "a821081f321616ad8d5204d6f851deed5aa0fe44",
       "role": "linked bounded public case study"
+    },
+    {
+      "path": "docs/tektite-v0.1/case-studies/ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md",
+      "git_blob_sha1": "690a13a19cc43fe20ed1db391e651c95c738912c",
+      "role": "linked bounded executor and durable-lineage case study"
     }
   ],
   "external_authorities": [
@@ -47,5 +52,5 @@
     "live_repository_mutation": "NOT_AUTHORIZED",
     "production_executor": "NOT_ESTABLISHED"
   },
-  "semantic_material_digest_sha256": "e9188f244db2bc408152f594c3bedd77531effb5cf0b11a0f7ffbf314e64d73d"
+  "semantic_material_digest_sha256": "379f516857e8f379eacdc6a379ca9ab6efaed4fb678c68b9952e3b9160fe840c"
 }

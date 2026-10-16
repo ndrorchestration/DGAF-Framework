@@ -29,11 +29,15 @@
     },
     {
       "artifact": "ACP bounded local-test executor + retained-risk reconciliation",
-      "source_surface": "GitHub / ACP main at e7135323663ebbe025b18b74a13f2d99c14e2b57",
+      "source_surface": "GitHub / ACP implementation baseline e7135323663ebbe025b18b74a13f2d99c14e2b57",
       "claim_supported": "A bounded disposable-repository executor and durable local mutation lineage are established for the tested BOUNDED_LOCAL_TEST profile; #117/#118 are closed by explicit retained-risk decision for that profile.",
       "claim_not_supported": "No real-project mutation, rollback execution, production executor, hostile-local-actor resistance, trusted process identity, distributed/global lineage, independent validation, or High-Assurance is established.",
       "authorization_effect": "NONE; consequential follow-on authority still requires fresh adjudication.",
-      "public_link": "https://github.com/ndrorchestration/agent-control-plane"
+      "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/159",
+      "evidence_refs": [
+        "https://github.com/ndrorchestration/agent-control-plane/pull/156",
+        "https://github.com/ndrorchestration/agent-control-plane/pull/159"
+      ]
     }
   ]
 }
