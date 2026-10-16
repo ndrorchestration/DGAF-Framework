@@ -7,6 +7,8 @@ import scripts.aoss_stage_a.execution_identity_candidate as identity
 from scripts.aoss_stage_a.external_admission_decision_intake import (
     ExternalAdmissionDecisionIntakeError,
     prepare_external_admission_decision_intake,
+)
+from scripts.aoss_stage_a.external_admission_decision_intake import (
     record_sha256 as intake_record_sha256,
 )
 from scripts.aoss_stage_a.installed_environment_evidence import (
@@ -18,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json"
 CATALOG_SHA = hashlib.sha256(CATALOG.read_bytes()).hexdigest()
 EXTERNAL_SHA = "d" * 64
+REAL_ACP_VERIFIER = identity._verify_frozen_acp_checkout
 
 
 @pytest.fixture(autouse=True)
@@ -154,7 +157,9 @@ def test_validation_rejects_output_destination_mismatch(tmp_path):
     other.parent.mkdir(parents=True)
     _set_option(candidate, "--output", str(other.resolve()))
 
-    with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_OUTPUT_DESTINATION_MISMATCH"):
+    with pytest.raises(
+        identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_OUTPUT_DESTINATION_MISMATCH"
+    ):
         identity.validate_execution_identity_candidate(
             candidate,
             source_driver_file=_driver(tmp_path),
@@ -175,7 +180,9 @@ def test_prepare_rejects_unreserved_output_parent(tmp_path):
 
 def test_validation_rejects_output_that_already_exists(tmp_path):
     candidate = _candidate(tmp_path)
-    output = Path(candidate["executable_identity"]["argv"][candidate["executable_identity"]["argv"].index("--output") + 1])
+    output = Path(
+        candidate["executable_identity"]["argv"][candidate["executable_identity"]["argv"].index("--output") + 1]
+    )
     output.write_bytes(b"preexisting\n")
 
     with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_OUTPUT_ALREADY_EXISTS"):
@@ -215,3 +222,27 @@ def test_external_intake_rejects_environment_execution_interpreter_path_mismatch
             destination_attempt_decision="BLOCKED",
         )
 
+
+def test_prepare_rejects_checkout_without_frozen_git_identity(tmp_path, monkeypatch):
+    monkeypatch.setattr(identity, "_verify_frozen_acp_checkout", REAL_ACP_VERIFIER)
+    with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_ACP_CHECKOUT_INVALID"):
+        identity.prepare_execution_identity_candidate(**_kwargs(tmp_path))
+
+
+def test_validation_reverifies_checkout_after_prepare(tmp_path, monkeypatch):
+    candidate = _candidate(tmp_path)
+    monkeypatch.setattr(identity, "_verify_frozen_acp_checkout", REAL_ACP_VERIFIER)
+    with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_ACP_CHECKOUT_INVALID"):
+        identity.validate_execution_identity_candidate(candidate)
+
+
+def test_validation_rejects_dangling_output_symlink(tmp_path):
+    candidate = _candidate(tmp_path)
+    output = Path(candidate["executable_identity"]["argv"][-1])
+    try:
+        output.symlink_to(output.parent / "missing-result.json")
+    except OSError:
+        pytest.skip("symlink creation unavailable on this platform")
+    candidate["destination_identity"]["uri"] = output.resolve().as_uri()
+    with pytest.raises(identity.ExecutionIdentityCandidateError, match="EXECUTION_IDENTITY_OUTPUT_ALREADY_EXISTS"):
+        identity.validate_execution_identity_candidate(candidate)
