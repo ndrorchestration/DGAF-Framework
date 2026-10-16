@@ -12,11 +12,7 @@ import re
 from pathlib import Path
 from typing import Any, Mapping, NoReturn, Sequence
 
-from scripts.aoss_stage_a.source_driver import (
-    SourceDriverError,
-)
-from scripts.aoss_stage_a.source_driver import _git as _acp_git
-from scripts.aoss_stage_a.source_driver import verify_frozen_acp_checkout
+from scripts.aoss_stage_a import source_driver
 
 EXPECTED_CONTROLLER_ISSUE = 901
 EXPECTED_SOURCE_REPOSITORY = "ndrorchestration/agent-control-plane"
@@ -114,10 +110,10 @@ def _validate_driver_argv(
 
 def _verify_frozen_acp_checkout(path: Path) -> None:
     try:
-        verify_frozen_acp_checkout(path)
-        if Path(_acp_git(path, "rev-parse", "--show-toplevel")).resolve() != path.resolve():
+        source_driver.verify_frozen_acp_checkout(path)
+        if Path(source_driver._git(path, "rev-parse", "--show-toplevel")).resolve() != path.resolve():
             _fail("EXECUTION_IDENTITY_ACP_ROOT_PATH_MISMATCH")
-    except SourceDriverError as exc:
+    except source_driver.SourceDriverError as exc:
         raise ExecutionIdentityCandidateError("EXECUTION_IDENTITY_ACP_CHECKOUT_INVALID") from exc
 
 
