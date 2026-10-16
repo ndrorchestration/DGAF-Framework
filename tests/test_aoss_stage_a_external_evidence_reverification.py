@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+import scripts.aoss_stage_a.execution_identity_candidate as identity_module
 from scripts.aoss_stage_a.execution_identity_candidate import (
     prepare_execution_identity_candidate,
 )
@@ -31,6 +32,25 @@ EXTERNAL_BYTES = b'{"decision":"ACCEPT","scope":"stage-a-admission"}\n'
 ATTRIBUTION_BYTES = b'{"reviewer":"external-reviewer:example","role":"reviewer"}\n'
 
 
+INTERPRETER = INTERPRETER_SHA = ACP_ROOT = OUTPUT = DESTINATION = ""
+
+
+@pytest.fixture(autouse=True)
+def _reserved_identity_paths(tmp_path, monkeypatch):
+    interpreter = tmp_path / "python"
+    interpreter.write_bytes(b"test-interpreter\n")
+    output = tmp_path / "reserved" / "result.json"
+    output.parent.mkdir()
+    acp = tmp_path / "acp"
+    acp.mkdir()
+    monkeypatch.setitem(globals(), "INTERPRETER", str(interpreter))
+    monkeypatch.setitem(globals(), "INTERPRETER_SHA", hashlib.sha256(interpreter.read_bytes()).hexdigest())
+    monkeypatch.setitem(globals(), "ACP_ROOT", str(acp))
+    monkeypatch.setitem(globals(), "OUTPUT", str(output))
+    monkeypatch.setitem(globals(), "DESTINATION", output.as_uri())
+    monkeypatch.setattr(identity_module, "_verify_frozen_acp_checkout", lambda _path: None)
+
+
 def _sha(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
@@ -43,7 +63,7 @@ def _environment_candidate():
             version="3.12.3",
             platform_system="Linux",
             platform_machine="x86_64",
-            executable="/opt/python/3.12.3/bin/python",
+            executable=INTERPRETER,
             prefix="/opt/python/3.12.3",
             base_prefix="/opt/python/3.12.3",
         ),
@@ -53,21 +73,21 @@ def _environment_candidate():
 def _fixtures():
     environment = _environment_candidate()
     identity = prepare_execution_identity_candidate(
-        interpreter_path="/opt/python/3.12.3/bin/python",
-        interpreter_sha256=SHA_A,
+        interpreter_path=INTERPRETER,
+        interpreter_sha256=INTERPRETER_SHA,
         argv=[
             "scripts/aoss_stage_a/source_driver.py",
             "--acp-root",
-            "/srv/agent-control-plane",
+            ACP_ROOT,
             "--recipe-class",
             "normal_completion",
             "--run-id",
-            "run-0001",
+            "aoss-stage-a-attempt-0001",
             "--output",
-            "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json",
+            OUTPUT,
         ],
         working_directory=str(ROOT),
-        destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+        destination_uri=DESTINATION,
         attempt_id="aoss-stage-a-attempt-0001",
         recipe_catalog_sha256=SHA_B,
         environment_candidate_record_sha256=record_sha256(environment),

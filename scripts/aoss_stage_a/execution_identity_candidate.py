@@ -12,6 +12,8 @@ import re
 from pathlib import Path
 from typing import Any, Mapping, NoReturn, Sequence
 
+from scripts.aoss_stage_a import source_driver
+
 EXPECTED_CONTROLLER_ISSUE = 901
 EXPECTED_SOURCE_REPOSITORY = "ndrorchestration/agent-control-plane"
 EXPECTED_SOURCE_COMMIT = "dbab7c1afafec524ce7c18157de2089cafe79c87"
@@ -106,6 +108,53 @@ def _validate_driver_argv(
     return values
 
 
+def _verify_frozen_acp_checkout(path: Path) -> None:
+    try:
+        source_driver.verify_frozen_acp_checkout(path)
+        if Path(source_driver._git(path, "rev-parse", "--show-toplevel")).resolve() != path.resolve():
+            _fail("EXECUTION_IDENTITY_ACP_ROOT_PATH_MISMATCH")
+    except source_driver.SourceDriverError as exc:
+        raise ExecutionIdentityCandidateError("EXECUTION_IDENTITY_ACP_CHECKOUT_INVALID") from exc
+
+
+def _verify_interpreter(path: str, digest: str) -> None:
+    interpreter = Path(path)
+    if not interpreter.is_absolute() or not interpreter.is_file():
+        _fail("EXECUTION_IDENTITY_INTERPRETER_FILE_MISSING")
+    try:
+        observed = hashlib.sha256(interpreter.read_bytes()).hexdigest()
+    except OSError as exc:
+        raise ExecutionIdentityCandidateError("EXECUTION_IDENTITY_INTERPRETER_UNREADABLE") from exc
+    if observed != digest:
+        _fail("EXECUTION_IDENTITY_INTERPRETER_SHA_MISMATCH")
+
+
+def _verify_crossbindings(
+    argv: Sequence[str],
+    workdir: str,
+    destination: str,
+    attempt: str,
+    checkout: str,
+) -> None:
+    options = dict(zip(argv[1::2], argv[2::2], strict=True))
+    root = Path(options["--acp-root"])
+    if not root.is_absolute() or str(root.resolve()) != checkout:
+        _fail("EXECUTION_IDENTITY_ACP_ROOT_PATH_MISMATCH")
+    if options["--run-id"] != attempt:
+        _fail("EXECUTION_IDENTITY_RUN_ID_ATTEMPT_MISMATCH")
+    output = Path(options["--output"])
+    if not output.is_absolute():
+        output = Path(workdir) / output
+    if ".." in output.parts or not output.parent.is_dir():
+        _fail("EXECUTION_IDENTITY_OUTPUT_PARENT_MISSING")
+    if output.exists() or output.is_symlink():
+        _fail("EXECUTION_IDENTITY_OUTPUT_ALREADY_EXISTS")
+    output = output.resolve()
+    if output.as_uri() != destination:
+        _fail("EXECUTION_IDENTITY_OUTPUT_DESTINATION_MISMATCH")
+    _verify_frozen_acp_checkout(root)
+
+
 def _reject_fixture_uri(uri: str) -> None:
     lowered = uri.lower()
     if lowered.startswith("fixture://") or "synthetic-fixture" in lowered:
@@ -175,12 +224,16 @@ def prepare_execution_identity_candidate(
     argv_values = _validate_driver_argv(argv, driver_path, workdir, driver_file)
     _reject_fixture_uri(destination)
     _reject_fixture_attempt(attempt)
+    _verify_interpreter(interpreter, interpreter_digest)
+    checkout = str(Path(argv_values[2]).resolve())
+    _verify_crossbindings(argv_values, workdir, destination, attempt, checkout)
 
     return {
         "record_type": RECORD_TYPE,
         "status": STATUS,
         "controller_issue": EXPECTED_CONTROLLER_ISSUE,
         "source": {
+            "checkout_path": checkout,
             "repository": EXPECTED_SOURCE_REPOSITORY,
             "commit": EXPECTED_SOURCE_COMMIT,
             "module_path": EXPECTED_SOURCE_MODULE,
@@ -350,6 +403,12 @@ def validate_execution_identity_candidate(
         _fail("EXECUTION_IDENTITY_ATTEMPT_NOT_PROSPECTIVE")
     if attempt.get("outcome_inspected") is not False:
         _fail("EXECUTION_IDENTITY_OUTCOME_ALREADY_INSPECTED")
+
+    checkout = source.get("checkout_path")
+    if not isinstance(checkout, str) or not Path(checkout).is_absolute():
+        _fail("EXECUTION_IDENTITY_ACP_ROOT_PATH_MISMATCH")
+    _verify_interpreter(interpreter, interpreter_sha)
+    _verify_crossbindings(argv, workdir, destination_uri, attempt_id, checkout)
 
     if candidate.get("adjudication") != {
         "status": "NOT_EXECUTED",
