@@ -110,6 +110,8 @@ def test_clean_private_preflight_passes_without_writes(tmp_path):
     report = _inspect_preflight(dgaf, acp, bindings)
 
     assert report["static_identity_checks"] == "PASS"
+    assert report["working_tree_identity_contract"] == "GIT_CANONICAL_BLOB"
+    assert report["raw_worktree_byte_identity"] == "NOT_ESTABLISHED"
     assert report["collection_readiness"] == "NOT_ESTABLISHED"
     assert report["mapping_binding"] == "NOT_ESTABLISHED"
     assert report["runtime_binding"] == "NOT_ESTABLISHED"
@@ -253,3 +255,54 @@ def test_default_bindings_fix_authorization_parent():
     from scripts.aoss_stage_a.preflight import DEFAULT_BINDINGS
 
     assert DEFAULT_BINDINGS.authorization_parent_commit == "d11885b9338e7d05493f4cd58dc7f3b11942906e"
+
+
+def test_git_canonical_identity_is_distinct_from_raw_checkout_bytes(tmp_path):
+    from scripts.aoss_stage_a.preflight import _working_git_blob, _working_raw_sha256
+
+    repo = tmp_path / "filter-contract"
+    _init_repo(repo)
+    _git(repo, "config", "core.autocrlf", "false")
+    fixture = repo / "contract.txt"
+    fixture.write_bytes(b"line-one\nline-two\n")
+    _commit_all(repo, "canonical LF source")
+    expected_blob = _git(repo, "rev-parse", "HEAD:contract.txt")
+
+    _git(repo, "config", "core.autocrlf", "true")
+    fixture.unlink()
+    _git(repo, "checkout", "--", "contract.txt")
+
+    assert _git(repo, "status", "--porcelain=v1", "--untracked-files=all") == ""
+    assert _working_git_blob(repo, "contract.txt") == expected_blob
+
+    raw_bytes = fixture.read_bytes()
+    if b"\r\n" in raw_bytes:
+        assert _git(repo, "hash-object", "--no-filters", "--", "contract.txt") != expected_blob
+        assert (
+            _working_raw_sha256(repo, "contract.txt")
+            != __import__("hashlib").sha256(b"line-one\nline-two\n").hexdigest()
+        )
+    else:
+        # Platforms/configurations that materialize LF still prove the two identity
+        # mechanisms are separate computations without fabricating a mismatch.
+        assert raw_bytes == b"line-one\nline-two\n"
+
+
+def test_raw_digest_observes_literal_byte_change_without_redefining_git_binding(tmp_path):
+    from scripts.aoss_stage_a.preflight import _working_git_blob, _working_raw_sha256
+
+    repo = tmp_path / "raw-byte-observation"
+    _init_repo(repo)
+    _git(repo, "config", "core.autocrlf", "true")
+    fixture = repo / "contract.txt"
+    fixture.write_bytes(b"line-one\nline-two\n")
+    _commit_all(repo, "canonical source")
+    expected_blob = _git(repo, "rev-parse", "HEAD:contract.txt")
+
+    fixture.write_bytes(b"line-one\r\nline-two\r\n")
+
+    canonical = _working_git_blob(repo, "contract.txt")
+    raw = _working_raw_sha256(repo, "contract.txt")
+    assert canonical == expected_blob
+    assert raw == __import__("hashlib").sha256(b"line-one\r\nline-two\r\n").hexdigest()
+    assert _git(repo, "hash-object", "--no-filters", "--", "contract.txt") != expected_blob
