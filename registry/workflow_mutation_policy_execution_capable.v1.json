@@ -1,0 +1,76 @@
+{
+  "version": "WORKFLOW_MUTATION_POLICY_EXECUTION_CAPABLE_V1",
+  "scope": "Supplemental Tektite-facing mutation-policy projection for execution-capable workflows discovered during #939 hardening scans. This supplement does not reclassify audit families and does not authorize scientific, empirical, deployment, independence, efficacy, or High-Assurance state changes.",
+  "source_registries": [
+    "registry/workflow_mutation_policy.v1.json",
+    "registry/workflow_classification.v1.json",
+    "registry/audit_catalog.v1.json"
+  ],
+  "policies": [
+    {
+      "path": ".github/workflows/canonical-epoch-004-execution.yml",
+      "policy_id": "MUTATION_BLOCKED_EXECUTION_CAPABLE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXECUTION_CAPABLE_EMPIRICAL_WORKFLOW",
+      "workflow_lifecycle": "CLASSIFICATION_REQUIRED_BEFORE_MUTATION",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Resolve #1158 by explicitly classifying the canonical Epoch 004 execution lane before any future #939 action-pin mutation touches this workflow.",
+      "minimum_verification_before_mutation": [
+        "confirm the current canonical Epoch 004 authorization and execution state",
+        "determine whether the workflow is current-operational, pending-run, historical, or closed-bounded",
+        "preserve the distinction between pull-request validation and push-triggered empirical execution",
+        "prove maintenance does not authorize collection, unblinding, primary analysis, canonical efficacy, independent validation, or High Assurance"
+      ],
+      "triggering_evidence": [
+        "post-#1157 #939 scan found mutable action references in canonical-epoch-004-execution.yml",
+        "workflow includes a push-triggered empirical execution path for solo-canonical-epoch-004/run-*",
+        "#1158 opened as the dedicated classification-before-mutation lane"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135",
+        "#1157",
+        "#1158"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/pdmal-solo-p30-variant-execution.yml",
+      "policy_id": "MUTATION_BLOCKED_EXECUTION_CAPABLE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXECUTION_CAPABLE_EMPIRICAL_WORKFLOW",
+      "workflow_lifecycle": "CLASSIFICATION_REQUIRED_BEFORE_MUTATION",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Resolve #1160 by explicitly classifying the PDMAL Solo P30 variant execution lane before any future #939 action-pin mutation touches this workflow.",
+      "minimum_verification_before_mutation": [
+        "confirm the current P30 variant / Epoch 003 authorization, run, and result state",
+        "determine whether the workflow is current-operational, pending-run, historical, or closed-bounded",
+        "preserve the distinction between non-empirical pull-request validation and push-triggered empirical execution",
+        "prove maintenance does not authorize collection, unblinding, primary analysis, canonical efficacy, independent validation, or High Assurance"
+      ],
+      "triggering_evidence": [
+        "post-#1157 #939 scan found mutable action references in pdmal-solo-p30-variant-execution.yml",
+        "workflow includes a push-triggered empirical execution path for solo-p30-variant/run-*",
+        "#1160 opened as the dedicated classification-before-mutation lane"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135",
+        "#1157",
+        "#1158",
+        "#1160"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    }
+  ]
+}

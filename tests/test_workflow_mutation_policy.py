@@ -3,6 +3,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = REPO_ROOT / "registry" / "workflow_mutation_policy.v1.json"
+EXECUTION_CAPABLE_POLICY_PATH = REPO_ROOT / "registry" / "workflow_mutation_policy_execution_capable.v1.json"
 CLASSIFICATION_PATH = REPO_ROOT / "registry" / "workflow_classification.v1.json"
 AUDIT_CATALOG_PATH = REPO_ROOT / "registry" / "audit_catalog.v1.json"
 
@@ -13,6 +14,11 @@ def _load(path: Path) -> dict:
 
 def _policies_by_path() -> dict[str, dict]:
     policy = _load(POLICY_PATH)
+    return {entry["path"]: entry for entry in policy["policies"]}
+
+
+def _execution_capable_policies_by_path() -> dict[str, dict]:
+    policy = _load(EXECUTION_CAPABLE_POLICY_PATH)
     return {entry["path"]: entry for entry in policy["policies"]}
 
 
@@ -129,3 +135,41 @@ def test_epoch001_confirmed_stale_downstream_workflows_are_blocked():
         assert entry["workflow_lifecycle"] == "HISTORICAL_EXACT_SCOPE"
         assert entry["tektite_lane_status"] == "BLOCKED"
         assert entry["routine_hardening_allowed"] is False
+
+
+def test_execution_capable_policy_supplement_declares_non_authorizing_scope():
+    policy = _load(EXECUTION_CAPABLE_POLICY_PATH)
+
+    assert policy["version"] == "WORKFLOW_MUTATION_POLICY_EXECUTION_CAPABLE_V1"
+    assert "registry/workflow_mutation_policy.v1.json" in policy["source_registries"]
+    assert "does not reclassify audit families" in policy["scope"]
+    assert "does not authorize scientific" in policy["scope"]
+
+
+def test_execution_capable_workflows_are_blocked_pending_classification():
+    policies = _execution_capable_policies_by_path()
+    expected = {
+        ".github/workflows/canonical-epoch-004-execution.yml": "#1158",
+        ".github/workflows/pdmal-solo-p30-variant-execution.yml": "#1160",
+    }
+
+    for path, issue in expected.items():
+        entry = policies[path]
+        assert (REPO_ROOT / path).exists()
+        assert entry["policy_id"] == "MUTATION_BLOCKED_EXECUTION_CAPABLE_RECONCILIATION_REQUIRED"
+        assert entry["workflow_classification_kind"] == "EXECUTION_CAPABLE_EMPIRICAL_WORKFLOW"
+        assert entry["workflow_lifecycle"] == "CLASSIFICATION_REQUIRED_BEFORE_MUTATION"
+        assert entry["tektite_lane_status"] == "BLOCKED"
+        assert entry["routine_hardening_allowed"] is False
+        assert issue in entry["related_issues"]
+        assert any("push-triggered empirical execution" in item for item in entry["triggering_evidence"])
+        assert any("does not authorize collection" in item for item in entry["minimum_verification_before_mutation"])
+
+
+def test_execution_capable_policy_supplement_preserves_claim_boundaries():
+    for entry in _execution_capable_policies_by_path().values():
+        boundary = set(entry["claim_boundary"])
+        assert "SCIENTIFIC_N_INCREMENT=0" in boundary
+        assert "INDEPENDENT_VALIDATION=NOT_ESTABLISHED" in boundary
+        assert "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED" in boundary
+        assert "HIGH_ASSURANCE=NOT_AUTHORIZED" in boundary
