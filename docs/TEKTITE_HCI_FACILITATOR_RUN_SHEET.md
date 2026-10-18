@@ -29,12 +29,14 @@ This rebind changes **surface identity only**. Participant tasks, scoring, eligi
 The immutable deployment URL listed above now sends unauthenticated visitors to Vercel sign-in. A final HTTP 200 on the login page is **not** evidence the actual study interface is accessible. The publicly accessible production alias points to a different DGAF build and must not be substituted.
 
 Before each session:
+
 - Privately issue a short-lived Vercel Shareable Link scoped to deployment dpl_C1HM4r8nuSkzSK8nxxdL6uTKgXjs and its /demo path. Do not disable project-wide authentication.
 - Validate the link in a fresh, unauthenticated browser; record the final hostname and confirm the actual Tektite Demo - DGAF UI instead of a Vercel login form.
 - Verify deployment ID and original source SHA against Frozen identities above. A share-link refresh for the same deployment does not revise the tested application or participant scoring.
 - Record the issuance and expiry timestamps, access method and pass/fail of the unauthenticated UI check. Redact the temporary bearer query token everywhere, including GitHub, Notion, artifacts, screenshots and participant records.
 - If the share link expires before testing, preserve the access failure as technical evidence, generate a fresh deployment-specific link and repeat access verification. Do not count a pre-task access error as a participant HCI outcome.
 - If source/deployment/task wording changes, stop and use a separately reviewed protocol/surface rebind. Do not share facilitator scoring instructions or expected answers with participants.
+
 ## Before the session
 
 - [ ] Participant is unfamiliar with Tektite/DGAF design.

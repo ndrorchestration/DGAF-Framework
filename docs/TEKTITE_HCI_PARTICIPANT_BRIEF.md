@@ -8,7 +8,7 @@ Your facilitator will privately provide a **time-limited study access link** to 
 
 The fixed deployment address is provided only for identification; the bare address may redirect to Vercel sign-in:
 
-https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo
+[Frozen deployment (identity only)](https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo)
 
 You do **not** need to create a Vercel account, install anything, or understand DGAF/Tektite beforehand. If the link expires, opens a sign-in page, or shows a different interface, **stop and tell the facilitator**. Do not switch to the public production demo. Treat the temporary study link as private and do not redistribute it.
 
