@@ -1,0 +1,52 @@
+{
+  "schema_version": "DGAF_V2_EFFECT_PILOT_OPERATOR_LOCAL_V1",
+  "status": "OPERATOR_AUTHORED_PROVISIONAL_ORACLE_NOT_INDEPENDENTLY_ADJUDICATED",
+  "provider": "IN_PROCESS_APPEND_ONLY_FAKE_EFFECT_LOG",
+  "arm_capability_parity": "DGAF_REFERENCE_LEDGER_VS_MATCHED_CONVENTIONAL_LEDGER",
+  "scenarios": [
+    {
+      "id": "GOV2-01",
+      "mode": "NORMAL_SUCCESS",
+      "expected_effect_count": 1,
+      "expected_decisions": ["CLAIMED", "COMPLETED", "REPLAY_COMPLETED"],
+      "notes": "Legitimate positive control with one actual fake-provider write"
+    },
+    {
+      "id": "GOV2-04",
+      "mode": "ACK_LOST_AFTER_COMMIT",
+      "expected_effect_count": 1,
+      "expected_decisions": ["CLAIMED", "OUTCOME_UNKNOWN", "RECONCILE_REQUIRED"],
+      "notes": "Fake provider commits once then drops acknowledgement; client must not repeat effect"
+    },
+    {
+      "id": "GOV2-05",
+      "mode": "DUPLICATE_INTERLEAVING",
+      "expected_effect_count": 1,
+      "expected_decisions": ["CLAIMED", "IN_FLIGHT", "COMPLETED", "REPLAY_COMPLETED"],
+      "notes": "Deterministic in-flight ordering, not a threaded or distributed race test"
+    },
+    {
+      "id": "GOV2-06",
+      "mode": "CONFIRMED_NO_EFFECT_THEN_FRESH_RETRY",
+      "expected_effect_count": 1,
+      "expected_decisions": [
+        "CLAIMED",
+        "OUTCOME_UNKNOWN",
+        "RECONCILE_REQUIRED",
+        "NON_EFFECT_OBSERVED",
+        "FRESH_AUTHORIZATION_SIMULATED",
+        "CLAIMED",
+        "COMPLETED"
+      ],
+      "notes": "Fake-provider log proves first non-effect inside one process; not outside custody"
+    }
+  ],
+  "limits": {
+    "scientific_n_increment": 0,
+    "real_provider_effects": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED",
+    "human_operator_minutes": "UNMEASURED"
+  }
+}
