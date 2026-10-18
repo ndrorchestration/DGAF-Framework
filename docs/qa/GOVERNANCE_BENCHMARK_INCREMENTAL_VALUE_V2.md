@@ -25,7 +25,7 @@ When OPA is absent, the optional OPA parity test SKIPS explicitly and cannot ass
 
 The C3-to-Rego fixed-fixture calibration does not exercise all untrusted input
 shapes. A separate **six-input, same-system engineering negative suite** rejects
-missing/null/string action objects and literal \`__ABSENT__\` values supplied as
+missing/null/string action objects and literal `__ABSENT__` values supplied as
 optional authority, evidence, or provenance values. First observed OPA failure
 (ALLOW for missing action) was preserved and then corrected. The Rego allow
 rule now requires object-shaped input and action, and optional-field checks
