@@ -21,6 +21,21 @@ Run with verified OPA installed at /opt/opa/opa:
 
 When OPA is absent, the optional OPA parity test SKIPS explicitly and cannot assert equivalence; the direct runner returns BLOCKED.
 
+## Malformed-input engineering negative controls
+
+The C3-to-Rego fixed-fixture calibration does not exercise all untrusted input
+shapes. A separate **six-input, same-system engineering negative suite** rejects
+missing/null/string action objects and literal \`__ABSENT__\` values supplied as
+optional authority, evidence, or provenance values. First observed OPA failure
+(ALLOW for missing action) was preserved and then corrected. The Rego allow
+rule now requires object-shaped input and action, and optional-field checks
+distinguish key absence from caller-supplied strings.
+
+These six cases are *not* additional independent trials, statistical samples,
+external-validation returns, real provider effects, or the eight operational
+scenarios proposed below. Their sole purpose is to guard basic comparator
+semantics against accidental fail-open handling outside the historic schema.
+
 ## Eight operational cases: not yet executed
 
 See experiments/governance_benchmark/v2/scenario_catalog_v1.json for GOV2-01 through GOV2-08: authorized positive control, revocation race, conflicting evidence, ambiguous timeout, concurrent duplicate, fresh-admission recovery, composed protected egress, and custody mismatch.

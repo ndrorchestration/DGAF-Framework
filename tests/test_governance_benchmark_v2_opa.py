@@ -55,3 +55,39 @@ def test_fixed_fixture_parity_with_pinned_opa_only():
     assert report["summary"]["opa_false_blocks"] == 0
     assert report["summary"]["dgaf_false_blocks"] == 0
     assert report["candidate_state"] == "UNCOMMITTED_NOT_ADMITTED"
+
+
+def test_rego_policy_rejects_invalid_action_shape_without_sentinel_alias():
+    policy = (V2 / "opa_c3_v1.rego").read_text(encoding="utf-8")
+    assert "is_object(input.action)" in policy
+    assert 'not is_object(object.get(input, "action", null))' in policy
+    assert "__ABSENT__" not in policy
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        {},
+        {"action": None},
+        {"action": "malformed"},
+        {
+            "action": {"authorized": True, "tool_allowed": True, "target_allowed": True},
+            "authority_context": {"delegated_requester_authorized": "__ABSENT__"},
+        },
+        {
+            "action": {"authorized": True, "tool_allowed": True, "target_allowed": True},
+            "flow": {"provenance_known": "__ABSENT__"},
+        },
+        {
+            "action": {"authorized": True, "tool_allowed": True, "target_allowed": True},
+            "claim": {"evidence_present": "__ABSENT__", "evidence_fresh": "__ABSENT__"},
+        },
+    ],
+)
+def test_real_opa_denies_out_of_schema_malformed_or_sentinel_cases(case):
+    opa_path = os.environ.get("DGAF_V2_OPA_BINARY")
+    if not opa_path:
+        pytest.skip("Pinned OPA binary not provided; actual-engine negative probe not verified")
+    c3 = candidate.c3_module()
+    assert c3.strong_policy_as_code(case)[0] == "DENY"
+    assert candidate.opa_allow(Path(opa_path), case) is False
