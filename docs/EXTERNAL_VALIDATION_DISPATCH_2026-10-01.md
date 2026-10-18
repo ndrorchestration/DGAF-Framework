@@ -8,7 +8,7 @@ Choose **one** lane. You do not need prior knowledge of DGAF, Tektite, or the ND
 
 **Controller:** [issue #1224](https://github.com/ndrorchestration/DGAF-Framework/issues/1224)  
 **Protocol commit:** `c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91`  
-**Status:** READY / NO RESULT YET
+**Status:** ACCESS_LINK_REQUIRED / NO HUMAN RESULT
 
 ### Who qualifies
 
@@ -25,9 +25,10 @@ Technical expertise is not required.
 
 Use the participant brief:
 
-[Participant brief — current surface rebind](https://github.com/ndrorchestration/DGAF-Framework/blob/c46b208e4b99fcdbce0b87f745eaaabad72eb7d7/docs/TEKTITE_HCI_PARTICIPANT_BRIEF.md)
+[Participant brief — current controlled access](https://github.com/ndrorchestration/DGAF-Framework/blob/main/docs/TEKTITE_HCI_PARTICIPANT_BRIEF.md)
 
-Participant-facing site:
+**Access correction, October 18:** The bare frozen deployment URL below redirects to Vercel sign-in for unfamiliar visitors, despite the deployment being READY. The facilitator must privately supply a short-lived Shareable Link scoped to the exact frozen deployment and verify that an unauthenticated browser loads the Tektite interface. Never put the bearer access link into source, public issues or returned records. The public production alias is not an equivalent frozen study surface. An access failure before participant tasks is a technical blocker, not a human-study result.
+Participant-facing site (base URL is a deployment identity, not unauthenticated entry):
 
 `https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo`
 
@@ -39,11 +40,11 @@ Surface identity:
 
 The facilitator should separately use:
 
-[Facilitator run sheet — current surface rebind](https://github.com/ndrorchestration/DGAF-Framework/blob/3f76c9a93168eed7b366f51ac16481ae53954e27/docs/TEKTITE_HCI_FACILITATOR_RUN_SHEET.md)
+[Facilitator run sheet — current controlled access](https://github.com/ndrorchestration/DGAF-Framework/blob/main/docs/TEKTITE_HCI_FACILITATOR_RUN_SHEET.md)
 
 [Canonical validation protocol — facilitator only before the run](https://github.com/ndrorchestration/DGAF-Framework/blob/c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91/docs/TEKTITE_HCI_VALIDATION_PACKET.md)
 
-For participant recruitment, share only the participant brief and neutral access instructions; keep the four-stage explanation and scoring material out of the pre-run handoff.
+For participant recruitment, privately provide a fresh, deployment-specific access link along with the participant brief; share only neutral access instructions; keep the four-stage explanation and scoring material out of the pre-run handoff.
 
 Do not expose facilitator scoring or expected answers before the participant finishes. The participant task wording and canonical scoring protocol remain frozen from protocol commit `c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91`. The participant brief is surface-rebound at `c46b208e4b99fcdbce0b87f745eaaabad72eb7d7`; the facilitator sheet is surface-rebound at `3f76c9a93168eed7b366f51ac16481ae53954e27`.
 

@@ -4,11 +4,13 @@ Thank you for helping test an experimental governance interface.
 
 ## What you need
 
-Use this exact website:
+Your facilitator will privately provide a **time-limited study access link** to the frozen Tektite study deployment. Use that supplied link, not the latest public demo.
 
-[Tektite participant surface](https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo)
+The fixed deployment address is provided only for identification; the bare address may redirect to Vercel sign-in:
 
-You do **not** need to install anything, create an account, or understand DGAF/Tektite beforehand.
+https://dynamicgovernanceagenticformation-kol94uquc-ndrorchestration.vercel.app/demo
+
+You do **not** need to create a Vercel account, install anything, or understand DGAF/Tektite beforehand. If the link expires, opens a sign-in page, or shows a different interface, **stop and tell the facilitator**. Do not switch to the public production demo. Treat the temporary study link as private and do not redistribute it.
 
 ## Important
 
