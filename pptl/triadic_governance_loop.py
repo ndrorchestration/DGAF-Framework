@@ -206,6 +206,10 @@ class TriadicGovernanceLoop:
             return TurnStatus.KILL
         if any(g.step in TriadicGovernanceLoop.REQUIRED_STEPS and g.result == GateResult.SKIP for g in gates):
             return TurnStatus.ESCALATE
+        if any(g.step == 6 and g.result == GateResult.PASS for g in gates) and any(
+            g.step == 7 and g.result == GateResult.SKIP for g in gates
+        ):
+            return TurnStatus.ESCALATE
         if any(g.result == GateResult.WARN for g in gates):
             return TurnStatus.WARN
         return initial
