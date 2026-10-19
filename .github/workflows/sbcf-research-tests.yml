@@ -51,10 +51,10 @@ jobs:
           --only-binary=:all:
           -r requirements-ci-py312-ubuntu2404-x64.lock
 
-      - name: Check cross-layer and witness formatting
+      - name: Check complete SBCF formatting
         run: |
-          python -m black --check --target-version py312 --line-length 120 experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py experiments/sbcf/recovery.py experiments/sbcf/external_anchor.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py tests/test_sbcf_recovery.py tests/test_sbcf_external_anchor.py
-          python -m isort --check-only --profile black experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py experiments/sbcf/recovery.py experiments/sbcf/external_anchor.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py tests/test_sbcf_recovery.py tests/test_sbcf_external_anchor.py
+          python -m black --check --target-version py312 --line-length 120 experiments/sbcf/*.py tests/test_sbcf*.py
+          python -m isort --check-only --profile black experiments/sbcf/*.py tests/test_sbcf*.py
 
       - name: Run complete SBCF synthetic test group
         env:
@@ -68,7 +68,7 @@ jobs:
             echo '### SBCF research verification'
             echo 'Candidate: ${{ github.event.pull_request.head.sha || github.sha }}'
             echo 'Scope: synthetic SBCF tests, including cross-layer fixtures.'
-            echo 'Expected failures retain standalone rollback, evidence-only bypass, and coordinated rollback counterexamples.'
+            echo 'Strict expected failures retain documented rollback, trusted-time, and same-process bypass counterexamples.'
             echo 'No live containment, independent validation, scientific N increment, or release authority is established.'
           } >> "$GITHUB_STEP_SUMMARY"
 
