@@ -60,7 +60,12 @@ def test_client_fails_closed_when_endpoint_unreachable(tmp_path):
 
 
 def test_handler_rejects_missing_authorization(tmp_path):
-    server = WitnessHTTPServer(("127.0.0.1", 0), WitnessStore(tmp_path / "remote.db"), "secret")
+    server = WitnessHTTPServer(
+        ("127.0.0.1", 0),
+        WitnessStore(tmp_path / "remote.db"),
+        read_token="reader",
+        write_token="writer",
+    )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
@@ -74,10 +79,78 @@ def test_handler_rejects_missing_authorization(tmp_path):
         thread.join(timeout=2)
 
 
+def test_server_requires_distinct_read_write_tokens(tmp_path):
+    store = WitnessStore(tmp_path / "remote.db")
+    with pytest.raises(ValueError):
+        WitnessHTTPServer(
+            ("127.0.0.1", 0),
+            store,
+            read_token="same",
+            write_token="same",
+        )
+
+
+def test_read_token_cannot_advance_and_write_token_cannot_read(tmp_path):
+    import json
+
+    server = WitnessHTTPServer(
+        ("127.0.0.1", 0),
+        WitnessStore(tmp_path / "remote.db"),
+        read_token="reader",
+        write_token="writer",
+    )
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        payload = json.dumps(checkpoint(1).__dict__).encode("utf-8")
+        read_credential_post = Request(
+            f"http://127.0.0.1:{server.server_port}/v1/checkpoint",
+            data=payload,
+            method="POST",
+            headers={"Authorization": "Bearer reader", "Content-Type": "application/json"},
+        )
+        with pytest.raises(HTTPError) as exc:
+            urlopen(read_credential_post, timeout=2)
+        assert exc.value.code == 401
+
+        write_credential_post = Request(
+            f"http://127.0.0.1:{server.server_port}/v1/checkpoint",
+            data=payload,
+            method="POST",
+            headers={"Authorization": "Bearer writer", "Content-Type": "application/json"},
+        )
+        with urlopen(write_credential_post, timeout=2) as response:
+            assert response.status == 201
+
+        write_credential_get = Request(
+            f"http://127.0.0.1:{server.server_port}/v1/checkpoint?source=broker&run=r",
+            headers={"Authorization": "Bearer writer"},
+        )
+        with pytest.raises(HTTPError) as exc:
+            urlopen(write_credential_get, timeout=2)
+        assert exc.value.code == 401
+
+        read_credential_get = Request(
+            f"http://127.0.0.1:{server.server_port}/v1/checkpoint?source=broker&run=r",
+            headers={"Authorization": "Bearer reader"},
+        )
+        with urlopen(read_credential_get, timeout=2) as response:
+            assert response.status == 200
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
 def test_handler_accepts_only_strictly_monotonic_records(tmp_path):
     import json
 
-    server = WitnessHTTPServer(("127.0.0.1", 0), WitnessStore(tmp_path / "remote.db"), "secret")
+    server = WitnessHTTPServer(
+        ("127.0.0.1", 0),
+        WitnessStore(tmp_path / "remote.db"),
+        read_token="reader",
+        write_token="writer",
+    )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
 
@@ -87,7 +160,7 @@ def test_handler_accepts_only_strictly_monotonic_records(tmp_path):
             f"http://127.0.0.1:{server.server_port}/v1/checkpoint",
             data=data,
             method="POST",
-            headers={"Authorization": "Bearer secret", "Content-Type": "application/json"},
+            headers={"Authorization": "Bearer writer", "Content-Type": "application/json"},
         )
         try:
             with urlopen(request, timeout=2) as response:

@@ -4,9 +4,11 @@ Status: RESEARCH PROTOTYPE / FAIL-CLOSED / NOT AUTHORIZED.
 
 This increment moves a monotonic checkpoint store behind an HTTPS service so the
 SBCF client process does not directly own the witness database. The service
-requires a bearer token, binds records to source/run/policy, rejects replay and
-lower sequences, rejects policy drift within a run, and makes checkpoint IDs
-unique. The client requires HTTPS and a configured trust anchor; network,
+requires distinct read and write bearer credentials, binds records to
+source/run/policy, rejects replay and lower sequences, rejects policy drift
+within a run, and makes checkpoint IDs unique. The service refuses to start if
+the two credentials are identical. The client requires HTTPS and a configured
+trust anchor; network,
 certificate, authentication, parsing, or availability failures return no
 verified checkpoint.
 
@@ -15,10 +17,12 @@ verified checkpoint.
 A separate computer is a stronger failure-domain separation than two SQLite
 files under one process, but it is **not independent validation**. In the planned
 two-host demonstration both machines remain under the same operator and the
-client holds a bearer credential that can advance the witness. A compromised
-authorized client could therefore advance the remote counter and cause
-fail-closed denial of service. Compromise or rollback of the witness host itself
-is not solved by this interface.
+client still holds a write credential that can advance the witness. A
+read-only credential can no longer advance state, and the write credential
+cannot read checkpoints, reducing accidental privilege coupling. A compromised
+authorized writer could still advance the remote counter and cause fail-closed
+denial of service. Compromise or rollback of the witness host itself is not
+solved by this interface.
 
 TLS server private-key material and the witness SQLite file must remain on the
 witness host during live QA. Only the public certificate/trust anchor and an

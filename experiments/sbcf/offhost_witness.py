@@ -101,12 +101,20 @@ class WitnessStore:
 
 
 class WitnessHTTPServer(ThreadingHTTPServer):
-    def __init__(self, server_address: tuple[str, int], store: WitnessStore, token: str):
-        if not token:
-            raise ValueError("witness token is required")
+    def __init__(
+        self,
+        server_address: tuple[str, int],
+        store: WitnessStore,
+        *,
+        read_token: str,
+        write_token: str,
+    ):
+        if not read_token or not write_token or read_token == write_token:
+            raise ValueError("distinct witness read/write tokens are required")
         super().__init__(server_address, WitnessRequestHandler)
         self.store = store
-        self.token = token
+        self.read_token = read_token
+        self.write_token = write_token
 
 
 class WitnessRequestHandler(BaseHTTPRequestHandler):
@@ -118,9 +126,9 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
     def _server(self) -> WitnessHTTPServer:
         return cast(WitnessHTTPServer, self.server)
 
-    def _authorized(self) -> bool:
+    def _authorized(self, token: str) -> bool:
         supplied = self.headers.get("Authorization", "")
-        expected = f"Bearer {self._server().token}"
+        expected = f"Bearer {token}"
         return hmac.compare_digest(supplied, expected)
 
     def _reply(self, status: int, payload: dict[str, object]) -> None:
@@ -133,7 +141,7 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self) -> None:  # noqa: N802
-        if not self._authorized():
+        if not self._authorized(self._server().read_token):
             self._reply(401, {"status": "blocked"})
             return
         parsed = urlparse(self.path)
@@ -150,7 +158,7 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
         self._reply(200, {"status": "ok", "checkpoint": asdict(record)})
 
     def do_POST(self) -> None:  # noqa: N802
-        if not self._authorized():
+        if not self._authorized(self._server().write_token):
             self._reply(401, {"status": "blocked"})
             return
         if self.path != "/v1/checkpoint":
@@ -189,11 +197,17 @@ def make_https_server(
     port: int,
     *,
     store_path: str | Path,
-    token: str,
+    read_token: str,
+    write_token: str,
     certfile: str | Path,
     keyfile: str | Path,
 ) -> WitnessHTTPServer:
-    server = WitnessHTTPServer((host, port), WitnessStore(store_path), token)
+    server = WitnessHTTPServer(
+        (host, port),
+        WitnessStore(store_path),
+        read_token=read_token,
+        write_token=write_token,
+    )
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
     context.load_cert_chain(certfile=str(certfile), keyfile=str(keyfile))
