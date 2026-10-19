@@ -201,6 +201,7 @@ class WitnessHTTPServer(ThreadingHTTPServer):
         read_token: str,
         writer_leases: tuple[WriterLease, ...],
         now_fn: Callable[[], float] = time.time,
+        generation_floor_fn: Callable[[str, str, str], int | None] | None = None,
     ):
         if not read_token or not writer_leases:
             raise ValueError("witness read token and writer lease are required")
@@ -214,6 +215,7 @@ class WitnessHTTPServer(ThreadingHTTPServer):
         self.read_token = read_token
         self.writer_leases = writer_leases
         self.now_fn = now_fn
+        self.generation_floor_fn = generation_floor_fn
 
 
 class WitnessRequestHandler(BaseHTTPRequestHandler):
@@ -296,6 +298,15 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
         if not lease.allows(record, now=self._server().now_fn()):
             self._reply(403, {"status": "out_of_scope"})
             return
+        floor_fn = self._server().generation_floor_fn
+        if floor_fn is not None:
+            floor = floor_fn(record.source, record.run, record.policy)
+            if type(floor) is not int or floor < 0:
+                self._reply(503, {"status": "generation_floor_unavailable"})
+                return
+            if lease.generation < floor:
+                self._reply(409, {"status": "rejected"})
+                return
         if not self._server().store.advance(record, writer_generation=lease.generation):
             self._reply(409, {"status": "rejected"})
             return
@@ -312,6 +323,7 @@ def make_https_server(
     certfile: str | Path,
     keyfile: str | Path,
     now_fn: Callable[[], float] = time.time,
+    generation_floor_fn: Callable[[str, str, str], int | None] | None = None,
 ) -> WitnessHTTPServer:
     server = WitnessHTTPServer(
         (host, port),
@@ -319,6 +331,7 @@ def make_https_server(
         read_token=read_token,
         writer_leases=writer_leases,
         now_fn=now_fn,
+        generation_floor_fn=generation_floor_fn,
     )
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
