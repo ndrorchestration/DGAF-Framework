@@ -8,11 +8,11 @@ Orchestrator: Amethyst
 Anchor: S043
 """
 
-import time
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from enum import Enum, auto
+from itertools import count
 from typing import Callable, Dict, List, Optional, Set
 
 import pytest
@@ -198,8 +198,16 @@ def all_invariants_hold(state: State) -> bool:
     )
 
 
+# This file contains synthetic, locally sequenced test events. Host wall-clock
+# precision is not guaranteed to produce distinct instants on every platform.
+# Use a deterministic UTC timeline so strict before/after authorization checks
+# remain exercised rather than failing because several event creations share
+# one OS clock tick. This does not change any production timestamp behavior.
+_SYNTHETIC_EVENT_CLOCK = count()
+
+
 def now_ts() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime(2026, 1, 1, tzinfo=timezone.utc) + timedelta(microseconds=next(_SYNTHETIC_EVENT_CLOCK))
 
 
 def new_event(
@@ -372,3 +380,28 @@ class TestProvenanceCompleteness:
             clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": env})
         )
         assert result is True
+
+
+def test_synthetic_event_timestamps_are_strictly_increasing() -> None:
+    events = [new_event(EventType.CODEGEN, "clock-control", "code_agent") for _ in range(4)]
+    assert all(left.timestamp < right.timestamp for left, right in zip(events, events[1:]))
+
+
+def test_equal_timestamp_deploy_remains_fail_closed(clean_state: State) -> None:
+    # A source with an equal-time review and test must not satisfy strict
+    # provenance ordering merely because its event list is insertion-ordered.
+    same_timestamp = now_ts()
+    aid = "equal-time-denial"
+    for event_type, actor, metadata in [
+        (EventType.CODEGEN, "code_agent", {}),
+        (EventType.REVIEW_APPROVE, "review_agent", {}),
+        (EventType.TEST_PASS, "test_agent", {}),
+        (EventType.DEPLOY_ATTEMPT, "deploy_agent", {"environment": "prod"}),
+    ]:
+        item = new_event(event_type, aid, actor, metadata)
+        item.timestamp = same_timestamp
+        assert apply_event(clean_state, item) is True
+    attempted = new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": "prod"})
+    attempted.timestamp = same_timestamp
+    assert apply_event(clean_state, attempted) is False
+    assert all(event.type != EventType.DEPLOY_SUCCESS for event in clean_state.events)
