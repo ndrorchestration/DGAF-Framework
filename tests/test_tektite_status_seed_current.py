@@ -71,3 +71,39 @@ def test_semantic_manifest_binds_current_acp_authority_without_claim_promotion()
     assert manifest["non_effects"]["independent_validation"] == "NOT_ESTABLISHED"
     assert manifest["non_effects"]["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
     assert manifest["non_effects"]["high_assurance"] == "NOT_AUTHORIZED"
+
+
+def test_durable_lineage_is_visible_with_disposable_scope_and_no_continuing_authority() -> None:
+    status = load(STATUS)
+    assert status["current_status"]["DURABLE_LOCAL_MUTATION_LINEAGE"] == "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE"
+    html = PUBLIC.read_text(encoding="utf-8")
+    assert "Durable Local Mutation Lineage" in html
+    assert "distributed/global lineage" in html
+    assert "fresh adjudication" in html
+
+
+def test_historical_case_and_current_milestones_are_separately_reviewable() -> None:
+    html = PUBLIC.read_text(encoding="utf-8")
+    assert "Historical PR #145 disposition" in html
+    case = ROOT / "docs/tektite-v0.1/case-studies/ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md"
+    assert case.is_file()
+    assert "Historical scope" in (case.parent / "ACP_PR_145.md").read_text(encoding="utf-8")
+    text = case.read_text(encoding="utf-8")
+    for number in (156, 159):
+        link = f"https://github.com/ndrorchestration/agent-control-plane/pull/{number}"
+        assert link in text
+        assert link in html
+    assert "authority_effect=NONE" in text
+    assert "FRESH_ADJUDICATION_REQUIRED" in text
+    assert "../case-studies/ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md" in html
+    assert case.relative_to(ROOT).as_posix() in {row["path"] for row in load(MANIFEST)["artifacts"]}
+
+
+def test_public_shell_uses_current_agentic_assurance_positioning_without_promotion() -> None:
+    html = PUBLIC.read_text(encoding="utf-8")
+    assert "AI evaluation, agentic assurance, governance, and provenance" in html
+    assert "evidence-bound assurance for agentic AI" in html
+    assert "Independent Validation" in html
+    assert "NOT_ESTABLISHED" in html
+    assert "High Assurance" in html
+    assert "NOT_AUTHORIZED" in html
