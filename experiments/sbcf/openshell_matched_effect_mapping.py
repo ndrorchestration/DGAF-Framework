@@ -45,9 +45,9 @@ _EXPECTED_CASES = {
         "external_receiver_identity_not_matched",
     ),
     "control_plane_unavailable": (
-        "UNRESOLVED",
-        None,
-        "control_plane_unavailable_semantics_not_reproduced",
+        "OBSERVED_SEMANTIC_MISMATCH",
+        "ALLOW",
+        "candidate_expected_deny_observed_allow",
     ),
 }
 

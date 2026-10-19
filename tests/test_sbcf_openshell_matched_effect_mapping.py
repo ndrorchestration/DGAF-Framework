@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from experiments.sbcf.matched_effect_contract import effect_contract_digest
 from experiments.sbcf.openshell_matched_effect_mapping import (
     evaluate_openshell_mapping,
@@ -25,7 +24,7 @@ def test_current_openshell_mapping_is_partial_and_not_ready():
     assert not result.complete
     assert "openshell_receiver_unmatched" in result.blockers
     assert (
-        "openshell_case_blocked:control_plane_unavailable:" "control_plane_unavailable_semantics_not_reproduced"
+        "openshell_case_blocked:control_plane_unavailable:" "candidate_expected_deny_observed_allow"
     ) in result.blockers
 
 
@@ -33,7 +32,12 @@ def test_host_method_and_revocation_candidates_remain_receiver_blocked():
     records = {record["id"]: record for record in load()["cases"]}
     for case_id in ("exact_allow", "adjacent_host", "adjacent_method", "revoked_authority"):
         assert records[case_id]["blocker"] == "external_receiver_identity_not_matched"
-    assert records["control_plane_unavailable"]["mapping_state"] == "UNRESOLVED"
+    assert records["control_plane_unavailable"] == {
+        "id": "control_plane_unavailable",
+        "mapping_state": "OBSERVED_SEMANTIC_MISMATCH",
+        "system_decision": "ALLOW",
+        "blocker": "candidate_expected_deny_observed_allow",
+    }
 
 
 def test_mapping_is_bound_to_current_effect_contract_without_freezing_parent():
@@ -58,7 +62,7 @@ def test_public_baseline_receiver_cannot_be_silently_declared_matched():
         validate_openshell_mapping(mapping)
 
 
-def test_control_plane_case_cannot_be_silently_resolved():
+def test_control_plane_semantic_mismatch_cannot_be_silently_relabelled():
     mapping = load()
     record = next(item for item in mapping["cases"] if item["id"] == "control_plane_unavailable")
     record["mapping_state"] = "EXECUTABLE_CANDIDATE_UNMATCHED_RECEIVER"

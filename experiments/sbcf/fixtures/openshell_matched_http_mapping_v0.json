@@ -40,9 +40,9 @@
     },
     {
       "id": "control_plane_unavailable",
-      "mapping_state": "UNRESOLVED",
-      "system_decision": null,
-      "blocker": "control_plane_unavailable_semantics_not_reproduced"
+      "mapping_state": "OBSERVED_SEMANTIC_MISMATCH",
+      "system_decision": "ALLOW",
+      "blocker": "candidate_expected_deny_observed_allow"
     }
   ]
 }

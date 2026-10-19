@@ -1,0 +1,75 @@
+{
+  "schema": "sbcf.openshell.control_plane_outage.v0",
+  "date": "2026-10-19",
+  "branch_head_before_evidence_update": "a1f3430faabb6dc3e608cf68ee70b22661265d05",
+  "pinned_openshell": {
+    "repository": "NVIDIA/OpenShell",
+    "commit": "5a7728c304b5528e954e9ae900cf21f84e1a12b1",
+    "tag": "v0.1.4",
+    "runner": "ubuntu-24.04"
+  },
+  "runs": {
+    "topology_diagnostic": {
+      "run_id": 39229673726,
+      "job_id": 117984325249,
+      "conclusion": "success"
+    },
+    "control_plane_outage": {
+      "run_id": 39229671143,
+      "job_id": 117984320309,
+      "conclusion": "success"
+    }
+  },
+  "topology": {
+    "gateway": "openshell-gateway user service on runner host",
+    "supervisor": "separate openshell-supervisor container using host network",
+    "sandbox": "separate openshell-sandbox container using network none",
+    "pre_outage_policy_effect": "api.github.com GET allowed; example.com denied"
+  },
+  "outage_intervention": {
+    "action": "stop only openshell-gateway.service",
+    "gateway_state": "inactive",
+    "openshell_status_exit": 1,
+    "supervisor_after_poll_interval": "running_unhealthy",
+    "sandbox_and_supervisor_left_running": true
+  },
+  "post_outage_observation": {
+    "exact_host": {
+      "request": "GET https://api.github.com/zen",
+      "exit_code": 0,
+      "nonempty_response": true,
+      "observed_decision": "ALLOW"
+    },
+    "adjacent_host": {
+      "request": "GET https://example.com/",
+      "exit_code": 7,
+      "observed_decision": "DENY_OR_UNREACHABLE"
+    },
+    "supervisor_log_evidence": [
+      "OCSF NET:OPEN ALLOWED /usr/bin/curl -> api.github.com:443 [policy:matched_http engine:opa]",
+      "OCSF HTTP:GET ALLOWED GET http://api.github.com:443/zen [policy:matched_http engine:l7]",
+      "OCSF NET:REFUSE DENIED example.com [reason:policy_dns_ineligible]",
+      "OCSF NET:OPEN DENIED /usr/bin/curl -> example.com:443 [reason:transparent_tcp_policy_denied]"
+    ]
+  },
+  "candidate_contract_comparison": {
+    "case": "control_plane_unavailable",
+    "candidate_expected_decision": "DENY",
+    "observed_openshell_decision": "ALLOW",
+    "semantic_match": false,
+    "mapping_state": "OBSERVED_SEMANTIC_MISMATCH",
+    "blocker": "candidate_expected_deny_observed_allow"
+  },
+  "limitations": [
+    "The receiver remains api.github.com rather than the common external matched receiver.",
+    "This characterizes pinned OpenShell v0.1.4 behavior under local gateway-service loss; it does not establish all possible control-plane failure modes.",
+    "The supervisor retained previously published policy state and became unhealthy while continuing to enforce that state.",
+    "No matched cross-system benchmark, fairness claim, efficacy claim, parity claim, superiority claim, independent validation, or scientific-N increment is authorized."
+  ],
+  "ceilings": {
+    "SCIENTIFIC_N_INCREMENT": 0,
+    "INDEPENDENT_VALIDATION": "NOT_ESTABLISHED",
+    "CANONICAL_DGAF_EFFICACY": "NOT_ESTABLISHED",
+    "HIGH_ASSURANCE": "NOT_AUTHORIZED"
+  }
+}
