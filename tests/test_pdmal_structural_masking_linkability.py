@@ -137,6 +137,9 @@ def test_source_and_documentation_do_not_promote_blinding_or_scientific_status()
     )
     assert "TOPOLOGY CONFIDENTIALITY NOT ESTABLISHED" in scope
     assert "A passed characterization test is affirmative evidence of a limitation" in scope
+    governance_ci = (REPO / ".github" / "workflows" / "governance-ci.yml").read_text(encoding="utf-8")
+    assert "python -m pytest -q tests/test_pdmal_structural_masking_linkability.py -ra" in governance_ci
+    assert "networkx.__version__ == '3.6.1'" in governance_ci
     assert '"freeze_authorized": False' in workflow
     assert '"pilot_authorized": False' in workflow
     assert '"empirical_execution_requested": False' in workflow
