@@ -61,6 +61,27 @@ def test_deleted_store_blocks_without_recreating(tmp_path):
     assert not absent.exists()
 
 
+def test_same_store_cannot_claim_independent_witness(tmp_path):
+    v = create(tmp_path)
+    assert admit(v, 1)
+    store = tmp_path / "events.db"
+    result = reconcile_stores(str(store), str(store), source="broker", run="r")
+    assert result.disposition == Disposition.BLOCKED
+    assert result.reason == "NONINDEPENDENT_STORE"
+
+
+def test_readonly_check_releases_windows_file_handle(tmp_path):
+    v = create(tmp_path)
+    assert admit(v, 1)
+    assert check(tmp_path).disposition == Disposition.CONSISTENT
+    # Renaming must succeed on Windows after read-only reconciliation.
+    original = tmp_path / "witness.db"
+    renamed = tmp_path / "witness.renamed"
+    original.rename(renamed)
+    assert renamed.exists()
+    assert check(tmp_path).disposition == Disposition.BLOCKED
+
+
 def test_missing_records_block(tmp_path):
     create(tmp_path)
     assert check(tmp_path).reason == "MISSING_OR_INVALID_COUNTER"

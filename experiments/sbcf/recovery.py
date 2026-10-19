@@ -4,6 +4,8 @@ It NEVER repairs, authorizes production execution or establishes remote trust.
 """
 from dataclasses import dataclass
 from enum import Enum
+from contextlib import closing
+from pathlib import Path
 import sqlite3
 
 
@@ -22,9 +24,8 @@ class RecoveryCheck:
 
 def _counter(path: str, table: str, source: str, run: str) -> int | None:
     # Opening SQLite read-only ensures an absent database is not silently created.
-    from pathlib import Path
     p = Path(path).resolve()
-    with sqlite3.connect(p.as_uri() + "?mode=ro", uri=True, timeout=3) as db:
+    with closing(sqlite3.connect(p.as_uri() + "?mode=ro", uri=True, timeout=3)) as db:
         row = db.execute(
             f"SELECT sequence FROM {table} WHERE source=? AND run=?",
             (source, run),
@@ -35,6 +36,11 @@ def _counter(path: str, table: str, source: str, run: str) -> int | None:
 def reconcile_stores(evidence_path: str, witness_path: str, *, source: str, run: str) -> RecoveryCheck:
     """Fail closed for absent, divergent, corrupt or invalid counters."""
     try:
+        # A shared physical store is not an independent witness, even if tables agree.
+        evidence = Path(evidence_path).resolve(strict=True)
+        witness = Path(witness_path).resolve(strict=True)
+        if evidence == witness or evidence.samefile(witness):
+            return RecoveryCheck(Disposition.BLOCKED, "NONINDEPENDENT_STORE", None, None)
         a = _counter(evidence_path, "high_water", source, run)
         b = _counter(witness_path, "counters", source, run)
     except (OSError, sqlite3.Error, ValueError) as exc:
