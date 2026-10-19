@@ -6,9 +6,10 @@ Verification refresh: 2026-10-19. Primary-source inspection is not implementatio
 ## NVIDIA OpenShell — verified primary documentation
 
 Sources:
-- https://docs.nvidia.com/openshell/latest/how-it-works/policies/overview
-- https://docs.nvidia.com/openshell/latest/how-it-works/policies/schema
-- https://docs.nvidia.com/openshell/latest/how-it-works/policies/default-policy
+
+- <https://docs.nvidia.com/openshell/latest/how-it-works/policies/overview>
+- <https://docs.nvidia.com/openshell/latest/how-it-works/policies/schema>
+- <https://docs.nvidia.com/openshell/latest/how-it-works/policies/default-policy>
 
 Current documented release: latest v0.1.4. Policy schema v1 includes `filesystem_policy`, `landlock`, `process`, `network_policies`, and `network_middlewares`. Filesystem/Landlock/process controls are startup-scoped; network policy and middleware are live-updatable. OpenShell documents default-deny outbound network policy, Landlock kernel enforcement, non-root process identity, and restrictive default policy behavior.
 
@@ -23,6 +24,7 @@ Pinned source: `NVIDIA/OpenShell` commit `5a7728c304b5528e954e9ae900cf21f84e1a12
 Hosted reproduction: DGAF research workflow head `4ee65d9f715f966a3dadce446979393c312e803c`, run `39186200300`, job `117849041087`, on Ubuntu 24.04 with Docker. The exact v0.1.4 Debian package installed successfully, the local gateway registered and reported connected, and a user-owned Ubuntu 24.04 workload image with curl was built as required by the upstream first-network-policy tutorial.
 
 Observed real enforcement behavior in the OpenShell sandbox:
+
 - isolation boundary enforcement was explicitly confirmed by the supervisor;
 - the initial policy loaded at revision 1;
 - before any network rule, `/usr/bin/curl` to `api.github.com:443` was denied and recorded as structured `NET:OPEN ... DENIED` evidence;
@@ -41,8 +43,9 @@ Reproduction still needed for broader parity work: filesystem and process contro
 ## OWASP Agent Control Standard (ACS) — verified source and implementation availability
 
 Sources:
-- https://genai.owasp.org/resource/agent-control-standard-acs/
-- https://github.com/GenAI-Security-Project/agent-control-standard
+
+- <https://genai.owasp.org/resource/agent-control-standard-acs/>
+- <https://github.com/GenAI-Security-Project/agent-control-standard>
 
 OWASP published ACS on 2026-09-01. The project describes ACS as a runtime control wire specification with lifecycle hooks, declarative policy enforcement, observability and an audit trail. The public repository exposes specification, tests, tools and a reference implementation. The current repository documentation identifies ACS v0.1.0 schemas and a Guardian pattern that can allow, deny, modify, ask or defer before an action.
 
@@ -66,7 +69,7 @@ Disposition: ACS is now a **reproduced executable comparator** for its own pinne
 
 ## OWASP Top 10 for Agentic Applications 2026 — verified threat baseline
 
-Source: https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
+Source: <https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/>
 
 Published 2025-12-09. OWASP describes it as a peer-reviewed risk framework for autonomous/agentic systems, developed with more than 100 experts, researchers and practitioners. It is a threat/mitigation baseline, not a containment implementation or efficacy benchmark.
 
@@ -74,7 +77,7 @@ Use in SBCF: map the C2 adversarial threat model and negative test catalog to th
 
 ## Cisco Zero Trust for Agentic AI — verified architecture baseline
 
-Source: https://www.cisco.com/c/en/us/solutions/collateral/artificial-intelligence/security/zero-trust-agentic-ai-wp.html
+Source: <https://www.cisco.com/c/en/us/solutions/collateral/artificial-intelligence/security/zero-trust-agentic-ai-wp.html>
 Document updated 2026-03-23.
 
 Cisco frames the architecture around three continuous pillars: know every agent, authorize every action, and adapt to risk in real time. The published design includes NHI discovery/ownership, least-privilege and time-bound authorization, runtime behavioral/semantic inspection, and inline blocking, privilege revocation or isolation across identity, network and application layers.
@@ -85,7 +88,7 @@ Current SBCF result: NOT PRODUCT/DEPLOYMENT PARITY. SBCF currently tests synthet
 
 ## LLM Agent Honeypot — verified monitoring precedent, not containment baseline
 
-Source: https://arxiv.org/abs/2410.13919
+Source: <https://arxiv.org/abs/2410.13919>
 Reworr and Dmitrii Volkov, first submitted 2024-10-17.
 
 The paper augments an SSH honeypot with prompt injection and time-based analysis to identify potential autonomous AI hacking agents in public attack traffic. It reports a roughly three-month deployment with 8,130,731 hacking attempts and 8 potential AI agents.
@@ -95,8 +98,9 @@ Relevance to SBCF: semantic/behavioral observation precedent and adversarial mon
 ## BRaVeS / LBCF — verified peer-reviewed bounded-safety comparator
 
 Sources:
-- https://link.springer.com/article/10.1007/s10846-026-02467-w
-- https://arxiv.org/abs/2610.08815
+
+- <https://link.springer.com/article/10.1007/s10846-026-02467-w>
+- <https://arxiv.org/abs/2610.08815>
 
 Published in Journal of Intelligent & Robotic Systems in September 2026. The work describes bounded autonomy with invariant anchors, a state hierarchy that reduces autonomy as epistemic risk rises, and the Lyapunov-Bounded Consensus Framework (LBCF). The authors explicitly bound the formal convergence result to a finite abstraction under fixed thresholds and feasible-shield assumptions; they do not claim proof over the full continuous neural activation space. Evaluation is discrete-event Monte Carlo simulation using industrial-control-system time-series data with synthetic noise/degradation.
 
@@ -106,7 +110,7 @@ Current SBCF result: NO FORMAL PARITY. SBCF finite-state enumeration verifies im
 
 ## MARIS-TRA — verified temporal runtime-assurance comparator
 
-Source: https://www.mdpi.com/2504-4990/8/9/293
+Source: <https://www.mdpi.com/2504-4990/8/9/293>
 
 The 2026 publication describes hierarchical temporal runtime assurance using a quantitative Signal Temporal Logic fragment, bounded predictive monitoring, deterministic repair over an explicit candidate library and hash-chained assurance certificates. Reported results are simulator/episode measurements, with explicit sensitivity to numerical semantics, model mismatch, hysteresis and safety/recovery conflicts.
 
@@ -119,6 +123,7 @@ Current SBCF result: NO TEMPORAL-RUNTIME PARITY. SBCF does not yet implement mat
 Primary-source identity is now verified for OpenShell, OWASP ACS, OWASP Agentic Top 10, Cisco Zero Trust for Agentic AI, LLM Agent Honeypot, BRaVeS/LBCF and MARIS-TRA.
 
 C1 remains OPEN. ACS and OpenShell have advanced from source verification to executable reproduction, but the other candidate baselines have not yet received matched implementation reproduction, and no cross-system SBCF comparison has been run. Before promoting any candidate to an empirical minimum benchmark:
+
 1. pin exact version/commit/artifact;
 2. identify executable implementation and license/access constraints;
 3. define matching threat model and control surface;

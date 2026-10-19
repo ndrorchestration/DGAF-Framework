@@ -5,6 +5,7 @@ Status: DRAFT / FAIL-CLOSED / NOT AUTHORIZED. No live enforcement or cryptograph
 The `attestation.py` prototype requires all enumerated sources, rejects duplicates and unexpected sources, requires minimum revision, checks agreement on five state dimensions and demands a restrictive regime. Source names and revisions are caller-provided strings and numbers: **not proof of independent provenance**. Freshness by revision is weaker than timestamped signed evidence with nonce and trusted source registry.
 
 ## Required real-world upgrade gates
+
 1. Trust-root identity binding: registered independent, mutually authenticated observation service (not agent-controlled).
 2. Source-specific projections: no assumption that worker registry and capability broker can each truthfully attest every dimension. Define per-source authority by field.
 3. Anti-replay: signed nonce, monotonically increasing per-source sequence, trusted clock / TTL, exact policy+run+source identity.
