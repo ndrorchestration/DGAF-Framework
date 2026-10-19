@@ -27,6 +27,14 @@ You do not need to read the full repository history before testing DGAF. Pick th
 
 The outside-operator gate is **not yet satisfied**. Issue [#1210](https://github.com/ndrorchestration/DGAF-Framework/issues/1210) requires a technically capable operator who did not implement the system, does not rely on private NDR context, and is not coached through the procedure. ChatGPT, same-owner automation, and implementation-author execution are useful engineering checks but do **not** satisfy that gate.
 
+## Reproduce the bounded Python regressions
+
+The [Ubuntu 24.04 / Python 3.12 cold-reproduction runbook](docs/qa/COLD_REPRODUCTION_PYTHON_312_UBUNTU_2404.md)
+requires a **full clone**, the correct hash-locked OS/interpreter dependency
+set, and explicit accounting for deliberate skips and private retained
+artifacts. The [operator self-test](docs/qa/DGAF_OPERATOR_SELFTEST.md) is
+separately scoped. Neither route is independent scientific validation.
+
 ## Try the bounded live demo
 
 **[Open the DGAF proof-of-operation demo](https://project-7ybao.vercel.app/demo)**
