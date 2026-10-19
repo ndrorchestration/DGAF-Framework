@@ -47,3 +47,49 @@ Preserved ceilings:
 `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`;
 `CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`;
 `HIGH_ASSURANCE=NOT_AUTHORIZED`.
+
+
+## Two-host lease QA and falsification probe — 2026-10-19
+
+Implementation commit `71efab9a213d7fe7645f9c792f6d4ce3db28d194`
+was exercised with NeonPC as client and neontic as witness over a fresh verified
+HTTPS service on port 4444. Port 4444 had no listener before the probe.
+
+At injected witness test time 100, a lease scoped to source `broker`, run
+`lease-live-run`, policy `policy-lease`, and sequences 1–2 accepted sequence
+1. The same writer credential failed closed for a different source, run and
+policy, for sequence 3 above the configured maximum, and when the read
+credential attempted to write. The read credential returned only the accepted
+sequence-1 checkpoint.
+
+At injected test time 150, equal to the configured expiry, sequence 2 was
+denied and the retained witness checkpoint remained sequence 1.
+
+The test time source was then deliberately moved backward to 100. The same
+writer lease accepted sequence 2, and the read credential returned
+`lease-cp-2`. This reproduces the strict local expected-failure finding in a
+two-host HTTPS setup. It is **falsification evidence** for rollback-resistant
+expiry, not a successful trusted-time control.
+
+The probe changed an explicit test clock supplied through `now_fn`; it did not
+change the physical witness operating-system clock. The result therefore shows
+that the current lease logic depends on a trustworthy rollback-resistant time
+source that has not been established.
+
+Retained secret-free receipt:
+`docs/research/sbcf_offhost_evidence/2026-10-19/writer_lease_probe.json`.
+
+After capture, the service was stopped and port 4444 was verified without a
+listener. CA/server private keys, ephemeral scripts, the injected test clock,
+and the client probe directory were deleted. The witness database and public
+CA/server certificates remain on neontic as local retained evidence.
+
+Setup notes are preserved in the receipt: a narrow Git fetch initially failed
+to create the expected remote-tracking ref and was corrected with an explicit
+refspec before service start; an initial PowerShell test-clock write created a
+stray untracked file named `100`, which was deleted before service start and
+replaced with an explicit file write.
+
+This remains same-operator engineering evidence only. It does not establish
+independent custody, independent validation, trusted time, live containment,
+efficacy, or high assurance.
