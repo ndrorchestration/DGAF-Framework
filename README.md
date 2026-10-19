@@ -5,6 +5,16 @@
 
 In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
+## Current positioning
+
+**DGAF — evidence-bound assurance for agentic AI.**
+
+For current public and product positioning, DGAF is framed within **Agentic AI Assurance / AI Governance & Assurance**: an experimental **Evidence & Authorization Assurance Layer** with an **Assurance Control Plane** architecture, **evidence-bound Governance-as-Code** implementation model, and **epistemic transition control** as its technical thesis.
+
+This is a positioning/classification statement, not evidence of efficacy or superiority. A stronger conventional policy-as-code comparator matched the bounded DGAF decision model on **13/13 fixed fixtures** and produced **zero allow/deny differences across 112,200 systematically enumerated bounded states**. DGAF is therefore **not** presented as a uniquely superior policy engine. The incremental value under evaluation is the surrounding assurance lifecycle: evidence admissibility, provenance continuity, bounded transfer, lifecycle integrity, reconstructability, explicit authority, and whether the available evidence actually justifies the next consequential transition. See [comparative controller #1061](https://github.com/ndrorchestration/DGAF-Framework/issues/1061) and [independent reproduction gate #1067](https://github.com/ndrorchestration/DGAF-Framework/issues/1067).
+
+This positioning does not establish certification/compliance, production assurance, state-of-the-art status, independent validation, canonical DGAF efficacy, scientific-N promotion, or High-Assurance authorization.
+
 ## Choose an evaluation path
 
 You do not need to read the full repository history before testing DGAF. Pick the depth that matches what you want to inspect:
@@ -54,7 +64,7 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **8. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
-**9. Review the provider-neutral capability-governance design lane.** The current design branch formalizes how agents may obtain and exercise authority across MCP, APIs, SDKs, CLIs, plugins, and connectors without treating any transport or vendor API as the governance model. It separates PDP, PEP, credentials, adapters, data-flow controls, receipts, postconditions, and audit evidence. Draft PR #1041 is prospective/non-authorizing and now demonstrates **12/12 bounded model-check tests PASS** plus **127 passed, 1 skipped** in the broader capability-selected test slice, with bounded G1–G16 invariant slices, the first bounded end-to-end reference transaction, a second non-MCP mock HTTP/OpenAPI-style adapter preserving the same governed `dgaf.local.status` capability identity, fail-closed idempotency/replay semantics, and finite-state/small-state checks spanning authorization order, commit revalidation, composition, recovery, competing idempotency claims, unknown execution outcomes, postconditions, and audit-before-closure; it is not protected-main authority or a production-security claim.
+**9. Review the accepted provider-neutral capability-governance reference lane.** The earlier draft PR #1041 is **closed / superseded / unmerged** and retained only as design-history provenance. Its reconciled signed replacement, [PR #1071](https://github.com/ndrorchestration/DGAF-Framework/pull/1071), merged to protected `main` as `7dc5ab85b46e3910592bb29cba9b42bbe99a1cf2`. That accepted bounded reference lane separates PDP, PEP, credentials, adapters/transports, data-flow controls, receipts, postconditions, audit evidence, idempotency/replay, recovery, and transport-neutral capability identity. It remains a bounded reference/design implementation—not universal correctness, production security, empirical efficacy, independent validation, certification, scientific-N promotion, or High-Assurance authorization. Read [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md) for current architecture authority rather than treating historical PR text as live state.
 
 ### What this demonstrates
 
