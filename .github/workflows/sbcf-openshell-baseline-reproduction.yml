@@ -80,7 +80,7 @@ jobs:
             --from sbcf-openshell-curl:local \
             --no-auto-providers \
             --no-tty \
-            -- sleep 600
+            -- echo 'sandbox ready'
 
           openshell sandbox ssh-config "$SANDBOX" > "$SSH_CONFIG"
           SSH_HOST="$(awk '/^Host / { print $2; exit }' "$SSH_CONFIG")"
