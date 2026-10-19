@@ -47,15 +47,42 @@ jobs:
           openshell --version
           systemctl --user is-active openshell-gateway.service
 
-      - name: Build curl workload
+      - name: Build persistent supervised probe workload
         shell: bash
         run: |
           set -euo pipefail
+          cat > /tmp/sbcf-outage-probe.sh <<'EOF'
+          #!/bin/sh
+          set +e
+          : > /tmp/probe.ready
+          while true; do
+            if test -f /tmp/probe.pre; then
+              curl -sSf --max-time 12 https://api.github.com/zen > /tmp/probe.pre.out 2>&1
+              printf '%s\n' "$?" > /tmp/probe.pre.rc
+              rm -f /tmp/probe.pre
+            fi
+            if test -f /tmp/probe.exact; then
+              curl -sSf --max-time 12 https://api.github.com/zen > /tmp/probe.exact.out 2>&1
+              printf '%s\n' "$?" > /tmp/probe.exact.rc
+              rm -f /tmp/probe.exact
+            fi
+            if test -f /tmp/probe.adjacent; then
+              curl -sSf --max-time 8 https://example.com/ > /tmp/probe.adjacent.out 2>&1
+              printf '%s\n' "$?" > /tmp/probe.adjacent.rc
+              rm -f /tmp/probe.adjacent
+            fi
+            sleep 1
+          done
+          EOF
+          chmod +x /tmp/sbcf-outage-probe.sh
+
           cat > /tmp/Dockerfile.sbcf-openshell <<'EOF'
           FROM ubuntu:24.04
           RUN apt-get update \
               && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates \
               && rm -rf /var/lib/apt/lists/*
+          COPY sbcf-outage-probe.sh /usr/local/bin/sbcf-outage-probe
+          RUN chmod +x /usr/local/bin/sbcf-outage-probe
           EOF
           docker build -t sbcf-openshell-curl:local -f /tmp/Dockerfile.sbcf-openshell /tmp
 
@@ -71,7 +98,7 @@ jobs:
             --from sbcf-openshell-curl:local \
             --no-auto-providers \
             --no-tty \
-            -- echo 'sandbox ready'
+            -- /usr/local/bin/sbcf-outage-probe
 
           openshell policy update "$SANDBOX" \
             --rule-name matched_http \
@@ -86,7 +113,24 @@ jobs:
           echo "SBCF_OUTAGE_SANDBOX_ID=$SANDBOX_ID" >> "$GITHUB_ENV"
           echo "SBCF_OUTAGE_SUPERVISOR_ID=$SUPERVISOR_ID" >> "$GITHUB_ENV"
 
-          PRE="$(docker exec "$SANDBOX_ID" curl -sSf --max-time 12 https://api.github.com/zen)"
+          for _ in $(seq 1 30); do
+            if docker exec "$SANDBOX_ID" test -f /tmp/probe.ready; then
+              break
+            fi
+            sleep 1
+          done
+          docker exec "$SANDBOX_ID" test -f /tmp/probe.ready
+
+          docker exec "$SANDBOX_ID" touch /tmp/probe.pre
+          for _ in $(seq 1 30); do
+            if docker exec "$SANDBOX_ID" test -f /tmp/probe.pre.rc; then
+              break
+            fi
+            sleep 1
+          done
+          PRE_RC="$(docker exec "$SANDBOX_ID" cat /tmp/probe.pre.rc)"
+          PRE="$(docker exec "$SANDBOX_ID" cat /tmp/probe.pre.out)"
+          test "$PRE_RC" = "0"
           test -n "$PRE"
           printf 'pre_outage_allow=%s\n' "$PRE"
 
@@ -118,18 +162,25 @@ jobs:
           set -euo pipefail
           RESULT_FILE="$RUNNER_TEMP/openshell-outage-observation.txt"
 
-          set +e
-          EXACT="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" curl -sSf --max-time 12 https://api.github.com/zen 2>&1)"
-          EXACT_RC=$?
-          ADJACENT="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" curl -sSf --max-time 8 https://example.com/ 2>&1)"
-          ADJACENT_RC=$?
-          set -e
+          docker exec "$SBCF_OUTAGE_SANDBOX_ID" touch /tmp/probe.exact /tmp/probe.adjacent
+          for _ in $(seq 1 30); do
+            if docker exec "$SBCF_OUTAGE_SANDBOX_ID" test -f /tmp/probe.exact.rc \
+              && docker exec "$SBCF_OUTAGE_SANDBOX_ID" test -f /tmp/probe.adjacent.rc; then
+              break
+            fi
+            sleep 1
+          done
+
+          EXACT_RC="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" cat /tmp/probe.exact.rc)"
+          EXACT="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" cat /tmp/probe.exact.out)"
+          ADJACENT_RC="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" cat /tmp/probe.adjacent.rc)"
+          ADJACENT="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" cat /tmp/probe.adjacent.out)"
 
           printf 'exact_rc=%s\nexact_output=%s\nadjacent_rc=%s\nadjacent_output=%s\n' \
             "$EXACT_RC" "$EXACT" "$ADJACENT_RC" "$ADJACENT" | tee "$RESULT_FILE"
 
           test "$ADJACENT_RC" -ne 0
-          if test "$EXACT_RC" -eq 0 && test -n "$EXACT"; then
+          if test "$EXACT_RC" = "0" && test -n "$EXACT"; then
             echo 'observed_control_plane_unavailable_decision=ALLOW'
             echo 'candidate_expected_decision=DENY'
             echo 'semantic_match=false'
