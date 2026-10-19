@@ -50,14 +50,87 @@ jobs:
           command -v openshell
           openshell --version
 
-      - name: Run upstream sandbox policy quickstart
+      - name: Build documented curl workload prerequisite
         shell: bash
-        env:
-          DEMO_PAUSE: '0'
         run: |
           set -euo pipefail
-          cd openshell-upstream
-          bash examples/sandbox-policy-quickstart/demo.sh
+          cat > /tmp/Dockerfile.sbcf-openshell <<'EOF'
+          FROM ubuntu:24.04
+          RUN apt-get update \
+              && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates \
+              && rm -rf /var/lib/apt/lists/*
+          EOF
+          docker build -t sbcf-openshell-curl:local -f /tmp/Dockerfile.sbcf-openshell /tmp
+          docker run --rm sbcf-openshell-curl:local /usr/bin/curl --version
+
+      - name: Reproduce documented network-policy enforcement
+        shell: bash
+        run: |
+          set -euo pipefail
+          SANDBOX=policy-repro
+          SSH_CONFIG="$(mktemp)"
+          cleanup() {
+            openshell sandbox delete "$SANDBOX" >/dev/null 2>&1 || true
+            rm -f "$SSH_CONFIG"
+          }
+          trap cleanup EXIT
+
+          openshell sandbox create \
+            --name "$SANDBOX" \
+            --from sbcf-openshell-curl:local \
+            --no-auto-providers \
+            --no-tty \
+            -- sleep 600
+
+          openshell sandbox ssh-config "$SANDBOX" > "$SSH_CONFIG"
+          SSH_HOST="$(awk '/^Host / { print $2; exit }' "$SSH_CONFIG")"
+          for _ in $(seq 1 20); do
+            if ssh -F "$SSH_CONFIG" "$SSH_HOST" true >/dev/null 2>&1; then
+              break
+            fi
+            sleep 2
+          done
+          ssh -F "$SSH_CONFIG" "$SSH_HOST" true
+
+          set +e
+          INITIAL="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 8 https://api.github.com/zen 2>&1)"
+          INITIAL_RC=$?
+          set -e
+          test "$INITIAL_RC" -ne 0
+          printf '%s\n' "$INITIAL"
+          sleep 2
+          INITIAL_LOGS="$(openshell logs "$SANDBOX" --since 2m --source sandbox -n 30 2>&1)"
+          printf '%s\n' "$INITIAL_LOGS"
+          printf '%s\n' "$INITIAL_LOGS" | grep -E 'NET:OPEN .*DENIED .*api\.github\.com:443'
+
+          openshell policy update "$SANDBOX" \
+            --rule-name github_api \
+            --binary /usr/bin/curl \
+            --add-endpoint api.github.com:443:read-only:rest:enforce \
+            --wait
+
+          GET_BODY="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 12 https://api.github.com/zen)"
+          test -n "$GET_BODY"
+          printf 'allowed_get=%s\n' "$GET_BODY"
+
+          set +e
+          OTHER="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 8 https://example.com/ 2>&1)"
+          OTHER_RC=$?
+          set -e
+          test "$OTHER_RC" -ne 0
+          printf '%s\n' "$OTHER"
+
+          POST_BODY="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sS --max-time 12 -X POST \
+            https://api.github.com/repos/octocat/hello-world/issues \
+            -H 'Content-Type: application/json' \
+            -d '{"title":"sbcf-reproduction"}')"
+          printf '%s\n' "$POST_BODY"
+          printf '%s\n' "$POST_BODY" | grep -q 'policy_denied'
+
+          sleep 2
+          FINAL_LOGS="$(openshell logs "$SANDBOX" --since 2m --source sandbox -n 60 2>&1)"
+          printf '%s\n' "$FINAL_LOGS"
+          printf '%s\n' "$FINAL_LOGS" | grep -E 'HTTP:POST .*DENIED .*api\.github\.com:443'
 
       - name: Record bounded evidence statement
         if: always()
@@ -67,7 +140,7 @@ jobs:
             echo '### SBCF external comparator reproduction'
             echo 'Upstream: NVIDIA/OpenShell'
             echo 'Pinned commit: 5a7728c304b5528e954e9ae900cf21f84e1a12b1 (v0.1.4)'
-            echo 'Attempted upstream automated first-network-policy tutorial on ubuntu-24.04 with Docker.'
-            echo 'The demo is expected to exercise default-deny egress, a live read-only api.github.com rule, allowed GET, blocked POST, and policy logs.'
+            echo 'Reproduces the documented first-network-policy sequence on ubuntu-24.04 with Docker and a user-owned curl workload image, as required by the tutorial prerequisites.'
+            echo 'Assertions cover default-deny api.github.com egress, a live read-only api.github.com rule, allowed GET, unrelated-host denial, blocked POST, and policy logs.'
             echo 'A passing demo is bounded OpenShell enforcement evidence only. It does not establish SBCF parity, comparative efficacy, independent validation, or production authorization.'
           } >> "$GITHUB_STEP_SUMMARY"
