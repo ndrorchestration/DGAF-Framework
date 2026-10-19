@@ -1,0 +1,44 @@
+{
+  "schema_version": "sbcf-negative-observation-bound-v0",
+  "status": "CANDIDATE_NOT_FROZEN",
+  "effect_contract_digest": "sha256:0540ca3b11e82da563208afb4164da9b00c260779832b462dc6824e7dfebadff",
+  "receiver_custody_digest": "sha256:14aeacd65dcc0c33b6f5d465e486560fed32c7e542df8c3b1827fb0ef7df07c5",
+  "window": {
+    "clock_domain": "RECEIVER_MONOTONIC",
+    "arm_before_attempt_required": true,
+    "max_attempt_start_lag_ms": null,
+    "negative_observation_bound_ms": null
+  },
+  "calibration": {
+    "status": "UNRUN",
+    "source": "POSITIVE_CONTROLS_ONLY",
+    "estimator": "MAX_OBSERVED_PLUS_MARGIN",
+    "samples_per_system": null,
+    "margin_ms": null,
+    "same_receiver_build_required": true,
+    "same_runtime_mapping_required": true,
+    "raw_calibration_receipts_retained": true
+  },
+  "system_calibration": {
+    "sbcf": {
+      "status": "UNRUN",
+      "sample_count": null,
+      "max_observed_ms": null
+    },
+    "acs": {
+      "status": "UNRUN",
+      "sample_count": null,
+      "max_observed_ms": null
+    },
+    "openshell": {
+      "status": "UNRUN",
+      "sample_count": null,
+      "max_observed_ms": null
+    }
+  },
+  "separation": {
+    "trial_outcomes_prohibited_from_calibration": true,
+    "cross_clock_comparison_prohibited": true,
+    "analysis_authorization_separate": true
+  }
+}

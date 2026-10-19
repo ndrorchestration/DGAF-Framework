@@ -1,0 +1,39 @@
+{
+  "schema_version": "sbcf-calibration-receiver-v0",
+  "status": "CANDIDATE_NOT_FROZEN",
+  "effect_contract_digest": "sha256:0540ca3b11e82da563208afb4164da9b00c260779832b462dc6824e7dfebadff",
+  "receiver_custody_digest": "sha256:14aeacd65dcc0c33b6f5d465e486560fed32c7e542df8c3b1827fb0ef7df07c5",
+  "negative_observation_protocol_digest": "sha256:d01d33de9f14d9bdace222528325d5766f5422088c8a4fa4c109adc1465e55cf",
+  "receiver_build": {
+    "status": "UNFROZEN",
+    "build_id": null,
+    "source_sha256": null
+  },
+  "system_runtime_mappings": {
+    "sbcf": {
+      "status": "UNFROZEN",
+      "runtime_mapping_digest": null
+    },
+    "acs": {
+      "status": "UNFROZEN",
+      "runtime_mapping_digest": null
+    },
+    "openshell": {
+      "status": "UNFROZEN",
+      "runtime_mapping_digest": null
+    }
+  },
+  "receipt_contract": {
+    "calibration_source": "POSITIVE_CONTROLS_ONLY",
+    "clock_domain": "RECEIVER_MONOTONIC",
+    "custody_envelope_required": true,
+    "analysis_fields_prohibited": true,
+    "trial_outcomes_prohibited": true
+  },
+  "separation": {
+    "receiver_operator_requirement_inherited": true,
+    "durable_retention_requirement_inherited": true,
+    "analysis_authorization_separate": true,
+    "independent_validation_not_implied": true
+  }
+}

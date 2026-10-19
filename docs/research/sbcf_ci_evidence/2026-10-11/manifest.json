@@ -1,0 +1,568 @@
+{
+  "schema": "SBCF_CI_FAILURE_AUDIT_V0",
+  "audit_date": "2026-10-13",
+  "repository": "ndrorchestration/DGAF-Framework",
+  "pr": 1342,
+  "first_failure_input": "d0d0a4463e4f1908908bcf2137a7d671c54a76a9",
+  "verified_code_head": "a283e17bfbc2696bda372a63eff7153bf2e406ba",
+  "first_complete_contract_head": "041c7f1903a5f03c60c0d37f36514e4e37b6eec8",
+  "runs": [
+    {
+      "id": 38160736666,
+      "head_sha": "a283e17bfbc2696bda372a63eff7153bf2e406ba",
+      "event": "pull_request",
+      "created_at": "2026-10-11T17:42:02Z",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160717455,
+      "head_sha": "a283e17bfbc2696bda372a63eff7153bf2e406ba",
+      "event": "push",
+      "created_at": "2026-10-11T17:41:45Z",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160713056,
+      "head_sha": "041c7f1903a5f03c60c0d37f36514e4e37b6eec8",
+      "event": "push",
+      "created_at": "2026-10-11T17:41:41Z",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160711846,
+      "head_sha": "3360056055632b3b7287ebdb6280e15a8b8d3eda",
+      "event": "push",
+      "created_at": "2026-10-11T17:41:39Z",
+      "conclusion": "failure"
+    },
+    {
+      "id": 38160710638,
+      "head_sha": "079be2f644dd3a34c9ecbfa69e57d747e8267e0b",
+      "event": "push",
+      "created_at": "2026-10-11T17:41:38Z",
+      "conclusion": "failure"
+    },
+    {
+      "id": 38160709486,
+      "head_sha": "d0d0a4463e4f1908908bcf2137a7d671c54a76a9",
+      "event": "push",
+      "created_at": "2026-10-11T17:41:37Z",
+      "conclusion": "failure"
+    }
+  ],
+  "failed_jobs": [
+    {
+      "run_id": 38160709486,
+      "id": 114532837687,
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-11T17:41:41Z",
+          "completed_at": "2026-10-11T17:41:42Z"
+        },
+        {
+          "name": "Checkout candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-11T17:41:42Z",
+          "completed_at": "2026-10-11T17:41:43Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-11T17:41:43Z",
+          "completed_at": "2026-10-11T17:41:43Z"
+        },
+        {
+          "name": "Bootstrap exact pip resolver",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-11T17:41:43Z",
+          "completed_at": "2026-10-11T17:41:47Z"
+        },
+        {
+          "name": "Install hash-locked QA tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-11T17:41:47Z",
+          "completed_at": "2026-10-11T17:41:58Z"
+        },
+        {
+          "name": "Check cross-layer formatting",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-11T17:41:58Z",
+          "completed_at": "2026-10-11T17:41:59Z"
+        },
+        {
+          "name": "Run complete SBCF synthetic test group",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-10-11T17:41:59Z",
+          "completed_at": "2026-10-11T17:42:00Z"
+        },
+        {
+          "name": "Record evidence boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-11T17:42:00Z",
+          "completed_at": "2026-10-11T17:42:00Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-11T17:42:00Z",
+          "completed_at": "2026-10-11T17:42:00Z"
+        },
+        {
+          "name": "Post Checkout candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-11T17:42:00Z",
+          "completed_at": "2026-10-11T17:42:00Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-11T17:42:00Z",
+          "completed_at": "2026-10-11T17:42:00Z"
+        }
+      ]
+    },
+    {
+      "run_id": 38160710638,
+      "id": 114532840736,
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-11T17:41:43Z",
+          "completed_at": "2026-10-11T17:41:43Z"
+        },
+        {
+          "name": "Checkout candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-11T17:41:43Z",
+          "completed_at": "2026-10-11T17:41:45Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-11T17:41:45Z",
+          "completed_at": "2026-10-11T17:41:45Z"
+        },
+        {
+          "name": "Bootstrap exact pip resolver",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-11T17:41:45Z",
+          "completed_at": "2026-10-11T17:41:49Z"
+        },
+        {
+          "name": "Install hash-locked QA tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-11T17:41:49Z",
+          "completed_at": "2026-10-11T17:41:58Z"
+        },
+        {
+          "name": "Check cross-layer formatting",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-11T17:41:58Z",
+          "completed_at": "2026-10-11T17:41:59Z"
+        },
+        {
+          "name": "Run complete SBCF synthetic test group",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-10-11T17:41:59Z",
+          "completed_at": "2026-10-11T17:42:01Z"
+        },
+        {
+          "name": "Record evidence boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-11T17:42:01Z",
+          "completed_at": "2026-10-11T17:42:01Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-11T17:42:01Z",
+          "completed_at": "2026-10-11T17:42:01Z"
+        },
+        {
+          "name": "Post Checkout candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-11T17:42:01Z",
+          "completed_at": "2026-10-11T17:42:01Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-11T17:42:01Z",
+          "completed_at": "2026-10-11T17:42:01Z"
+        }
+      ]
+    },
+    {
+      "run_id": 38160711846,
+      "id": 114532844515,
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-11T17:41:43Z",
+          "completed_at": "2026-10-11T17:41:44Z"
+        },
+        {
+          "name": "Checkout candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-11T17:41:44Z",
+          "completed_at": "2026-10-11T17:41:45Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-11T17:41:45Z",
+          "completed_at": "2026-10-11T17:41:45Z"
+        },
+        {
+          "name": "Bootstrap exact pip resolver",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-11T17:41:45Z",
+          "completed_at": "2026-10-11T17:41:47Z"
+        },
+        {
+          "name": "Install hash-locked QA tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-11T17:41:47Z",
+          "completed_at": "2026-10-11T17:42:00Z"
+        },
+        {
+          "name": "Check cross-layer formatting",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-11T17:42:00Z",
+          "completed_at": "2026-10-11T17:42:00Z"
+        },
+        {
+          "name": "Run complete SBCF synthetic test group",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-10-11T17:42:00Z",
+          "completed_at": "2026-10-11T17:42:02Z"
+        },
+        {
+          "name": "Record evidence boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-11T17:42:02Z",
+          "completed_at": "2026-10-11T17:42:02Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-11T17:42:02Z",
+          "completed_at": "2026-10-11T17:42:02Z"
+        },
+        {
+          "name": "Post Checkout candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-11T17:42:02Z",
+          "completed_at": "2026-10-11T17:42:03Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-11T17:42:03Z",
+          "completed_at": "2026-10-11T17:42:03Z"
+        }
+      ]
+    }
+  ],
+  "annotation_retrieval": {
+    "available": false,
+    "reason": "HTTPError: 400: GitHub Fetch URL is not an allowed public GitHub repository or search endpoint. (Response: None)"
+  },
+  "hosted_environment": {
+    "os": "Ubuntu 24.04",
+    "runner_image": "20261004.327.1",
+    "python": "3.12.15",
+    "pytest": "9.1.1",
+    "pluggy": "1.6.0",
+    "install": "python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r requirements-ci-py312-ubuntu2404-x64.lock"
+  },
+  "local_environment": {
+    "python": "3.12.14",
+    "pytest": "9.1.1",
+    "dependencies": "repository full hash-locked QA environment",
+    "initial_missing_environment": "Previous qa-venv was absent; fresh isolated sbcf-audit-venv installed successfully before reproduction."
+  },
+  "final_code_head_workflows": [
+    {
+      "id": 38160736731,
+      "name": "Truth Layer Validation",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736684,
+      "name": "Propagation Consistency (Advisory)",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736718,
+      "name": "Control-State Consistency",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736688,
+      "name": "Full Repository Coverage Audit",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736689,
+      "name": "Truth Layer Tests",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736705,
+      "name": "Epistemic Evidence Validation",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736666,
+      "name": "SBCF Research Contract Tests",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736668,
+      "name": "PDMAL Harness Validation",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736692,
+      "name": "Critical PR Lane Custody",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160736737,
+      "name": "PDMAL Pre-Freeze Runner Validation",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160717445,
+      "name": "Truth Layer Validation",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160717466,
+      "name": "Truth Layer Tests",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160717461,
+      "name": "Full Repository Coverage Audit",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160717497,
+      "name": "Epistemic Evidence Validation",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 38160717455,
+      "name": "SBCF Research Contract Tests",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "claim_boundaries": {
+    "SCIENTIFIC_N_INCREMENT": 0,
+    "INDEPENDENT_VALIDATION": "NOT_ESTABLISHED",
+    "CANONICAL_DGAF_EFFICACY": "NOT_ESTABLISHED",
+    "HIGH_ASSURANCE": "NOT_AUTHORIZED"
+  },
+  "log_exports": [
+    {
+      "path": "job-114532837687.log",
+      "bytes": 47794,
+      "sha256": "6dfd3d345457fe62697c27fed2c18959ca23520c29e5bc0937603f5f7507db98",
+      "encoding": "UTF-8 decoded connector export; BOM and line endings retained"
+    },
+    {
+      "path": "job-114532840736.log",
+      "bytes": 47898,
+      "sha256": "2c8c396f67d77bc5a2c0c5319001a43005d62e271c2d8ec9275cbb8c846265d1",
+      "encoding": "UTF-8 decoded connector export; BOM and line endings retained"
+    },
+    {
+      "path": "job-114532844515.log",
+      "bytes": 46572,
+      "sha256": "b10094d607ab8ecf1acccf10413b0dc37cfb5669e4451020fce428de60ee6c49",
+      "encoding": "UTF-8 decoded connector export; BOM and line endings retained"
+    }
+  ],
+  "local_checks": [
+    {
+      "name": "first_failure_reproduction",
+      "exit_code": 1,
+      "tree": "Exact first failing SHA, unmodified worktree",
+      "command": "python -m pytest tests/test_sbcf*.py -ra -q",
+      "output_utf8": "...x.........F.x................... [ 54%]\n.........................F..x                                            [100%]\n=================================== FAILURES ===================================\n_________________ test_witness_ahead_of_evidence_fails_closed __________________\n\ntmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_witness_ahead_of_evidence0')\n\n    def test_witness_ahead_of_evidence_fails_closed(tmp_path):\n        verifier = make(tmp_path)\n        with sqlite3.connect(tmp_path / \"witness.db\") as db:\n            db.execute(\"INSERT INTO counters(source,run,sequence) VALUES ('broker','r',7)\")\n        assert not admit(verifier, 7)\n>       assert admit(verifier, 8)\nE       assert False\nE        +  where False = admit(<experiments.sbcf.witness.WitnessedVerifier object at 0x7f53e4a1a600>, 8)\n\ntests/test_sbcf_concurrency_recovery.py:34: AssertionError\n_________________ test_witness_rejects_rolled_back_event_store _________________\n\ntmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_witness_rejects_rolled_ba0')\n\n    def test_witness_rejects_rolled_back_event_store(tmp_path):\n        v=make(tmp_path)\n        assert admit(v,1)\n        shutil.copy2(tmp_path/\"events.db\",tmp_path/\"old.db\")\n        assert admit(v,2)\n        shutil.copy2(tmp_path/\"old.db\",tmp_path/\"events.db\")\n        assert not admit(make(tmp_path),2)\n>       assert admit(make(tmp_path),3)\nE       AssertionError: assert False\nE        +  where False = admit(<experiments.sbcf.witness.WitnessedVerifier object at 0x7f53e4a10350>, 3)\nE        +    where <experiments.sbcf.witness.WitnessedVerifier object at 0x7f53e4a10350> = make(PosixPath('/tmp/pytest-of-root/pytest-0/test_witness_rejects_rolled_ba0'))\n\ntests/test_sbcf_witness.py:23: AssertionError\n=========================== short test summary info ============================\nXFAIL tests/test_sbcf_adversarial_gaps.py::test_snapshot_restore_must_not_readmit_old_event - Known limitation: restoring a prior DB snapshot rolls back replay state; independent anti-rollback anchor required\nXFAIL tests/test_sbcf_concurrency_recovery.py::test_injected_crash_cannot_split_stores - Cross-store crash consistency not implemented: evidence commits before witness write\nXFAIL tests/test_sbcf_witness_counterexample.py::test_coordinated_rollback_cannot_readmit - Both on-host SQLite files can be rolled back together; protected independent witness required\nFAILED tests/test_sbcf_concurrency_recovery.py::test_witness_ahead_of_evidence_fails_closed\nFAILED tests/test_sbcf_witness.py::test_witness_rejects_rolled_back_event_store\n2 failed, 59 passed, 3 xfailed, 37 subtests passed in 0.61s\n",
+      "output_sha256": "b9a9a1e1535308dc1e12392229f44b1f97a854e0cb141af0588e4615ee6e90ed"
+    },
+    {
+      "name": "minimal_contract_repair",
+      "exit_code": 0,
+      "tree": "First failing SHA plus only the two assert-not replacements",
+      "command": "python -m pytest tests/test_sbcf*.py -ra -q",
+      "output_utf8": "...x...........x................... [ 54%]\n............................x                                            [100%]\n=========================== short test summary info ============================\nXFAIL tests/test_sbcf_adversarial_gaps.py::test_snapshot_restore_must_not_readmit_old_event - Known limitation: restoring a prior DB snapshot rolls back replay state; independent anti-rollback anchor required\nXFAIL tests/test_sbcf_concurrency_recovery.py::test_injected_crash_cannot_split_stores - Cross-store crash consistency not implemented: evidence commits before witness write\nXFAIL tests/test_sbcf_witness_counterexample.py::test_coordinated_rollback_cannot_readmit - Both on-host SQLite files can be rolled back together; protected independent witness required\n61 passed, 3 xfailed, 37 subtests passed in 0.88s\n",
+      "output_sha256": "c3789c4f7515e98ca2413e47e987ebd8931f0fe59f1982efde7c3e92aa0e3598"
+    },
+    {
+      "name": "current_code_head",
+      "exit_code": 0,
+      "tree": "Exact a283e17bfbc2696bda372a63eff7153bf2e406ba",
+      "command": "python -m pytest tests/test_sbcf*.py -ra -q",
+      "output_utf8": "...x....................................x...............................................x                   [100%]\n=========================== short test summary info ============================\nXFAIL tests/test_sbcf_adversarial_gaps.py::test_snapshot_restore_must_not_readmit_old_event - Known limitation: restoring a prior DB snapshot rolls back replay state; independent anti-rollback anchor required\nXFAIL tests/test_sbcf_concurrency_recovery.py::test_evidence_only_bypass_cannot_split_stores - Direct evidence-only API bypass still splits stores; witnessed admission fences the mismatch\nXFAIL tests/test_sbcf_witness_counterexample.py::test_coordinated_rollback_cannot_readmit - Both on-host SQLite files can be rolled back together; protected independent witness required\n86 passed, 3 xfailed, 37 subtests passed in 1.00s\n",
+      "output_sha256": "90d9280b286462a1a2de85ef4047e142cebf2add675c40c7d9774c2ec16551c1"
+    }
+  ],
+  "minimal_contract_patch": {
+    "diff": "diff --git a/tests/test_sbcf_concurrency_recovery.py b/tests/test_sbcf_concurrency_recovery.py\nindex 85dd036..3676a8c 100644\n--- a/tests/test_sbcf_concurrency_recovery.py\n+++ b/tests/test_sbcf_concurrency_recovery.py\n@@ -31,7 +31,7 @@ def test_witness_ahead_of_evidence_fails_closed(tmp_path):\n     with sqlite3.connect(tmp_path / \"witness.db\") as db:\n         db.execute(\"INSERT INTO counters(source,run,sequence) VALUES ('broker','r',7)\")\n     assert not admit(verifier, 7)\n-    assert admit(verifier, 8)\n+    assert not admit(verifier, 8)\n \n def test_invalid_signature_cannot_advance_witness(tmp_path):\n     verifier = make(tmp_path)\ndiff --git a/tests/test_sbcf_witness.py b/tests/test_sbcf_witness.py\nindex 616e5ab..a93a6e9 100644\n--- a/tests/test_sbcf_witness.py\n+++ b/tests/test_sbcf_witness.py\n@@ -20,7 +20,7 @@ def test_witness_rejects_rolled_back_event_store(tmp_path):\n     assert admit(v,2)\n     shutil.copy2(tmp_path/\"old.db\",tmp_path/\"events.db\")\n     assert not admit(make(tmp_path),2)\n-    assert admit(make(tmp_path),3)\n+    assert not admit(make(tmp_path),3)\n def test_duplicate_rejected(tmp_path):\n     v=make(tmp_path)\n     assert admit(v,1)\n",
+    "sha256": "e99c8092d2a4ffff521d3404294d601bf9e12fd93c0dbe7c9712b34d7203de2d"
+  },
+  "input_sha256": {
+    "d0d0a4463e4f1908908bcf2137a7d671c54a76a9": {
+      "experiments/sbcf/witness.py": "897cf4aa22965f5cd27b4332d9206747401ae1e1fd72b976e4d8645a46d200b2",
+      "tests/test_sbcf_concurrency_recovery.py": "a15e897e3644b606553a19ebe41bd1601df02b8b6990ced80d93c5ef34ea4833",
+      "tests/test_sbcf_witness.py": "9c5ae47dd4ec060da9d6aac041e7890a201cc25cb5f552aa8cf60b0fc8a50fe8",
+      "tests/test_sbcf_atomic_witness.py": "ABSENT_AT_THIS_SHA",
+      ".github/workflows/sbcf-research-tests.yml": "775a9f7a018654d6309dbbd889c915b9a6803865aea4bce5b9010c41f658f157",
+      "requirements-ci-py312-ubuntu2404-x64.lock": "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
+      "scripts/bootstrap_ci_pip.sh": "6db1d1e3f8176911756ee72e275f4d759a1e814ebd8cd5fdeb39db5934b346b3"
+    },
+    "079be2f644dd3a34c9ecbfa69e57d747e8267e0b": {
+      "experiments/sbcf/witness.py": "897cf4aa22965f5cd27b4332d9206747401ae1e1fd72b976e4d8645a46d200b2",
+      "tests/test_sbcf_concurrency_recovery.py": "a15e897e3644b606553a19ebe41bd1601df02b8b6990ced80d93c5ef34ea4833",
+      "tests/test_sbcf_witness.py": "9c5ae47dd4ec060da9d6aac041e7890a201cc25cb5f552aa8cf60b0fc8a50fe8",
+      "tests/test_sbcf_atomic_witness.py": "e9d2216d1c46a4cc3d1ff67b345931ab4daf7c86b5ba14ae755ba495ec15d5df",
+      ".github/workflows/sbcf-research-tests.yml": "775a9f7a018654d6309dbbd889c915b9a6803865aea4bce5b9010c41f658f157",
+      "requirements-ci-py312-ubuntu2404-x64.lock": "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
+      "scripts/bootstrap_ci_pip.sh": "6db1d1e3f8176911756ee72e275f4d759a1e814ebd8cd5fdeb39db5934b346b3"
+    },
+    "3360056055632b3b7287ebdb6280e15a8b8d3eda": {
+      "experiments/sbcf/witness.py": "897cf4aa22965f5cd27b4332d9206747401ae1e1fd72b976e4d8645a46d200b2",
+      "tests/test_sbcf_concurrency_recovery.py": "edead18cf49a688741f4b6b719ff6588bf9c804b6451d14acbd7409336a9d09f",
+      "tests/test_sbcf_witness.py": "9c5ae47dd4ec060da9d6aac041e7890a201cc25cb5f552aa8cf60b0fc8a50fe8",
+      "tests/test_sbcf_atomic_witness.py": "e9d2216d1c46a4cc3d1ff67b345931ab4daf7c86b5ba14ae755ba495ec15d5df",
+      ".github/workflows/sbcf-research-tests.yml": "775a9f7a018654d6309dbbd889c915b9a6803865aea4bce5b9010c41f658f157",
+      "requirements-ci-py312-ubuntu2404-x64.lock": "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
+      "scripts/bootstrap_ci_pip.sh": "6db1d1e3f8176911756ee72e275f4d759a1e814ebd8cd5fdeb39db5934b346b3"
+    },
+    "041c7f1903a5f03c60c0d37f36514e4e37b6eec8": {
+      "experiments/sbcf/witness.py": "897cf4aa22965f5cd27b4332d9206747401ae1e1fd72b976e4d8645a46d200b2",
+      "tests/test_sbcf_concurrency_recovery.py": "edead18cf49a688741f4b6b719ff6588bf9c804b6451d14acbd7409336a9d09f",
+      "tests/test_sbcf_witness.py": "d074de531f2ffde5170b14cf73ca1f2769b06eb26b1d378cce2c2d6c3f7c16b0",
+      "tests/test_sbcf_atomic_witness.py": "e9d2216d1c46a4cc3d1ff67b345931ab4daf7c86b5ba14ae755ba495ec15d5df",
+      ".github/workflows/sbcf-research-tests.yml": "775a9f7a018654d6309dbbd889c915b9a6803865aea4bce5b9010c41f658f157",
+      "requirements-ci-py312-ubuntu2404-x64.lock": "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
+      "scripts/bootstrap_ci_pip.sh": "6db1d1e3f8176911756ee72e275f4d759a1e814ebd8cd5fdeb39db5934b346b3"
+    },
+    "a283e17bfbc2696bda372a63eff7153bf2e406ba": {
+      "experiments/sbcf/witness.py": "897cf4aa22965f5cd27b4332d9206747401ae1e1fd72b976e4d8645a46d200b2",
+      "tests/test_sbcf_concurrency_recovery.py": "edead18cf49a688741f4b6b719ff6588bf9c804b6451d14acbd7409336a9d09f",
+      "tests/test_sbcf_witness.py": "d074de531f2ffde5170b14cf73ca1f2769b06eb26b1d378cce2c2d6c3f7c16b0",
+      "tests/test_sbcf_atomic_witness.py": "e9d2216d1c46a4cc3d1ff67b345931ab4daf7c86b5ba14ae755ba495ec15d5df",
+      ".github/workflows/sbcf-research-tests.yml": "dbf366ae9f9d16829706ef6b272cb91b1949888cb3311f5638facddf5bf0ef11",
+      "requirements-ci-py312-ubuntu2404-x64.lock": "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
+      "scripts/bootstrap_ci_pip.sh": "6db1d1e3f8176911756ee72e275f4d759a1e814ebd8cd5fdeb39db5934b346b3"
+    }
+  }
+}

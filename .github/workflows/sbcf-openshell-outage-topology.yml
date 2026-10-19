@@ -1,0 +1,154 @@
+name: SBCF OpenShell Outage Topology Diagnostic
+
+on:
+  push:
+    branches: ['research/sbcf-openshell-outage-topology-20261019']
+    paths:
+      - '.github/workflows/sbcf-openshell-outage-topology.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  topology-diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout DGAF diagnostic wrapper
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned OpenShell source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          repository: NVIDIA/OpenShell
+          ref: 5a7728c304b5528e954e9ae900cf21f84e1a12b1
+          path: openshell-upstream
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Assert exact upstream identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C openshell-upstream rev-parse HEAD)" = "5a7728c304b5528e954e9ae900cf21f84e1a12b1"
+          test "$(git -C openshell-upstream describe --tags --exact-match)" = "v0.1.4"
+          test -z "$(git -C openshell-upstream status --porcelain)"
+
+      - name: Install exact OpenShell release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd openshell-upstream
+          OPENSHELL_VERSION=v0.1.4 bash ./install.sh
+          openshell --version
+
+      - name: Build curl workload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/Dockerfile.sbcf-openshell <<'EOF'
+          FROM ubuntu:24.04
+          RUN apt-get update \
+              && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates \
+              && rm -rf /var/lib/apt/lists/*
+          EOF
+          docker build -t sbcf-openshell-curl:local -f /tmp/Dockerfile.sbcf-openshell /tmp
+
+      - name: Create sandbox and activate policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          SANDBOX=outage-topology
+          SSH_CONFIG="$RUNNER_TEMP/openshell-outage-ssh-config"
+          echo "SBCF_TOPOLOGY_SANDBOX=$SANDBOX" >> "$GITHUB_ENV"
+          echo "SBCF_TOPOLOGY_SSH_CONFIG=$SSH_CONFIG" >> "$GITHUB_ENV"
+
+          openshell sandbox create \
+            --name "$SANDBOX" \
+            --from sbcf-openshell-curl:local \
+            --no-auto-providers \
+            --no-tty \
+            -- echo 'sandbox ready'
+
+          openshell sandbox ssh-config "$SANDBOX" > "$SSH_CONFIG"
+          SSH_HOST="$(awk '/^Host / { print $2; exit }' "$SSH_CONFIG")"
+          echo "SBCF_TOPOLOGY_SSH_HOST=$SSH_HOST" >> "$GITHUB_ENV"
+          for _ in $(seq 1 20); do
+            if ssh -F "$SSH_CONFIG" "$SSH_HOST" true >/dev/null 2>&1; then
+              break
+            fi
+            sleep 2
+          done
+          ssh -F "$SSH_CONFIG" "$SSH_HOST" true
+
+          openshell policy update "$SANDBOX" \
+            --rule-name matched_http \
+            --binary /usr/bin/curl \
+            --add-endpoint api.github.com:443:read-only:rest:enforce \
+            --wait
+
+          ALLOW="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 12 https://api.github.com/zen)"
+          test -n "$ALLOW"
+          printf 'pre_outage_allow=%s\n' "$ALLOW"
+
+      - name: Inventory exact local topology without stopping anything
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '--- docker ps ---'
+          docker ps --no-trunc --format '{{json .}}'
+          echo '--- docker inspect selected fields ---'
+          docker ps -q | while read -r id; do
+            docker inspect "$id" --format '{{json .Name}} {{json .Config.Image}} {{json .Config.Cmd}} {{json .Config.Labels}} {{json .NetworkSettings.Networks}}'
+          done
+          echo '--- openshell status ---'
+          openshell status -o json || openshell status || true
+          echo '--- openshell gateway list ---'
+          openshell gateway list -o json || openshell gateway list || true
+          echo '--- process summary ---'
+          ps -eo pid,ppid,comm,args | grep -E '[o]penshell|[d]ocker|[c]ontainerd' || true
+
+      - name: Confirm policy is still active after diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -F "$SBCF_TOPOLOGY_SSH_CONFIG" "$SBCF_TOPOLOGY_SSH_HOST" \
+            curl -sSf --max-time 12 https://api.github.com/zen >/tmp/post-topology-allow.txt
+          test -s /tmp/post-topology-allow.txt
+          set +e
+          DENIED="$(ssh -F "$SBCF_TOPOLOGY_SSH_CONFIG" "$SBCF_TOPOLOGY_SSH_HOST" \
+            curl -sSf --max-time 8 https://example.com/ 2>&1)"
+          RC=$?
+          set -e
+          test "$RC" -ne 0
+          printf 'post_topology_deny=%s\n' "$DENIED"
+
+      - name: Cleanup
+        if: always()
+        shell: bash
+        run: |
+          openshell sandbox delete "$SBCF_TOPOLOGY_SANDBOX" >/dev/null 2>&1 || true
+          rm -f "$SBCF_TOPOLOGY_SSH_CONFIG"
+
+      - name: Assert pinned checkout remains clean
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git -C openshell-upstream status --porcelain)"
+
+      - name: Record bounded evidence statement
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### OpenShell outage topology diagnostic'
+            echo 'This run inventories local runtime topology after a valid policy is loaded.'
+            echo 'It intentionally does not stop, kill, pause, disconnect, or mutate any gateway/control-plane component.'
+            echo 'A passing run does not establish control-plane-unavailable behavior.'
+            echo 'No fairness, efficacy, parity, superiority, freeze, or independent-validation claim is authorized.'
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,130 @@
+{
+  "schema": "sbcf.generation_anchor.two_host_probe.v0",
+  "date": "2026-10-19",
+  "candidate": "b3846ac710676b63783eb356cde8558e3a2cff5f",
+  "scope": "same-operator two-host generation-floor probe with client and witness co-resident on NeonPC; not independent validation",
+  "topology": {
+    "client_and_witness": {
+      "host": "NeonPC",
+      "witness_endpoint": "https://127.0.0.1:4449"
+    },
+    "generation_anchor": {
+      "host": "neontic",
+      "lan_address": "192.168.1.64",
+      "anchor_endpoint": "https://192.168.1.64:4448"
+    }
+  },
+  "certificate_evidence": {
+    "anchor_ca_file_sha256": "e6f2c636d20897c2747bcebcc8531764d533d4d40ee7efc78130796192de7c74",
+    "anchor_server_file_sha256": "acdc3e45aa99355d5b4261e667667d9be01244c5606269055ab48ef627dc2556",
+    "anchor_ca_x509_sha256": "094b572d47b71839a6058a481b9ab49767fb60d148c317f70475bd3029b95c0f",
+    "anchor_server_x509_sha256": "bfdd8a5e9b8d47b51ac16d381455428ae29a4ae43a2fcdfb24edd847ad3109d2",
+    "witness_ca_file_sha256": "1088c9bd5c0ecf381664efa8fda598d90e6f639ba3adc37fef79ffbd4d042c21",
+    "witness_server_file_sha256": "df05cd03b7e7ea8c51e3b40d02f5ad17966925de8424d6e311c96a45330ce1a5"
+  },
+  "pre_revocation_snapshots": {
+    "witness_db_sha256": "2d81a2cedf0f206006334bb3ac63c525d2317b66747f53c62e0e68c113f60092",
+    "anchor_db_sha256": "051c20ae4f0f45e9a1f28fd27a530ce218c9a7e4ee62ca88cca41e75e85297f9",
+    "witness_state": {
+      "source": "broker",
+      "run": "anchor-live-run",
+      "policy": "policy-anchor",
+      "sequence": 1,
+      "checkpoint_id": "anchor-live-cp-1"
+    },
+    "anchor_floor": 0
+  },
+  "observations": [
+    {
+      "phase": "initial",
+      "anchor_floor": 0,
+      "generation_1_writer_sequence_1": true,
+      "observed_sequence": 1
+    },
+    {
+      "phase": "revocation",
+      "advance_anchor_floor_to_2": true,
+      "anchor_floor": 2,
+      "generation_1_writer_sequence_2": false,
+      "generation_2_writer_sequence_2": true,
+      "observed_sequence": 2
+    },
+    {
+      "phase": "witness_only_rollback",
+      "action": "restore witness pre-revocation snapshot only; leave anchor unchanged",
+      "anchor_floor": 2,
+      "generation_1_writer_sequence_2": false,
+      "generation_2_writer_sequence_2": true,
+      "observed_sequence": 2,
+      "classification": "bounded positive evidence for separation of revocation floor from witness DB rollback"
+    },
+    {
+      "phase": "anchor_unavailable",
+      "action": "stop remote anchor only",
+      "anchor_floor": null,
+      "generation_2_writer_sequence_3": false,
+      "observed_sequence": 2,
+      "classification": "fail-closed availability behavior"
+    },
+    {
+      "phase": "anchor_recovered",
+      "anchor_floor": 2,
+      "generation_2_writer_sequence_3": true,
+      "observed_sequence": 3
+    },
+    {
+      "phase": "coordinated_rollback",
+      "action": "stop both services and restore both pre-revocation SQLite snapshots",
+      "anchor_floor": 0,
+      "generation_1_writer_sequence_2": true,
+      "observed_sequence": 2,
+      "classification": "live falsification: coordinated rollback revives revoked writer"
+    }
+  ],
+  "final_coordinated_rollback_state": {
+    "witness_db_sha256": "12f09ca49f2a4c77ece0fe36a66db6f89dadc809b7da0738b1b4f91c3150e6b9",
+    "anchor_db_sha256": "051c20ae4f0f45e9a1f28fd27a530ce218c9a7e4ee62ca88cca41e75e85297f9",
+    "witness_checkpoint": {
+      "source": "broker",
+      "run": "anchor-live-run",
+      "policy": "policy-anchor",
+      "sequence": 2,
+      "checkpoint_id": "anchor-live-cp-2"
+    },
+    "witness_local_generation_rows": [],
+    "anchor_generation_rows": []
+  },
+  "prior_blocked_attempt": {
+    "receipt": "docs/research/sbcf_offhost_evidence/2026-10-19/generation_anchor_probe_blocked.json",
+    "summary": "The first topology placed the anchor on NeonPC and witness on neontic, but neontic could not initiate either LAN or Tailscale connectivity to NeonPC. It was terminated and cleaned up without starting the witness service."
+  },
+  "cleanup": {
+    "anchor_service_stopped": true,
+    "witness_service_stopped": true,
+    "port_4448_listener_absent": true,
+    "port_4449_listener_absent": true,
+    "private_keys_deleted_from_probe_worktrees": true,
+    "ephemeral_scripts_deleted_from_probe_worktrees": true,
+    "fixture_tokens_deleted_from_probe_worktrees": true,
+    "retained_non_secret_evidence_only": [
+      "witness current and pre-revocation SQLite databases",
+      "anchor current and pre-revocation SQLite databases",
+      "public CA/server certificates"
+    ],
+    "retained_evidence_location": "outside both Git worktrees"
+  },
+  "limitations": [
+    "Both hosts remain under the same operator.",
+    "Client and witness were co-resident on NeonPC; this is not three-party custody.",
+    "The anchor uses ordinary SQLite and remains rollbackable by a privileged operator.",
+    "The result establishes bounded witness-rollback separation and fail-closed anchor unavailability only.",
+    "The coordinated rollback phase directly falsifies any claim of durable anti-rollback protection.",
+    "No live production containment, matched comparative efficacy, independent validation, scientific efficacy, or high assurance is established."
+  ],
+  "ceilings": {
+    "SCIENTIFIC_N_INCREMENT": 0,
+    "INDEPENDENT_VALIDATION": "NOT_ESTABLISHED",
+    "CANONICAL_DGAF_EFFICACY": "NOT_ESTABLISHED",
+    "HIGH_ASSURANCE": "NOT_AUTHORIZED"
+  }
+}

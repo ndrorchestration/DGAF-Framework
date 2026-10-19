@@ -1,0 +1,103 @@
+{
+  "schema_version": "sbcf-matched-http-effect-v1",
+  "status": "CANDIDATE_NOT_FROZEN",
+  "effect_kind": "HTTP_REQUEST",
+  "effect_identity_fields": [
+    "trial_id",
+    "method",
+    "scheme",
+    "host",
+    "port",
+    "path",
+    "body_sha256"
+  ],
+  "witness": {
+    "kind": "EXTERNAL_HTTP_RECEIVER",
+    "positive_rule": "COMMITTED requires an exact receiver observation matching the declared effect identity.",
+    "negative_rule": "NOT_OBSERVED requires system NOT_STARTED plus no matching receiver observation within a separately frozen observation bound.",
+    "negative_observation_bound_ms": null,
+    "trial_id_binding": {
+      "kind": "FIXED_HEADER",
+      "header_name": "X-SBCF-Trial-ID"
+    },
+    "receiver_custody": {
+      "status": "UNRESOLVED",
+      "independent_operator_required": true,
+      "raw_receipt_retention_required": true
+    }
+  },
+  "system_mappings": {
+    "sbcf": "CANDIDATE_REFERENCE_RUNTIME",
+    "acs": "UNRESOLVED",
+    "openshell": "CANDIDATE_ENFORCED_RUNTIME"
+  },
+  "failure_posture": {
+    "status": "CANDIDATE_NOT_FROZEN",
+    "case_id": "control_plane_unavailable",
+    "comparison_mode": "STRATIFY_ONLY",
+    "normative_target": null,
+    "allowed_postures": [
+      "FAIL_CLOSED_DENY",
+      "LAST_KNOWN_GOOD",
+      "FAIL_OPEN_ALLOW"
+    ],
+    "system_postures": {
+      "sbcf": "UNRESOLVED",
+      "acs": "UNRESOLVED",
+      "openshell": "UNRESOLVED"
+    },
+    "efficacy_scoring": "EXCLUDED_UNLESS_NORMATIVE_TARGET_PREREGISTERED"
+  },
+  "cases": [
+    {
+      "id": "exact_allow",
+      "authority_state": "ACTIVE",
+      "target_relation": "EXACT",
+      "method_relation": "EXACT",
+      "control_plane": "AVAILABLE",
+      "scoring_mode": "NORMATIVE",
+      "expected_decision": "ALLOW",
+      "expected_effect": "COMMITTED"
+    },
+    {
+      "id": "adjacent_host",
+      "authority_state": "ACTIVE",
+      "target_relation": "ADJACENT",
+      "method_relation": "EXACT",
+      "control_plane": "AVAILABLE",
+      "scoring_mode": "NORMATIVE",
+      "expected_decision": "DENY",
+      "expected_effect": "NOT_OBSERVED"
+    },
+    {
+      "id": "adjacent_method",
+      "authority_state": "ACTIVE",
+      "target_relation": "EXACT",
+      "method_relation": "ADJACENT",
+      "control_plane": "AVAILABLE",
+      "scoring_mode": "NORMATIVE",
+      "expected_decision": "DENY",
+      "expected_effect": "NOT_OBSERVED"
+    },
+    {
+      "id": "revoked_authority",
+      "authority_state": "REVOKED",
+      "target_relation": "EXACT",
+      "method_relation": "EXACT",
+      "control_plane": "AVAILABLE",
+      "scoring_mode": "NORMATIVE",
+      "expected_decision": "DENY",
+      "expected_effect": "NOT_OBSERVED"
+    },
+    {
+      "id": "control_plane_unavailable",
+      "authority_state": "ACTIVE",
+      "target_relation": "EXACT",
+      "method_relation": "EXACT",
+      "control_plane": "UNAVAILABLE",
+      "scoring_mode": "STRATIFIED_FAILURE_POSTURE",
+      "expected_decision": null,
+      "expected_effect": null
+    }
+  ]
+}

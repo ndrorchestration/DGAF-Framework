@@ -1,0 +1,81 @@
+{
+  "schema": "sbcf.offhost_witness.writer_lease_probe.v0",
+  "date": "2026-10-19",
+  "implementation_commit": "71efab9a213d7fe7645f9c792f6d4ce3db28d194",
+  "scope": "ephemeral two-host HTTPS writer-lease scope and injected-time rollback probe; not independent validation",
+  "client": {
+    "role": "SBCF client",
+    "host": "NeonPC",
+    "lan_address": "192.168.1.81"
+  },
+  "witness": {
+    "role": "off-host monotonic witness",
+    "host": "neontic",
+    "lan_address": "192.168.1.64",
+    "port": 4444,
+    "witness_db_sha256": "9b44e583f7ddbc50c2a34eabc2a46567432e1a4ef88bd568c32e6f3234a5266d",
+    "ca_certificate_file_sha256": "882b00cb1f532f1e9be46c402c0a4411dc1a37c9dba71f625d06507f7c0eabb8",
+    "server_certificate_file_sha256": "7ef1ba4f62fec995614593df1ca960a1499a29a64cacbfc3ac40985c95b5ec05",
+    "ca_certificate_x509_sha256": "065e5f54ac68bdd377be637443c5a8e84d3d57ae2fe92c13ac29eb2cff683083",
+    "server_certificate_x509_sha256": "fe4435b7ccafd63cf79e9298e15bdc1d3b1fd14cfb20cc1a1f9a9ff45a9c144d",
+    "retained_record": {
+      "source": "broker",
+      "run": "lease-live-run",
+      "policy": "policy-lease",
+      "sequence": 2,
+      "checkpoint_id": "lease-cp-2"
+    }
+  },
+  "lease": {
+    "source": "broker",
+    "run": "lease-live-run",
+    "policy": "policy-lease",
+    "min_sequence": 1,
+    "max_sequence": 2,
+    "expires_at_test_time": 150.0
+  },
+  "observations": [
+    {"phase": "normal", "test_time": 100.0, "step": "writer_advance_sequence_1", "result": true},
+    {"phase": "normal", "test_time": 100.0, "step": "wrong_source", "result": false},
+    {"phase": "normal", "test_time": 100.0, "step": "wrong_run", "result": false},
+    {"phase": "normal", "test_time": 100.0, "step": "wrong_policy", "result": false},
+    {"phase": "normal", "test_time": 100.0, "step": "above_max_sequence", "result": false},
+    {"phase": "normal", "test_time": 100.0, "step": "reader_attempt_advance", "result": false},
+    {"phase": "normal", "test_time": 100.0, "step": "reader_read", "sequence": 1, "checkpoint_id": "lease-cp-1"},
+    {"phase": "expired", "test_time": 150.0, "step": "writer_advance_sequence_2", "result": false},
+    {"phase": "expired", "test_time": 150.0, "step": "reader_read", "sequence": 1, "checkpoint_id": "lease-cp-1"},
+    {"phase": "rollback_counterexample", "test_time": 100.0, "step": "writer_advance_sequence_2", "result": true},
+    {"phase": "rollback_counterexample", "test_time": 100.0, "step": "reader_read", "sequence": 2, "checkpoint_id": "lease-cp-2"}
+  ],
+  "counterexample": {
+    "result": "REPRODUCED",
+    "statement": "After lease expiry denied sequence 2 at injected witness test time 150, moving the injected time source backward to 100 made the same lease valid again and sequence 2 was accepted.",
+    "boundary": "This changed an explicit test clock supplied through now_fn; it did not alter the physical witness OS clock. It demonstrates that the lease logic depends on rollback-resistant trustworthy time that is not presently established."
+  },
+  "setup_notes": [
+    "Port 4444 had no listener before the probe.",
+    "A narrow git fetch did not create the expected remote-tracking ref on neontic; checkout was corrected using an explicit fetch refspec before the service started.",
+    "An initial PowerShell Set-Content invocation created an untracked file named 100; it was deleted before service start and the test clock was then created using an explicit file write."
+  ],
+  "cleanup": {
+    "service_stopped": true,
+    "listener_4444_absent_after_probe": true,
+    "witness_ca_private_key_deleted": true,
+    "witness_server_private_key_deleted": true,
+    "witness_ephemeral_scripts_deleted": true,
+    "witness_test_clock_deleted": true,
+    "client_ephemeral_probe_directory_deleted": true,
+    "witness_database_retained_on_witness_host": true,
+    "witness_public_ca_certificate_retained_on_witness_host": true,
+    "witness_public_server_certificate_retained_on_witness_host": true
+  },
+  "limitations": [
+    "Both computers remain under the same operator and are not independent custody or independent validation.",
+    "Writer credentials remain bearer secrets configured directly on the witness service.",
+    "A compromised writer can cause fail-closed denial of service inside its authorized source/run/policy/sequence scope.",
+    "Expiry is not rollback-resistant because trustworthy monotonic time is not established.",
+    "Credential issuance, rotation, revocation, hardware binding and external identity governance are not established.",
+    "Witness-host compromise, durable storage rollback and availability loss remain outside the demonstrated protection.",
+    "This probe does not establish live containment, matched efficacy, comparator parity, scientific N, canonical efficacy or high assurance."
+  ]
+}

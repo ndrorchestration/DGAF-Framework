@@ -1,0 +1,85 @@
+{
+  "schema": "sbcf.generation_anchor.live_probe_blocked.v0",
+  "date": "2026-10-19",
+  "candidate": "b3846ac710676b63783eb356cde8558e3a2cff5f",
+  "status": "BLOCKED_ENVIRONMENT",
+  "scope": "attempted same-operator two-host generation-anchor/witness probe; no live protocol result established",
+  "planned_topology": {
+    "client_and_generation_anchor": {
+      "host": "NeonPC",
+      "lan_address": "192.168.1.81",
+      "tailscale_address": "100.107.237.63",
+      "anchor_port": 4447
+    },
+    "witness": {
+      "host": "neontic",
+      "lan_address": "192.168.1.64",
+      "planned_witness_port": 4446
+    }
+  },
+  "setup_observations": [
+    {
+      "stage": "repository_sync",
+      "observation": "A narrow Git fetch on neontic did not create the expected remote-tracking ref.",
+      "remediation": "Used an explicit refspec and verified exact candidate b3846ac710676b63783eb356cde8558e3a2cff5f."
+    },
+    {
+      "stage": "certificate_tooling",
+      "observation": "NeonPC system Python and the QA virtual environment did not contain cryptography.",
+      "remediation": "Used Git for Windows bundled OpenSSL 3.5.9 to generate ephemeral anchor TLS material without installing a new package."
+    },
+    {
+      "stage": "anchor_start",
+      "observation": "Generation-anchor HTTPS service started on NeonPC port 4447 with a fresh empty generation store.",
+      "server_certificate_sha256": "aa949d21484289d716ad24a4c457e82f9365d13fa1508b5f9590c964333e0330"
+    },
+    {
+      "stage": "initial_cross_host_read",
+      "observation": "RemoteGenerationAnchorClient on neontic returned no generation value. Direct verified-TLS diagnosis failed before TLS with PermissionError WinError 10013."
+    },
+    {
+      "stage": "firewall_profile_check",
+      "observation": "NeonPC Ethernet was Public while the first temporary inbound rule was Private-profile only.",
+      "remediation": "Replaced the temporary rule with Profile Any while retaining exact source restriction 192.168.1.64 and TCP port 4447."
+    },
+    {
+      "stage": "reachability_retry",
+      "observation": "The corrected firewall rule did not restore connectivity. Test-NetConnection to 192.168.1.81:4447 remained false and Python still returned WinError 10013."
+    },
+    {
+      "stage": "alternate_route",
+      "observation": "Test-NetConnection from neontic to NeonPC Tailscale address 100.107.237.63:4447 also failed/timed out."
+    }
+  ],
+  "protocol_execution": {
+    "anchor_service_started": true,
+    "witness_service_started": false,
+    "writer_checkpoint_attempted": false,
+    "generation_advance_attempted": false,
+    "witness_database_rollback_attempted": false,
+    "coordinated_rollback_attempted": false,
+    "live_result": "NOT_ESTABLISHED"
+  },
+  "cleanup": {
+    "anchor_service_stopped": true,
+    "neonpc_port_4447_listener_absent": true,
+    "temporary_firewall_rule_removed": true,
+    "neonpc_ephemeral_probe_directory_deleted": true,
+    "neontic_port_4446_listener_absent": true,
+    "neontic_ephemeral_probe_directory_deleted": true,
+    "private_keys_retained": false,
+    "fixture_tokens_retained": false
+  },
+  "limitations": [
+    "The failed route is an environment/network limitation, not evidence that the generation-floor protocol is incorrect.",
+    "No live witness-to-anchor read succeeded, so no live anti-rollback claim may be made from this attempt.",
+    "Only two operator-controlled machines were online; even a successful retry would not establish independent custody or three-party validation.",
+    "Synthetic and hosted tests remain the current evidence for witness-only rollback resistance and coordinated rollback vulnerability."
+  ],
+  "ceilings": {
+    "SCIENTIFIC_N_INCREMENT": 0,
+    "INDEPENDENT_VALIDATION": "NOT_ESTABLISHED",
+    "CANONICAL_DGAF_EFFICACY": "NOT_ESTABLISHED",
+    "HIGH_ASSURANCE": "NOT_AUTHORIZED"
+  }
+}

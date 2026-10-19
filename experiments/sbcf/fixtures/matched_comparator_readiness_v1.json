@@ -1,0 +1,43 @@
+{
+  "schema_version": "sbcf-matched-comparator-v1",
+  "status": "PRE_FREEZE_FAIL_CLOSED",
+  "systems": {
+    "sbcf": {
+      "version": "52315ea11e02f33a3f547ecc79ff731c1df9b892",
+      "source": "ndrorchestration/DGAF-Framework implementation checkpoint stacked above #1393",
+      "matched_effect_tier": "reference_runtime_effect",
+      "reproduced": true,
+      "effect_boundary": "Real loopback HTTP effect mediated through the accepted DGAF capability PEP and exact action digest; direct process code can still bypass the reference wrapper.",
+      "scope": "Bounded application-level real-effect adapter plus same-operator off-host witness/generation-floor runtime QA; no OS-level interception or bypass-resistant enforcement."
+    },
+    "acs": {
+      "version": "9c05f0402d76dea6b67a12a93672c2131137e572",
+      "source": "GenAI-Security-Project/agent-control-standard",
+      "matched_effect_tier": "reference_runtime_effect",
+      "reproduced": true,
+      "effect_boundary": "Reference host hook/policy decision runtime; reproduced tests do not establish the same committed external effect boundary as OpenShell.",
+      "scope": "Pinned upstream reference suite and bounded host behavior; no claim beyond the reproduced reference implementation."
+    },
+    "openshell": {
+      "version": "5a7728c304b5528e954e9ae900cf21f84e1a12b1",
+      "source": "NVIDIA/OpenShell v0.1.4",
+      "matched_effect_tier": "enforced_runtime_effect",
+      "reproduced": true,
+      "effect_boundary": "Docker-backed sandbox network enforcement at a real effect boundary.",
+      "scope": "Default deny, live scoped allow, unrelated-host denial, and L7 POST denial in the reproduced sandbox policy path."
+    }
+  },
+  "gates": {
+    "exact_system_versions_pinned": true,
+    "common_effect_semantics_frozen": false,
+    "common_policy_intent_frozen": false,
+    "common_failure_posture_frozen": false,
+    "common_outcome_witness_defined": false,
+    "evidence_tier_reporting_frozen": true,
+    "matched_runtime_effect_evidence_for_all": false,
+    "trial_fixture_packet_frozen": false,
+    "statistics_preregistered": false,
+    "outside_operator_assigned": false,
+    "raw_evidence_retention_ready": false
+  }
+}

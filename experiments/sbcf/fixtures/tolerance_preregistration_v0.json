@@ -1,0 +1,46 @@
+{
+  "schema_version": "sbcf-tolerance-prereg-v0",
+  "status": "CANDIDATE_NOT_FROZEN",
+  "parent_digests": {
+    "effect_contract": "sha256:0540ca3b11e82da563208afb4164da9b00c260779832b462dc6824e7dfebadff",
+    "receiver_custody": "sha256:14aeacd65dcc0c33b6f5d465e486560fed32c7e542df8c3b1827fb0ef7df07c5",
+    "negative_observation": "sha256:d01d33de9f14d9bdace222528325d5766f5422088c8a4fa4c109adc1465e55cf",
+    "calibration_receiver": "sha256:3d05f5c94a0aca51fd8b80fe20e4acb84330e649b5e7a1251064fd9721aa0cd5"
+  },
+  "target": {
+    "status": "UNSELECTED",
+    "coverage_p": null,
+    "confidence_gamma": null,
+    "scientific_rationale": null
+  },
+  "method": {
+    "family": "DISTRIBUTION_FREE_ONE_SIDED_UPPER_TOLERANCE",
+    "statistic": "SAMPLE_MAXIMUM",
+    "sample_size_rule": "1-p^n>=gamma",
+    "source": "POSITIVE_CONTROLS_ONLY",
+    "outcomes_used_to_select_targets": false
+  },
+  "sampling_assumptions": {
+    "status": "UNASSESSED",
+    "sampling_design_id": null,
+    "independent_samples_required": true,
+    "identically_distributed_required": true,
+    "stable_runtime_and_receiver_required": true,
+    "censoring_and_timeouts_accounted_for": true,
+    "receiver_monotonic_clock_required": true,
+    "same_predeclared_protocol_required": true
+  },
+  "sample_plan": {
+    "samples_per_system": null,
+    "equal_counts_across_systems": true,
+    "maximum_allowed_samples": null,
+    "preregister_before_positive_controls": true
+  },
+  "separation": {
+    "no_empirical_samples_collected": true,
+    "external_custody_not_implied": true,
+    "statistical_result_not_efficacy": true,
+    "structural_ready_not_run_authorization": true,
+    "analysis_authorization_separate": true
+  }
+}

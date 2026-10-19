@@ -1,0 +1,201 @@
+name: SBCF ACS Matched HTTP Candidate
+
+on:
+  push:
+    branches: ['research/sbcf-acs-effect-adapter-20261019']
+    paths:
+      - '.github/workflows/sbcf-acs-matched-http-candidate.yml'
+      - 'experiments/sbcf/acs_matched_effect_candidate.test.ts'
+      - 'experiments/sbcf/acs_matched_effect_mapping.py'
+      - 'experiments/sbcf/acs_matched_effect_receiver.py'
+      - 'experiments/sbcf/fixtures/acs_matched_http_mapping_v0.json'
+      - 'experiments/sbcf/fixtures/matched_http_effect_contract_v0.json'
+      - 'experiments/sbcf/matched_effect_contract.py'
+      - 'tests/test_sbcf_acs_matched_effect_mapping.py'
+      - 'tests/test_sbcf_matched_effect_contract.py'
+      - 'docs/research/SBCF_MATCHED_HTTP_EFFECT_CONTRACT_V0.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acs-matched-http-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout DGAF candidate wrapper
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned OWASP ACS source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          repository: GenAI-Security-Project/agent-control-standard
+          ref: 9c05f0402d76dea6b67a12a93672c2131137e572
+          path: acs-upstream
+          persist-credentials: false
+
+      - name: Assert pinned ACS source is clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C acs-upstream rev-parse HEAD)" = "9c05f0402d76dea6b67a12a93672c2131137e572"
+          test -z "$(git -C acs-upstream status --porcelain)"
+
+      - name: Install upstream-pinned Bun
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version: '1.3.11'
+
+      - name: Install frozen ACS dependencies
+        working-directory: acs-upstream/reference-implementations/agt
+        run: bun install --frozen-lockfile
+
+      - name: Prepare explicit candidate policy overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          overlay="$RUNNER_TEMP/acs-candidate-policy"
+          cp -a acs-upstream/reference-implementations/agt/policy "$overlay"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["RUNNER_TEMP"]) / "acs-candidate-policy" / "lib" / "data.json"
+          data = json.loads(path.read_text(encoding="utf-8"))
+          data["agt"]["defaults"]["config"]["egress"]["allowlist"] = ["127.0.0.1"]
+          path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+          PY
+          python - <<'PY'
+          import hashlib
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["RUNNER_TEMP"]) / "acs-candidate-policy" / "lib" / "data.json"
+          print("candidate_overlay_sha256=" + hashlib.sha256(path.read_bytes()).hexdigest())
+          PY
+
+      - name: Install candidate harness without modifying pinned policy source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp experiments/sbcf/acs_matched_effect_candidate.test.ts \
+            acs-upstream/reference-implementations/agt/test/sbcf-matched-effect-candidate.test.ts
+
+      - name: Run pinned ACS executable candidate mapping
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt="$RUNNER_TEMP/acs-matched-receipt.jsonl"
+          port_file="$RUNNER_TEMP/acs-matched-port.txt"
+          export SBCF_RECEIPT_FILE="$receipt"
+          export SBCF_RECEIVER_PORT_FILE="$port_file"
+          python experiments/sbcf/acs_matched_effect_receiver.py &
+          receiver_pid=$!
+          cleanup() {
+            kill "$receiver_pid" 2>/dev/null || true
+            wait "$receiver_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          for _ in $(seq 1 50); do
+            if test -s "$port_file"; then break; fi
+            sleep 0.1
+          done
+          test -s "$port_file"
+          port="$(cat "$port_file")"
+
+          export SBCF_MATCHED_RECEIVER_URL="http://127.0.0.1:${port}/matched-effect"
+          export SBCF_ACS_MANIFEST="$RUNNER_TEMP/acs-candidate-policy/manifest.yaml"
+
+          (
+            cd acs-upstream/reference-implementations/agt
+            bun test test/sbcf-matched-effect-candidate.test.ts
+          )
+
+          cleanup
+          trap - EXIT
+
+      - name: Validate exact external receiver receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          receipt_path = Path(os.environ["RUNNER_TEMP"]) / "acs-matched-receipt.jsonl"
+          port = int((Path(os.environ["RUNNER_TEMP"]) / "acs-matched-port.txt").read_text())
+          lines = [line for line in receipt_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+          assert len(lines) == 1, lines
+          actual = json.loads(lines[0])
+          expected = {
+              "trial_id": "exact_allow",
+              "method": "POST",
+              "scheme": "http",
+              "host": "127.0.0.1",
+              "port": port,
+              "path": "/matched-effect",
+              "body_sha256": hashlib.sha256(b"sbcf-acs-candidate-body").hexdigest(),
+          }
+          assert actual == expected, (actual, expected)
+          print(json.dumps(actual, sort_keys=True))
+          PY
+
+      - name: Verify candidate mapping schema without extra dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from experiments.sbcf.acs_matched_effect_mapping import (
+              evaluate_acs_mapping,
+              validate_acs_mapping,
+          )
+          from experiments.sbcf.matched_effect_contract import (
+              effect_contract_digest,
+              evaluate_effect_contract,
+              validate_effect_contract,
+          )
+
+          root = Path("experiments/sbcf/fixtures")
+          effect = json.loads((root / "matched_http_effect_contract_v0.json").read_text(encoding="utf-8"))
+          mapping = json.loads((root / "acs_matched_http_mapping_v0.json").read_text(encoding="utf-8"))
+
+          validate_effect_contract(effect)
+          validate_acs_mapping(mapping)
+          assert mapping["effect_contract_digest"] == effect_contract_digest(effect)
+          assert effect["system_mappings"]["acs"] == "UNRESOLVED"
+          assert not evaluate_effect_contract(effect).ready
+          assert not evaluate_acs_mapping(mapping).complete
+          print("candidate schema PASS; parent ACS mapping remains UNRESOLVED")
+          PY
+
+      - name: Assert pinned ACS checkout is restored clean
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f acs-upstream/reference-implementations/agt/test/sbcf-matched-effect-candidate.test.ts
+          test -z "$(git -C acs-upstream status --porcelain)"
+
+      - name: Record bounded evidence statement
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### SBCF ACS matched HTTP candidate'
+            echo 'Pinned ACS: 9c05f0402d76dea6b67a12a93672c2131137e572 / Bun 1.3.11.'
+            echo 'Executable candidate coverage is intentionally partial: exact-host allow and adjacent-host deny only.'
+            echo 'Adjacent method remains unmapped because pinned ACS stock egress does not bind HTTP method.'
+            echo 'Revoked authority and control-plane-unavailable mappings remain unresolved.'
+            echo 'The receiver allowlist is an explicit unfrozen benchmark fixture overlay, not stock ACS configuration.'
+            echo 'No fairness, efficacy, parity, superiority, freeze, or independent-validation claim is authorized.'
+          } >> "$GITHUB_STEP_SUMMARY"

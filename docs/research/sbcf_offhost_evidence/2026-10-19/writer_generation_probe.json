@@ -1,0 +1,81 @@
+{
+  "schema": "sbcf.offhost_witness.writer_generation_probe.v0",
+  "date": "2026-10-19",
+  "implementation_commit": "5c92d51ec1a76610f0f187dcae233bbacb725a08",
+  "scope": "ephemeral two-host HTTPS writer-generation revocation and witness-DB rollback probe; not independent validation",
+  "client": {
+    "role": "SBCF client",
+    "host": "NeonPC",
+    "lan_address": "192.168.1.81"
+  },
+  "witness": {
+    "role": "off-host monotonic witness",
+    "host": "neontic",
+    "lan_address": "192.168.1.64",
+    "port": 4445,
+    "witness_db_sha256_after_rollback_probe": "cef1bffe39ba50d6c8dae3f6a5d2130b9d95d5b955fc238b2358794ebae67c1a",
+    "pre_revocation_snapshot_sha256": "8e03dbeac25584782abe07df69959540112351d69294605d24402f7d24e65c26",
+    "ca_certificate_file_sha256": "4e877d8363108c86392bc7882611a6ba3b451757476945489733394abd319f33",
+    "server_certificate_file_sha256": "ef8c0c67c3d968226ef09f93b8485e5af365deb1b02b186d7aa7c43aeb01cd4f",
+    "ca_certificate_x509_sha256": "e8a7b98783ab63a9eefd55d0617cbb4e2a6147f421e32250c04ee30a5d7b97bb",
+    "server_certificate_x509_sha256": "8d71b3f1eb27f41e0a5240f785f7c27090648be8d1def14cfe1e8d8cedf26e1c",
+    "retained_generation_rows_after_rollback_probe": [],
+    "retained_checkpoint": {
+      "source": "broker",
+      "run": "generation-live-run",
+      "policy": "policy-generation",
+      "sequence": 2,
+      "checkpoint_id": "generation-cp-2"
+    }
+  },
+  "observations": [
+    {"phase": "generation_1_normal", "step": "generation_1_advance_sequence_1", "result": true},
+    {"phase": "generation_1_normal", "step": "reader_read", "sequence": 1, "checkpoint_id": "generation-cp-1"},
+    {"phase": "pre_revocation_snapshot", "step": "sqlite_backup", "result": true, "snapshot_sha256": "8e03dbeac25584782abe07df69959540112351d69294605d24402f7d24e65c26"},
+    {"phase": "revocation", "step": "required_generation_before", "generation": 0},
+    {"phase": "revocation", "step": "advance_required_generation_to_2", "result": true},
+    {"phase": "revocation", "step": "required_generation_after", "generation": 2},
+    {"phase": "revoked_writer", "step": "generation_1_advance_sequence_2", "result": false},
+    {"phase": "revoked_writer", "step": "reader_read", "sequence": 1, "checkpoint_id": "generation-cp-1"},
+    {"phase": "replacement_writer", "step": "generation_2_advance_sequence_2_after_restart", "result": true},
+    {"phase": "replacement_writer", "step": "reader_read", "sequence": 2, "checkpoint_id": "generation-cp-2"},
+    {"phase": "rollback_counterexample", "step": "restore_pre_revocation_sqlite_snapshot", "result": true},
+    {"phase": "rollback_counterexample", "step": "restored_generation_rows", "rows": []},
+    {"phase": "rollback_counterexample", "step": "restored_checkpoint", "sequence": 1, "checkpoint_id": "generation-cp-1"},
+    {"phase": "rollback_counterexample", "step": "generation_1_advance_sequence_2_after_db_rollback", "result": true},
+    {"phase": "rollback_counterexample", "step": "reader_read", "sequence": 2, "checkpoint_id": "generation-cp-2"}
+  ],
+  "counterexample": {
+    "result": "REPRODUCED",
+    "statement": "After required writer generation 2 revoked the generation-1 writer and a generation-2 replacement advanced successfully, restoring the pre-revocation witness SQLite snapshot removed the revocation record and the generation-1 writer could advance sequence 2 again.",
+    "boundary": "This is a direct witness-database rollback on the same operator-controlled host. It demonstrates that writer-generation revocation is not rollback-resistant without a separately protected monotonic generation anchor or durable anti-rollback storage."
+  },
+  "setup_notes": [
+    "Port 4445 had no listener before the probe.",
+    "The first post-restore one-line SQLite inspection failed from PowerShell/Python quoting after the database restore had already completed; state was rechecked with a short local script.",
+    "The first server restart after restored-state inspection failed because the helper was named inspect.py and shadowed Python's standard-library inspect module; the helper was deleted and the same restored DB was restarted without modification.",
+    "A __pycache__ directory remained after script cleanup and was removed before final cleanup verification."
+  ],
+  "cleanup": {
+    "service_stopped": true,
+    "listener_4445_absent_after_probe": true,
+    "witness_ca_private_key_deleted": true,
+    "witness_server_private_key_deleted": true,
+    "witness_ephemeral_scripts_deleted": true,
+    "witness_generation_and_token_fixture_files_deleted": true,
+    "witness_pre_revocation_snapshot_deleted": true,
+    "witness_python_bytecode_cache_deleted": true,
+    "client_ephemeral_probe_directory_deleted": true,
+    "witness_database_retained_on_witness_host": true,
+    "witness_public_ca_certificate_retained_on_witness_host": true,
+    "witness_public_server_certificate_retained_on_witness_host": true
+  },
+  "limitations": [
+    "Both computers remain under the same operator and are not independent custody or independent validation.",
+    "Writer-generation administration is an in-process/off-path store operation in this research increment.",
+    "The revocation generation is stored in the witness SQLite database and can be rolled back with the database.",
+    "Credential issuance, rotation, revocation authority, hardware binding and external identity governance are not established.",
+    "Witness-host compromise, durable anti-rollback storage and availability loss remain outside the demonstrated protection.",
+    "This probe does not establish live containment, matched efficacy, comparator parity, scientific N, canonical efficacy or high assurance."
+  ]
+}

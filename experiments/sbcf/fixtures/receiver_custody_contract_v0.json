@@ -1,0 +1,44 @@
+{
+  "schema_version": "sbcf-receiver-custody-v0",
+  "status": "CANDIDATE_NOT_FROZEN",
+  "effect_contract_digest": "sha256:0540ca3b11e82da563208afb4164da9b00c260779832b462dc6824e7dfebadff",
+  "receiver_operator": {
+    "status": "UNASSIGNED",
+    "operator_id": null,
+    "outside_implementation_required": true,
+    "uncoached_required": true,
+    "same_owner_automation_disallowed": true,
+    "systems_under_test": [
+      "sbcf",
+      "acs",
+      "openshell"
+    ]
+  },
+  "raw_receipt": {
+    "required_fields": [
+      "trial_id",
+      "effect_identity_sha256",
+      "observed_effect",
+      "raw_record_sha256",
+      "byte_count"
+    ],
+    "integrity_algorithm": "SHA-256",
+    "raw_bytes_retained": true,
+    "private_keys_prohibited": true,
+    "analysis_fields_prohibited": true
+  },
+  "durable_retention": {
+    "status": "UNRESOLVED",
+    "archive_location": null,
+    "archive_identifier": null,
+    "retention_period": null,
+    "access_control_owner": null,
+    "retrieval_verification_required": true,
+    "independent_hash_recompute_required": true
+  },
+  "separation": {
+    "analysis_authorization_separate": true,
+    "adjudication_separate": true,
+    "independent_validation_not_implied": true
+  }
+}
