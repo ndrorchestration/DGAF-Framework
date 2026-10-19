@@ -1,52 +1,43 @@
-// dashboard/components/TurnTable.jsx
-// Per-turn audit table: newest rows at top, 50-row max.
+// Current /api/orchestrate presentation; schema-limited, no inferred approval.
+import { normalizeOrchestrateResponse, decisionColor } from '../lib/orchestrate-presentation.mjs';
+
 const COLS = [
-  { key: 'turn_id',              label: 'Turn ID',       w: 180 },
-  { key: 'kappa_category',      label: 'KAPPA',         w: 100 },
-  { key: 'dgaf_decision',       label: 'DGAF',          w: 90  },
-  { key: 'phi_decision',        label: 'Φ-Gate',        w: 90  },
-  { key: 'effective_confidence',label: 'Eff. Conf',     w: 90  },
-  { key: 'hpg_applied',         label: 'HPG',           w: 60  },
-  { key: 'hpg_step_locked',     label: 'Step↓',         w: 60  },
-  { key: 'apogee_grade',        label: 'Apogee',        w: 80  },
-  { key: 'gold_star',           label: '★',             w: 40  },
-  { key: 'scpe_compression',    label: 'SCPE%',         w: 80  },
-  { key: 'seal_hash',           label: 'Seal',          w: 120 },
+  { key: 'turn', label: 'Turn', w: 60 },
+  { key: 'decision', label: 'API decision', w: 130 },
+  { key: 'evidence_status', label: 'Evidence', w: 100 },
+  { key: 'phi_gate', label: 'Φ-Gate', w: 100 },
+  { key: 'effective_confidence', label: 'Eff. Conf', w: 100 },
+  { key: 'hpg_fired', label: 'HPG', w: 60 },
+  { key: 'reason', label: 'Reason', w: 240 },
 ];
 
-const badge = (val, key) => {
-  if (key === 'dgaf_decision') {
-    const c = val === 'KILL' ? '#dc2626' : val === 'REPROMPT' ? '#d97706' : '#059669';
-    return <span style={{ ...styles.badge, background: c }}>{val}</span>;
+const cell = (row, key) => {
+  const val = row[key];
+  if (key === 'decision') {
+    return <span style={{ ...styles.badge, background: decisionColor(row) }}>{val}</span>;
   }
-  if (key === 'phi_decision') {
-    const c = val === 'PASS' ? '#059669' : val === 'REPROMPT' ? '#d97706' : '#374151';
-    return <span style={{ ...styles.badge, background: c }}>{val ?? '—'}</span>;
-  }
-  if (key === 'gold_star') return val ? '⭐' : '·';
-  if (key === 'hpg_applied' || key === 'hpg_step_locked') return val ? '✓' : '·';
-  if (key === 'seal_hash') return <code style={styles.code}>{String(val ?? '—').slice(0,10)}…</code>;
-  if (key === 'effective_confidence') return typeof val === 'number' ? val.toFixed(3) : '—';
-  if (key === 'scpe_compression') return typeof val === 'number' ? (val * 100).toFixed(1) + '%' : '—';
-  return String(val ?? '—');
+  if (key === 'effective_confidence') return val === null ? '—' : val.toFixed(3);
+  if (key === 'hpg_fired') return val === null ? '—' : (val ? 'Yes' : 'No');
+  return val ?? '—';
 };
 
 export default function TurnTable({ turns }) {
-  if (!turns.length) return (
-    <div style={styles.empty}>No turns yet — fire a request via the Orchestrate panel above.</div>
+  const rows = Array.isArray(turns) ? turns.map(normalizeOrchestrateResponse) : [];
+  if (!rows.length) return (
+    <div style={styles.empty}>No responses yet — submit a request above.</div>
   );
   return (
     <div style={styles.wrap}>
-      <div style={styles.heading}>Turn Audit Log</div>
+      <div style={styles.heading}>Turn responses — not authorization evidence</div>
       <div style={{ overflowX: 'auto' }}>
         <table style={styles.table}>
           <thead>
             <tr>{COLS.map(c => <th key={c.key} style={{ ...styles.th, width: c.w }}>{c.label}</th>)}</tr>
           </thead>
           <tbody>
-            {turns.map((row, i) => (
+            {rows.map((row, i) => (
               <tr key={i} style={i % 2 === 0 ? styles.rowEven : styles.rowOdd}>
-                {COLS.map(c => <td key={c.key} style={styles.td}>{badge(row[c.key], c.key)}</td>)}
+                {COLS.map(c => <td key={c.key} style={styles.td}>{cell(row, c.key)}</td>)}
               </tr>
             ))}
           </tbody>
@@ -65,6 +56,5 @@ const styles = {
   rowEven: { background: 'transparent' },
   rowOdd:  { background: '#0d0d12' },
   badge:   { display: 'inline-block', padding: '2px 7px', borderRadius: 4, fontSize: 11, fontWeight: 600, color: '#fff' },
-  code:    { fontSize: 11, color: '#7c3aed', fontFamily: 'monospace' },
   empty:   { padding: 24, color: '#6b7280', textAlign: 'center', fontSize: 13 },
 };

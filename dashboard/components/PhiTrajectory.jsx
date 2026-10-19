@@ -1,21 +1,22 @@
 // dashboard/components/PhiTrajectory.jsx
-// SVG sparkline of effective_confidence over turns, with φ* = 0.618 reference line.
+// SVG sparkline of only observed effective confidence; missing values are never fabricated.
+import { normalizeOrchestrateResponse } from '../lib/orchestrate-presentation.mjs';
 export default function PhiTrajectory({ turns }) {
   const W = 560, H = 200, PAD = 32;
-  const data = [...turns].reverse();
+  const data = (Array.isArray(turns) ? turns : []).map(normalizeOrchestrateResponse).reverse();
   const n    = data.length;
 
   const xScale = i  => PAD + (i / Math.max(n - 1, 1)) * (W - PAD * 2);
   const yScale = v  => H - PAD - (v * (H - PAD * 2));
   const phiY   = yScale(0.618);
 
-  const points = data.map((t, i) =>
-    `${xScale(i)},${yScale(t.effective_confidence ?? 0.5)}`
+  const observed = data.map((t, i) => ({ t, i }))
+    .filter(({ t }) => t.effective_confidence !== null);
+  const points = observed.map(({ t, i }) =>
+    `${xScale(i)},${yScale(t.effective_confidence)}`
   ).join(' ');
-
-  const dgafKillPoints = data
-    .map((t, i) => ({ t, i }))
-    .filter(({ t }) => t.dgaf_decision === 'KILL');
+  const blocked = data.map((t, i) => ({ t, i }))
+    .filter(({ t }) => ['KILL', 'REJECT', 'BLOCKED'].includes(t.decision));
 
   return (
     <div style={styles.card}>
@@ -27,17 +28,18 @@ export default function PhiTrajectory({ turns }) {
         <text x={W - PAD + 4} y={phiY + 4} fill="#7c3aed" fontSize={10}>φ*</text>
 
         {/* Confidence sparkline */}
-        {n > 1 && (
+        {observed.length > 1 && (
           <polyline points={points} fill="none" stroke="#2563eb" strokeWidth={2} />
         )}
         {/* Data points */}
-        {data.map((t, i) => (
-          <circle key={i} cx={xScale(i)} cy={yScale(t.effective_confidence ?? 0.5)}
-                  r={3} fill={t.gold_star ? '#f59e0b' : '#2563eb'} />
+        {observed.map(({ t, i }) => (
+          <circle key={i} cx={xScale(i)} cy={yScale(t.effective_confidence)}
+                  r={3} fill="#2563eb" />
         ))}
         {/* KILL markers */}
-        {dgafKillPoints.map(({ t, i }) => (
-          <text key={i} x={xScale(i) - 5} y={yScale(t.effective_confidence ?? 0.5) - 8}
+        {blocked.map(({ t, i }) => (
+          <text key={i} x={xScale(i) - 5}
+                y={(t.effective_confidence === null ? H - PAD : yScale(t.effective_confidence)) - 8}
                 fill="#dc2626" fontSize={10} fontWeight="bold">✕</text>
         ))}
 
@@ -49,9 +51,8 @@ export default function PhiTrajectory({ turns }) {
         <text x={W / 2} y={H - 6} fill="#6b7280" fontSize={9} textAnchor="middle">Turns (newest right)</text>
       </svg>
       <div style={styles.legend}>
-        <span style={styles.dot('#f59e0b')} /> Gold Star &nbsp;
-        <span style={styles.dot('#2563eb')} /> Normal &nbsp;
-        <span style={{ color: '#dc2626', fontSize: 11 }}>✕ DGAF Kill</span>
+        <span style={styles.dot('#2563eb')} /> Observed confidence &nbsp;
+        <span style={{ color: '#dc2626', fontSize: 11 }}>✕ Blocked / rejected</span>
       </div>
     </div>
   );
