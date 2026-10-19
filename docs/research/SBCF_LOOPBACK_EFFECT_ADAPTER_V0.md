@@ -63,7 +63,12 @@ Covered cases:
 8. an unreachable loopback endpoint produces an unknown-outcome/reconciliation
    state rather than a successful receipt.
 
-Focused result at implementation checkpoint: **15 passed**.
+Focused positive/negative contract result at implementation checkpoint: **15 passed**.
+
+A separate strict expected-failure test opens a direct loopback socket without
+calling the PEP. The receiver observes the request, so the assertion that direct
+code cannot bypass the reference PEP fails as expected. This is retained
+falsification evidence for the absence of OS-level interception.
 
 ## Comparator interpretation
 
@@ -72,8 +77,9 @@ For the matched-comparator program this is appropriately classified as
 
 Why: a real effect is mediated when callers use the reference transaction and
 PEP, but the host operating system does not prevent other process code from
-opening a socket directly. The adapter therefore proves a bounded application
-enforcement path, not universal interception or bypass resistance.
+opening a socket directly. The strict direct-socket counterexample reproduces
+that bypass. The adapter therefore proves a bounded application enforcement
+path, not universal interception or bypass resistance.
 
 This advances SBCF beyond a purely synthetic effect path, but it does **not**
 satisfy the matched-runtime readiness gate. A stronger matched boundary would
