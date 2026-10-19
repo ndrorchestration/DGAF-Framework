@@ -99,14 +99,12 @@ jobs:
             --wait
 
           EXACT="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 12 \
-            -H 'X-SBCF-Trial-ID: openshell-exact-allow' \
             https://api.github.com/zen)"
           test -n "$EXACT"
           printf 'exact_allow=%s\n' "$EXACT"
 
           set +e
           OTHER="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 8 \
-            -H 'X-SBCF-Trial-ID: openshell-adjacent-host' \
             https://example.com/ 2>&1)"
           OTHER_RC=$?
           set -e
@@ -114,7 +112,6 @@ jobs:
           printf 'adjacent_host=%s\n' "$OTHER"
 
           POST_BODY="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sS --max-time 12 -X POST \
-            -H 'X-SBCF-Trial-ID: openshell-adjacent-method' \
             https://api.github.com/repos/octocat/hello-world/issues \
             -d sbcf_candidate=1)"
           printf 'adjacent_method=%s\n' "$POST_BODY"
@@ -126,7 +123,6 @@ jobs:
 
           set +e
           REVOKED="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 8 \
-            -H 'X-SBCF-Trial-ID: openshell-revoked-authority' \
             https://api.github.com/zen 2>&1)"
           REVOKED_RC=$?
           set -e
