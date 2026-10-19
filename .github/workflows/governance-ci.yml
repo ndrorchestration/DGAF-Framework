@@ -42,6 +42,12 @@ jobs:
           -r requirements-ci-control-plane-py312-ubuntu2404-x64.lock
           -r requirements-ci-governance-networkx.lock
 
+      - name: Characterize source-known PDMAL topology-label linkability (#1399)
+        run: |
+          set -euo pipefail
+          python -c "import networkx; assert networkx.__version__ == '3.6.1'"
+          python -m pytest -q tests/test_pdmal_structural_masking_linkability.py -ra
+
       - name: Emit E2b/M6 evidence in isolated hash-pinned verifier environment
         run: |
           python -m venv .e2b-venv
