@@ -82,3 +82,48 @@ demonstrated protections.
 
 This work does not establish live containment, matched comparator efficacy,
 scientific N, independent validation, canonical efficacy, or high assurance.
+
+
+## Split read/write live QA — 2026-10-19
+
+At implementation commit `5f4d27a5216c23b7d4fc2eaa02c8981548d8e8b0`, the service
+was rerun between NeonPC and neontic with separate read and write credentials.
+The successful clean run used a fresh run identity and verified TLS chain.
+
+Observed behavior:
+
+- the writer advanced sequence 1 but could not read it;
+- the reader read sequence 1 but could not advance sequence 2;
+- a same-sequence replay with a new checkpoint ID was rejected;
+- the writer advanced sequence 2;
+- the reader returned sequence 2 / `split-v2-cp-2`;
+- an unrelated credential returned no checkpoint.
+
+The witness retained sequence 2 for run `split-live-run-v2`. Private CA and
+server keys, probe scripts, and client-side certificate copies were deleted
+after capture. The witness database and public CA/server certificates remain
+on neontic as retained local evidence.
+
+Three first failures are intentionally retained in the new receipt. Initial
+connections reached a stale historical `live_witness_server.py` process still
+listening on port 4443 and presenting the prior probe certificate; that stale
+listener was identified by command line and terminated before the clean run.
+The first new TLS fixture also failed closed because a self-signed leaf was
+incorrectly supplied as a CA trust file; it was replaced by an ephemeral CA
+and CA-signed server certificate without disabling verification. A one-line
+evidence-capture command later failed from shell quoting and was replaced by
+a local capture script without changing witness state.
+
+The stale-listener finding is operationally important: a cleanup receipt can
+describe the state observed at capture time but cannot establish that a host
+remained clean later. Future witness QA must re-check active listeners and
+certificate identity at the beginning and end of each probe.
+
+Evidence receipt:
+`docs/research/sbcf_offhost_evidence/2026-10-19/split_credential_probe.json`.
+
+This remains same-operator off-host failure-domain separation, not independently
+managed custody. The write credential can still advance the monotonic state and
+cause fail-closed denial of service if compromised. Hardware-backed identity,
+credential rotation/revocation, durable witness anti-rollback, availability
+policy, and outside falsification remain open.
