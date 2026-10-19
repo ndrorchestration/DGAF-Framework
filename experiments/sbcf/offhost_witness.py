@@ -1,0 +1,285 @@
+"""Off-host monotonic witness research prototype.
+
+The service separates checkpoint state from the SBCF client process and requires
+HTTPS plus a bearer token. It does not establish independent custody, production
+authorization, or protection against compromise of the witness host.
+"""
+
+from __future__ import annotations
+
+import hmac
+import http.client
+import json
+import sqlite3
+import ssl
+from contextlib import closing
+from dataclasses import asdict, dataclass
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from typing import cast
+from urllib.parse import parse_qs, urlencode, urlparse
+
+MAX_BODY_BYTES = 8192
+
+
+@dataclass(frozen=True)
+class RemoteCheckpoint:
+    source: str
+    run: str
+    policy: str
+    sequence: int
+    checkpoint_id: str
+
+
+def _valid_checkpoint(record: RemoteCheckpoint) -> bool:
+    return (
+        all(
+            isinstance(value, str) and value
+            for value in (record.source, record.run, record.policy, record.checkpoint_id)
+        )
+        and type(record.sequence) is int
+        and record.sequence >= 0
+    )
+
+
+class WitnessStore:
+    """Monotonic SQLite checkpoint store intended to live on another host."""
+
+    def __init__(self, path: str | Path):
+        self.path = str(Path(path).resolve())
+        with closing(sqlite3.connect(self.path)) as db, db:
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS checkpoint ("
+                "source TEXT NOT NULL, run TEXT NOT NULL, policy TEXT NOT NULL, "
+                "sequence INTEGER NOT NULL, checkpoint_id TEXT NOT NULL, "
+                "PRIMARY KEY(source, run), UNIQUE(checkpoint_id))"
+            )
+
+    def advance(self, record: RemoteCheckpoint) -> bool:
+        if not _valid_checkpoint(record):
+            return False
+        try:
+            with closing(sqlite3.connect(self.path, timeout=10, isolation_level=None)) as db:
+                db.execute("BEGIN IMMEDIATE")
+                current = db.execute(
+                    "SELECT policy, sequence FROM checkpoint WHERE source=? AND run=?",
+                    (record.source, record.run),
+                ).fetchone()
+                if current is not None:
+                    if current[0] != record.policy or record.sequence <= current[1]:
+                        db.rollback()
+                        return False
+                    db.execute(
+                        "UPDATE checkpoint SET sequence=?, checkpoint_id=? WHERE source=? AND run=?",
+                        (record.sequence, record.checkpoint_id, record.source, record.run),
+                    )
+                else:
+                    db.execute(
+                        "INSERT INTO checkpoint(source,run,policy,sequence,checkpoint_id) VALUES (?,?,?,?,?)",
+                        (
+                            record.source,
+                            record.run,
+                            record.policy,
+                            record.sequence,
+                            record.checkpoint_id,
+                        ),
+                    )
+                db.commit()
+            return True
+        except sqlite3.IntegrityError:
+            return False
+
+    def read(self, source: str, run: str) -> RemoteCheckpoint | None:
+        if not source or not run:
+            return None
+        with closing(sqlite3.connect(self.path, timeout=3)) as db:
+            row = db.execute(
+                "SELECT source,run,policy,sequence,checkpoint_id FROM checkpoint WHERE source=? AND run=?",
+                (source, run),
+            ).fetchone()
+        return None if row is None else RemoteCheckpoint(*row)
+
+
+class WitnessHTTPServer(ThreadingHTTPServer):
+    def __init__(self, server_address: tuple[str, int], store: WitnessStore, token: str):
+        if not token:
+            raise ValueError("witness token is required")
+        super().__init__(server_address, WitnessRequestHandler)
+        self.store = store
+        self.token = token
+
+
+class WitnessRequestHandler(BaseHTTPRequestHandler):
+    server_version = "SBCF-Witness-Research/0"
+
+    def log_message(self, format: str, *args: object) -> None:
+        return
+
+    def _server(self) -> WitnessHTTPServer:
+        return cast(WitnessHTTPServer, self.server)
+
+    def _authorized(self) -> bool:
+        supplied = self.headers.get("Authorization", "")
+        expected = f"Bearer {self._server().token}"
+        return hmac.compare_digest(supplied, expected)
+
+    def _reply(self, status: int, payload: dict[str, object]) -> None:
+        body = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self) -> None:  # noqa: N802
+        if not self._authorized():
+            self._reply(401, {"status": "blocked"})
+            return
+        parsed = urlparse(self.path)
+        if parsed.path != "/v1/checkpoint":
+            self._reply(404, {"status": "not_found"})
+            return
+        query = parse_qs(parsed.query, strict_parsing=False)
+        source = query.get("source", [""])[0]
+        run = query.get("run", [""])[0]
+        record = self._server().store.read(source, run)
+        if record is None:
+            self._reply(404, {"status": "not_found"})
+            return
+        self._reply(200, {"status": "ok", "checkpoint": asdict(record)})
+
+    def do_POST(self) -> None:  # noqa: N802
+        if not self._authorized():
+            self._reply(401, {"status": "blocked"})
+            return
+        if self.path != "/v1/checkpoint":
+            self._reply(404, {"status": "not_found"})
+            return
+        try:
+            length = int(self.headers.get("Content-Length", ""))
+        except ValueError:
+            self._reply(400, {"status": "invalid"})
+            return
+        if length <= 0 or length > MAX_BODY_BYTES:
+            self._reply(413, {"status": "invalid"})
+            return
+        try:
+            payload = json.loads(self.rfile.read(length))
+            if not isinstance(payload, dict) or set(payload) != {
+                "source",
+                "run",
+                "policy",
+                "sequence",
+                "checkpoint_id",
+            }:
+                raise ValueError("invalid fields")
+            record = RemoteCheckpoint(**payload)
+        except (UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError):
+            self._reply(400, {"status": "invalid"})
+            return
+        if not self._server().store.advance(record):
+            self._reply(409, {"status": "rejected"})
+            return
+        self._reply(201, {"status": "accepted", "checkpoint": asdict(record)})
+
+
+def make_https_server(
+    host: str,
+    port: int,
+    *,
+    store_path: str | Path,
+    token: str,
+    certfile: str | Path,
+    keyfile: str | Path,
+) -> WitnessHTTPServer:
+    server = WitnessHTTPServer((host, port), WitnessStore(store_path), token)
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
+    context.load_cert_chain(certfile=str(certfile), keyfile=str(keyfile))
+    server.socket = context.wrap_socket(server.socket, server_side=True)
+    return server
+
+
+class RemoteWitnessClient:
+    """Fail-closed HTTPS client for an off-host checkpoint service."""
+
+    def __init__(self, base_url: str, *, token: str, cafile: str | Path, timeout: float = 3.0):
+        parsed = urlparse(base_url)
+        if parsed.scheme != "https" or not parsed.hostname or not token:
+            raise ValueError("verified https witness endpoint and token required")
+        if parsed.path not in ("", "/") or parsed.query or parsed.fragment:
+            raise ValueError("witness base URL must not contain path, query, or fragment")
+        self.host = parsed.hostname
+        self.port = parsed.port or 443
+        self.token = token
+        self.timeout = timeout
+        self.context = ssl.create_default_context(cafile=str(cafile))
+        self.context.minimum_version = ssl.TLSVersion.TLSv1_2
+
+    def _connection(self) -> http.client.HTTPSConnection:
+        return http.client.HTTPSConnection(
+            self.host,
+            self.port,
+            timeout=self.timeout,
+            context=self.context,
+        )
+
+    def advance(self, record: RemoteCheckpoint) -> bool:
+        if not _valid_checkpoint(record):
+            return False
+        data = json.dumps(asdict(record), sort_keys=True, separators=(",", ":")).encode("utf-8")
+        connection = self._connection()
+        try:
+            connection.request(
+                "POST",
+                "/v1/checkpoint",
+                body=data,
+                headers={
+                    "Authorization": f"Bearer {self.token}",
+                    "Content-Type": "application/json",
+                },
+            )
+            response = connection.getresponse()
+            response.read()
+            return response.status == 201
+        except (http.client.HTTPException, TimeoutError, ssl.SSLError, OSError):
+            return False
+        finally:
+            connection.close()
+
+    def read(self, source: str, run: str) -> RemoteCheckpoint | None:
+        if not source or not run:
+            return None
+        query = urlencode({"source": source, "run": run})
+        connection = self._connection()
+        try:
+            connection.request(
+                "GET",
+                f"/v1/checkpoint?{query}",
+                headers={"Authorization": f"Bearer {self.token}"},
+            )
+            response = connection.getresponse()
+            body = response.read()
+            if response.status != 200:
+                return None
+            payload = json.loads(body)
+            if not isinstance(payload, dict) or payload.get("status") != "ok":
+                return None
+            checkpoint = payload.get("checkpoint")
+            if not isinstance(checkpoint, dict):
+                return None
+            record = RemoteCheckpoint(**checkpoint)
+            return record if _valid_checkpoint(record) else None
+        except (
+            http.client.HTTPException,
+            TimeoutError,
+            ssl.SSLError,
+            OSError,
+            TypeError,
+            ValueError,
+            json.JSONDecodeError,
+        ):
+            return None
+        finally:
+            connection.close()
