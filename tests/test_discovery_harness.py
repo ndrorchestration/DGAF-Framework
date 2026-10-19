@@ -99,6 +99,8 @@ def test_historical_crlf_exact_byte_defect_is_detected_now(tmp_path):
     repo = tmp_path / "crlf-replay"
     repo.mkdir()
     _git(repo, "init")
+    # This fixture must hash raw bytes independent of a host-wide CRLF filter.
+    _git(repo, "config", "core.autocrlf", "false")
     _git(repo, "config", "user.email", "replay@example.invalid")
     _git(repo, "config", "user.name", "DGAF Historical Replay")
 
