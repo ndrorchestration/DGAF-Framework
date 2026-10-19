@@ -32,6 +32,18 @@ Minimum SBCF comparator requirement: pre-action interception, deterministic poli
 
 Current SBCF result: PARTIAL CONTRACT OVERLAP / NO INTEROPERABILITY OR PERFORMANCE PARITY. SBCF has deterministic synthetic decisions, fail-closed local evidence checks and signed test envelopes, but no ACS wire interoperability, Guardian integration, conformance result, authenticated external control channel or independently managed audit service.
 
+### ACS executable reproduction checkpoint — 2026-10-19
+
+Pinned source: `GenAI-Security-Project/agent-control-standard` commit `9c05f0402d76dea6b67a12a93672c2131137e572`.
+
+Hosted reproduction: DGAF research workflow run `39185127303`, job `117845841547`, mirrors the upstream reference workflow contract: Ubuntu latest, Bun `1.3.11`, frozen `bun.lock`, pinned `trash-cli@7.2.0`, typecheck, then full `bun test`. Result: **1231 passed / 4 skipped / 0 failed**, 3754 expectations, 1235 tests across 73 files in 37.07 seconds. Typecheck passed.
+
+Windows bounded reproduction: NeonPC, same upstream source, Bun `1.3.11`, documented external `ACS_OPA_PATH`, no source edits. `bun test hosts\\claude-code` returned **50 passed / 0 failed**, 206 expectations, 50 tests across four files in 6.45 seconds. The suite includes the real subprocess test that sends a destructive `rm -rf /` tool call through the Claude host shim and expects a Guardian policy denial.
+
+First failures are retained as reproduction evidence. Bun `1.4.3` produced **2 passed / 48 failed** in the Claude host subset because child shims exited successfully with empty stdout; the repository's own CI pins Bun `1.3.11`, and rerunning on that version resolved the behavior. Before nested tests could run, an earlier attempt also failed because locally installed Bun was not on the child-process `PATH`. Neither environment mismatch is counted as an ACS policy failure.
+
+Disposition: ACS is now a **reproduced executable comparator** for its own pinned reference suite and bounded deny behavior. This does not establish SBCF parity, interoperability, comparative efficacy, or superiority. Published ACS reference limitations, including its documented unauthenticated wire and configurable/default decision-failure posture, remain part of the comparator.
+
 ## OWASP Top 10 for Agentic Applications 2026 — verified threat baseline
 
 Source: https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
@@ -86,7 +98,7 @@ Current SBCF result: NO TEMPORAL-RUNTIME PARITY. SBCF does not yet implement mat
 
 Primary-source identity is now verified for OpenShell, OWASP ACS, OWASP Agentic Top 10, Cisco Zero Trust for Agentic AI, LLM Agent Honeypot, BRaVeS/LBCF and MARIS-TRA.
 
-C1 remains OPEN because source verification is not matched reproduction. Before promoting any candidate to an empirical minimum benchmark:
+C1 remains OPEN. ACS has advanced from source verification to executable reproduction, but the other candidate baselines have not yet received matched implementation reproduction, and no cross-system SBCF comparison has been run. Before promoting any candidate to an empirical minimum benchmark:
 1. pin exact version/commit/artifact;
 2. identify executable implementation and license/access constraints;
 3. define matching threat model and control surface;
