@@ -16,7 +16,27 @@ Minimum SBCF comparator requirement: independently enforced resource boundary, e
 
 Current SBCF result: NOT PARITY. The SBCF branch implements synthetic policy/evidence contracts and local SQLite witness behavior only. It does not implement an OpenShell-equivalent sandbox, kernel filesystem enforcement, process identity boundary, credential broker, or network proxy.
 
-Reproduction still needed: pin exact OpenShell release/container/runtime; exercise filesystem/process/network controls, hot update, invalid policy, bypass attempts, crash/update races, evidence capture, and outside review.
+### OpenShell executable enforcement reproduction checkpoint — 2026-10-19
+
+Pinned source: `NVIDIA/OpenShell` commit `5a7728c304b5528e954e9ae900cf21f84e1a12b1`, exact tag `v0.1.4`.
+
+Hosted reproduction: DGAF research workflow head `4ee65d9f715f966a3dadce446979393c312e803c`, run `39186200300`, job `117849041087`, on Ubuntu 24.04 with Docker. The exact v0.1.4 Debian package installed successfully, the local gateway registered and reported connected, and a user-owned Ubuntu 24.04 workload image with curl was built as required by the upstream first-network-policy tutorial.
+
+Observed real enforcement behavior in the OpenShell sandbox:
+- isolation boundary enforcement was explicitly confirmed by the supervisor;
+- the initial policy loaded at revision 1;
+- before any network rule, `/usr/bin/curl` to `api.github.com:443` was denied and recorded as structured `NET:OPEN ... DENIED` evidence;
+- a live `github_api` read-only REST rule was submitted as policy version 2 and loaded without restarting the sandbox;
+- a GET to `https://api.github.com/zen` succeeded after the update;
+- unrelated `example.com:443` remained denied after the GitHub rule was active;
+- a POST to `/repos/octocat/hello-world/issues` returned a structured `policy_denied` response under `github_api`;
+- sandbox logs recorded the corresponding `HTTP:POST ... DENIED` L7 event.
+
+First reproduction failures are preserved. A shallow external checkout initially omitted tags and broke only the provenance assertion. The upstream automated demo then failed because the default v0.1.4 sandbox image lacks curl even though the tutorial explicitly requires a user-owned workload image with curl. A later wrapper used a long-running canonical command and was canceled because it held sandbox creation open. Another wrapper misquoted an HTTP header through SSH after default-deny, live policy update, allowed GET and unrelated-host denial had already reproduced. The final successful run corrected only the reproduction wrapper/prerequisite and did not modify OpenShell source.
+
+Disposition: OpenShell v0.1.4 is now a **reproduced executable enforcement comparator** for this bounded network-policy sequence. SBCF remains NOT PARITY: it still has no OpenShell-equivalent kernel/process/filesystem/network enforcement plane, credential injection boundary, or matched bypass/update-race evidence.
+
+Reproduction still needed for broader parity work: filesystem and process controls, credential/provider behavior, invalid-policy semantics, bypass attempts, crash/update races, policy prover behavior, comparable workload semantics, and outside review.
 
 ## OWASP Agent Control Standard (ACS) — verified source and implementation availability
 
@@ -98,7 +118,7 @@ Current SBCF result: NO TEMPORAL-RUNTIME PARITY. SBCF does not yet implement mat
 
 Primary-source identity is now verified for OpenShell, OWASP ACS, OWASP Agentic Top 10, Cisco Zero Trust for Agentic AI, LLM Agent Honeypot, BRaVeS/LBCF and MARIS-TRA.
 
-C1 remains OPEN. ACS has advanced from source verification to executable reproduction, but the other candidate baselines have not yet received matched implementation reproduction, and no cross-system SBCF comparison has been run. Before promoting any candidate to an empirical minimum benchmark:
+C1 remains OPEN. ACS and OpenShell have advanced from source verification to executable reproduction, but the other candidate baselines have not yet received matched implementation reproduction, and no cross-system SBCF comparison has been run. Before promoting any candidate to an empirical minimum benchmark:
 1. pin exact version/commit/artifact;
 2. identify executable implementation and license/access constraints;
 3. define matching threat model and control surface;
