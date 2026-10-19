@@ -72,6 +72,7 @@ def test_semantic_manifest_binds_current_acp_authority_without_claim_promotion()
     assert manifest["non_effects"]["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
     assert manifest["non_effects"]["high_assurance"] == "NOT_AUTHORIZED"
 
+
 def test_durable_lineage_is_visible_with_disposable_scope_and_no_continuing_authority() -> None:
     status = load(STATUS)
     assert status["current_status"]["DURABLE_LOCAL_MUTATION_LINEAGE"] == "ESTABLISHED_FOR_TESTED_DISPOSABLE_SCOPE"
