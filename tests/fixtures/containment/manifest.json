@@ -1,0 +1,9 @@
+{
+  "schema_version": "SYNTHETIC_OBSERVATION_PINS_V1",
+  "observations": {
+    "SC-01": "sha256:e79bc0451dbcd1b5c8c242c5e071f7525a81c3ee499a88588137ec1ab218a9e6",
+    "SC-05": "sha256:5b311999f03d9becbb8917481060d857567f677c065af864adce288c96df282f",
+    "SC-13": "sha256:bc1166f9fe61b7d3ce7d9ba74f48ebc71f2440c8cc720228932c173f2f20934a",
+    "SC-16": "sha256:e79bc0451dbcd1b5c8c242c5e071f7525a81c3ee499a88588137ec1ab218a9e6"
+  }
+}
