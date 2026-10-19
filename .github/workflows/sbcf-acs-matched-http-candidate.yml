@@ -147,13 +147,39 @@ jobs:
           print(json.dumps(actual, sort_keys=True))
           PY
 
-      - name: Verify candidate mapping schema
+      - name: Verify candidate mapping schema without extra dependencies
+        shell: bash
         run: |
-          python -m pytest \
-            tests/test_sbcf_acs_matched_effect_mapping.py \
-            tests/test_sbcf_matched_effect_contract.py -q
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from experiments.sbcf.acs_matched_effect_mapping import (
+              evaluate_acs_mapping,
+              validate_acs_mapping,
+          )
+          from experiments.sbcf.matched_effect_contract import (
+              effect_contract_digest,
+              evaluate_effect_contract,
+              validate_effect_contract,
+          )
+
+          root = Path("experiments/sbcf/fixtures")
+          effect = json.loads((root / "matched_http_effect_contract_v0.json").read_text(encoding="utf-8"))
+          mapping = json.loads((root / "acs_matched_http_mapping_v0.json").read_text(encoding="utf-8"))
+
+          validate_effect_contract(effect)
+          validate_acs_mapping(mapping)
+          assert mapping["effect_contract_digest"] == effect_contract_digest(effect)
+          assert effect["system_mappings"]["acs"] == "UNRESOLVED"
+          assert not evaluate_effect_contract(effect).ready
+          assert not evaluate_acs_mapping(mapping).complete
+          print("candidate schema PASS; parent ACS mapping remains UNRESOLVED")
+          PY
 
       - name: Assert pinned ACS checkout is restored clean
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
