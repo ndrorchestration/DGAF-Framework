@@ -324,6 +324,24 @@
       "controller": "PDMAL Solo Final Experiment 001 retirement boundary",
       "decision_effect": "Preserves and verifies that the retired Solo Experiment 001 execution authority remains absent; it does not execute the experiment or establish a recurring audit-family identity.",
       "reason": "The workflow is explicitly named Retired, contains only pull-request retirement checks, forbids executable authority tokens, and verifies the retained retirement record."
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-rekor-timing.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "CONTROLLED_EXTERNAL_SIDE_EFFECT_EXPERIMENT_INSTANCE",
+      "lifecycle": "CURRENT",
+      "controller": "P4 Mode T controlled synthetic public Rekor timing experiment",
+      "decision_effect": "A manually dispatched, source-bound, explicitly confirmed experiment can create an irreversible public Rekor transparency-log entry; it is not a recurring repository assurance audit or an authorization for empirical collection.",
+      "reason": "The workflow has only workflow_dispatch with a default NO public-entry confirmation; its public-effect job is conditioned on explicit I_UNDERSTAND_PUBLIC_REKOR_ENTRY, uses short-lived OIDC token permission and verifies exact SHA and first attempt. The experiment creates externally visible data, while its contract tests are incidental supporting assurance and do not make the whole workflow an audit family."
+    },
+    {
+      "path": ".github/workflows/canonical-epoch-004-execution.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CURRENT",
+      "controller": "Canonical Solo Epoch 004 one-file run-request authorization and protected artifact custody",
+      "decision_effect": "Pull requests run non-empirical authorization tests; only a matching exact-scope experiment-branch push can run a blinded Epoch 004 execution and upload dataset and recoverable blinding key separately. This is an empirical execution mechanism, not a recurring audit family or independent custody.",
+      "reason": "The workflow distinguishes non-empirical PR validation from one-file authorization on solo-canonical-epoch-004/run-* pushes and owns protected blinded dataset/key artifacts with 90-day retention. Its historical runs do not make validation independent or authorize new collection by this classification."
     }
   ]
 }
