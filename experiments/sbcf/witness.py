@@ -17,7 +17,9 @@ class WitnessedVerifier:
             evidence_path.exists() and witness_path.exists() and evidence_path.samefile(witness_path)
         ):
             raise ValueError("witness must be a separate store")
-        self.evidence = DurableEvidenceVerifier(evidence_path, keys, allowed_fields)
+        # Private implementation dependency: callers must use witnessed admission.
+        # Python attribute privacy is not a security boundary; tests retain that counterexample.
+        self._evidence = DurableEvidenceVerifier(evidence_path, keys, allowed_fields)
         self.witness_path = str(witness_path)
         with closing(sqlite3.connect(self.witness_path)) as db, db:
             db.execute(
@@ -29,12 +31,12 @@ class WitnessedVerifier:
         if not isinstance(record, dict) or type(record.get("state")) is not dict:
             return False
         source = record.get("source")
-        if not isinstance(source, str) or source not in self.evidence.allowed_fields:
+        if not isinstance(source, str) or source not in self._evidence.allowed_fields:
             return False
-        if not set(record["state"]).issubset(self.evidence.allowed_fields[source]):
+        if not set(record["state"]).issubset(self._evidence.allowed_fields[source]):
             return False
         try:
-            if not EvidenceVerifier(self.evidence.keys).admit(
+            if not EvidenceVerifier(self._evidence.keys).admit(
                 record, expected_run=expected_run, expected_policy=expected_policy, expected_nonce=expected_nonce
             ):
                 return False
@@ -42,7 +44,7 @@ class WitnessedVerifier:
             return False
 
         # mode=rw prevents a missing store being silently recreated during admission.
-        evidence_uri = Path(self.evidence.path).as_uri() + "?mode=rw"
+        evidence_uri = Path(self._evidence.path).as_uri() + "?mode=rw"
         witness_uri = Path(self.witness_path).as_uri() + "?mode=rw"
         try:
             with closing(sqlite3.connect(evidence_uri, uri=True, timeout=10, isolation_level=None)) as db:

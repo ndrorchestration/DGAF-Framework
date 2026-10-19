@@ -50,14 +50,22 @@ def test_invalid_signature_cannot_advance_witness(tmp_path):
     assert admit(verifier, 5)
 
 
-@pytest.mark.xfail(
-    strict=True, reason="Direct evidence-only API bypass still splits stores; witnessed admission fences the mismatch"
-)
-def test_evidence_only_bypass_cannot_split_stores(tmp_path):
+def test_public_evidence_only_admission_path_is_not_exposed(tmp_path):
     verifier = make(tmp_path)
     assert admit(verifier, 1)
-    # Deliberately bypass the atomic witnessed API; preserve this counterexample.
-    assert verifier.evidence.admit(packet(2), expected_run="r", expected_policy="p", expected_nonce="n")
+    with pytest.raises(AttributeError):
+        _ = verifier.evidence
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="Same-process access to the private implementation can still bypass witnessed admission; Python privacy is not a security boundary",
+)
+def test_private_evidence_dependency_cannot_split_stores(tmp_path):
+    verifier = make(tmp_path)
+    assert admit(verifier, 1)
+    # Deliberate same-process fault injection through a private implementation detail.
+    assert verifier._evidence.admit(packet(2), expected_run="r", expected_policy="p", expected_nonce="n")
     with sqlite3.connect(tmp_path / "events.db") as db:
         evidence = db.execute("SELECT sequence FROM high_water WHERE source='broker' AND run='r'").fetchone()[0]
     with sqlite3.connect(tmp_path / "witness.db") as db:

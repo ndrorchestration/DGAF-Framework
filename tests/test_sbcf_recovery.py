@@ -38,7 +38,7 @@ def test_crash_between_writes_blocks(tmp_path):
     assert admit(v, 1)
     packet = dict(source="broker", run="r", policy="p", nonce="n", sequence=2, state={"capabilities": 0})
     packet["signature"] = sign(packet, KEYS["broker"])
-    assert v.evidence.admit(packet, expected_run="r", expected_policy="p", expected_nonce="n")
+    assert v._evidence.admit(packet, expected_run="r", expected_policy="p", expected_nonce="n")
     assert check(tmp_path).disposition == Disposition.BLOCKED
     assert check(tmp_path).reason == "COUNTER_MISMATCH"
 

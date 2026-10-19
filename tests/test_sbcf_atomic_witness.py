@@ -56,7 +56,7 @@ def test_mismatch_blocks_later_sequences_without_repair(tmp_path, ahead):
     verifier = make(tmp_path)
     assert admit(verifier, 1)
     if ahead == "evidence":
-        assert verifier.evidence.admit(packet(2), expected_run="r", expected_policy="p", expected_nonce="n")
+        assert verifier._evidence.admit(packet(2), expected_run="r", expected_policy="p", expected_nonce="n")
     else:
         with sqlite3.connect(tmp_path / "witness.db") as db:
             db.execute("UPDATE counters SET sequence=2")
