@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from experiments.sbcf.matched_effect_contract import effect_contract_digest
 from experiments.sbcf.openshell_matched_effect_mapping import (
     evaluate_openshell_mapping,
