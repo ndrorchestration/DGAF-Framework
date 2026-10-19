@@ -40,3 +40,5 @@ output/
 verify_integration.py
 artifacts/
 tests/resources/
+# Disposable test outputs; CI uploads named evidence separately
+test-artifacts/
