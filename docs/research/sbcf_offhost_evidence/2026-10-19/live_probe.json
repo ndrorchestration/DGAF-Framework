@@ -1,0 +1,54 @@
+{
+  "schema": "sbcf.offhost_witness.live_probe.v0",
+  "date": "2026-10-19",
+  "implementation_commit": "f04ddcc6b4e5940ed126f37db5eb89ad65e22bb4",
+  "scope": "ephemeral two-host HTTPS research probe; not independent validation",
+  "client": {
+    "role": "SBCF client",
+    "os": "Microsoft Windows 10 Home 10.0.19045",
+    "python": "3.12.10"
+  },
+  "witness": {
+    "role": "off-host monotonic witness",
+    "os": "Microsoft Windows 11 Home 10.0.26300",
+    "python": "3.14.5",
+    "tls_certificate_file_sha256": "e75299f3f0e7e723ad655cdaa18cf4748bd2aa673ea12e6ac50ce5f02fb28e6a",
+    "tls_certificate_x509_sha256_fingerprint": "36:A4:C3:CE:6E:95:73:A2:0A:7F:1F:D3:CE:35:96:E3:7E:D8:F9:73:A1:00:F1:C3:73:7E:73:DD:83:30:2D:E3",
+    "witness_db_sha256": "f7f590bd2bd907a148e4acafa4fe915306b2155d96c501f948094d4d65ebd250",
+    "retained_record": {
+      "source": "broker",
+      "run": "live-run",
+      "policy": "policy-live",
+      "sequence": 2,
+      "checkpoint_id": "live-cp-2"
+    }
+  },
+  "observations": [
+    {"step": "advance_sequence_1", "result": true},
+    {"step": "read_sequence_1", "sequence": 1, "checkpoint_id": "live-cp-1"},
+    {"step": "replay_sequence_1_with_new_checkpoint_id", "result": false},
+    {"step": "advance_sequence_2", "result": true},
+    {"step": "read_sequence_2", "sequence": 2, "checkpoint_id": "live-cp-2"},
+    {"step": "read_with_wrong_bearer_credential", "result": null}
+  ],
+  "cleanup": {
+    "service_stopped": true,
+    "witness_private_tls_key_deleted": true,
+    "witness_bearer_credential_deleted": true,
+    "client_bearer_credential_deleted": true,
+    "client_public_certificate_copy_deleted": true,
+    "witness_database_retained_on_witness_host": true,
+    "witness_public_certificate_retained_on_witness_host": true
+  },
+  "capture_notes": [
+    "Initial write of this evidence file failed because the nested evidence directory did not exist; the directory was created and the same content was retried.",
+    "The witness host did not expose PowerShell Get-FileHash in this session; SHA-256 file hashes were computed with Python hashlib instead.",
+    "No firewall rule was added for the probe."
+  ],
+  "limitations": [
+    "Both computers remain under the same operator and are not an independent validation arrangement.",
+    "The authorized client credential can advance the remote counter and could cause fail-closed denial of service if compromised.",
+    "Witness-host compromise, disk rollback, certificate/key compromise, availability loss, and independent key governance are not solved.",
+    "The test establishes bounded off-host monotonic witness behavior only; it does not establish live containment, scientific efficacy, parity, or high assurance."
+  ]
+}
