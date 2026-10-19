@@ -3,12 +3,12 @@
   "status": "PRE_FREEZE_FAIL_CLOSED",
   "systems": {
     "sbcf": {
-      "version": "97371dcd42b6cae5f88e2883d4adb24d65c5ad9f",
-      "source": "ndrorchestration/DGAF-Framework#1389",
-      "matched_effect_tier": "synthetic_effect",
+      "version": "52315ea11e02f33a3f547ecc79ff731c1df9b892",
+      "source": "ndrorchestration/DGAF-Framework implementation checkpoint stacked above #1393",
+      "matched_effect_tier": "reference_runtime_effect",
       "reproduced": true,
-      "effect_boundary": "Synthetic reference effects; off-host witness and generation-floor controls execute at runtime but do not mediate a matched real policy effect.",
-      "scope": "Deterministic controller and authority/evidence contracts plus same-operator off-host witness/generation-floor runtime QA; no matched real policy enforcement point."
+      "effect_boundary": "Real loopback HTTP effect mediated through the accepted DGAF capability PEP and exact action digest; direct process code can still bypass the reference wrapper.",
+      "scope": "Bounded application-level real-effect adapter plus same-operator off-host witness/generation-floor runtime QA; no OS-level interception or bypass-resistant enforcement."
     },
     "acs": {
       "version": "9c05f0402d76dea6b67a12a93672c2131137e572",

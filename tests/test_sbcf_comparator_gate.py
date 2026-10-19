@@ -26,7 +26,7 @@ def test_current_manifest_is_explicitly_not_ready():
 
 def test_system_versions_are_exactly_bound():
     manifest = load()
-    assert manifest["systems"]["sbcf"]["version"] == "97371dcd42b6cae5f88e2883d4adb24d65c5ad9f"
+    assert manifest["systems"]["sbcf"]["version"] == "52315ea11e02f33a3f547ecc79ff731c1df9b892"
     assert manifest["systems"]["acs"]["version"] == "9c05f0402d76dea6b67a12a93672c2131137e572"
     assert manifest["systems"]["openshell"]["version"] == "5a7728c304b5528e954e9ae900cf21f84e1a12b1"
 

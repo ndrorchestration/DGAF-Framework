@@ -11,23 +11,24 @@ contract is frozen first.
 
 | System | Exact source | Reproduced evidence | Matched-effect tier |
 |---|---|---|---|
-| SBCF | DGAF draft #1389 at `97371dcd42b6cae5f88e2883d4adb24d65c5ad9f` | synthetic policy effects plus same-operator off-host witness/generation-floor runtime QA | `synthetic_effect` |
+| SBCF | implementation checkpoint `52315ea11e02f33a3f547ecc79ff731c1df9b892` stacked above #1393 | real loopback HTTP effect through accepted DGAF capability PEP plus off-host witness/generation-floor runtime QA | `reference_runtime_effect` |
 | OWASP ACS | `9c05f0402d76dea6b67a12a93672c2131137e572` | pinned upstream reference suite and bounded host behavior | `reference_runtime_effect` |
 | NVIDIA OpenShell | v0.1.4 / `5a7728c304b5528e954e9ae900cf21f84e1a12b1` | Docker-backed sandbox network enforcement | `enforced_runtime_effect` |
 
 These tiers describe the **effect boundary relevant to a matched study**. They
-do not rank system quality. In particular, SBCF now has real runtime evidence
-for its off-host witness and generation floor, but that does not convert its
-synthetic policy-effect path into a matched real enforcement point.
+do not rank system quality. SBCF now has a real loopback HTTP effect mediated
+through the accepted DGAF capability PEP and exact action digest, but direct
+process code can still bypass that application wrapper. It therefore advances
+to `reference_runtime_effect`, not `enforced_runtime_effect`.
 
 ## Why a matched benchmark is blocked
 
 The same words do not yet mean the same experiment across all three systems.
 
 - **Effect boundary:** OpenShell intercepts a real sandbox network effect. ACS
-  currently has reproduced reference-runtime hook/policy behavior. SBCF still
-  evaluates synthetic reference effects even though supporting witness controls
-  run on real hosts.
+  currently has reproduced reference-runtime hook/policy behavior. SBCF now
+  mediates a real loopback HTTP effect through the reference PEP, but the host
+  does not prevent direct socket access that bypasses that wrapper.
 - **Policy intent:** the three systems currently express scope and authority
   differently; a common mapping is not frozen.
 - **Failure posture:** current controller-availability and decision-failure
@@ -101,9 +102,9 @@ Any unresolved field remains BLOCKED.
 
 The executable gate is expected to return NOT READY. That is the correct
 result. Comparator reproduction has improved, but no matched runtime efficacy
-study is authorized. The next engineering requirement for this track is an SBCF
-effect adapter/PEP at a real observable boundary plus a frozen common semantic
-mapping; ACS also requires evidence at the same matched effect boundary before
+study is authorized. SBCF now has a bounded real loopback effect adapter, but a
+stronger enforcement boundary and frozen common semantic mapping are still
+required; ACS also requires evidence at the same matched effect boundary before
 a three-system runtime comparison can be READY.
 
 `SCIENTIFIC_N_INCREMENT=0`
