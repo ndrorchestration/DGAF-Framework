@@ -12,11 +12,12 @@ import http.client
 import json
 import sqlite3
 import ssl
+import time
 from contextlib import closing
 from dataclasses import asdict, dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import cast
+from typing import Callable, cast
 from urllib.parse import parse_qs, urlencode, urlparse
 
 MAX_BODY_BYTES = 8192
@@ -29,6 +30,41 @@ class RemoteCheckpoint:
     policy: str
     sequence: int
     checkpoint_id: str
+
+
+@dataclass(frozen=True)
+class WriterLease:
+    """Server-side bounded authority for one off-host witness writer."""
+
+    token: str
+    source: str
+    run: str
+    policy: str
+    min_sequence: int
+    max_sequence: int
+    expires_at: float
+
+    def allows(self, record: RemoteCheckpoint, *, now: float) -> bool:
+        return (
+            now < self.expires_at
+            and record.source == self.source
+            and record.run == self.run
+            and record.policy == self.policy
+            and self.min_sequence <= record.sequence <= self.max_sequence
+        )
+
+
+def _valid_writer_lease(lease: WriterLease) -> bool:
+    return (
+        all(isinstance(value, str) and value for value in (lease.token, lease.source, lease.run, lease.policy))
+        and type(lease.min_sequence) is int
+        and type(lease.max_sequence) is int
+        and lease.min_sequence >= 0
+        and lease.max_sequence >= lease.min_sequence
+        and isinstance(lease.expires_at, (int, float))
+        and not isinstance(lease.expires_at, bool)
+        and lease.expires_at > 0
+    )
 
 
 def _valid_checkpoint(record: RemoteCheckpoint) -> bool:
@@ -107,14 +143,21 @@ class WitnessHTTPServer(ThreadingHTTPServer):
         store: WitnessStore,
         *,
         read_token: str,
-        write_token: str,
+        writer_leases: tuple[WriterLease, ...],
+        now_fn: Callable[[], float] = time.time,
     ):
-        if not read_token or not write_token or read_token == write_token:
-            raise ValueError("distinct witness read/write tokens are required")
+        if not read_token or not writer_leases:
+            raise ValueError("witness read token and writer lease are required")
+        if any(not _valid_writer_lease(lease) for lease in writer_leases):
+            raise ValueError("invalid writer lease")
+        writer_tokens = [lease.token for lease in writer_leases]
+        if read_token in writer_tokens or len(set(writer_tokens)) != len(writer_tokens):
+            raise ValueError("witness read/write credentials must be distinct")
         super().__init__(server_address, WitnessRequestHandler)
         self.store = store
         self.read_token = read_token
-        self.write_token = write_token
+        self.writer_leases = writer_leases
+        self.now_fn = now_fn
 
 
 class WitnessRequestHandler(BaseHTTPRequestHandler):
@@ -130,6 +173,13 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
         supplied = self.headers.get("Authorization", "")
         expected = f"Bearer {token}"
         return hmac.compare_digest(supplied, expected)
+
+    def _writer_lease(self) -> WriterLease | None:
+        supplied = self.headers.get("Authorization", "")
+        for lease in self._server().writer_leases:
+            if hmac.compare_digest(supplied, f"Bearer {lease.token}"):
+                return lease
+        return None
 
     def _reply(self, status: int, payload: dict[str, object]) -> None:
         body = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -158,7 +208,8 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
         self._reply(200, {"status": "ok", "checkpoint": asdict(record)})
 
     def do_POST(self) -> None:  # noqa: N802
-        if not self._authorized(self._server().write_token):
+        lease = self._writer_lease()
+        if lease is None:
             self._reply(401, {"status": "blocked"})
             return
         if self.path != "/v1/checkpoint":
@@ -186,6 +237,9 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
         except (UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError):
             self._reply(400, {"status": "invalid"})
             return
+        if not lease.allows(record, now=self._server().now_fn()):
+            self._reply(403, {"status": "out_of_scope"})
+            return
         if not self._server().store.advance(record):
             self._reply(409, {"status": "rejected"})
             return
@@ -198,15 +252,17 @@ def make_https_server(
     *,
     store_path: str | Path,
     read_token: str,
-    write_token: str,
+    writer_leases: tuple[WriterLease, ...],
     certfile: str | Path,
     keyfile: str | Path,
+    now_fn: Callable[[], float] = time.time,
 ) -> WitnessHTTPServer:
     server = WitnessHTTPServer(
         (host, port),
         WitnessStore(store_path),
         read_token=read_token,
-        write_token=write_token,
+        writer_leases=writer_leases,
+        now_fn=now_fn,
     )
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
