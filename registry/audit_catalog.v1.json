@@ -190,6 +190,7 @@
       "implementation": [
         "scripts/verify_deployment.sh",
         ".github/workflows/regression.yml",
+        ".github/workflows/deploy.yml",
         "tests/test_vercel_runtime_identity_hygiene.py",
         "tests/test_live_regression_endpoint_binding.py"
       ],
