@@ -1,6 +1,7 @@
 // dashboard/components/OrchestratePanel.jsx
 // POST form to /api/orchestrate; appends result to turn table.
 import { useState } from 'react';
+import { normalizeOrchestrateResponse, decisionColor } from '../lib/orchestrate-presentation.mjs';
 
 const DEFAULT = {
   payload:              'Validate schema hash against SSoT. Mode: governance.',
@@ -33,8 +34,14 @@ export default function OrchestratePanel({ onNewTurn }) {
         }),
       });
       const data = await res.json();
-      setLast(data);
-      onNewTurn(data);
+      const record = normalizeOrchestrateResponse(data, res.ok);
+      setLast(record);
+      if (typeof onNewTurn === 'function') onNewTurn(record);
+      // Errors with valid KILL/REJECT/BLOCKED decisions remain visible evidence.
+      // A non-JSON or unknown error must not look like successful governance.
+      if (!res.ok && record.decision === 'UNKNOWN') {
+        setErr(`Request failed (HTTP ${res.status}): unrecognized response`);
+      }
     } catch (e) {
       setErr(e.message);
     } finally {
@@ -79,43 +86,36 @@ export default function OrchestratePanel({ onNewTurn }) {
       {last && (
         <div style={styles.result}>
           <div style={styles.resultRow}>
-            <span style={styles.k}>DGAF</span>
-            <span style={dgafColor(last.dgaf_decision)}>{last.dgaf_decision}</span>
+            <span style={styles.k}>API decision (not admission)</span>
+            <span style={{ color: decisionColor(last), fontWeight: 700 }}>{last.decision}</span>
           </div>
           <div style={styles.resultRow}>
             <span style={styles.k}>Φ-Gate</span>
-            <span>{last.phi_decision ?? '—'}</span>
+            <span>{last.phi_gate ?? '—'}</span>
           </div>
           <div style={styles.resultRow}>
-            <span style={styles.k}>KAPPA</span>
-            <span>{last.kappa_category} / {last.kappa_policy}</span>
+            <span style={styles.k}>Evidence status</span>
+            <span>{last.evidence_status}</span>
           </div>
           <div style={styles.resultRow}>
             <span style={styles.k}>Eff. Conf</span>
             <span>{typeof last.effective_confidence === 'number' ? last.effective_confidence.toFixed(4) : '—'}</span>
           </div>
           <div style={styles.resultRow}>
-            <span style={styles.k}>Apogee</span>
-            <span>{last.apogee_grade} {last.gold_star ? '⭐' : ''}</span>
+            <span style={styles.k}>Turn</span>
+            <span>{last.turn ?? '—'}</span>
           </div>
-          <div style={styles.resultRow}>
-            <span style={styles.k}>SCPE</span>
-            <span>{typeof last.scpe_compression === 'number' ? (last.scpe_compression * 100).toFixed(1) + '%' : '—'}</span>
-          </div>
-          <div style={styles.resultRow}>
-            <span style={styles.k}>Seal</span>
-            <code style={styles.code}>{String(last.seal_hash ?? '—').slice(0,16)}…</code>
-          </div>
+          {last.reason && (
+            <div style={styles.resultRow}>
+              <span style={styles.k}>Reason</span>
+              <span>{last.reason}</span>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
-
-const dgafColor = (d) => ({
-  color: d === 'KILL' ? '#dc2626' : d === 'REPROMPT' ? '#d97706' : '#059669',
-  fontWeight: 700,
-});
 
 const styles = {
   card:      { background: '#111118', border: '1px solid #1f2937', borderRadius: 10, padding: 16, display: 'flex', flexDirection: 'column', gap: 8 },
