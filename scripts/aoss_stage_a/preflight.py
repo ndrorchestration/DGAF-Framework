@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -104,18 +105,36 @@ def _blob_at(root: Path, ref: str, path: str) -> str:
     return _git(root, "rev-parse", f"{ref}:{path}")
 
 
-def _working_blob(root: Path, path: str) -> str:
+def _working_git_blob(root: Path, path: str) -> str:
+    """Return the Git-clean-filter canonical blob identity for a working-tree path.
+
+    This is intentionally not a raw-byte digest. Git attributes, EOL conversion,
+    or clean filters may cause the literal checkout bytes to differ while this
+    canonical Git object identity remains stable.
+    """
     target = root / path
     if not target.is_file():
         raise PreflightError("REQUIRED_FILE_MISSING", path)
     return _git(root, "hash-object", "--", path)
 
 
+def _working_raw_sha256(root: Path, path: str) -> str:
+    """Return SHA-256 over the literal working-tree bytes, without Git filters."""
+    target = root / path
+    if not target.is_file():
+        raise PreflightError("REQUIRED_FILE_MISSING", path)
+    return hashlib.sha256(target.read_bytes()).hexdigest()
+
+
+# Backward-compatible private alias for historical/internal consumers.
+_working_blob = _working_git_blob
+
+
 def _require_blob(root: Path, ref: str, path: str, expected: str) -> None:
     actual_ref = _blob_at(root, ref, path)
     if actual_ref != expected:
         raise PreflightError("ACCEPTED_BLOB_MISMATCH", f"{path} {actual_ref} != {expected}")
-    actual_working = _working_blob(root, path)
+    actual_working = _working_git_blob(root, path)
     if actual_working != expected:
         raise PreflightError("WORKTREE_BLOB_MISMATCH", f"{path} {actual_working} != {expected}")
 
@@ -198,11 +217,11 @@ def _inspect_preflight(dgaf: Path, acp: Path, bindings: ExpectedBindings) -> dic
         "RECEIPT_EVENT_HISTORY_MUTATED",
     )
 
-    current_auth = _working_blob(dgaf, AUTH_REL)
+    current_auth = _working_git_blob(dgaf, AUTH_REL)
     accepted_auth = _blob_at(dgaf, bindings.dgaf_authorization_commit, AUTH_REL)
     if current_auth != accepted_auth:
         raise PreflightError("AUTHORIZATION_BYTES_DRIFTED")
-    current_receipt = _working_blob(dgaf, RECEIPT_REL)
+    current_receipt = _working_git_blob(dgaf, RECEIPT_REL)
     accepted_receipt = _blob_at(dgaf, bindings.dgaf_receipt_commit, RECEIPT_REL)
     if current_receipt != accepted_receipt:
         raise PreflightError("RECEIPT_BYTES_DRIFTED")
@@ -212,6 +231,8 @@ def _inspect_preflight(dgaf: Path, acp: Path, bindings: ExpectedBindings) -> dic
     return {
         "record_type": "AOSS_STAGE_A_STATIC_PREFLIGHT",
         "static_identity_checks": "PASS",
+        "working_tree_identity_contract": "GIT_CANONICAL_BLOB",
+        "raw_worktree_byte_identity": "NOT_ESTABLISHED",
         "dgaf_head": dgaf_head,
         "acp_head": acp_head,
         "collection_readiness": "NOT_ESTABLISHED",
