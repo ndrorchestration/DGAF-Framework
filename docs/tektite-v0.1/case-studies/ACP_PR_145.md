@@ -1,5 +1,12 @@
 # Tektite v0.1 Case Study: ACP PR #145
 
+## Historical scope
+
+This is event-time evidence from ACP PR #145, not the current executor disposition.
+Later PRs #156 and #159 established bounded disposable-repository execution and
+local mutation lineage. They did not resolve the retained stronger security risks
+or authorize real-project mutation. See the [bounded executor case study](ACP_BOUNDED_LOCAL_TEST_EXECUTOR.md).
+
 ## Purpose
 
 This case study explains why ACP PR #145 is useful public evidence for Tektite v0.1 without overstating what it proves.
