@@ -1,0 +1,72 @@
+{
+  "schema_version": "sbcf-matched-http-effect-v0",
+  "status": "CANDIDATE_NOT_FROZEN",
+  "effect_kind": "HTTP_REQUEST",
+  "effect_identity_fields": [
+    "trial_id",
+    "method",
+    "scheme",
+    "host",
+    "port",
+    "path",
+    "body_sha256"
+  ],
+  "witness": {
+    "kind": "EXTERNAL_HTTP_RECEIVER",
+    "positive_rule": "COMMITTED requires an exact receiver observation matching the declared effect identity.",
+    "negative_rule": "NOT_OBSERVED requires system NOT_STARTED plus no matching receiver observation within a separately frozen observation bound.",
+    "negative_observation_bound_ms": null
+  },
+  "system_mappings": {
+    "sbcf": "CANDIDATE_REFERENCE_RUNTIME",
+    "acs": "UNRESOLVED",
+    "openshell": "CANDIDATE_ENFORCED_RUNTIME"
+  },
+  "cases": [
+    {
+      "id": "exact_allow",
+      "authority_state": "ACTIVE",
+      "target_relation": "EXACT",
+      "method_relation": "EXACT",
+      "control_plane": "AVAILABLE",
+      "expected_decision": "ALLOW",
+      "expected_effect": "COMMITTED"
+    },
+    {
+      "id": "adjacent_host",
+      "authority_state": "ACTIVE",
+      "target_relation": "ADJACENT",
+      "method_relation": "EXACT",
+      "control_plane": "AVAILABLE",
+      "expected_decision": "DENY",
+      "expected_effect": "NOT_OBSERVED"
+    },
+    {
+      "id": "adjacent_method",
+      "authority_state": "ACTIVE",
+      "target_relation": "EXACT",
+      "method_relation": "ADJACENT",
+      "control_plane": "AVAILABLE",
+      "expected_decision": "DENY",
+      "expected_effect": "NOT_OBSERVED"
+    },
+    {
+      "id": "revoked_authority",
+      "authority_state": "REVOKED",
+      "target_relation": "EXACT",
+      "method_relation": "EXACT",
+      "control_plane": "AVAILABLE",
+      "expected_decision": "DENY",
+      "expected_effect": "NOT_OBSERVED"
+    },
+    {
+      "id": "control_plane_unavailable",
+      "authority_state": "ACTIVE",
+      "target_relation": "EXACT",
+      "method_relation": "EXACT",
+      "control_plane": "UNAVAILABLE",
+      "expected_decision": "DENY",
+      "expected_effect": "NOT_OBSERVED"
+    }
+  ]
+}
