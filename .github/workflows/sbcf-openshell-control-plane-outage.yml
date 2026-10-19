@@ -1,0 +1,184 @@
+name: SBCF OpenShell Control Plane Outage Probe
+
+on:
+  push:
+    branches: ['research/sbcf-openshell-control-plane-outage-20261019']
+    paths:
+      - '.github/workflows/sbcf-openshell-control-plane-outage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  outage-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout DGAF probe wrapper
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned OpenShell source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          repository: NVIDIA/OpenShell
+          ref: 5a7728c304b5528e954e9ae900cf21f84e1a12b1
+          path: openshell-upstream
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Assert exact upstream identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C openshell-upstream rev-parse HEAD)" = "5a7728c304b5528e954e9ae900cf21f84e1a12b1"
+          test "$(git -C openshell-upstream describe --tags --exact-match)" = "v0.1.4"
+          test -z "$(git -C openshell-upstream status --porcelain)"
+
+      - name: Install exact OpenShell release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd openshell-upstream
+          OPENSHELL_VERSION=v0.1.4 bash ./install.sh
+          openshell --version
+          systemctl --user is-active openshell-gateway.service
+
+      - name: Build curl workload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/Dockerfile.sbcf-openshell <<'EOF'
+          FROM ubuntu:24.04
+          RUN apt-get update \
+              && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates \
+              && rm -rf /var/lib/apt/lists/*
+          EOF
+          docker build -t sbcf-openshell-curl:local -f /tmp/Dockerfile.sbcf-openshell /tmp
+
+      - name: Create sandbox and activate allow rule
+        shell: bash
+        run: |
+          set -euo pipefail
+          SANDBOX=outage-probe
+          echo "SBCF_OUTAGE_SANDBOX=$SANDBOX" >> "$GITHUB_ENV"
+
+          openshell sandbox create \
+            --name "$SANDBOX" \
+            --from sbcf-openshell-curl:local \
+            --no-auto-providers \
+            --no-tty \
+            -- echo 'sandbox ready'
+
+          openshell policy update "$SANDBOX" \
+            --rule-name matched_http \
+            --binary /usr/bin/curl \
+            --add-endpoint api.github.com:443:read-only:rest:enforce \
+            --wait
+
+          SANDBOX_ID="$(docker ps --filter "label=openshell.ai/sandbox-name=$SANDBOX" --filter "label=openshell.ai/isolation-role=sandbox" --format '{{.ID}}')"
+          SUPERVISOR_ID="$(docker ps --filter "label=openshell.ai/sandbox-name=$SANDBOX" --filter "label=openshell.ai/isolation-role=supervisor" --format '{{.ID}}')"
+          test -n "$SANDBOX_ID"
+          test -n "$SUPERVISOR_ID"
+          echo "SBCF_OUTAGE_SANDBOX_ID=$SANDBOX_ID" >> "$GITHUB_ENV"
+          echo "SBCF_OUTAGE_SUPERVISOR_ID=$SUPERVISOR_ID" >> "$GITHUB_ENV"
+
+          PRE="$(docker exec "$SANDBOX_ID" curl -sSf --max-time 12 https://api.github.com/zen)"
+          test -n "$PRE"
+          printf 'pre_outage_allow=%s\n' "$PRE"
+
+      - name: Stop only the OpenShell gateway control plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          systemctl --user stop openshell-gateway.service
+          test "$(systemctl --user is-active openshell-gateway.service || true)" = "inactive"
+          echo 'gateway_service_state=inactive'
+          set +e
+          openshell status -o json
+          STATUS_RC=$?
+          set -e
+          test "$STATUS_RC" -ne 0
+          echo "openshell_status_exit=$STATUS_RC"
+
+      - name: Wait beyond one policy poll interval
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 12
+          docker inspect "$SBCF_OUTAGE_SUPERVISOR_ID" --format '{{.State.Running}} {{.State.Status}} {{.State.Health.Status}}'
+          test "$(docker inspect "$SBCF_OUTAGE_SUPERVISOR_ID" --format '{{.State.Running}}')" = "true"
+
+      - name: Observe exact and adjacent effects with gateway unavailable
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT_FILE="$RUNNER_TEMP/openshell-outage-observation.txt"
+
+          set +e
+          EXACT="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" curl -sSf --max-time 12 https://api.github.com/zen 2>&1)"
+          EXACT_RC=$?
+          ADJACENT="$(docker exec "$SBCF_OUTAGE_SANDBOX_ID" curl -sSf --max-time 8 https://example.com/ 2>&1)"
+          ADJACENT_RC=$?
+          set -e
+
+          printf 'exact_rc=%s\nexact_output=%s\nadjacent_rc=%s\nadjacent_output=%s\n' \
+            "$EXACT_RC" "$EXACT" "$ADJACENT_RC" "$ADJACENT" | tee "$RESULT_FILE"
+
+          test "$ADJACENT_RC" -ne 0
+          if test "$EXACT_RC" -eq 0 && test -n "$EXACT"; then
+            echo 'observed_control_plane_unavailable_decision=ALLOW'
+            echo 'candidate_expected_decision=DENY'
+            echo 'semantic_match=false'
+          else
+            echo 'observed_control_plane_unavailable_decision=DENY_OR_UNREACHABLE'
+            echo 'candidate_expected_decision=DENY'
+            echo 'semantic_match=requires_log_classification'
+          fi
+
+          echo '--- supervisor logs after outage ---'
+          docker logs "$SBCF_OUTAGE_SUPERVISOR_ID" 2>&1 | tail -n 200
+
+      - name: Restore gateway before cleanup
+        if: always()
+        shell: bash
+        run: |
+          systemctl --user start openshell-gateway.service || true
+          for _ in $(seq 1 30); do
+            if openshell status -o json >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          systemctl --user is-active openshell-gateway.service || true
+          openshell status -o json || true
+
+      - name: Cleanup sandbox
+        if: always()
+        shell: bash
+        run: |
+          openshell sandbox delete "$SBCF_OUTAGE_SANDBOX" >/dev/null 2>&1 || true
+
+      - name: Assert pinned checkout remains clean
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git -C openshell-upstream status --porcelain)"
+
+      - name: Record bounded evidence statement
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### OpenShell control-plane-unavailable probe'
+            echo 'Pinned OpenShell: 5a7728c304b5528e954e9ae900cf21f84e1a12b1 (v0.1.4).'
+            echo 'Only openshell-gateway.service is stopped; sandbox and supervisor containers remain running.'
+            echo 'The post-outage request is executed with docker exec inside the sandbox container, not through the OpenShell CLI.'
+            echo 'The candidate common contract expects DENY when the control plane is unavailable.'
+            echo 'This remains an unmatched-receiver semantic probe against api.github.com, not frozen matched-effect evidence.'
+            echo 'No fairness, efficacy, parity, superiority, freeze, or independent-validation claim is authorized.'
+          } >> "$GITHUB_STEP_SUMMARY"
