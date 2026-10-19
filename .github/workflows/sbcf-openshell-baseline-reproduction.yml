@@ -26,6 +26,8 @@ jobs:
           repository: NVIDIA/OpenShell
           ref: 5a7728c304b5528e954e9ae900cf21f84e1a12b1
           path: openshell-upstream
+          fetch-depth: 0
+          fetch-tags: true
           persist-credentials: false
 
       - name: Assert exact upstream identity and runtime
