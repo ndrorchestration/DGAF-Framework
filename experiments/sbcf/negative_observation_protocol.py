@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass
 
+from scripts.dgaf_capability_canonicalize import sha256_digest
+
 _EFFECT_DIGEST = "sha256:0540ca3b11e82da563208afb4164da9b00c260779832b462dc6824e7dfebadff"
 _CUSTODY_DIGEST = "sha256:14aeacd65dcc0c33b6f5d465e486560fed32c7e542df8c3b1827fb0ef7df07c5"
 _SYSTEMS = ("sbcf", "acs", "openshell")
@@ -143,6 +145,11 @@ def validate_negative_observation_protocol(protocol: dict) -> None:
         required_bound = start_lag + max(maxima) + margin
         if bound < required_bound:
             raise ValueError("negative observation bound is shorter than calibrated requirement")
+
+
+def negative_observation_protocol_digest(protocol: dict) -> str:
+    validate_negative_observation_protocol(protocol)
+    return sha256_digest(protocol)
 
 
 def evaluate_negative_observation_protocol(protocol: dict) -> NegativeObservationReadiness:
