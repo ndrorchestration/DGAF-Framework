@@ -1,9 +1,11 @@
 """Safety-oriented negative tests for synthetic two-store recovery."""
-import sqlite3
+
 import shutil
-from experiments.sbcf.recovery import reconcile_stores, Disposition
-from experiments.sbcf.witness import WitnessedVerifier
+import sqlite3
+
+from experiments.sbcf.recovery import Disposition, reconcile_stores
 from experiments.sbcf.signed_evidence import sign
+from experiments.sbcf.witness import WitnessedVerifier
 
 KEYS = {"broker": b"toy"}
 FIELDS = {"broker": frozenset({"capabilities"})}
@@ -14,15 +16,13 @@ def create(tmp_path):
 
 
 def admit(v, seq):
-    r = dict(source="broker", run="r", policy="p", nonce="n",
-             sequence=seq, state={"capabilities": 0})
+    r = dict(source="broker", run="r", policy="p", nonce="n", sequence=seq, state={"capabilities": 0})
     r["signature"] = sign(r, KEYS["broker"])
     return v.admit(r, expected_run="r", expected_policy="p", expected_nonce="n")
 
 
 def check(path):
-    return reconcile_stores(str(path / "events.db"), str(path / "witness.db"),
-                            source="broker", run="r")
+    return reconcile_stores(str(path / "events.db"), str(path / "witness.db"), source="broker", run="r")
 
 
 def test_matched_counters_are_not_authorization(tmp_path):
@@ -36,8 +36,7 @@ def test_matched_counters_are_not_authorization(tmp_path):
 def test_crash_between_writes_blocks(tmp_path):
     v = create(tmp_path)
     assert admit(v, 1)
-    packet = dict(source="broker", run="r", policy="p", nonce="n",
-                  sequence=2, state={"capabilities": 0})
+    packet = dict(source="broker", run="r", policy="p", nonce="n", sequence=2, state={"capabilities": 0})
     packet["signature"] = sign(packet, KEYS["broker"])
     assert v.evidence.admit(packet, expected_run="r", expected_policy="p", expected_nonce="n")
     assert check(tmp_path).disposition == Disposition.BLOCKED

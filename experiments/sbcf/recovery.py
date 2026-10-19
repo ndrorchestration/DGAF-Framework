@@ -2,11 +2,12 @@
 
 It NEVER repairs, authorizes production execution or establishes remote trust.
 """
+
+import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from enum import Enum
-from contextlib import closing
 from pathlib import Path
-import sqlite3
 
 
 class Disposition(str, Enum):

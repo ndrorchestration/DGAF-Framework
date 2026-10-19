@@ -53,8 +53,8 @@ jobs:
 
       - name: Check cross-layer and witness formatting
         run: |
-          python -m black --check --target-version py312 --line-length 120 experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py
-          python -m isort --check-only --profile black experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py
+          python -m black --check --target-version py312 --line-length 120 experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py experiments/sbcf/recovery.py experiments/sbcf/external_anchor.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py tests/test_sbcf_recovery.py tests/test_sbcf_external_anchor.py
+          python -m isort --check-only --profile black experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py experiments/sbcf/witness.py experiments/sbcf/durable_evidence.py experiments/sbcf/recovery.py experiments/sbcf/external_anchor.py tests/test_sbcf_atomic_witness.py tests/test_sbcf_concurrency_recovery.py tests/test_sbcf_witness.py tests/test_sbcf_recovery.py tests/test_sbcf_external_anchor.py
 
       - name: Run complete SBCF synthetic test group
         env:
