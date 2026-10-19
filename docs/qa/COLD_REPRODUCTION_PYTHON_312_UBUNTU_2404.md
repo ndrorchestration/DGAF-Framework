@@ -65,9 +65,13 @@ replacement tests assert the current public API instead and should
 fail visibly if current required symbols disappear. Historical tests
 remain available in Git history; old behavior was not resurrected.
 
-Tests may write to test-artifacts; save any needed logs before cleaning
-a disposable checkout. Do not confuse ignored test files with admitted
-research evidence.
+General Python tests generate the staging-circuit-breaker receipt at
+test-artifacts/staging-circuit-breaker-evidence.json, and the Python
+workflow explicitly uploads this named evidence. This *single generated
+file* is ignored to avoid local git-status noise; the rest of
+test-artifacts/ is not ignored and must remain visible for custody
+inspection. Preserve required evidence outside a disposable checkout.
+Do not confuse an ignored local file with admitted research evidence.
 
 ## Evidence that this procedure does NOT establish
 

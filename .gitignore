@@ -40,5 +40,5 @@ output/
 verify_integration.py
 artifacts/
 tests/resources/
-# Disposable test outputs; CI uploads named evidence separately
-test-artifacts/
+# Generated staging-circuit evidence is uploaded by Python CI; other artifacts remain visible
+test-artifacts/staging-circuit-breaker-evidence.json
