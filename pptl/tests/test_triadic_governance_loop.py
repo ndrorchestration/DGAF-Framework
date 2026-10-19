@@ -194,3 +194,23 @@ def test_p35_always_fires_regardless_of_hooks():
     step0 = next(g for g in audit.gate_records if g.step == 0)
     assert step0.pattern == "P-35"
     assert step0.result == GateResult.PASS
+
+@pytest.mark.governance
+def test_phi_closure_pass_with_unwired_hpg_escalates():
+    audit = make_tgl(fully_wired_hooks(hpg_fn=None)).run_turn("unwired HPG")
+    phi = next(g for g in audit.gate_records if g.step == 6)
+    hpg = next(g for g in audit.gate_records if g.step == 7)
+    assert phi.result == GateResult.PASS
+    assert hpg.result == GateResult.SKIP
+    assert audit.final_status == TurnStatus.ESCALATE
+    assert audit.verify_seal()
+
+@pytest.mark.governance
+def test_dependency_skipped_hpg_preserves_phi_warning():
+    audit = make_tgl(fully_wired_hooks(phi_closure_fn=lambda t,c:GateResult.WARN)).run_turn("phi warn")
+    phi = next(g for g in audit.gate_records if g.step == 6)
+    hpg = next(g for g in audit.gate_records if g.step == 7)
+    assert phi.result == GateResult.WARN
+    assert hpg.result == GateResult.SKIP
+    assert audit.final_status == TurnStatus.WARN
+    assert audit.verify_seal()
