@@ -1,0 +1,119 @@
+# Fail-closed same-system engineering verification. No research/driver admission.
+name: Governance V2 Real OPA Calibration
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/governance-v2-real-opa.yml'
+      - 'experiments/governance_benchmark/v2/**'
+      - 'experiments/governance_benchmark/fixtures_v1.json'
+      - 'experiments/governance_benchmark/run_strong_policy_comparator.py'
+      - 'experiments/governance_benchmark/run_benchmark.py'
+      - 'tests/test_governance_benchmark_v2_opa.py'
+      - 'requirements-ci-py312-ubuntu2404-x64.lock'
+
+jobs:
+  actual-opa-fixed-fixtures:
+    name: Real OPA 1.21.2 Fixed-Fixture Calibration
+    runs-on: ubuntu-24.04
+    env:
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      OPA_SHA256: '830ab11f61ffec760b5e19db0d7ad02bf037e13f5ef4d665faeaf17632177527'
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact candidate source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
+          test -f experiments/governance_benchmark/v2/verify_opa_c3.py
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12'
+      - name: Bootstrap pinned pip
+        run: bash scripts/bootstrap_ci_pip.sh
+      - name: Install hash-locked CI dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check
+          --require-hashes --only-binary=:all:
+          -r requirements-ci-py312-ubuntu2404-x64.lock
+      - name: Download and authenticate real OPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .local-v2-opa
+          curl --fail --location --retry 5 --retry-all-errors --max-time 180 \
+            --output .local-v2-opa/opa \
+            https://github.com/open-policy-agent/opa/releases/download/v1.21.2/opa_linux_amd64_static
+          echo "$OPA_SHA256  .local-v2-opa/opa" | sha256sum --check --strict
+          chmod 0755 .local-v2-opa/opa
+          test "$(.local-v2-opa/opa version | head -n 1)" = 'Version: 1.21.2'
+          .local-v2-opa/opa check --strict experiments/governance_benchmark/v2/opa_c3_v1.rego
+          echo "DGAF_V2_OPA_BINARY=$PWD/.local-v2-opa/opa" >> "$GITHUB_ENV"
+      - name: Execute actual OPA positive and negative cases
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x "$DGAF_V2_OPA_BINARY"
+          python -m pytest tests/test_governance_benchmark_v2_opa.py -q --strict-markers
+      - name: Generate exact-head real-engine evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p v2-ci-artifacts
+          python experiments/governance_benchmark/v2/verify_opa_c3.py \
+            --opa "$DGAF_V2_OPA_BINARY" --output v2-ci-artifacts/real-opa-v2.json
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          result = json.loads(Path('v2-ci-artifacts/real-opa-v2.json').read_text())
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if head != os.environ['PR_HEAD_SHA'] or result['source_baseline'] != head:
+              raise SystemExit('BLOCKED_HEAD_MISMATCH')
+          if result['opa_binary_sha256'] != os.environ['OPA_SHA256']:
+              raise SystemExit('BLOCKED_OPA_DIGEST_MISMATCH')
+          if result['summary']['cases'] != 13 or result['summary']['three_way_parity'] != 13:
+              raise SystemExit('BLOCKED_PARITY_FAILURE')
+          if result['summary']['non_parity'] != 0:
+              raise SystemExit('BLOCKED_DECISION_DIVERGENCE')
+          receipt = {
+              'schema': 'DGAF_V2_REAL_OPA_HOSTED_RECEIPT_V1',
+              'evidence_class': 'SAME_SYSTEM_HOSTED_SYNTHETIC_CALIBRATION_ONLY',
+              'source_head': head,
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+              'github_run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'opa_binary_sha256': result['opa_binary_sha256'],
+              'rego_sha256': result['rego_policy_sha256'],
+              'fixture_sha256': result['fixture_sha256'],
+              'decision_cases': result['summary']['cases'],
+              'parity_cases': result['summary']['three_way_parity'],
+              'scientific_n_increment': 0,
+              'independent_validation': 'NOT_ESTABLISHED',
+              'canonical_efficacy': 'NOT_ESTABLISHED',
+              'high_assurance': 'NOT_AUTHORIZED',
+              'live_effects': False
+          }
+          Path('v2-ci-artifacts/receipt.json').write_text(
+              json.dumps(receipt, sort_keys=True, indent=2) + '\n'
+          )
+          PY
+      - name: Upload evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-v2-real-opa-calibration
+          path: v2-ci-artifacts/
+          if-no-files-found: warn

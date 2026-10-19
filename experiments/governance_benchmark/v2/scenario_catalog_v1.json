@@ -1,0 +1,16 @@
+{
+  "schema_version": "DGAF_GOVERNANCE_V2_SCENARIO_DESIGN_V1",
+  "status": "DESIGN_ONLY_ORACLE_UNFROZEN",
+  "evidence_class": "NON_EXECUTED_DESIGN",
+  "scenarios": [
+    {"id":"GOV2-01","family":"legitimate_action","safety_invariant":"One authorized effect with bounded receipt.","required_evidence":["request","authorization","effect_receipt","source_version"]},
+    {"id":"GOV2-02","family":"revocation_race","safety_invariant":"No unauthorized effect after revocation at the governed commit point.","required_evidence":["revoke_event","ordered_trace","authorization","effect_ledger"]},
+    {"id":"GOV2-03","family":"conflicted_evidence","safety_invariant":"No unsupported promotion; unresolved evidence state explicit.","required_evidence":["claim","source_evidence","conflict_trace","decision"]},
+    {"id":"GOV2-04","family":"ambiguous_timeout","safety_invariant":"No blind second effect or invented known outcome.","required_evidence":["provider_trace","idempotency_token","recovery_state"]},
+    {"id":"GOV2-05","family":"concurrent_duplicate","safety_invariant":"At most one effect under the admitted idempotency contract.","required_evidence":["interleaving","request_ids","provider_write_ledger"]},
+    {"id":"GOV2-06","family":"fresh_recovery","safety_invariant":"Fresh authorization required after confirmed non-effect.","required_evidence":["provider_non_effect_proof","fresh_decision","receipt"]},
+    {"id":"GOV2-07","family":"unauthorized_composition","safety_invariant":"Protected egress blocked; separately authorized control permitted.","required_evidence":["sensitivity_trace","composed_authority","decision"]},
+    {"id":"GOV2-08","family":"custody_mismatch","safety_invariant":"Mismatch detected; receipt confers no follow-on authority.","required_evidence":["before_artifact","after_artifact","custody_identity","decision"]}
+  ],
+  "claim_ceiling": {"scientific_n_increment":0,"independent_validation":"NOT_ESTABLISHED","canonical_dgaf_efficacy":"NOT_ESTABLISHED","high_assurance":"NOT_AUTHORIZED"}
+}
