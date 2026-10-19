@@ -34,6 +34,7 @@ import hashlib
 import json
 import math
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Tuple
@@ -419,10 +420,24 @@ class DemiJouleGate:
 
     AXES = ("identity", "intent", "consent", "risk", "provenance", "coherence")
 
-    def safety_gate(self, scores: Dict[str, float]) -> Dict:
+    def safety_gate(self, scores: object) -> Dict:
+        # Malformed scores cannot satisfy a numeric safety threshold.
+        # bool is an int subclass; NaN compares False even below the threshold.
+        if not isinstance(scores, Mapping):
+            return {"decision": "ESCALATE", "reason": "safety scores must be a mapping"}
         missing = [a for a in self.AXES if a not in scores]
         if missing:
             return {"decision": "ESCALATE", "reason": f"missing axes: {missing}"}
+        invalid = [
+            axis
+            for axis in self.AXES
+            if isinstance(scores[axis], bool)
+            or not isinstance(scores[axis], (int, float))
+            or not (0.0 <= scores[axis] <= 1.0)
+            or not math.isfinite(scores[axis])
+        ]
+        if invalid:
+            return {"decision": "ESCALATE", "reason": f"nonfinite or invalid scores: {invalid}"}
         if any(scores[a] < 0.5 for a in self.AXES):
             return {"decision": "ESCALATE", "reason": "one or more axes below 0.5"}
         return {"decision": "PASS", "reason": "all axes ≥ 0.5"}
