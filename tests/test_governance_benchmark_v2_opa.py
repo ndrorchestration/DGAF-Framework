@@ -54,7 +54,7 @@ def test_fixed_fixture_parity_with_pinned_opa_only():
     assert report["summary"]["non_parity"] == 0
     assert report["summary"]["opa_false_blocks"] == 0
     assert report["summary"]["dgaf_false_blocks"] == 0
-    assert report["candidate_state"] == "UNCOMMITTED_NOT_ADMITTED"
+    assert report["candidate_state"] == "ENGINEERING_CANDIDATE_NOT_ADMITTED"
 
 
 def test_rego_policy_rejects_invalid_action_shape_without_sentinel_alias():

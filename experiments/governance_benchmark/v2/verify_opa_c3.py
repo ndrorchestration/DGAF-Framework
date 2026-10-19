@@ -105,7 +105,7 @@ def run(opa: Path) -> dict[str, Any]:
     return {
         "version": "DGAF_OPA_C3_FIXED_FIXTURE_EQUIVALENCE_V2_CANDIDATE",
         "evidence_class": "SAME_SYSTEM_SANDBOX_ENGINEERING_CHARACTERIZATION_ONLY",
-        "candidate_state": "UNCOMMITTED_NOT_ADMITTED",
+        "candidate_state": "ENGINEERING_CANDIDATE_NOT_ADMITTED",
         "source_baseline": subprocess.run(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True
         ).stdout.strip(),
