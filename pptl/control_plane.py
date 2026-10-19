@@ -286,7 +286,7 @@ class ControlPlane:
         try:
             result = self._tgl_runner(input_text, context or {})
         except Exception as exc:
-            self._events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": str(exc)})
+            self._events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": "TGL runner exception"})
             self._escalate(task, "TGL runner exception")
             raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
         status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
