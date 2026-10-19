@@ -114,3 +114,28 @@ def test_unknown_top_level_field_is_rejected():
     contract["efficacy_claim"] = "superior"
     with pytest.raises(ValueError):
         validate_effect_contract(contract)
+
+
+def test_trial_id_is_bound_to_fixed_receiver_header():
+    contract = load()
+    assert contract["witness"]["trial_id_binding"] == {
+        "kind": "FIXED_HEADER",
+        "header_name": "X-SBCF-Trial-ID",
+    }
+
+
+@pytest.mark.parametrize(
+    ("kind", "header"),
+    [
+        ("QUERY_PARAMETER", "X-SBCF-Trial-ID"),
+        ("FIXED_HEADER", "X-Other-Trial-ID"),
+    ],
+)
+def test_trial_id_binding_cannot_be_silently_relabelled(kind, header):
+    contract = load()
+    contract["witness"]["trial_id_binding"] = {
+        "kind": kind,
+        "header_name": header,
+    }
+    with pytest.raises(ValueError):
+        validate_effect_contract(contract)

@@ -23,9 +23,14 @@ The proposed effect identity is the ordered semantic tuple:
 - path;
 - request-body SHA-256.
 
-Headers are not currently part of the identity. Query and fragment semantics are
-also excluded from v0. Any future inclusion requires a new contract version
-rather than silent reinterpretation.
+Headers are not generally part of the HTTP effect identity. The one fixed
+exception is receiver correlation for the already-declared `trial_id` field:
+the candidate requires the sender to carry that value in
+`X-SBCF-Trial-ID`, and the receiver copies that exact header value into the
+receipt's `trial_id` field. The header name is therefore witness transport
+metadata for an identity field, not an invitation to compare arbitrary
+headers. Query and fragment semantics remain excluded from v0. Any future
+inclusion requires a new contract version rather than silent reinterpretation.
 
 ## Common decision and outcome semantics
 
@@ -70,8 +75,16 @@ The current SBCF candidate mapping is evaluated on top of main-target draft #139
 - **SBCF:** candidate reference-runtime mapping. The bounded loopback adapter
   performs a real HTTP effect through the accepted DGAF capability PEP, but the
   strict direct-socket counterexample shows same-process bypass remains.
-- **OWASP ACS:** **UNRESOLVED**. The reproduced reference suite is not yet
-  mapped to this exact external HTTP receiver/effect identity.
+- **OWASP ACS:** **UNRESOLVED**, with a partial executable candidate mapping.
+  At pinned ACS commit `9c05f0402d76dea6b67a12a93672c2131137e572`,
+  the stock egress policy can express exact-host allow and adjacent-host deny.
+  The candidate harness uses an explicit, unfrozen benchmark fixture overlay
+  whose only policy-data change is an egress allowlist containing
+  `127.0.0.1`; the pinned upstream checkout remains unmodified. Adjacent
+  HTTP method is not bound by the stock egress policy, authority revocation
+  has no frozen matched semantic, and control-plane-unavailable behavior still
+  depends on an unfrozen failure-posture mapping. Those three cases therefore
+  remain blockers rather than being synthesized by the adapter.
 - **NVIDIA OpenShell:** candidate enforced-runtime mapping based on its
   reproduced sandbox network boundary. The exact v0 five-case adapter/mapping
   is still not frozen.
@@ -100,7 +113,9 @@ superiority, or independence.
 
 Before `common_effect_semantics_frozen` can become true:
 
-1. implement/review an ACS adapter for this exact HTTP effect identity;
+1. execute/review the ACS partial candidate mapping, then resolve the three
+   still-unmapped semantics without inventing controls that the pinned ACS
+   runtime does not demonstrate;
 2. implement/review the OpenShell v0 five-case mapping rather than inferring it
    from the earlier bounded reproduction;
 3. select and preregister a negative observation bound;

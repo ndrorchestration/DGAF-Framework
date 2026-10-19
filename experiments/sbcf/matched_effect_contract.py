@@ -26,8 +26,10 @@ _REQUIRED_WITNESS = frozenset(
         "positive_rule",
         "negative_rule",
         "negative_observation_bound_ms",
+        "trial_id_binding",
     }
 )
+_REQUIRED_TRIAL_BINDING = frozenset({"kind", "header_name"})
 _REQUIRED_CASE = frozenset(
     {
         "id",
@@ -129,6 +131,14 @@ def validate_effect_contract(contract: dict) -> None:
     bound = witness["negative_observation_bound_ms"]
     if bound is not None and (type(bound) is not int or bound <= 0):
         raise ValueError("negative observation bound must be null or a positive integer")
+
+    trial_binding = witness["trial_id_binding"]
+    if type(trial_binding) is not dict or set(trial_binding) != _REQUIRED_TRIAL_BINDING:
+        raise ValueError("invalid trial id binding schema")
+    if trial_binding["kind"] != "FIXED_HEADER":
+        raise ValueError("unsupported trial id binding kind")
+    if trial_binding["header_name"] != "X-SBCF-Trial-ID":
+        raise ValueError("matched effect trial id header changed")
 
     mappings = contract["system_mappings"]
     if type(mappings) is not dict or set(mappings) != _SYSTEMS:

@@ -15,7 +15,11 @@
     "kind": "EXTERNAL_HTTP_RECEIVER",
     "positive_rule": "COMMITTED requires an exact receiver observation matching the declared effect identity.",
     "negative_rule": "NOT_OBSERVED requires system NOT_STARTED plus no matching receiver observation within a separately frozen observation bound.",
-    "negative_observation_bound_ms": null
+    "negative_observation_bound_ms": null,
+    "trial_id_binding": {
+      "kind": "FIXED_HEADER",
+      "header_name": "X-SBCF-Trial-ID"
+    }
   },
   "system_mappings": {
     "sbcf": "CANDIDATE_REFERENCE_RUNTIME",
