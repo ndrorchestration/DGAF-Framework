@@ -25,6 +25,18 @@ jobs:
       PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
       PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
     steps:
+      - name: Block unapproved structural artifact publication (#1399)
+        env:
+          PDMAL_REPO_PRIVATE: ${{ github.event.repository.private }}
+        run: |
+          set -euo pipefail
+          if [ "$PDMAL_REPO_PRIVATE" != "true" ]; then
+            echo "::error::PDMAL masked structural artifact publication is blocked in a public repository (issue #1399)."
+            exit 1
+          fi
+          echo "::error::PDMAL masked structural artifact custody/audience decision is not independently approved (issue #1399)."
+          exit 1
+
       - name: Checkout control plane for candidate resolution
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
