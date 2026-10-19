@@ -83,7 +83,6 @@ demonstrated protections.
 This work does not establish live containment, matched comparator efficacy,
 scientific N, independent validation, canonical efficacy, or high assurance.
 
-
 ## Split read/write live QA — 2026-10-19
 
 At implementation commit `5f4d27a5216c23b7d4fc2eaa02c8981548d8e8b0`, the service
