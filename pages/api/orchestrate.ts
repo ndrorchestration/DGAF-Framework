@@ -52,15 +52,19 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Respon
 
   const payload = typeof body.payload === 'string' ? body.payload : ''
   const claim = typeof body.claim === 'string' ? body.claim : ''
-  const turn = Number.isInteger(body.turn) ? Number(body.turn) : 1
-  const confidence = typeof body.confidence === 'number' ? Number(body.confidence) : 0.5
+  // Default only when omitted. A supplied invalid type must not silently
+  // become turn 1 (which could skip a Phi-Closure checkpoint) or confidence 0.5.
+  const hasTurn = Object.prototype.hasOwnProperty.call(body, 'turn')
+  const hasConfidence = Object.prototype.hasOwnProperty.call(body, 'confidence')
+  const turn = hasTurn ? body.turn : 1
+  const confidence = hasConfidence ? body.confidence : 0.5
 
-  if (!Number.isFinite(confidence) || confidence < 0 || confidence > 1) {
+  if (typeof confidence !== 'number' || !Number.isFinite(confidence) || confidence < 0 || confidence > 1) {
     return reject(res, 'confidence must be a finite number in [0,1]')
   }
 
-  if (!Number.isInteger(turn) || turn < 1) {
-    return reject(res, 'turn must be a positive integer')
+  if (!Number.isSafeInteger(turn) || turn < 1) {
+    return reject(res, 'turn must be a positive safe integer')
   }
 
   const trace: TraceEntry[] = []
