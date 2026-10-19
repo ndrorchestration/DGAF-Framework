@@ -1,0 +1,48 @@
+{
+  "schema_version": "sbcf-openshell-matched-http-mapping-v0",
+  "status": "CANDIDATE_PARTIAL_NOT_FROZEN",
+  "upstream": {
+    "repository": "NVIDIA/OpenShell",
+    "commit": "5a7728c304b5528e954e9ae900cf21f84e1a12b1",
+    "tag": "v0.1.4",
+    "runner": "ubuntu-24.04"
+  },
+  "effect_contract_digest": "sha256:f4b153a6a922e49516e0d01c59817feab1d69e7a05e571b69c395e07a54b0b7b",
+  "baseline_receiver": {
+    "identity": "https://api.github.com",
+    "matches_common_receiver": false,
+    "blocker": "external_receiver_identity_not_matched"
+  },
+  "cases": [
+    {
+      "id": "exact_allow",
+      "mapping_state": "SEMANTIC_CANDIDATE_UNMATCHED_RECEIVER",
+      "system_decision": "ALLOW",
+      "blocker": "external_receiver_identity_not_matched"
+    },
+    {
+      "id": "adjacent_host",
+      "mapping_state": "SEMANTIC_CANDIDATE_UNMATCHED_RECEIVER",
+      "system_decision": "DENY",
+      "blocker": "external_receiver_identity_not_matched"
+    },
+    {
+      "id": "adjacent_method",
+      "mapping_state": "SEMANTIC_CANDIDATE_UNMATCHED_RECEIVER",
+      "system_decision": "DENY",
+      "blocker": "external_receiver_identity_not_matched"
+    },
+    {
+      "id": "revoked_authority",
+      "mapping_state": "EXECUTABLE_CANDIDATE_UNMATCHED_RECEIVER",
+      "system_decision": "DENY",
+      "blocker": "external_receiver_identity_not_matched"
+    },
+    {
+      "id": "control_plane_unavailable",
+      "mapping_state": "UNRESOLVED",
+      "system_decision": null,
+      "blocker": "control_plane_unavailable_semantics_not_reproduced"
+    }
+  ]
+}

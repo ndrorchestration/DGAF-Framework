@@ -1,0 +1,187 @@
+name: SBCF OpenShell Matched HTTP Candidate
+
+on:
+  push:
+    branches: ['research/sbcf-openshell-effect-mapping-20261019']
+    paths:
+      - '.github/workflows/sbcf-openshell-matched-http-candidate.yml'
+      - 'experiments/sbcf/openshell_matched_effect_mapping.py'
+      - 'experiments/sbcf/fixtures/openshell_matched_http_mapping_v0.json'
+      - 'experiments/sbcf/fixtures/matched_http_effect_contract_v0.json'
+      - 'tests/test_sbcf_openshell_matched_effect_mapping.py'
+      - 'docs/research/SBCF_MATCHED_HTTP_EFFECT_CONTRACT_V0.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  openshell-semantic-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout DGAF candidate wrapper
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned OpenShell source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          repository: NVIDIA/OpenShell
+          ref: 5a7728c304b5528e954e9ae900cf21f84e1a12b1
+          path: openshell-upstream
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Assert exact upstream identity and clean checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C openshell-upstream rev-parse HEAD)" = "5a7728c304b5528e954e9ae900cf21f84e1a12b1"
+          test "$(git -C openshell-upstream describe --tags --exact-match)" = "v0.1.4"
+          test -z "$(git -C openshell-upstream status --porcelain)"
+
+      - name: Install exact OpenShell release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd openshell-upstream
+          OPENSHELL_VERSION=v0.1.4 bash ./install.sh
+          openshell --version
+
+      - name: Build curl workload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/Dockerfile.sbcf-openshell <<'EOF'
+          FROM ubuntu:24.04
+          RUN apt-get update \
+              && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates \
+              && rm -rf /var/lib/apt/lists/*
+          EOF
+          docker build -t sbcf-openshell-curl:local -f /tmp/Dockerfile.sbcf-openshell /tmp
+
+      - name: Execute pinned OpenShell semantic candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SANDBOX=matched-semantic-candidate
+          SSH_CONFIG="$(mktemp)"
+          cleanup() {
+            openshell sandbox delete "$SANDBOX" >/dev/null 2>&1 || true
+            rm -f "$SSH_CONFIG"
+          }
+          trap cleanup EXIT
+
+          openshell sandbox create \
+            --name "$SANDBOX" \
+            --from sbcf-openshell-curl:local \
+            --no-auto-providers \
+            --no-tty \
+            -- echo 'sandbox ready'
+
+          openshell sandbox ssh-config "$SANDBOX" > "$SSH_CONFIG"
+          SSH_HOST="$(awk '/^Host / { print $2; exit }' "$SSH_CONFIG")"
+          for _ in $(seq 1 20); do
+            if ssh -F "$SSH_CONFIG" "$SSH_HOST" true >/dev/null 2>&1; then
+              break
+            fi
+            sleep 2
+          done
+          ssh -F "$SSH_CONFIG" "$SSH_HOST" true
+
+          openshell policy update "$SANDBOX" \
+            --rule-name matched_http \
+            --binary /usr/bin/curl \
+            --add-endpoint api.github.com:443:read-only:rest:enforce \
+            --wait
+
+          EXACT="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 12 \
+            -H 'X-SBCF-Trial-ID: openshell-exact-allow' \
+            https://api.github.com/zen)"
+          test -n "$EXACT"
+          printf 'exact_allow=%s\n' "$EXACT"
+
+          set +e
+          OTHER="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 8 \
+            -H 'X-SBCF-Trial-ID: openshell-adjacent-host' \
+            https://example.com/ 2>&1)"
+          OTHER_RC=$?
+          set -e
+          test "$OTHER_RC" -ne 0
+          printf 'adjacent_host=%s\n' "$OTHER"
+
+          POST_BODY="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sS --max-time 12 -X POST \
+            -H 'X-SBCF-Trial-ID: openshell-adjacent-method' \
+            https://api.github.com/repos/octocat/hello-world/issues \
+            -d sbcf_candidate=1)"
+          printf 'adjacent_method=%s\n' "$POST_BODY"
+          printf '%s\n' "$POST_BODY" | grep -q 'policy_denied'
+
+          openshell policy update "$SANDBOX" \
+            --remove-rule matched_http \
+            --wait
+
+          set +e
+          REVOKED="$(ssh -F "$SSH_CONFIG" "$SSH_HOST" curl -sSf --max-time 8 \
+            -H 'X-SBCF-Trial-ID: openshell-revoked-authority' \
+            https://api.github.com/zen 2>&1)"
+          REVOKED_RC=$?
+          set -e
+          test "$REVOKED_RC" -ne 0
+          printf 'revoked_authority=%s\n' "$REVOKED"
+
+          sleep 2
+          LOGS="$(openshell logs "$SANDBOX" --since 2m --source sandbox -n 120 2>&1)"
+          printf '%s\n' "$LOGS"
+          printf '%s\n' "$LOGS" | grep -E 'HTTP:POST .*DENIED .*api\.github\.com:443'
+          printf '%s\n' "$LOGS" | grep -E 'NET:OPEN .*DENIED .*api\.github\.com:443'
+
+          cleanup
+          trap - EXIT
+
+      - name: Verify candidate mapping schema without extra dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from experiments.sbcf.matched_effect_contract import effect_contract_digest
+          from experiments.sbcf.openshell_matched_effect_mapping import (
+              evaluate_openshell_mapping,
+              validate_openshell_mapping,
+          )
+
+          root = Path("experiments/sbcf/fixtures")
+          effect = json.loads((root / "matched_http_effect_contract_v0.json").read_text(encoding="utf-8"))
+          mapping = json.loads((root / "openshell_matched_http_mapping_v0.json").read_text(encoding="utf-8"))
+          validate_openshell_mapping(mapping)
+          assert mapping["effect_contract_digest"] == effect_contract_digest(effect)
+          assert effect["system_mappings"]["openshell"] == "CANDIDATE_ENFORCED_RUNTIME"
+          assert not evaluate_openshell_mapping(mapping).complete
+          print("OpenShell candidate schema PASS; receiver/control-plane blockers remain")
+          PY
+
+      - name: Assert pinned OpenShell checkout remains clean
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git -C openshell-upstream status --porcelain)"
+
+      - name: Record bounded evidence statement
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### SBCF OpenShell matched HTTP semantic candidate'
+            echo 'Pinned OpenShell: 5a7728c304b5528e954e9ae900cf21f84e1a12b1 (v0.1.4).'
+            echo 'Reproduced candidate semantics: exact-host allow, adjacent-host deny, adjacent-method deny, and live rule revocation followed by deny.'
+            echo 'The receiver remains api.github.com, not the common external receiver; those cases are therefore not frozen matched-effect evidence.'
+            echo 'Control-plane-unavailable semantics remain unresolved.'
+            echo 'No fairness, efficacy, parity, superiority, freeze, or independent-validation claim is authorized.'
+          } >> "$GITHUB_STEP_SUMMARY"

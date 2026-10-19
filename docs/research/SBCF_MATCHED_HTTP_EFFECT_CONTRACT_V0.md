@@ -85,9 +85,14 @@ The current SBCF candidate mapping is evaluated on top of main-target draft #139
   has no frozen matched semantic, and control-plane-unavailable behavior still
   depends on an unfrozen failure-posture mapping. Those three cases therefore
   remain blockers rather than being synthesized by the adapter.
-- **NVIDIA OpenShell:** candidate enforced-runtime mapping based on its
-  reproduced sandbox network boundary. The exact v0 five-case adapter/mapping
-  is still not frozen.
+- **NVIDIA OpenShell:** **CANDIDATE_ENFORCED_RUNTIME**, with a partial
+  semantic mapping at pinned commit
+  `5a7728c304b5528e954e9ae900cf21f84e1a12b1` / v0.1.4. The pinned
+  runtime can reproduce exact-host allow, adjacent-host deny, HTTP-method deny,
+  and live network-rule removal followed by deny. Those observations currently
+  use `api.github.com`, not the common external receiver, so all four remain
+  blocked by receiver-identity mismatch rather than being relabelled as matched
+  effects. Control-plane-unavailable behavior remains unresolved.
 
 No system mapping is currently `FROZEN`.
 
@@ -116,8 +121,9 @@ Before `common_effect_semantics_frozen` can become true:
 1. execute/review the ACS partial candidate mapping, then resolve the three
    still-unmapped semantics without inventing controls that the pinned ACS
    runtime does not demonstrate;
-2. implement/review the OpenShell v0 five-case mapping rather than inferring it
-   from the earlier bounded reproduction;
+2. execute/review the OpenShell partial semantic mapping, establish the common
+   external receiver identity for it, and resolve control-plane-unavailable
+   behavior before declaring any OpenShell case frozen;
 3. select and preregister a negative observation bound;
 4. define receiver custody and raw receipt retention;
 5. freeze exact system/build/runtime identities and fixture packet;
