@@ -1,7 +1,7 @@
 # BKRC-001 — decision-only evidence-boundary first slice
 
 Status: OPERATOR-LOCAL ENGINEERING CANDIDATE, NO SCIENTIFIC OR RUNTIME AUTHORITY.
-Research protocol: https://app.notion.com/p/3fef5bad238b8125b897ff011009ed2f
+Research protocol: [BKRC-001 candidate](https://app.notion.com/p/3fef5bad238b8125b897ff011009ed2f)
 Canonical prospective comparative study: docs/qa/COMPARATIVE_GOVERNANCE_BENCHMARK_SPEC.md
 Existing engineering controller: DGAF issue #1022; evaluation-integrity owner: issue #64.
 
