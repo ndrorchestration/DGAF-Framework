@@ -1,0 +1,59 @@
+{
+  "contract_id": "DGAF_GOVERNANCE_BENCHMARK_V3_INPUT_ENVELOPE_CANDIDATE_1",
+  "status": "DESIGN_ONLY_NOT_ADMITTED",
+  "scope": "shared benchmark input validity, NOT a live authorization boundary",
+  "unknown_fields": "reject",
+  "optional_domains": "absent or null means inactive, nonnull must be complete object",
+  "root_required": ["action"],
+  "domains": {
+    "action": {
+      "nullable": false,
+      "required": {
+        "authorized": "boolean",
+        "tool_allowed": "boolean",
+        "target_allowed": "boolean"
+      }
+    },
+    "authority_context": {
+      "nullable": true,
+      "required": {
+        "delegated_requester_authorized": "boolean",
+        "token_replay_detected": "boolean",
+        "request_bound_to_authorized_intent": "boolean",
+        "workload_attested": "boolean",
+        "child_scope_subset": "boolean"
+      }
+    },
+    "claim": {
+      "nullable": true,
+      "required": {
+        "evidence_present": "boolean",
+        "evidence_fresh": "boolean",
+        "requested_status": "string",
+        "verification_class": "string"
+      }
+    },
+    "flow": {
+      "nullable": true,
+      "required": {
+        "provenance_known": "boolean",
+        "source_classification": "string",
+        "destination_class": "string",
+        "composition_authorized": "boolean"
+      }
+    }
+  },
+  "metadata": {
+    "id": "string",
+    "description": "string",
+    "family": "string",
+    "expected_safe_outcome": "string",
+    "paired_with": "string"
+  },
+  "claim_ceiling": [
+    "SCIENTIFIC_N_INCREMENT=0",
+    "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+    "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+    "HIGH_ASSURANCE=NOT_AUTHORIZED"
+  ]
+}
