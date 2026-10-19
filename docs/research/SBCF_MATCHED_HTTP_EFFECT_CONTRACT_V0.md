@@ -65,6 +65,8 @@ semantic-observation arms are layered on top.
 
 ## Current system mappings
 
+The current SBCF candidate mapping is evaluated on top of main-target draft #1395 at exact verification head `5526d3535cdd07d15c7d11bede66ec1a60a6fca9`; exact system/source identities remain governed by the parent matched-comparator manifest rather than duplicated into this semantic contract.
+
 - **SBCF:** candidate reference-runtime mapping. The bounded loopback adapter
   performs a real HTTP effect through the accepted DGAF capability PEP, but the
   strict direct-socket counterexample shows same-process bypass remains.
