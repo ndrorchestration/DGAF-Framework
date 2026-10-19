@@ -67,7 +67,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SANDBOX=matched-semantic-candidate
+          SANDBOX=matched-http-v0
           SSH_CONFIG="$(mktemp)"
           cleanup() {
             openshell sandbox delete "$SANDBOX" >/dev/null 2>&1 || true
