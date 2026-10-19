@@ -1,0 +1,468 @@
+﻿2026-10-11T17:41:41.8474612Z Current runner version: '2.337.0'
+2026-10-11T17:41:41.8501679Z ##[group]Runner Image Provisioner
+2026-10-11T17:41:41.8503006Z Hosted Compute Agent
+2026-10-11T17:41:41.8503609Z Version: 20261002.596
+2026-10-11T17:41:41.8504202Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-11T17:41:41.8505072Z Build Date: 2026-10-02T22:28:27Z
+2026-10-11T17:41:41.8505724Z Worker ID: {897143af-162b-451e-9d97-adcf14dc31fe}
+2026-10-11T17:41:41.8506508Z Region: northcentralus
+2026-10-11T17:41:41.8507104Z Cloud: Azure
+2026-10-11T17:41:41.8507631Z ##[endgroup]
+2026-10-11T17:41:41.8509053Z ##[group]Operating System
+2026-10-11T17:41:41.8509633Z Ubuntu
+2026-10-11T17:41:41.8510110Z 24.04.5
+2026-10-11T17:41:41.8510657Z LTS
+2026-10-11T17:41:41.8511158Z ##[endgroup]
+2026-10-11T17:41:41.8511728Z ##[group]Runner Image
+2026-10-11T17:41:41.8512702Z Image: ubuntu-24.04
+2026-10-11T17:41:41.8513217Z Version: 20261004.327.1
+2026-10-11T17:41:41.8514851Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-11T17:41:41.8516258Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-11T17:41:41.8517220Z ##[endgroup]
+2026-10-11T17:41:41.8518256Z ##[group]GITHUB_TOKEN Permissions
+2026-10-11T17:41:41.8520736Z Contents: read
+2026-10-11T17:41:41.8521280Z Metadata: read
+2026-10-11T17:41:41.8522037Z ##[endgroup]
+2026-10-11T17:41:41.8524552Z Secret source: Actions
+2026-10-11T17:41:41.8525515Z Cache mode: write
+2026-10-11T17:41:41.8526441Z Prepare workflow directory
+2026-10-11T17:41:41.8855322Z Prepare all required actions
+2026-10-11T17:41:41.8906630Z Getting action download info
+2026-10-11T17:41:42.1260676Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-11T17:41:42.2215508Z Download action repository 'actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c' (SHA:7f4fc3e22c37d6ff65e88745f38bd3157c663f7c)
+2026-10-11T17:41:42.4982797Z Complete job name: sbcf-contract-tests
+2026-10-11T17:41:42.5688123Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-11T17:41:42.5689186Z with:
+2026-10-11T17:41:42.5689730Z   ref: d0d0a4463e4f1908908bcf2137a7d671c54a76a9
+2026-10-11T17:41:42.5690402Z   persist-credentials: false
+2026-10-11T17:41:42.5691027Z   repository: ndrorchestration/DGAF-Framework
+2026-10-11T17:41:42.5695361Z   token: ***
+2026-10-11T17:41:42.5695891Z   ssh-strict: true
+2026-10-11T17:41:42.5696424Z   ssh-user: git
+2026-10-11T17:41:42.5696905Z   clean: true
+2026-10-11T17:41:42.5697418Z   sparse-checkout-cone-mode: true
+2026-10-11T17:41:42.5698012Z   fetch-depth: 1
+2026-10-11T17:41:42.5698510Z   fetch-tags: false
+2026-10-11T17:41:42.5699000Z   show-progress: true
+2026-10-11T17:41:42.5699483Z   lfs: false
+2026-10-11T17:41:42.5699981Z   submodules: false
+2026-10-11T17:41:42.5700511Z   set-safe-directory: true
+2026-10-11T17:41:42.5701069Z   allow-unsafe-pr-checkout: false
+2026-10-11T17:41:42.5701958Z ##[endgroup]
+2026-10-11T17:41:42.6713383Z Syncing repository: ndrorchestration/DGAF-Framework
+2026-10-11T17:41:42.6716353Z ##[group]Getting Git version info
+2026-10-11T17:41:42.6717564Z Working directory is '/home/runner/work/DGAF-Framework/DGAF-Framework'
+2026-10-11T17:41:42.6719366Z [command]/usr/bin/git version
+2026-10-11T17:41:42.6760711Z git version 2.55.0
+2026-10-11T17:41:42.6779720Z ##[endgroup]
+2026-10-11T17:41:42.6789109Z Temporarily overriding HOME='/home/runner/work/_temp/c3f9c698-7eaa-41de-b9a7-9d29e11a6ea5' before making global git config changes
+2026-10-11T17:41:42.6791291Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-11T17:41:42.6795997Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/DGAF-Framework/DGAF-Framework
+2026-10-11T17:41:42.6849337Z Deleting the contents of '/home/runner/work/DGAF-Framework/DGAF-Framework'
+2026-10-11T17:41:42.6853540Z ##[group]Determining repository object format
+2026-10-11T17:41:42.6855485Z ##[endgroup]
+2026-10-11T17:41:42.6856811Z ##[group]Initializing the repository
+2026-10-11T17:41:42.6861218Z [command]/usr/bin/git init /home/runner/work/DGAF-Framework/DGAF-Framework
+2026-10-11T17:41:42.6975088Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-11T17:41:42.6976648Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-11T17:41:42.6978256Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-11T17:41:42.6979366Z hint: call:
+2026-10-11T17:41:42.6980043Z hint:
+2026-10-11T17:41:42.6980911Z hint: 	git config --global init.defaultBranch <name>
+2026-10-11T17:41:42.6982033Z hint:
+2026-10-11T17:41:42.6983121Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-11T17:41:42.6984512Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-11T17:41:42.6985631Z hint:
+2026-10-11T17:41:42.6986925Z hint: 	git branch -m <name>
+2026-10-11T17:41:42.6987731Z hint:
+2026-10-11T17:41:42.6988808Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-11T17:41:42.6990387Z Initialized empty Git repository in /home/runner/work/DGAF-Framework/DGAF-Framework/.git/
+2026-10-11T17:41:42.6995441Z [command]/usr/bin/git remote add origin https://github.com/ndrorchestration/DGAF-Framework
+2026-10-11T17:41:42.7044805Z ##[endgroup]
+2026-10-11T17:41:42.7046289Z ##[group]Disabling automatic garbage collection
+2026-10-11T17:41:42.7047441Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-11T17:41:42.7079989Z ##[endgroup]
+2026-10-11T17:41:42.7081955Z ##[group]Setting up auth
+2026-10-11T17:41:42.7083431Z Removing SSH command configuration
+2026-10-11T17:41:42.7085731Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-11T17:41:42.7116951Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-11T17:41:42.7454423Z Removing HTTP extra header
+2026-10-11T17:41:42.7458412Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-11T17:41:42.7494840Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-11T17:41:42.7701038Z Removing includeIf entries pointing to credentials config files
+2026-10-11T17:41:42.7705747Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-11T17:41:42.7735611Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-11T17:41:42.7921687Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-11T17:41:42.7955276Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git.path /home/runner/work/_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:42.8074986Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:42.8110596Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:42.8143563Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:42.8177154Z ##[endgroup]
+2026-10-11T17:41:42.8178751Z ##[group]Fetching the repository
+2026-10-11T17:41:42.8182753Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin d0d0a4463e4f1908908bcf2137a7d671c54a76a9
+2026-10-11T17:41:43.3646066Z From https://github.com/ndrorchestration/DGAF-Framework
+2026-10-11T17:41:43.3647614Z  * branch            d0d0a4463e4f1908908bcf2137a7d671c54a76a9 -> FETCH_HEAD
+2026-10-11T17:41:43.3656959Z [command]/usr/bin/git rev-parse --verify --quiet d0d0a4463e4f1908908bcf2137a7d671c54a76a9^{object}
+2026-10-11T17:41:43.3684081Z d0d0a4463e4f1908908bcf2137a7d671c54a76a9
+2026-10-11T17:41:43.3688980Z ##[endgroup]
+2026-10-11T17:41:43.3690760Z ##[group]Determining the checkout info
+2026-10-11T17:41:43.3693270Z ##[endgroup]
+2026-10-11T17:41:43.3694584Z [command]/usr/bin/git sparse-checkout disable
+2026-10-11T17:41:43.3749165Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-11T17:41:43.3779829Z ##[group]Checking out the ref
+2026-10-11T17:41:43.3783890Z [command]/usr/bin/git checkout --progress --force d0d0a4463e4f1908908bcf2137a7d671c54a76a9
+2026-10-11T17:41:43.4992134Z Note: switching to 'd0d0a4463e4f1908908bcf2137a7d671c54a76a9'.
+2026-10-11T17:41:43.4993331Z 
+2026-10-11T17:41:43.4993940Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-11T17:41:43.4995712Z changes and commit them, and you can discard any commits you make in this
+2026-10-11T17:41:43.4997840Z state without impacting any branches by switching back to a branch.
+2026-10-11T17:41:43.4999132Z 
+2026-10-11T17:41:43.4999916Z If you want to create a new branch to retain commits you create, you may
+2026-10-11T17:41:43.5003061Z do so (now or later) by using -c with the switch command. Example:
+2026-10-11T17:41:43.5004573Z 
+2026-10-11T17:41:43.5005129Z   git switch -c <new-branch-name>
+2026-10-11T17:41:43.5006108Z 
+2026-10-11T17:41:43.5006756Z Or undo this operation with:
+2026-10-11T17:41:43.5007661Z 
+2026-10-11T17:41:43.5008157Z   git switch -
+2026-10-11T17:41:43.5008901Z 
+2026-10-11T17:41:43.5010169Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-11T17:41:43.5011928Z 
+2026-10-11T17:41:43.5013360Z HEAD is now at d0d0a44 research: atomic local witnessed admission and fail-closed recovery
+2026-10-11T17:41:43.5018201Z ##[endgroup]
+2026-10-11T17:41:43.5048791Z [command]/usr/bin/git log -1 --format=%H
+2026-10-11T17:41:43.5072097Z d0d0a4463e4f1908908bcf2137a7d671c54a76a9
+2026-10-11T17:41:43.5081133Z ##[group]Removing auth
+2026-10-11T17:41:43.5082596Z Removing SSH command configuration
+2026-10-11T17:41:43.5084591Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-11T17:41:43.5115165Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-11T17:41:43.5303995Z Removing HTTP extra header
+2026-10-11T17:41:43.5314223Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-11T17:41:43.5343346Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-11T17:41:43.5529010Z Removing includeIf entries pointing to credentials config files
+2026-10-11T17:41:43.5531400Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-11T17:41:43.5558010Z includeif.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git.path
+2026-10-11T17:41:43.5560494Z includeif.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git/worktrees/*.path
+2026-10-11T17:41:43.5562506Z includeif.gitdir:/github/workspace/.git.path
+2026-10-11T17:41:43.5563981Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-11T17:41:43.5568133Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git.path
+2026-10-11T17:41:43.5587108Z /home/runner/work/_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:43.5596377Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-a2ebc751\-0460\-4429\-a0c8\-f67828da7c17\.config
+2026-10-11T17:41:43.5629049Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git/worktrees/*.path
+2026-10-11T17:41:43.5652970Z /home/runner/work/_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:43.5663032Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/DGAF-Framework/DGAF-Framework/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-a2ebc751\-0460\-4429\-a0c8\-f67828da7c17\.config
+2026-10-11T17:41:43.5728666Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-11T17:41:43.5751574Z /github/runner_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:43.5760744Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-a2ebc751\-0460\-4429\-a0c8\-f67828da7c17\.config
+2026-10-11T17:41:43.5835384Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-11T17:41:43.5855911Z /github/runner_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config
+2026-10-11T17:41:43.5864274Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-a2ebc751\-0460\-4429\-a0c8\-f67828da7c17\.config
+2026-10-11T17:41:43.5897507Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-11T17:41:43.6082723Z Removing credentials config '/home/runner/work/_temp/git-credentials-a2ebc751-0460-4429-a0c8-f67828da7c17.config'
+2026-10-11T17:41:43.6092638Z ##[endgroup]
+2026-10-11T17:41:43.6397297Z ##[group]Run actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
+2026-10-11T17:41:43.6398721Z with:
+2026-10-11T17:41:43.6399330Z   python-version: 3.12
+2026-10-11T17:41:43.6400112Z   check-latest: false
+2026-10-11T17:41:43.6409752Z   token: ***
+2026-10-11T17:41:43.6410432Z   update-environment: true
+2026-10-11T17:41:43.6411275Z   allow-prereleases: false
+2026-10-11T17:41:43.6412163Z ##[endgroup]
+2026-10-11T17:41:43.7728657Z ##[group]Installed versions
+2026-10-11T17:41:43.7838062Z (node:2380) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-11T17:41:43.7841654Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-11T17:41:43.7843940Z Successfully set up CPython (3.12.15)
+2026-10-11T17:41:43.7846533Z ##[endgroup]
+2026-10-11T17:41:43.8020087Z ##[group]Run bash scripts/bootstrap_ci_pip.sh
+2026-10-11T17:41:43.8022181Z [36;1mbash scripts/bootstrap_ci_pip.sh[0m
+2026-10-11T17:41:43.8286081Z shell: /usr/bin/bash -e {0}
+2026-10-11T17:41:43.8287695Z env:
+2026-10-11T17:41:43.8289006Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:43.8291019Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-11T17:41:43.8293345Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:43.8295157Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:43.8297046Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:43.8298864Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-11T17:41:43.8300422Z ##[endgroup]
+2026-10-11T17:41:45.9829385Z Collecting pip==26.2.1
+2026-10-11T17:41:46.0553745Z   Downloading pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
+2026-10-11T17:41:46.0633306Z Downloading pip-26.2.1-py3-none-any.whl (1.8 MB)
+2026-10-11T17:41:46.1089449Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 81.4 MB/s  0:00:00
+2026-10-11T17:41:46.1258069Z Saved /home/runner/work/_temp/dgaf-ci-pip-bootstrap/pip-26.2.1-py3-none-any.whl
+2026-10-11T17:41:46.1259273Z Successfully downloaded pip
+2026-10-11T17:41:46.9571257Z Looking in links: /home/runner/work/_temp/dgaf-ci-pip-bootstrap
+2026-10-11T17:41:46.9577603Z Requirement already satisfied: pip==26.2.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (26.2.1)
+2026-10-11T17:41:47.2532580Z ##[group]Run python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r requirements-ci-py312-ubuntu2404-x64.lock
+2026-10-11T17:41:47.2533667Z [36;1mpython -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r requirements-ci-py312-ubuntu2404-x64.lock[0m
+2026-10-11T17:41:47.2578707Z shell: /usr/bin/bash -e {0}
+2026-10-11T17:41:47.2579231Z env:
+2026-10-11T17:41:47.2579640Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:47.2580174Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-11T17:41:47.2580767Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:47.2581290Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:47.2581920Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:47.2582454Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-11T17:41:47.2582987Z ##[endgroup]
+2026-10-11T17:41:48.1109310Z Collecting annotated-types==0.8.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 15))
+2026-10-11T17:41:48.1565599Z   Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-10-11T17:41:48.2126747Z Collecting ast-serialize==0.11.2 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 17))
+2026-10-11T17:41:48.2165745Z   Downloading ast_serialize-0.11.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+2026-10-11T17:41:48.2491534Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 87.2 MB/s  0:00:00
+2026-10-11T17:41:48.2613417Z Collecting attrs==26.1.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 19))
+2026-10-11T17:41:48.2648366Z   Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-10-11T17:41:48.2912601Z Collecting bandit==1.9.4 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 21))
+2026-10-11T17:41:48.2947607Z   Downloading bandit-1.9.4-py3-none-any.whl (134 kB)
+2026-10-11T17:41:48.3389952Z Collecting black==26.5.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 23))
+2026-10-11T17:41:48.3429608Z   Downloading black-26.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.9 MB)
+2026-10-11T17:41:48.3667216Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 80.7 MB/s  0:00:00
+2026-10-11T17:41:48.3996830Z Collecting boolean-py==5.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 25))
+2026-10-11T17:41:48.4030118Z   Downloading boolean_py-5.0-py3-none-any.whl (26 kB)
+2026-10-11T17:41:48.4153620Z Collecting cachecontrol==0.14.4 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 27))
+2026-10-11T17:41:48.4192642Z   Downloading cachecontrol-0.14.4-py3-none-any.whl (22 kB)
+2026-10-11T17:41:48.4424671Z Collecting certifi==2026.7.22 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 29))
+2026-10-11T17:41:48.4478341Z   Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-11T17:41:48.5504738Z Collecting charset-normalizer==3.5.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 31))
+2026-10-11T17:41:48.5542668Z   Downloading charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (248 kB)
+2026-10-11T17:41:48.5712470Z Collecting click==8.5.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 33))
+2026-10-11T17:41:48.5746596Z   Downloading click-8.5.0-py3-none-any.whl (125 kB)
+2026-10-11T17:41:48.9057760Z Collecting coverage==7.16.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 35))
+2026-10-11T17:41:48.9095535Z   Downloading coverage-7.16.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (258 kB)
+2026-10-11T17:41:48.9327573Z Collecting cyclonedx-python-lib==11.12.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 37))
+2026-10-11T17:41:48.9374333Z   Downloading cyclonedx_python_lib-11.12.0-py3-none-any.whl (529 kB)
+2026-10-11T17:41:48.9456000Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 529.5/529.5 kB 51.3 MB/s  0:00:00
+2026-10-11T17:41:48.9566609Z Collecting defusedxml==0.7.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 39))
+2026-10-11T17:41:48.9604758Z   Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+2026-10-11T17:41:48.9816545Z Collecting filelock==4.0.3 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 41))
+2026-10-11T17:41:48.9863232Z   Downloading filelock-4.0.3-py3-none-any.whl (108 kB)
+2026-10-11T17:41:49.0055118Z Collecting flake8==7.3.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 43))
+2026-10-11T17:41:49.0091929Z   Downloading flake8-7.3.0-py2.py3-none-any.whl (57 kB)
+2026-10-11T17:41:49.0227814Z Collecting idna==3.20 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 45))
+2026-10-11T17:41:49.0260784Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-11T17:41:49.0375584Z Collecting iniconfig==2.3.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 47))
+2026-10-11T17:41:49.0410301Z   Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+2026-10-11T17:41:49.0827947Z Collecting isort==8.0.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 49))
+2026-10-11T17:41:49.0869953Z   Downloading isort-8.0.1-py3-none-any.whl (89 kB)
+2026-10-11T17:41:49.1056101Z Collecting jsonschema==4.26.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 51))
+2026-10-11T17:41:49.1089875Z   Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+2026-10-11T17:41:49.1218090Z Collecting jsonschema-specifications==2025.9.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 53))
+2026-10-11T17:41:49.1252270Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-10-11T17:41:49.2486820Z Collecting librt==0.15.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 55))
+2026-10-11T17:41:49.2521954Z   Downloading librt-0.15.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (531 kB)
+2026-10-11T17:41:49.2595414Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 531.9/531.9 kB 53.7 MB/s  0:00:00
+2026-10-11T17:41:49.2704151Z Collecting license-expression==30.4.4 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 57))
+2026-10-11T17:41:49.2737237Z   Downloading license_expression-30.4.4-py3-none-any.whl (120 kB)
+2026-10-11T17:41:49.2881287Z Collecting markdown-it-py==4.2.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 59))
+2026-10-11T17:41:49.2915769Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-10-11T17:41:49.3043237Z Collecting mccabe==0.7.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 61))
+2026-10-11T17:41:49.3089870Z   Downloading mccabe-0.7.0-py2.py3-none-any.whl (7.3 kB)
+2026-10-11T17:41:49.3187158Z Collecting mdurl==0.1.2 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 63))
+2026-10-11T17:41:49.3221176Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-10-11T17:41:49.3860831Z Collecting msgpack==1.2.2 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 65))
+2026-10-11T17:41:49.3900228Z   Downloading msgpack-1.2.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (420 kB)
+2026-10-11T17:41:49.4774494Z Collecting mypy==2.3.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 67))
+2026-10-11T17:41:49.4809741Z   Downloading mypy-2.3.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (15.3 MB)
+2026-10-11T17:41:49.6297777Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.3/15.3 MB 102.9 MB/s  0:00:00
+2026-10-11T17:41:49.6579703Z Collecting mypy-extensions==1.1.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 69))
+2026-10-11T17:41:49.6613656Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+2026-10-11T17:41:49.8183354Z Collecting numpy==2.2.6 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 71))
+2026-10-11T17:41:49.8220162Z   Downloading numpy-2.2.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.5 MB)
+2026-10-11T17:41:49.9515542Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.5/16.5 MB 128.0 MB/s  0:00:00
+2026-10-11T17:41:49.9869951Z Collecting packageurl-python==0.17.6 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 73))
+2026-10-11T17:41:49.9905238Z   Downloading packageurl_python-0.17.6-py3-none-any.whl (36 kB)
+2026-10-11T17:41:50.0141001Z Collecting packaging==26.3 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 75))
+2026-10-11T17:41:50.0173504Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-11T17:41:50.0289350Z Collecting pathspec==1.1.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 77))
+2026-10-11T17:41:50.0321124Z   Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+2026-10-11T17:41:50.0370073Z Requirement already satisfied: pip==26.2.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 79)) (26.2.1)
+2026-10-11T17:41:50.0450061Z Collecting pip-api==0.0.35 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 81))
+2026-10-11T17:41:50.0483309Z   Downloading pip_api-0.0.35-py3-none-any.whl (123 kB)
+2026-10-11T17:41:50.0630476Z Collecting pip-audit==2.10.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 83))
+2026-10-11T17:41:50.0662534Z   Downloading pip_audit-2.10.1-py3-none-any.whl (62 kB)
+2026-10-11T17:41:50.0782903Z Collecting pip-requirements-parser==32.0.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 85))
+2026-10-11T17:41:50.0819753Z   Downloading pip_requirements_parser-32.0.1-py3-none-any.whl (35 kB)
+2026-10-11T17:41:50.0973067Z Collecting platformdirs==4.11.12 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 87))
+2026-10-11T17:41:50.1009222Z   Downloading platformdirs-4.11.12-py3-none-any.whl (24 kB)
+2026-10-11T17:41:50.1111143Z Collecting pluggy==1.6.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 89))
+2026-10-11T17:41:50.1149639Z   Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+2026-10-11T17:41:50.1284891Z Collecting py-serializable==2.1.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 91))
+2026-10-11T17:41:50.1318419Z   Downloading py_serializable-2.1.0-py3-none-any.whl (23 kB)
+2026-10-11T17:41:50.1432853Z Collecting pycodestyle==2.14.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 93))
+2026-10-11T17:41:50.1467091Z   Downloading pycodestyle-2.14.0-py2.py3-none-any.whl (31 kB)
+2026-10-11T17:41:50.2441562Z Collecting pydantic==2.13.4 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 95))
+2026-10-11T17:41:50.2482680Z   Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+2026-10-11T17:41:50.8381705Z Collecting pydantic-core==2.46.4 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 97))
+2026-10-11T17:41:50.8421592Z   Downloading pydantic_core-2.46.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-10-11T17:41:50.8583451Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 132.2 MB/s  0:00:00
+2026-10-11T17:41:50.8704616Z Collecting pyflakes==3.4.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 99))
+2026-10-11T17:41:50.8739650Z   Downloading pyflakes-3.4.0-py2.py3-none-any.whl (63 kB)
+2026-10-11T17:41:50.8897698Z Collecting pygments==2.21.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 101))
+2026-10-11T17:41:50.8931888Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-11T17:41:50.9003047Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 204.3 MB/s  0:00:00
+2026-10-11T17:41:50.9187284Z Collecting pyparsing==3.3.3 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 103))
+2026-10-11T17:41:50.9221042Z   Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-10-11T17:41:50.9573697Z Collecting pytest==9.1.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 105))
+2026-10-11T17:41:50.9610106Z   Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+2026-10-11T17:41:50.9776987Z Collecting pytest-asyncio==1.4.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 107))
+2026-10-11T17:41:50.9809900Z   Downloading pytest_asyncio-1.4.0-py3-none-any.whl (16 kB)
+2026-10-11T17:41:50.9935896Z Collecting pytest-cov==7.1.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 109))
+2026-10-11T17:41:50.9971198Z   Downloading pytest_cov-7.1.0-py3-none-any.whl (22 kB)
+2026-10-11T17:41:51.0094864Z Collecting pytest-timeout==2.4.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 111))
+2026-10-11T17:41:51.0128542Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+2026-10-11T17:41:51.0290478Z Collecting pytokens==0.4.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 113))
+2026-10-11T17:41:51.0322609Z   Downloading pytokens-0.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (269 kB)
+2026-10-11T17:41:51.0872360Z Collecting pyyaml==6.0.3 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 115))
+2026-10-11T17:41:51.0906222Z   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+2026-10-11T17:41:51.0967919Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 136.4 MB/s  0:00:00
+2026-10-11T17:41:51.1127724Z Collecting referencing==0.37.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 117))
+2026-10-11T17:41:51.1159384Z   Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-10-11T17:41:51.1334434Z Collecting requests==2.34.2 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 119))
+2026-10-11T17:41:51.1367966Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-10-11T17:41:51.1603429Z Collecting rich==15.0.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 121))
+2026-10-11T17:41:51.1638145Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-10-11T17:41:51.3708313Z Collecting rpds-py==2026.6.3 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 123))
+2026-10-11T17:41:51.3771347Z   Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (366 kB)
+2026-10-11T17:41:51.4519316Z Collecting setuptools==83.0.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 125))
+2026-10-11T17:41:51.4554587Z   Downloading setuptools-83.0.0-py3-none-any.whl (1.0 MB)
+2026-10-11T17:41:51.4620551Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 177.9 MB/s  0:00:00
+2026-10-11T17:41:51.4771056Z Collecting sortedcontainers==2.4.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 127))
+2026-10-11T17:41:51.4804476Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+2026-10-11T17:41:51.4948953Z Collecting stevedore==5.9.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 129))
+2026-10-11T17:41:51.4982691Z   Downloading stevedore-5.9.1-py3-none-any.whl (54 kB)
+2026-10-11T17:41:51.5220633Z Collecting tomli==2.4.1 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 131))
+2026-10-11T17:41:51.5257068Z   Downloading tomli-2.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (253 kB)
+2026-10-11T17:41:51.5364536Z Collecting tomli-w==1.2.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 133))
+2026-10-11T17:41:51.5396501Z   Downloading tomli_w-1.2.0-py3-none-any.whl (6.7 kB)
+2026-10-11T17:41:51.5527541Z Collecting typing-extensions==4.16.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 135))
+2026-10-11T17:41:51.5559083Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-11T17:41:51.5780350Z Collecting typing-inspection==0.4.4 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 137))
+2026-10-11T17:41:51.5813524Z   Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+2026-10-11T17:41:51.5979116Z Collecting urllib3==2.8.0 (from -r requirements-ci-py312-ubuntu2404-x64.lock (line 139))
+2026-10-11T17:41:51.6014260Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-10-11T17:41:51.7822886Z Installing collected packages: sortedcontainers, boolean-py, urllib3, typing-extensions, tomli-w, tomli, stevedore, setuptools, rpds-py, pyyaml, pytokens, pyparsing, pygments, pyflakes, pycodestyle, pluggy, platformdirs, pip-api, pathspec, packaging, packageurl-python, numpy, mypy-extensions, msgpack, mdurl, mccabe, license-expression, librt, isort, iniconfig, idna, filelock, defusedxml, coverage, click, charset-normalizer, certifi, attrs, ast-serialize, annotated-types, typing-inspection, requests, referencing, pytest, pydantic-core, py-serializable, pip-requirements-parser, mypy, markdown-it-py, flake8, black, rich, pytest-timeout, pytest-cov, pytest-asyncio, pydantic, jsonschema-specifications, cyclonedx-python-lib, cachecontrol, jsonschema, bandit, pip-audit
+2026-10-11T17:41:58.5832447Z 
+2026-10-11T17:41:58.5876559Z Successfully installed annotated-types-0.8.0 ast-serialize-0.11.2 attrs-26.1.0 bandit-1.9.4 black-26.5.1 boolean-py-5.0 cachecontrol-0.14.4 certifi-2026.7.22 charset-normalizer-3.5.1 click-8.5.0 coverage-7.16.1 cyclonedx-python-lib-11.12.0 defusedxml-0.7.1 filelock-4.0.3 flake8-7.3.0 idna-3.20 iniconfig-2.3.0 isort-8.0.1 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 librt-0.15.0 license-expression-30.4.4 markdown-it-py-4.2.0 mccabe-0.7.0 mdurl-0.1.2 msgpack-1.2.2 mypy-2.3.1 mypy-extensions-1.1.0 numpy-2.2.6 packageurl-python-0.17.6 packaging-26.3 pathspec-1.1.1 pip-api-0.0.35 pip-audit-2.10.1 pip-requirements-parser-32.0.1 platformdirs-4.11.12 pluggy-1.6.0 py-serializable-2.1.0 pycodestyle-2.14.0 pydantic-2.13.4 pydantic-core-2.46.4 pyflakes-3.4.0 pygments-2.21.0 pyparsing-3.3.3 pytest-9.1.1 pytest-asyncio-1.4.0 pytest-cov-7.1.0 pytest-timeout-2.4.0 pytokens-0.4.1 pyyaml-6.0.3 referencing-0.37.0 requests-2.34.2 rich-15.0.0 rpds-py-2026.6.3 setuptools-83.0.0 sortedcontainers-2.4.0 stevedore-5.9.1 tomli-2.4.1 tomli-w-1.2.0 typing-extensions-4.16.0 typing-inspection-0.4.4 urllib3-2.8.0
+2026-10-11T17:41:58.7250442Z ##[group]Run python -m black --check --line-length 120 experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py
+2026-10-11T17:41:58.7251341Z [36;1mpython -m black --check --line-length 120 experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py[0m
+2026-10-11T17:41:58.7252462Z [36;1mpython -m isort --check-only --profile black experiments/sbcf/cross_layer.py tests/test_sbcf_cross_layer.py[0m
+2026-10-11T17:41:58.7294220Z shell: /usr/bin/bash -e {0}
+2026-10-11T17:41:58.7294595Z env:
+2026-10-11T17:41:58.7295016Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:58.7295585Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-11T17:41:58.7296087Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:58.7296543Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:58.7296987Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:58.7297577Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-11T17:41:58.7297971Z ##[endgroup]
+2026-10-11T17:41:58.8713886Z Warning: Python 3.12 cannot parse code formatted for Python 3.15. To fix this: run Black with Python 3.15, set --target-version to py312, or use --fast to skip the safety check. Black's safety check verifies equivalence by parsing the AST, which fails when the running Python is older than the target version.
+2026-10-11T17:41:59.1335485Z All done! ✨ 🍰 ✨
+2026-10-11T17:41:59.1336309Z 2 files would be left unchanged.
+2026-10-11T17:41:59.2847782Z ##[group]Run python -m pytest tests/test_sbcf*.py -ra
+2026-10-11T17:41:59.2848292Z [36;1mpython -m pytest tests/test_sbcf*.py -ra[0m
+2026-10-11T17:41:59.2890726Z shell: /usr/bin/bash -e {0}
+2026-10-11T17:41:59.2891120Z env:
+2026-10-11T17:41:59.2891498Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:59.2892283Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-11T17:41:59.2892824Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:59.2893334Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:59.2893805Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:41:59.2894406Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-11T17:41:59.2894927Z   PYTHONPATH: /home/runner/work/DGAF-Framework/DGAF-Framework
+2026-10-11T17:41:59.2895335Z ##[endgroup]
+2026-10-11T17:42:00.2812918Z ============================= test session starts ==============================
+2026-10-11T17:42:00.2814412Z platform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.6.0
+2026-10-11T17:42:00.2815478Z rootdir: /home/runner/work/DGAF-Framework/DGAF-Framework
+2026-10-11T17:42:00.2816342Z configfile: pyproject.toml
+2026-10-11T17:42:00.2817240Z plugins: asyncio-1.4.0, timeout-2.4.0, cov-7.1.0
+2026-10-11T17:42:00.2818402Z asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+2026-10-11T17:42:00.2819512Z collected 64 items
+2026-10-11T17:42:00.2820066Z 
+2026-10-11T17:42:00.3219598Z tests/test_sbcf_adversarial_gaps.py ...x                                 [  6%]
+2026-10-11T17:42:00.3263967Z tests/test_sbcf_attestation.py ........                                  [ 18%]
+2026-10-11T17:42:00.3974376Z tests/test_sbcf_concurrency_recovery.py .F.x                             [ 25%]
+2026-10-11T17:42:00.4007252Z tests/test_sbcf_controller.py ......                                     [ 34%]
+2026-10-11T17:42:00.4116612Z tests/test_sbcf_cross_layer.py ..........                                [ 50%]
+2026-10-11T17:42:00.4453898Z tests/test_sbcf_durable_evidence.py ......                               [ 59%]
+2026-10-11T17:42:00.4490710Z tests/test_sbcf_enforcement.py ......                                    [ 68%]
+2026-10-11T17:42:00.4510989Z tests/test_sbcf_exhaustive.py ...                                        [ 73%]
+2026-10-11T17:42:00.4540539Z tests/test_sbcf_harness.py .....                                         [ 81%]
+2026-10-11T17:42:00.4586173Z tests/test_sbcf_signed_evidence.py ........                              [ 93%]
+2026-10-11T17:42:00.5088869Z tests/test_sbcf_witness.py F..                                           [ 98%]
+2026-10-11T17:42:00.5475008Z tests/test_sbcf_witness_counterexample.py x                              [100%]
+2026-10-11T17:42:00.5475623Z 
+2026-10-11T17:42:00.5475832Z =================================== FAILURES ===================================
+2026-10-11T17:42:00.5476378Z _________________ test_witness_ahead_of_evidence_fails_closed __________________
+2026-10-11T17:42:00.5476764Z 
+2026-10-11T17:42:00.5477025Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_witness_ahead_of_evidence0')
+2026-10-11T17:42:00.5477418Z 
+2026-10-11T17:42:00.5477625Z     def test_witness_ahead_of_evidence_fails_closed(tmp_path):
+2026-10-11T17:42:00.5478111Z         verifier = make(tmp_path)
+2026-10-11T17:42:00.5478577Z         with sqlite3.connect(tmp_path / "witness.db") as db:
+2026-10-11T17:42:00.5479128Z             db.execute("INSERT INTO counters(source,run,sequence) VALUES ('broker','r',7)")
+2026-10-11T17:42:00.5479697Z         assert not admit(verifier, 7)
+2026-10-11T17:42:00.5480100Z >       assert admit(verifier, 8)
+2026-10-11T17:42:00.5480483Z E       assert False
+2026-10-11T17:42:00.5481029Z E        +  where False = admit(<experiments.sbcf.witness.WitnessedVerifier object at 0x7f702c9eb7a0>, 8)
+2026-10-11T17:42:00.5481461Z 
+2026-10-11T17:42:00.5482163Z tests/test_sbcf_concurrency_recovery.py:34: AssertionError
+2026-10-11T17:42:00.5482787Z _________________ test_witness_rejects_rolled_back_event_store _________________
+2026-10-11T17:42:00.5483122Z 
+2026-10-11T17:42:00.5483425Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_witness_rejects_rolled_ba0')
+2026-10-11T17:42:00.5483758Z 
+2026-10-11T17:42:00.5484044Z     def test_witness_rejects_rolled_back_event_store(tmp_path):
+2026-10-11T17:42:00.5484465Z         v=make(tmp_path)
+2026-10-11T17:42:00.5484809Z         assert admit(v,1)
+2026-10-11T17:42:00.5485209Z         shutil.copy2(tmp_path/"events.db",tmp_path/"old.db")
+2026-10-11T17:42:00.5485609Z         assert admit(v,2)
+2026-10-11T17:42:00.5485977Z         shutil.copy2(tmp_path/"old.db",tmp_path/"events.db")
+2026-10-11T17:42:00.5486547Z         assert not admit(make(tmp_path),2)
+2026-10-11T17:42:00.5486925Z >       assert admit(make(tmp_path),3)
+2026-10-11T17:42:00.5487323Z E       AssertionError: assert False
+2026-10-11T17:42:00.5487869Z E        +  where False = admit(<experiments.sbcf.witness.WitnessedVerifier object at 0x7f702cdde870>, 3)
+2026-10-11T17:42:00.5488974Z E        +    where <experiments.sbcf.witness.WitnessedVerifier object at 0x7f702cdde870> = make(PosixPath('/tmp/pytest-of-runner/pytest-0/test_witness_rejects_rolled_ba0'))
+2026-10-11T17:42:00.5489710Z 
+2026-10-11T17:42:00.5489866Z tests/test_sbcf_witness.py:23: AssertionError
+2026-10-11T17:42:00.5490313Z =========================== short test summary info ============================
+2026-10-11T17:42:00.5491431Z XFAIL tests/test_sbcf_adversarial_gaps.py::test_snapshot_restore_must_not_readmit_old_event - Known limitation: restoring a prior DB snapshot rolls back replay state; independent anti-rollback anchor required
+2026-10-11T17:42:00.5492767Z XFAIL tests/test_sbcf_concurrency_recovery.py::test_injected_crash_cannot_split_stores - Cross-store crash consistency not implemented: evidence commits before witness write
+2026-10-11T17:42:00.5493951Z XFAIL tests/test_sbcf_witness_counterexample.py::test_coordinated_rollback_cannot_readmit - Both on-host SQLite files can be rolled back together; protected independent witness required
+2026-10-11T17:42:00.5494950Z FAILED tests/test_sbcf_concurrency_recovery.py::test_witness_ahead_of_evidence_fails_closed - assert False
+2026-10-11T17:42:00.5495703Z  +  where False = admit(<experiments.sbcf.witness.WitnessedVerifier object at 0x7f702c9eb7a0>, 8)
+2026-10-11T17:42:00.5496486Z FAILED tests/test_sbcf_witness.py::test_witness_rejects_rolled_back_event_store - AssertionError: assert False
+2026-10-11T17:42:00.5497217Z  +  where False = admit(<experiments.sbcf.witness.WitnessedVerifier object at 0x7f702cdde870>, 3)
+2026-10-11T17:42:00.5498151Z  +    where <experiments.sbcf.witness.WitnessedVerifier object at 0x7f702cdde870> = make(PosixPath('/tmp/pytest-of-runner/pytest-0/test_witness_rejects_rolled_ba0'))
+2026-10-11T17:42:00.5498965Z =================== 2 failed, 59 passed, 3 xfailed in 0.78s ====================
+2026-10-11T17:42:00.5836967Z ##[error]Process completed with exit code 1.
+2026-10-11T17:42:00.5911005Z ##[group]Run {
+2026-10-11T17:42:00.5911391Z [36;1m{[0m
+2026-10-11T17:42:00.5911730Z [36;1m  echo '### SBCF research verification'[0m
+2026-10-11T17:42:00.5912501Z [36;1m  echo 'Candidate: d0d0a4463e4f1908908bcf2137a7d671c54a76a9'[0m
+2026-10-11T17:42:00.5913017Z [36;1m  echo 'Scope: synthetic SBCF tests, including cross-layer fixtures.'[0m
+2026-10-11T17:42:00.5913643Z [36;1m  echo 'Expected failures retain known rollback and crash-consistency gaps.'[0m
+2026-10-11T17:42:00.5914382Z [36;1m  echo 'No live containment, independent validation, scientific N increment, or release authority is established.'[0m
+2026-10-11T17:42:00.5914987Z [36;1m} >> "$GITHUB_STEP_SUMMARY"[0m
+2026-10-11T17:42:00.5954338Z shell: /usr/bin/bash -e {0}
+2026-10-11T17:42:00.5954695Z env:
+2026-10-11T17:42:00.5955051Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:42:00.5955571Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-11T17:42:00.5956169Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:42:00.5956632Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:42:00.5957066Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-11T17:42:00.5957540Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-11T17:42:00.5957948Z ##[endgroup]
+2026-10-11T17:42:00.6164384Z Post job cleanup.
+2026-10-11T17:42:00.6948240Z [command]/usr/bin/git version
+2026-10-11T17:42:00.7006766Z git version 2.55.0
+2026-10-11T17:42:00.7056781Z Temporarily overriding HOME='/home/runner/work/_temp/97695949-94aa-4e7c-879b-9f0d1045c79a' before making global git config changes
+2026-10-11T17:42:00.7057773Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-11T17:42:00.7063141Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/DGAF-Framework/DGAF-Framework
+2026-10-11T17:42:00.7094415Z Removing SSH command configuration
+2026-10-11T17:42:00.7101270Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-11T17:42:00.7132604Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-11T17:42:00.7334701Z Removing HTTP extra header
+2026-10-11T17:42:00.7340085Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-11T17:42:00.7369611Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-11T17:42:00.7603047Z Removing includeIf entries pointing to credentials config files
+2026-10-11T17:42:00.7609786Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-11T17:42:00.7638527Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-11T17:42:00.8011536Z Cleaning up orphan processes
+2026-10-11T17:42:00.8265091Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

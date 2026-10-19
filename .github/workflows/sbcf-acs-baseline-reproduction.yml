@@ -1,0 +1,70 @@
+name: SBCF ACS Baseline Reproduction
+
+on:
+  push:
+    branches: ['research/sbcf-acs-repro-20261019']
+    paths:
+      - '.github/workflows/sbcf-acs-baseline-reproduction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-acs-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout DGAF evidence wrapper
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned OWASP ACS reference source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          repository: GenAI-Security-Project/agent-control-standard
+          ref: 9c05f0402d76dea6b67a12a93672c2131137e572
+          path: acs-upstream
+          persist-credentials: false
+
+      - name: Assert exact upstream identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C acs-upstream rev-parse HEAD)" = "9c05f0402d76dea6b67a12a93672c2131137e572"
+          git -C acs-upstream status --porcelain
+          uname -a
+
+      - name: Install upstream-pinned Bun
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version: '1.3.11'
+
+      - name: Install frozen ACS dependencies
+        working-directory: acs-upstream/reference-implementations/agt
+        run: bun install --frozen-lockfile
+
+      - name: Install upstream-declared trash CLI prerequisite
+        working-directory: acs-upstream/reference-implementations/agt
+        run: bun add --global trash-cli@7.2.0
+
+      - name: Typecheck ACS reference implementation
+        working-directory: acs-upstream/reference-implementations/agt
+        run: bun run typecheck
+
+      - name: Run upstream ACS reference tests
+        working-directory: acs-upstream/reference-implementations/agt
+        run: bun test
+
+      - name: Record bounded evidence statement
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### SBCF external comparator reproduction'
+            echo 'Upstream: GenAI-Security-Project/agent-control-standard'
+            echo 'Pinned commit: 9c05f0402d76dea6b67a12a93672c2131137e572'
+            echo 'Environment follows upstream reference-implementation workflow: ubuntu-latest, Bun 1.3.11, frozen lockfile, trash-cli 7.2.0.'
+            echo 'This reproduces upstream reference tests only. It does not establish SBCF parity, comparative efficacy, independent validation, or production containment.'
+          } >> "$GITHUB_STEP_SUMMARY"
