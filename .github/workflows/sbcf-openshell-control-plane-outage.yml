@@ -54,25 +54,18 @@ jobs:
           cat > /tmp/sbcf-outage-probe.sh <<'EOF'
           #!/bin/sh
           set +e
-          : > /tmp/probe.ready
-          while true; do
-            if test -f /tmp/probe.pre; then
-              curl -sSf --max-time 12 https://api.github.com/zen > /tmp/probe.pre.out 2>&1
-              printf '%s\n' "$?" > /tmp/probe.pre.rc
-              rm -f /tmp/probe.pre
-            fi
-            if test -f /tmp/probe.exact; then
-              curl -sSf --max-time 12 https://api.github.com/zen > /tmp/probe.exact.out 2>&1
-              printf '%s\n' "$?" > /tmp/probe.exact.rc
-              rm -f /tmp/probe.exact
-            fi
-            if test -f /tmp/probe.adjacent; then
-              curl -sSf --max-time 8 https://example.com/ > /tmp/probe.adjacent.out 2>&1
-              printf '%s\n' "$?" > /tmp/probe.adjacent.rc
-              rm -f /tmp/probe.adjacent
-            fi
-            sleep 1
-          done
+          (
+            sleep 15
+            curl -sSf --max-time 12 https://api.github.com/zen > /tmp/probe.pre.out 2>&1
+            printf '%s\n' "$?" > /tmp/probe.pre.rc
+
+            sleep 25
+            curl -sSf --max-time 12 https://api.github.com/zen > /tmp/probe.exact.out 2>&1
+            printf '%s\n' "$?" > /tmp/probe.exact.rc
+            curl -sSf --max-time 8 https://example.com/ > /tmp/probe.adjacent.out 2>&1
+            printf '%s\n' "$?" > /tmp/probe.adjacent.rc
+          ) > /tmp/probe.background.log 2>&1 &
+          echo probe-scheduled
           EOF
           chmod +x /tmp/sbcf-outage-probe.sh
 
@@ -113,16 +106,7 @@ jobs:
           echo "SBCF_OUTAGE_SANDBOX_ID=$SANDBOX_ID" >> "$GITHUB_ENV"
           echo "SBCF_OUTAGE_SUPERVISOR_ID=$SUPERVISOR_ID" >> "$GITHUB_ENV"
 
-          for _ in $(seq 1 30); do
-            if docker exec "$SANDBOX_ID" test -f /tmp/probe.ready; then
-              break
-            fi
-            sleep 1
-          done
-          docker exec "$SANDBOX_ID" test -f /tmp/probe.ready
-
-          docker exec "$SANDBOX_ID" touch /tmp/probe.pre
-          for _ in $(seq 1 30); do
+          for _ in $(seq 1 35); do
             if docker exec "$SANDBOX_ID" test -f /tmp/probe.pre.rc; then
               break
             fi
@@ -132,6 +116,7 @@ jobs:
           PRE="$(docker exec "$SANDBOX_ID" cat /tmp/probe.pre.out)"
           test "$PRE_RC" = "0"
           test -n "$PRE"
+          docker exec "$SANDBOX_ID" test ! -f /tmp/probe.exact.rc
           printf 'pre_outage_allow=%s\n' "$PRE"
 
       - name: Stop only the OpenShell gateway control plane
@@ -162,8 +147,7 @@ jobs:
           set -euo pipefail
           RESULT_FILE="$RUNNER_TEMP/openshell-outage-observation.txt"
 
-          docker exec "$SBCF_OUTAGE_SANDBOX_ID" touch /tmp/probe.exact /tmp/probe.adjacent
-          for _ in $(seq 1 30); do
+          for _ in $(seq 1 40); do
             if docker exec "$SBCF_OUTAGE_SANDBOX_ID" test -f /tmp/probe.exact.rc \
               && docker exec "$SBCF_OUTAGE_SANDBOX_ID" test -f /tmp/probe.adjacent.rc; then
               break
