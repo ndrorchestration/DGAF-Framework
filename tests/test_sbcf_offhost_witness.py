@@ -29,6 +29,7 @@ def writer_lease(**changes):
         policy="p",
         min_sequence=1,
         max_sequence=2,
+        generation=1,
         expires_at=200.0,
     )
     data.update(changes)
@@ -67,6 +68,53 @@ def test_invalid_checkpoint_is_rejected(tmp_path):
     assert not store.advance(checkpoint(-1))
     assert not store.advance(checkpoint(1, policy=""))
     assert store.read("", "r") is None
+
+
+def test_writer_generation_revokes_old_lease_and_persists(tmp_path):
+    path = tmp_path / "remote.db"
+    store = WitnessStore(path)
+    assert store.required_writer_generation("broker", "r", "p") == 0
+    assert store.advance(checkpoint(1), writer_generation=1)
+    assert store.advance_writer_generation("broker", "r", "p", 2)
+    assert store.required_writer_generation("broker", "r", "p") == 2
+    assert not store.advance(checkpoint(2), writer_generation=1)
+    assert not store.advance_writer_generation("broker", "r", "p", 2)
+    assert not store.advance_writer_generation("broker", "r", "p", 1)
+
+    reopened = WitnessStore(path)
+    assert reopened.required_writer_generation("broker", "r", "p") == 2
+    assert reopened.advance(checkpoint(2), writer_generation=2)
+
+
+def test_writer_generation_rejects_revoked_http_writer(tmp_path):
+    import json
+
+    server = witness_server(tmp_path)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    def post(record):
+        request = Request(
+            f"http://127.0.0.1:{server.server_port}/v1/checkpoint",
+            data=json.dumps(record.__dict__).encode("utf-8"),
+            method="POST",
+            headers={"Authorization": "Bearer writer", "Content-Type": "application/json"},
+        )
+        try:
+            with urlopen(request, timeout=2) as response:
+                return response.status
+        except HTTPError as exc:
+            return exc.code
+
+    try:
+        assert post(checkpoint(1)) == 201
+        assert server.store.advance_writer_generation("broker", "r", "p", 2)
+        assert post(checkpoint(2)) == 409
+        assert server.store.read("broker", "r") == checkpoint(1)
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
 
 
 def test_client_requires_https(tmp_path):

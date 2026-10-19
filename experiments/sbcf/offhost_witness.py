@@ -42,6 +42,7 @@ class WriterLease:
     policy: str
     min_sequence: int
     max_sequence: int
+    generation: int
     expires_at: float
 
     def allows(self, record: RemoteCheckpoint, *, now: float) -> bool:
@@ -61,6 +62,8 @@ def _valid_writer_lease(lease: WriterLease) -> bool:
         and type(lease.max_sequence) is int
         and lease.min_sequence >= 0
         and lease.max_sequence >= lease.min_sequence
+        and type(lease.generation) is int
+        and lease.generation >= 0
         and isinstance(lease.expires_at, (int, float))
         and not isinstance(lease.expires_at, bool)
         and lease.expires_at > 0
@@ -90,13 +93,30 @@ class WitnessStore:
                 "sequence INTEGER NOT NULL, checkpoint_id TEXT NOT NULL, "
                 "PRIMARY KEY(source, run), UNIQUE(checkpoint_id))"
             )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS writer_generation ("
+                "source TEXT NOT NULL, run TEXT NOT NULL, policy TEXT NOT NULL, "
+                "generation INTEGER NOT NULL, "
+                "PRIMARY KEY(source, run, policy))"
+            )
 
-    def advance(self, record: RemoteCheckpoint) -> bool:
+    def advance(self, record: RemoteCheckpoint, *, writer_generation: int | None = None) -> bool:
         if not _valid_checkpoint(record):
+            return False
+        if writer_generation is not None and (type(writer_generation) is not int or writer_generation < 0):
             return False
         try:
             with closing(sqlite3.connect(self.path, timeout=10, isolation_level=None)) as db:
                 db.execute("BEGIN IMMEDIATE")
+                if writer_generation is not None:
+                    required_row = db.execute(
+                        "SELECT generation FROM writer_generation WHERE source=? AND run=? AND policy=?",
+                        (record.source, record.run, record.policy),
+                    ).fetchone()
+                    required_generation = 0 if required_row is None else int(required_row[0])
+                    if writer_generation < required_generation:
+                        db.rollback()
+                        return False
                 current = db.execute(
                     "SELECT policy, sequence FROM checkpoint WHERE source=? AND run=?",
                     (record.source, record.run),
@@ -120,6 +140,42 @@ class WitnessStore:
                             record.checkpoint_id,
                         ),
                     )
+                db.commit()
+            return True
+        except sqlite3.IntegrityError:
+            return False
+
+    def required_writer_generation(self, source: str, run: str, policy: str) -> int | None:
+        if not all(isinstance(value, str) and value for value in (source, run, policy)):
+            return None
+        with closing(sqlite3.connect(self.path, timeout=3)) as db:
+            row = db.execute(
+                "SELECT generation FROM writer_generation WHERE source=? AND run=? AND policy=?",
+                (source, run, policy),
+            ).fetchone()
+        return 0 if row is None else int(row[0])
+
+    def advance_writer_generation(self, source: str, run: str, policy: str, generation: int) -> bool:
+        if not all(isinstance(value, str) and value for value in (source, run, policy)):
+            return False
+        if type(generation) is not int or generation <= 0:
+            return False
+        try:
+            with closing(sqlite3.connect(self.path, timeout=10, isolation_level=None)) as db:
+                db.execute("BEGIN IMMEDIATE")
+                row = db.execute(
+                    "SELECT generation FROM writer_generation WHERE source=? AND run=? AND policy=?",
+                    (source, run, policy),
+                ).fetchone()
+                current_generation = 0 if row is None else int(row[0])
+                if generation <= current_generation:
+                    db.rollback()
+                    return False
+                db.execute(
+                    "INSERT INTO writer_generation(source,run,policy,generation) VALUES (?,?,?,?) "
+                    "ON CONFLICT(source,run,policy) DO UPDATE SET generation=excluded.generation",
+                    (source, run, policy, generation),
+                )
                 db.commit()
             return True
         except sqlite3.IntegrityError:
@@ -240,7 +296,7 @@ class WitnessRequestHandler(BaseHTTPRequestHandler):
         if not lease.allows(record, now=self._server().now_fn()):
             self._reply(403, {"status": "out_of_scope"})
             return
-        if not self._server().store.advance(record):
+        if not self._server().store.advance(record, writer_generation=lease.generation):
             self._reply(409, {"status": "rejected"})
             return
         self._reply(201, {"status": "accepted", "checkpoint": asdict(record)})

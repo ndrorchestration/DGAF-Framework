@@ -17,6 +17,7 @@ def test_wall_clock_rollback_cannot_revive_expired_writer_lease():
         policy="p",
         min_sequence=1,
         max_sequence=2,
+        generation=1,
         expires_at=150.0,
     )
     record = RemoteCheckpoint(
