@@ -291,20 +291,32 @@ jobs:
           assert report["scientific_n_increment"] == 0
           PY
 
+      - name: Obtain frozen ACP identity without executing it
+        run: |
+          git clone https://github.com/ndrorchestration/agent-control-plane.git "$RUNNER_TEMP/aoss-identity-acp"
+          git -C "$RUNNER_TEMP/aoss-identity-acp" checkout --detach dbab7c1afafec524ce7c18157de2089cafe79c87
+
       - name: Verify non-fixture execution identity candidate without acceptance
         run: |
           python - <<'PY'
+          import os
+          import sys
+          import tempfile
+          from pathlib import Path
+
+          output = Path(tempfile.mkdtemp(prefix="aoss-identity-")) / "source-driver-result.json"
+          acp_root = Path(os.environ["RUNNER_TEMP"]) / "aoss-identity-acp"
           from scripts.aoss_stage_a.execution_identity_candidate import (
               prepare_execution_identity_candidate,
               validate_execution_identity_candidate,
           )
 
           candidate = prepare_execution_identity_candidate(
-              interpreter_path="/opt/python/3.12.3/bin/python",
-              interpreter_sha256="a" * 64,
-              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", "/srv/agent-control-plane", "--recipe-class", "normal_completion", "--run-id", "run-0001", "--output", "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json"],
+              interpreter_path=sys.executable,
+              interpreter_sha256=__import__("hashlib").sha256(Path(sys.executable).read_bytes()).hexdigest(),
+              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", str(acp_root), "--recipe-class", "normal_completion", "--run-id", "aoss-stage-a-attempt-0001", "--output", str(output)],
               working_directory=str(__import__("pathlib").Path.cwd()),
-              destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+              destination_uri=output.as_uri(),
               attempt_id="aoss-stage-a-attempt-0001",
               recipe_catalog_sha256=__import__("hashlib").sha256(__import__("pathlib").Path("registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest(),
               environment_candidate_record_sha256="c" * 64,
@@ -325,6 +337,13 @@ jobs:
       - name: Validate external admission decision intake without promotion
         run: |
           python - <<'PY'
+          import os
+          import sys
+          import tempfile
+          from pathlib import Path
+
+          output = Path(tempfile.mkdtemp(prefix="aoss-identity-")) / "source-driver-result.json"
+          acp_root = Path(os.environ["RUNNER_TEMP"]) / "aoss-identity-acp"
           from scripts.aoss_stage_a.execution_identity_candidate import (
               prepare_execution_identity_candidate,
           )
@@ -341,11 +360,11 @@ jobs:
               observed_at="2026-09-21T23:30:00Z",
           )
           identity = prepare_execution_identity_candidate(
-              interpreter_path="/opt/python/3.12.3/bin/python",
-              interpreter_sha256="a" * 64,
-              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", "/srv/agent-control-plane", "--recipe-class", "normal_completion", "--run-id", "run-0001", "--output", "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json"],
+              interpreter_path=sys.executable,
+              interpreter_sha256=__import__("hashlib").sha256(Path(sys.executable).read_bytes()).hexdigest(),
+              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", str(acp_root), "--recipe-class", "normal_completion", "--run-id", "aoss-stage-a-attempt-0001", "--output", str(output)],
               working_directory=str(__import__("pathlib").Path.cwd()),
-              destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+              destination_uri=output.as_uri(),
               attempt_id="aoss-stage-a-attempt-0001",
               recipe_catalog_sha256=__import__("hashlib").sha256(__import__("pathlib").Path("registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest(),
               environment_candidate_record_sha256=record_sha256(environment),
@@ -386,6 +405,13 @@ jobs:
         run: |
           python - <<'PY'
           import hashlib
+          import os
+          import sys
+          import tempfile
+          from pathlib import Path
+
+          output = Path(tempfile.mkdtemp(prefix="aoss-identity-")) / "source-driver-result.json"
+          acp_root = Path(os.environ["RUNNER_TEMP"]) / "aoss-identity-acp"
           from scripts.aoss_stage_a.execution_identity_candidate import (
               prepare_execution_identity_candidate,
           )
@@ -407,11 +433,11 @@ jobs:
               observed_at="2026-09-21T23:40:00Z",
           )
           identity = prepare_execution_identity_candidate(
-              interpreter_path="/opt/python/3.12.3/bin/python",
-              interpreter_sha256="a" * 64,
-              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", "/srv/agent-control-plane", "--recipe-class", "normal_completion", "--run-id", "run-0001", "--output", "/srv/aoss-stage-a/retained/attempt-0001/source-driver-result.json"],
+              interpreter_path=sys.executable,
+              interpreter_sha256=__import__("hashlib").sha256(Path(sys.executable).read_bytes()).hexdigest(),
+              argv=["scripts/aoss_stage_a/source_driver.py", "--acp-root", str(acp_root), "--recipe-class", "normal_completion", "--run-id", "aoss-stage-a-attempt-0001", "--output", str(output)],
               working_directory=str(__import__("pathlib").Path.cwd()),
-              destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+              destination_uri=output.as_uri(),
               attempt_id="aoss-stage-a-attempt-0001",
               recipe_catalog_sha256=__import__("hashlib").sha256(__import__("pathlib").Path("registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json").read_bytes()).hexdigest(),
               environment_candidate_record_sha256=record_sha256(environment),

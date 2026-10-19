@@ -74,6 +74,16 @@ def _require_timestamp(value: object) -> str:
     return timestamp
 
 
+def _verify_environment_execution_binding(
+    environment: Mapping[str, Any],
+    execution: Mapping[str, Any],
+) -> None:
+    if execution.get("environment_candidate_record_sha256") != record_sha256(environment):
+        _fail("EXTERNAL_DECISION_IDENTITY_ENVIRONMENT_BINDING_MISMATCH")
+    if environment["evidence"]["executable"] != execution["executable_identity"]["interpreter_path"]:
+        _fail("EXTERNAL_DECISION_ENVIRONMENT_INTERPRETER_PATH_MISMATCH")
+
+
 def prepare_external_admission_decision_intake(
     *,
     environment_candidate: Mapping[str, Any],
@@ -92,6 +102,7 @@ def prepare_external_admission_decision_intake(
 
     environment_report = validate_installed_environment_evidence_candidate(environment_candidate)
     execution_report = validate_execution_identity_candidate(execution_identity_candidate)
+    _verify_environment_execution_binding(environment_candidate, execution_identity_candidate)
 
     reviewer = _require_nonempty(
         reviewer_identity,
@@ -169,9 +180,8 @@ def validate_external_admission_decision_intake(
 
     environment_report = validate_installed_environment_evidence_candidate(environment_candidate)
     execution_report = validate_execution_identity_candidate(execution_identity_candidate)
+    _verify_environment_execution_binding(environment_candidate, execution_identity_candidate)
     expected_environment_record_sha = record_sha256(environment_candidate)
-    if execution_identity_candidate.get("environment_candidate_record_sha256") != expected_environment_record_sha:
-        _fail("EXTERNAL_DECISION_IDENTITY_ENVIRONMENT_BINDING_MISMATCH")
 
     if intake.get("record_type") != RECORD_TYPE:
         _fail("EXTERNAL_DECISION_RECORD_TYPE_MISMATCH")
