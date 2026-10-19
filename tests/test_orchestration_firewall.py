@@ -8,12 +8,11 @@ Orchestrator: Amethyst
 Anchor: S043
 """
 
-import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from itertools import count
 from enum import Enum, auto
+from itertools import count
 from typing import Callable, Dict, List, Optional, Set
 
 import pytest
@@ -208,9 +207,7 @@ _SYNTHETIC_EVENT_CLOCK = count()
 
 
 def now_ts() -> datetime:
-    return datetime(2026, 1, 1, tzinfo=timezone.utc) + timedelta(
-        microseconds=next(_SYNTHETIC_EVENT_CLOCK)
-    )
+    return datetime(2026, 1, 1, tzinfo=timezone.utc) + timedelta(microseconds=next(_SYNTHETIC_EVENT_CLOCK))
 
 
 def new_event(
