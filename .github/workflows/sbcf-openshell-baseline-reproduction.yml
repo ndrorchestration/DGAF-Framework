@@ -1,0 +1,71 @@
+name: SBCF OpenShell Baseline Reproduction
+
+on:
+  push:
+    branches: ['research/sbcf-openshell-repro-20261019']
+    paths:
+      - '.github/workflows/sbcf-openshell-baseline-reproduction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-openshell-policy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout DGAF evidence wrapper
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned OpenShell source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          repository: NVIDIA/OpenShell
+          ref: 5a7728c304b5528e954e9ae900cf21f84e1a12b1
+          path: openshell-upstream
+          persist-credentials: false
+
+      - name: Assert exact upstream identity and runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C openshell-upstream rev-parse HEAD)" = "5a7728c304b5528e954e9ae900cf21f84e1a12b1"
+          test "$(git -C openshell-upstream describe --tags --exact-match)" = "v0.1.4"
+          git -C openshell-upstream status --porcelain
+          uname -a
+          docker version
+          docker info
+
+      - name: Install exact OpenShell release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd openshell-upstream
+          OPENSHELL_VERSION=v0.1.4 bash ./install.sh
+          command -v openshell
+          openshell --version
+
+      - name: Run upstream sandbox policy quickstart
+        shell: bash
+        env:
+          DEMO_PAUSE: '0'
+        run: |
+          set -euo pipefail
+          cd openshell-upstream
+          bash examples/sandbox-policy-quickstart/demo.sh
+
+      - name: Record bounded evidence statement
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### SBCF external comparator reproduction'
+            echo 'Upstream: NVIDIA/OpenShell'
+            echo 'Pinned commit: 5a7728c304b5528e954e9ae900cf21f84e1a12b1 (v0.1.4)'
+            echo 'Attempted upstream automated first-network-policy tutorial on ubuntu-24.04 with Docker.'
+            echo 'The demo is expected to exercise default-deny egress, a live read-only api.github.com rule, allowed GET, blocked POST, and policy logs.'
+            echo 'A passing demo is bounded OpenShell enforcement evidence only. It does not establish SBCF parity, comparative efficacy, independent validation, or production authorization.'
+          } >> "$GITHUB_STEP_SUMMARY"
