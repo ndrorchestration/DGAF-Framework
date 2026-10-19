@@ -8,6 +8,7 @@ import pytest
 
 from experiments.sbcf.receiver_custody_contract import (
     evaluate_receiver_custody_contract,
+    receiver_custody_contract_digest,
     validate_receiver_custody_contract,
 )
 
@@ -26,6 +27,11 @@ def test_current_receiver_custody_is_not_ready():
         "durable_retention_unfrozen",
         "receiver_operator_unassigned",
     )
+
+
+def test_receiver_custody_digest_is_deterministic():
+    contract = load()
+    assert receiver_custody_contract_digest(contract) == receiver_custody_contract_digest(copy.deepcopy(contract))
 
 
 def test_candidate_is_bound_to_exact_v1_effect_contract():

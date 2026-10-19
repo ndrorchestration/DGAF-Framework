@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass
 
+from scripts.dgaf_capability_canonicalize import sha256_digest
+
 _V1_DIGEST = "sha256:0540ca3b11e82da563208afb4164da9b00c260779832b462dc6824e7dfebadff"
 _SYSTEMS = ("sbcf", "acs", "openshell")
 _REQUIRED_TOP = frozenset(
@@ -151,3 +153,8 @@ def evaluate_receiver_custody_contract(contract: dict) -> ReceiverCustodyReadine
     if retention["status"] != "FROZEN":
         blockers.append("durable_retention_unfrozen")
     return ReceiverCustodyReadiness(not blockers, tuple(sorted(blockers)))
+
+
+def receiver_custody_contract_digest(contract: dict) -> str:
+    validate_receiver_custody_contract(contract)
+    return sha256_digest(contract)
