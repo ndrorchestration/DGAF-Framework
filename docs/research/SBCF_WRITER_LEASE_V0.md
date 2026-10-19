@@ -48,16 +48,15 @@ Preserved ceilings:
 `CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`;
 `HIGH_ASSURANCE=NOT_AUTHORIZED`.
 
-
-## Two-host lease QA and falsification probe — 2026-10-19
+## Two-host lease QA and falsification probe - 2026-10-19
 
 Implementation commit `71efab9a213d7fe7645f9c792f6d4ce3db28d194`
 was exercised with NeonPC as client and neontic as witness over a fresh verified
 HTTPS service on port 4444. Port 4444 had no listener before the probe.
 
 At injected witness test time 100, a lease scoped to source `broker`, run
-`lease-live-run`, policy `policy-lease`, and sequences 1–2 accepted sequence
-1. The same writer credential failed closed for a different source, run and
+`lease-live-run`, policy `policy-lease`, and sequences 1 through 2 accepted
+sequence one. The same writer credential failed closed for a different source, run and
 policy, for sequence 3 above the configured maximum, and when the read
 credential attempted to write. The read credential returned only the accepted
 sequence-1 checkpoint.
