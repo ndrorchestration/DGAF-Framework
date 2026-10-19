@@ -161,6 +161,7 @@ def test_control_plane_rejects_self_sealed_final_status_override() -> None:
 
     assert task.state is TaskState.ESCALATED
 
+
 @pytest.mark.parametrize(
     ("premise_result", "final_status"),
     [(GateResult.SKIP, TurnStatus.PASS), (GateResult.WARN, TurnStatus.WARN)],
@@ -177,6 +178,7 @@ def test_control_plane_rejects_noncanonical_premise_result(
     assert task.state is TaskState.ESCALATED
     assert task.last_tgl_status is None
 
+
 def test_control_plane_preserves_canonical_premise_kill_prefix() -> None:
     audit = _sealed_audit(
         status=TurnStatus.KILL,
@@ -191,6 +193,7 @@ def test_control_plane_preserves_canonical_premise_kill_prefix() -> None:
     assert task.last_tgl_status == "KILL"
     assert any(event["event"] == "VETO" for event in plane.events)
 
+
 def test_control_plane_rejects_sealed_audit_bound_to_different_input() -> None:
     audit = _sealed_audit()
     plane, task = _evaluating_plane(audit)
@@ -199,6 +202,7 @@ def test_control_plane_rejects_sealed_audit_bound_to_different_input() -> None:
     assert audit.verify_seal()
     assert task.state is TaskState.ESCALATED
     assert task.last_tgl_status is None
+
 
 def test_control_plane_rejects_replayed_audit_for_second_input() -> None:
     audit = _sealed_audit()
