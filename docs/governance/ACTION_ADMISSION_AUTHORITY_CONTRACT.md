@@ -76,6 +76,48 @@ Verification may succeed only for `ACTIVE` and `OVERLAP_VERIFY_ONLY` anchors. `R
 
 Issuance authority must remain separate from request-path verification. A request handler may verify a trusted record, but that verification capability does not itself grant minting authority. This specification does not choose a KMS, HSM, secret manager, database, queue, or hosting provider.
 
+### Operation-specific trust interpretation — proposed AAR_V2 clarification
+
+The proposed operation matrix is design-only: it does not extend \`AAR_V1\`,
+grant issuance rights, enroll keys, select a provider, authorize a protected
+action, or establish independent custody. Source-of-truth: the additive
+\`issuer_and_trust_anchor.candidate_operation_semantics\` record in
+\`registry/action_admission_authority_contract.json\`. This distinction
+requires non-author security and methodology review before any runtime use.
+
+| Proposed operation | Trust anchor states that may satisfy **only the key-state prerequisite** |
+| --- | --- |
+| \`VERIFY_HISTORICAL_SIGNATURE\` | \`ACTIVE\`, \`OVERLAP_VERIFY_ONLY\` |
+| \`ISSUE_NEW_ATTESTATION\` | \`ACTIVE\` |
+| \`ADMIT_NEW_PROTECTED_EFFECT\` | \`ACTIVE\` |
+
+All other named states—\`RETIRED\`, \`COMPROMISED\`, \`UNAVAILABLE\`,
+and \`CONFLICTED\`—fail the corresponding prerequisite. Even
+\`VERIFY_HISTORICAL_SIGNATURE\` is allowed only if the key is sourced from
+an **admitted external trust registry**, the applicable event-time and
+compromise semantics are established, and the signed bytes verify. A
+receipt- or request-supplied \`key_id\` is not self-admitting. A compromised
+or retired key must not be silently restored to trusted historical status
+by an old signature.
+
+A successfully checked historical receipt **does not authorize a fresh
+protected action**. New issuance also requires an independently authorized
+issuer with custody separation; a verifier, user-facing agent, or receipt
+holder has no minting authority merely because verification succeeds.
+For a new protected effect, \`ACTIVE\` is **necessary but insufficient**:
+typed input, fresh narrowly scoped authorization, commit-time revocation,
+atomic consumption of the consequential effect identity, and a trusted
+effect gate remain separately required. A correct signature is not a
+verified postcondition, an effect receipt, or proof of non-dispatch.
+
+\`OVERLAP_VERIFY_ONLY\` permits historical verification only within an
+applicable approved overlap window; it is **not** permission to issue
+or admit fresh effects. Historical event-time evidence remains immutable
+on prospective revocation, while confidence in historical authenticity
+may still need revision after actual key compromise. This design matrix
+does not establish the overlap window, key-custody protocol, effective-time
+proof, or revocation infrastructure.
+
 ## Commit ordering
 
 The normative provider-neutral ordering is:

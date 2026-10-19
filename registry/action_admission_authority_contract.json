@@ -76,7 +76,35 @@
       "UNAVAILABLE",
       "CONFLICTED"
     ],
-    "issuer_separation": "ISSUANCE_AUTHORITY_SEPARATE_FROM_REQUEST_PATH_VERIFICATION"
+    "issuer_separation": "ISSUANCE_AUTHORITY_SEPARATE_FROM_REQUEST_PATH_VERIFICATION",
+    "candidate_operation_semantics": {
+      "status": "PROPOSED_NON_AUTHORIZING_REVIEW_REQUIRED",
+      "required_record_version": "AAR_V2",
+      "allowed_anchor_states_by_operation": {
+        "VERIFY_HISTORICAL_SIGNATURE": [
+          "ACTIVE",
+          "OVERLAP_VERIFY_ONLY"
+        ],
+        "ISSUE_NEW_ATTESTATION": [
+          "ACTIVE"
+        ],
+        "ADMIT_NEW_PROTECTED_EFFECT": [
+          "ACTIVE"
+        ]
+      },
+      "anchor_identity_source": "ADMITTED_TRUST_REGISTRY_NOT_RECEIPT_OR_REQUEST",
+      "issuance_principal": "INDEPENDENTLY_AUTHORIZED_ISSUER_REQUIRED",
+      "effect_authority_from_signature_alone": false,
+      "effect_admission_requires": [
+        "VALID_TYPED_INPUT",
+        "FRESH_SCOPE_LIMITED_AUTHORIZATION",
+        "COMMIT_TIME_REVOCATION_CHECK",
+        "ATOMIC_EFFECT_IDENTITY_CONSUME",
+        "TRUSTED_EFFECT_GATE"
+      ],
+      "historical_verification_is_effect_authorization": false,
+      "historical_verification_is_postcondition_proof": false
+    }
   },
   "commit_order": [
     "STRUCTURAL_AND_ATTESTATION_VALIDATION",
