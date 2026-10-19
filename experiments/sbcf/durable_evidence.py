@@ -14,10 +14,14 @@ class DurableEvidenceVerifier:
         self.allowed_fields = allowed_fields
         with closing(sqlite3.connect(self.path)) as db, db:
             db.execute(
-                "CREATE TABLE IF NOT EXISTS admission (source TEXT NOT NULL, run TEXT NOT NULL, sequence INTEGER NOT NULL, PRIMARY KEY (source, run, sequence))"
+                "CREATE TABLE IF NOT EXISTS admission "
+                "(source TEXT NOT NULL, run TEXT NOT NULL, sequence INTEGER NOT NULL, "
+                "PRIMARY KEY (source, run, sequence))"
             )
             db.execute(
-                "CREATE TABLE IF NOT EXISTS high_water (source TEXT NOT NULL, run TEXT NOT NULL, sequence INTEGER NOT NULL, PRIMARY KEY (source, run))"
+                "CREATE TABLE IF NOT EXISTS high_water "
+                "(source TEXT NOT NULL, run TEXT NOT NULL, sequence INTEGER NOT NULL, "
+                "PRIMARY KEY (source, run))"
             )
 
     def admit(self, record: dict, *, expected_run: str, expected_policy: str, expected_nonce: str) -> bool:
@@ -42,7 +46,8 @@ class DurableEvidenceVerifier:
                     return False
                 db.execute("INSERT INTO admission (source,run,sequence) VALUES (?,?,?)", (source, expected_run, seq))
                 db.execute(
-                    "INSERT INTO high_water (source,run,sequence) VALUES (?,?,?) ON CONFLICT(source,run) DO UPDATE SET sequence=excluded.sequence",
+                    "INSERT INTO high_water (source,run,sequence) VALUES (?,?,?) "
+                    "ON CONFLICT(source,run) DO UPDATE SET sequence=excluded.sequence",
                     (source, expected_run, seq),
                 )
             return True

@@ -143,12 +143,21 @@ from pathlib import Path
 from experiments.sbcf.witness import WitnessedVerifier
 from experiments.sbcf.signed_evidence import sign
 path, stage = Path(sys.argv[1]), sys.argv[2]
-verifier = WitnessedVerifier(path / "events.db", path / "witness.db", {"broker": b"test-only"}, {"broker": frozenset({"capabilities"})})
+verifier = WitnessedVerifier(
+    path / "events.db",
+    path / "witness.db",
+    {"broker": b"test-only"},
+    {"broker": frozenset({"capabilities"})},
+)
 original = sqlite3.connect
 class Injected(sqlite3.Connection):
     def execute(self, sql, *args, **kwargs):
         result = super().execute(sql, *args, **kwargs)
-        if stage in ("admission", "high_water", "counters") and sql.lstrip().upper().startswith("INSERT") and stage in sql:
+        if (
+            stage in ("admission", "high_water", "counters")
+            and sql.lstrip().upper().startswith("INSERT")
+            and stage in sql
+        ):
             os._exit(73)
         return result
     def commit(self):

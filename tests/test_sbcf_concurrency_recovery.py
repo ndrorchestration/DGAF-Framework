@@ -59,7 +59,10 @@ def test_public_evidence_only_admission_path_is_not_exposed(tmp_path):
 
 @pytest.mark.xfail(
     strict=True,
-    reason="Same-process access to the private implementation can still bypass witnessed admission; Python privacy is not a security boundary",
+    reason=(
+        "Same-process access to the private implementation can still bypass witnessed admission; "
+        "Python privacy is not a security boundary"
+    ),
 )
 def test_private_evidence_dependency_cannot_split_stores(tmp_path):
     verifier = make(tmp_path)

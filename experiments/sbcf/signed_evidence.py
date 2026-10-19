@@ -1,14 +1,18 @@
 """Prototype HMAC evidence envelope with replay defense; shared-key simulation, not independent attestation."""
-from dataclasses import dataclass, field
+
 import hashlib
 import hmac
 import json
+from dataclasses import dataclass, field
+
 
 def canonical(value: dict) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
 
+
 def sign(value: dict, secret: bytes) -> str:
     return hmac.new(secret, canonical(value), hashlib.sha256).hexdigest()
+
 
 @dataclass
 class EvidenceVerifier:

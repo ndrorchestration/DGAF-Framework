@@ -1,6 +1,9 @@
 """Deterministic synthetic SBCF comparison; no security enforcement or efficacy claim."""
+
 from dataclasses import dataclass
-from .controller import Evidence, State, Regime, transition, verified_quarantine
+
+from .controller import Evidence, Regime, State, transition, verified_quarantine
+
 
 @dataclass(frozen=True)
 class Trial:
@@ -9,6 +12,7 @@ class Trial:
     continuing: bool
     independently_observed: bool
     capacity_isolated: bool
+
 
 def run_trial(trial: Trial, *, semantic: bool, dialogue: bool) -> dict:
     # Simulated observation only: dialogue cannot change any security policy.
@@ -32,6 +36,7 @@ def run_trial(trial: Trial, *, semantic: bool, dialogue: bool) -> dict:
         "unsafe_effect_possible": bool(trial.violation and not isolated),
         "dialogue_offered": bool(dialogue and decision != Regime.NORMAL),
     }
+
 
 def matched_arms(trials: tuple[Trial, ...]) -> dict:
     return {

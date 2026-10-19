@@ -1,10 +1,14 @@
 """Isolated in-memory enforcement contract. NOT OS/network sandboxing."""
+
 from dataclasses import dataclass, field
+
 from .controller import Regime
+
 
 @dataclass
 class SimulatedGate:
     """Deny-by-default production effects; no authority restoration API."""
+
     regime: Regime = Regime.NORMAL
     grants: frozenset[str] = frozenset()
     history: list[tuple[str, str]] = field(default_factory=list)
