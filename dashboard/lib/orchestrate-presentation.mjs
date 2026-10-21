@@ -39,3 +39,22 @@ export function decisionColor(value) {
   if (row.decision === 'PASS') return '#b45309';
   return '#6b7280'; // Unknown/missing values must never turn green.
 }
+
+// A gap is unobserved evidence, not an instruction to interpolate a confidence line.
+// Retain absolute plot positions and split only on missing, malformed or out-of-range readings.
+export function confidenceSegments(values) {
+  if (!Array.isArray(values)) return [];
+  const segments = [];
+  let current = [];
+  values.forEach((value, index) => {
+    const row = normalizeOrchestrateResponse(value);
+    if (row.effective_confidence === null) {
+      if (current.length) segments.push(current);
+      current = [];
+      return;
+    }
+    current.push({ index, confidence: row.effective_confidence });
+  });
+  if (current.length) segments.push(current);
+  return segments;
+}
