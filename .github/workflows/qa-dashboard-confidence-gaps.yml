@@ -1,0 +1,34 @@
+name: Orchestrate Dashboard Confidence-Gap QA
+
+on:
+  push:
+    branches: [qa/1411-confidence-gap-20261020]
+    paths:
+      - 'dashboard/lib/orchestrate-presentation.mjs'
+      - 'dashboard/components/PhiTrajectory.jsx'
+      - 'tests/orchestrate-confidence-segments.test.mjs'
+      - '.github/workflows/qa-dashboard-confidence-gaps.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  presentation-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read-only checkout of isolated candidate
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: Install fixed Node.js 22
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: '22'
+      - name: Verify only presentation normalization and regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          node --test tests/orchestrate-presentation.test.mjs tests/orchestrate-confidence-segments.test.mjs
