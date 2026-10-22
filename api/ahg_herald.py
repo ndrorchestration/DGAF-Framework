@@ -284,5 +284,3 @@ class handler(BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         self._send_json(405, {"error": "Method not allowed"})
-
-[executed on device: neontic (fd6ceb3c-855d-43bd-a34e-d95659a36a0f)]
