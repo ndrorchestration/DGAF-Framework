@@ -30,26 +30,26 @@ TRACK_A_EPOCH_002_MATERIALIZATION_WORKFLOW = ROOT / ".github" / "workflows" / "t
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
-EXPECTED_SOURCE_SHA256 = "1abada5e8dabbcb6706e33c5b5dfa30c45b784e8b9a9b18166a52562b5c3dfa9"
+EXPECTED_SOURCE_SHA256 = "be5239699db277731960d7336a8fbdb9c72bb31a39a97252e50e553bb83b161a"
 EXPECTED_LOCKS = {
     "3.10": (
         ROOT / "requirements-ci-py310-ubuntu2404-x64.lock",
-        "18206a193da4de952c25d5384187edd82fa134eb4a9a3c5322f6999258a6d05c",
-        "7b7f6edb9c686b921d1450aabc3c8345ec6cb41ca84a6feadd16210dafb3c4e3",
+        "6f9d8e3f56c24bc1b2b129883d4acaf3155f3ebc35509f42e3346a39ea7ea7ad",
+        "db50a943311b60bb9680cd57ca6f3e3f8814f66aac9397b001ab914a0576e032",
     ),
     "3.11": (
         ROOT / "requirements-ci-py311-ubuntu2404-x64.lock",
-        "ff5111b07dc1949c06a6a364722bdece93f1f10e70a0c6e719704c091096344d",
-        "dabebe2879148dfed404f1163f17c248ba01ce7b98778782f9c6c12f9acac14d",
+        "b225c16aec73b816eca5d7d092e04811fd558c1e21e82444971259a4bfbcc328",
+        "6726afb44a35ac74bad4cf02508394a287e9f9c67ce883c481d2dfe5b87fe848",
     ),
     "3.12": (
         ROOT / "requirements-ci-py312-ubuntu2404-x64.lock",
-        "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
-        "7931d5f2ad8b22cbd71dea2cc60ce4c1f8a3b4ccde34a46be0fa5e284526fba9",
+        "fe512f0adf386b092aee78c3b647d5e15f33e431a55fad820550f490bf5a36a4",
+        "78740cb5591e6137147c98ee2109737178f4e1676fe24aeba812fa4324f4842a",
     ),
 }
-CONTROL_PLANE_LOCK_SHA256 = "208c68c614cbb4a3e17dfc7eaeffdd39b57ee3688f3b662c7c22e7e64d802b70"
-CONTROL_PLANE_RESOLVED_SET_SHA256 = "e18eb434f83c2f0e2801f218c77b1fbb8db76526dc57c57a734b3f12a3ed7b41"
+CONTROL_PLANE_LOCK_SHA256 = "a315bb4f61848007b253ec1d93b37ffb4f9973f3a940e88a51938bebea277acb"
+CONTROL_PLANE_RESOLVED_SET_SHA256 = "4fea32ec11a8f73ec57ac61aff2030b33a2ecd8336e387cbecafe1e99fd34689"
 CONTROL_PLANE_OVERLAY_SHA256 = "0f7011f8e062802ab40c0bcfa852c079b99f0097f1a3ea085d2eacfef42263f9"
 PIP_WHEEL_SHA256 = "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"
 PIN_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([^\s\\]+)(?:\s+\\)?$")
@@ -112,7 +112,7 @@ def test_source_and_canonical_lock_identities_are_bound() -> None:
 
 def test_every_direct_ci_pin_is_exactly_represented_in_every_lock() -> None:
     direct = direct_pins()
-    assert len(direct) == 15
+    assert len(direct) == 16
     for path, _, _ in EXPECTED_LOCKS.values():
         locked = lock_pins(path)
         for name, version in direct.items():
@@ -361,13 +361,14 @@ def test_epoch002_materialization_uses_bound_lock_and_post_receipt_route() -> No
     assert "MATERIALIZATION_TOOLING_EXECUTES_PRIMARY_ANALYSIS=FALSE" in workflow
     assert "SCIENTIFIC_N_INCREMENT=0" in workflow
     assert "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED" in workflow
-    for path in (
-        "requirements-ci.txt",
-        "requirements-ci-py312-ubuntu2404-x64.lock",
-        "scripts/bootstrap_ci_pip.sh",
-        "tests/test_ci_lock_contract.py",
-    ):
-        assert workflow.count(f"            '{path}'") == 1
+    expected_maintenance_occurrences = {
+        "requirements-ci.txt": 2,
+        "requirements-ci-py312-ubuntu2404-x64.lock": 2,
+        "scripts/bootstrap_ci_pip.sh": 1,
+        "tests/test_ci_lock_contract.py": 2,
+    }
+    for path, expected_count in expected_maintenance_occurrences.items():
+        assert workflow.count(f"            '{path}'") == expected_count
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
@@ -377,3 +378,36 @@ def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
     assert "--no-index" in bootstrap
     assert "--find-links" in bootstrap
     assert "sha256sum" in bootstrap
+
+
+def test_track_a_coordinated_dependency_maintenance_is_exact_bundle_only() -> None:
+    workflows = (
+        ROOT / ".github" / "workflows" / "track-a-epoch-002-primary-analysis-authorization.yml",
+        ROOT / ".github" / "workflows" / "track-a-epoch-002-dataset-lock.yml",
+        ROOT / ".github" / "workflows" / "track-a-epoch-002-materialization.yml",
+    )
+    expected = (
+        ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml",
+        ".github/workflows/track-a-epoch-002-dataset-lock.yml",
+        ".github/workflows/track-a-epoch-002-materialization.yml",
+        "requirements-ci.txt",
+        "requirements-ci-py310-ubuntu2404-x64.lock",
+        "requirements-ci-py311-ubuntu2404-x64.lock",
+        "requirements-ci-py312-ubuntu2404-x64.lock",
+        "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
+        "tests/test_ci_lock_contract.py",
+        "tests/test_track_a_epoch_002_primary_analysis_authorization.py",
+    )
+
+    for workflow in workflows:
+        source = workflow.read_text(encoding="utf-8")
+        assert source.count("TRACK_A_COORDINATED_DEPENDENCY_MAINTENANCE=EXACT_BUNDLE") == 1
+        assert source.count("coordinated dependency maintenance must match the frozen 10-path bundle exactly") == 1
+        before, marker, remainder = source.partition("coordinated_bundle=(\n")
+        assert marker, workflow
+        assert "coordinated_bundle=(" not in before
+        body, end_marker, after = remainder.partition("          )\n          coordinated=true")
+        assert end_marker, workflow
+        assert "coordinated_bundle=(" not in after
+        observed = tuple(line.strip().strip("'\\\"") for line in body.splitlines() if line.strip())
+        assert observed == expected, workflow
