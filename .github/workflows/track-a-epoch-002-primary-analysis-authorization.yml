@@ -179,8 +179,12 @@ jobs:
             "scripts/validate_track_a_epoch_002_primary_analysis_authorization.py"
             "tests/test_track_a_epoch_002_primary_analysis_authorization.py"
             "requirements-ci.txt"
+            "requirements-ci-py310-ubuntu2404-x64.lock"
+            "requirements-ci-py311-ubuntu2404-x64.lock"
             "requirements-ci-py312-ubuntu2404-x64.lock"
+            "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
             "scripts/bootstrap_ci_pip.sh"
+            "tests/test_ci_lock_contract.py"
           )
           for path in "${changed[@]}"; do
             ok=false
