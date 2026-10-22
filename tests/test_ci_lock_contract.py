@@ -398,9 +398,15 @@ def test_track_a_coordinated_dependency_maintenance_is_exact_bundle_only() -> No
         "tests/test_track_a_epoch_002_primary_analysis_authorization.py",
     )
 
+    bundle_pattern = re.compile(
+        r"coordinated_bundle=\\(\\n(?P<body>(?:\\s+['\\\"].+['\\\"]\\n)+)\\s+\\)\\n\\s+coordinated=true"
+    )
+
     for workflow in workflows:
         source = workflow.read_text(encoding="utf-8")
         assert source.count("TRACK_A_COORDINATED_DEPENDENCY_MAINTENANCE=EXACT_BUNDLE") == 1
         assert source.count("coordinated dependency maintenance must match the frozen 10-path bundle exactly") == 1
-        for path in expected:
-            assert source.count(path) >= 1, (workflow, path)
+        match = bundle_pattern.search(source)
+        assert match is not None, workflow
+        observed = tuple(line.strip().strip("'\\\"") for line in match.group("body").splitlines())
+        assert observed == expected, workflow
