@@ -1,0 +1,46 @@
+--- a/.github/workflows/deploy.yml
++++ b/.github/workflows/deploy.yml
+@@ -11,7 +11,7 @@
+
+ concurrency:
+   group: vercel-production-deploy
+-  cancel-in-progress: true
++  cancel-in-progress: false
+
+ env:
+   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+@@ -64,7 +64,8 @@
+   deploy:
+     name: Vercel Production Deploy
+     needs: classify
+-    if: needs.classify.outputs.should_deploy == 'true'
++    if: github.ref == 'refs/heads/main' && needs.classify.outputs.should_deploy == 'true'
++    environment: Production
+     runs-on: ubuntu-latest
+     outputs:
+       deployment_url: ${{ steps.deploy.outputs.deployment_url }}
+--- a/.github/workflows/live-staging-breaker.yml
++++ b/.github/workflows/live-staging-breaker.yml
+@@ -1,13 +1,6 @@
+ name: Live Staging Breaker Evidence
+
+ on:
+-  pull_request:
+-    paths:
+-      - 'pages/api/staging-breaker.ts'
+-      - '.github/workflows/live-staging-breaker.yml'
+-      - '.github/workflows/deploy.yml'
+-      - 'docs/governance/LIVE_STAGING_BREAKER_EVIDENCE_CONTRACT.md'
+-      - 'tests/test_live_staging_breaker_contract.py'
+   workflow_dispatch: {}
+
+ permissions:
+@@ -27,6 +20,8 @@
+
+ jobs:
+   exercise:
++    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
++    environment: Preview
+     name: Exact-source preview breaker exercise
+     runs-on: ubuntu-latest
+     env:

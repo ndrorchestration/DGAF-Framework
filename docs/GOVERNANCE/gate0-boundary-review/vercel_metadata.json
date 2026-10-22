@@ -1,0 +1,77 @@
+{
+  "project": {
+    "id": "prj_euzjAnhqct0wayTWWojizanKN3cX",
+    "name": "dynamicgovernanceagenticformation",
+    "framework": null,
+    "accountId": "team_TJWNcGa1Xh9ARKF3SYbKKxKp",
+    "createdAt": 1778184377867,
+    "updatedAt": 1792384344709,
+    "nodeVersion": "24.x",
+    "live": false,
+    "latestDeployment": {
+      "id": "dpl_6JkzUxhJnMrH9bn6f324P92PrSco",
+      "url": "dynamicgovernanceagenticformation-5bnnw8xlg-ndrorchestration.vercel.app",
+      "createdAt": 1792384323345,
+      "readyState": "READY",
+      "target": "production"
+    },
+    "domains": [
+      "project-7ybao.vercel.app",
+      "dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
+    ],
+    "passwordProtection": {
+      "enabled": false,
+      "deploymentType": null
+    },
+    "ssoProtection": {
+      "enabled": true,
+      "deploymentType": "all_except_custom_domains"
+    },
+    "trustedIps": {
+      "enabled": false,
+      "deploymentType": null,
+      "addresses": [],
+      "protectionMode": null
+    }
+  },
+  "deployment": {
+    "deployment": {
+      "id": "dpl_6JkzUxhJnMrH9bn6f324P92PrSco",
+      "name": "dynamicgovernanceagenticformation",
+      "url": "dynamicgovernanceagenticformation-5bnnw8xlg-ndrorchestration.vercel.app",
+      "type": "LAMBDAS",
+      "state": "READY",
+      "createdAt": 1792384323345,
+      "creator": {
+        "uid": "LrhmfAvo0jAOnzfJVpLmkSGa",
+        "username": "flickerflash-8879"
+      },
+      "project": {
+        "id": "prj_euzjAnhqct0wayTWWojizanKN3cX",
+        "name": "dynamicgovernanceagenticformation",
+        "framework": null
+      },
+      "meta": {
+        "githubCommitRef": "main",
+        "githubCommitSha": "1a95b94332dffb404c5a3ce026d70781a8c10b90",
+        "githubCommitMessage": "docs(tektite): reconcile #1314 on current protected main",
+        "githubRepo": "DGAF-Framework",
+        "githubOrg": "ndrorchestration"
+      },
+      "alias": [
+        "project-7ybao.vercel.app",
+        "dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
+      ],
+      "target": "production",
+      "regions": [
+        "iad1"
+      ],
+      "buildingAt": 1792384324555,
+      "ready": 1792384344399,
+      "readyState": "READY",
+      "source": "cli",
+      "aliasError": null
+    }
+  },
+  "limits": "Metadata only; no route execution, token scope verification, or release acceptance."
+}
