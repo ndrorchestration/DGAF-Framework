@@ -19,9 +19,7 @@ def candidate():
 def test_backdated_self_assertion_does_not_prove_time():
     c = candidate()
     assert c["claimed_issued_at_establishes_signing_time"] is False
-    assert (
-        c["missing_untrusted_or_conflicting_proof"] == "HISTORICAL_TIME_NOT_ESTABLISHED"
-    )
+    assert c["missing_untrusted_or_conflicting_proof"] == "HISTORICAL_TIME_NOT_ESTABLISHED"
 
 
 def test_payload_timestamp_is_not_signature_timestamp():
@@ -32,10 +30,7 @@ def test_payload_timestamp_is_not_signature_timestamp():
 
 def test_proof_binds_existence_before_witness_not_exact_signing():
     c = candidate()
-    assert (
-        c["historical_proof_could_support_only"]
-        == "SIGNATURE_EXISTED_NO_LATER_THAN_TRUSTED_WITNESS_TIME"
-    )
+    assert c["historical_proof_could_support_only"] == "SIGNATURE_EXISTED_NO_LATER_THAN_TRUSTED_WITNESS_TIME"
     assert c["exact_signing_instant_from_proof_alone"] is False
 
 
