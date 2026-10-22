@@ -134,5 +134,3 @@ const state = await kv.get(`ahg:session:${sessionId}:latest`)
 - The API key should match `AHG_HERALD_API_KEY` on the Python/ensemble side.
 - Rotate keys via `vercel env rm AHG_HERALD_API_KEY` + re-add.
 - The endpoint does not store records itself — KV holds only the **latest** state per session. Full record history lives in JSONL files on the ensemble host.
-
-[executed on device: neontic (fd6ceb3c-855d-43bd-a34e-d95659a36a0f)]
