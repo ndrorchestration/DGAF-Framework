@@ -1,0 +1,97 @@
+name: Gate 0 Release SBOM Proof
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'requirements-ci.txt'
+      - 'requirements-ci-py*-ubuntu2404-x64.lock'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/build_release_sbom_manifest.py'
+      - 'tests/test_gate0_release_sbom_workflow.py'
+      - '.github/workflows/gate0-release-sbom-proof.yml'
+  workflow_dispatch: {}
+
+jobs:
+  sbom-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Prove exact source
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12'
+
+      - name: Bootstrap exact pip resolver
+        run: bash scripts/bootstrap_ci_pip.sh
+
+      - name: Install hash-locked SBOM toolchain
+        run: |
+          python -m pip install             --disable-pip-version-check             --require-hashes             --only-binary=:all:             -r requirements-ci-py312-ubuntu2404-x64.lock
+
+      - name: Generate Python CycloneDX SBOM without waiving audit findings
+        id: python_sbom
+        shell: bash
+        run: |
+          set -u
+          mkdir -p artifacts/gate0-sbom
+          set +e
+          python -m pip_audit             -r requirements-ci-py312-ubuntu2404-x64.lock             -f cyclonedx-json             -o artifacts/gate0-sbom/python-ci-py312.cdx.json
+          rc=$?
+          set -e
+          test -s artifacts/gate0-sbom/python-ci-py312.cdx.json
+          echo "pip_audit_exit_code=$rc" >> "$GITHUB_OUTPUT"
+
+      - name: Set up exact Node runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.20.0'
+
+      - name: Generate npm CycloneDX SBOM from lockfile
+        run: |
+          mkdir -p artifacts/gate0-sbom
+          npm sbom             --package-lock-only             --sbom-format cyclonedx             --sbom-type application             > artifacts/gate0-sbom/npm-lock.cdx.json
+          test -s artifacts/gate0-sbom/npm-lock.cdx.json
+
+      - name: Build exact-source manifest
+        run: |
+          python scripts/build_release_sbom_manifest.py             --source-sha "$SOURCE_SHA"             --python-sbom artifacts/gate0-sbom/python-ci-py312.cdx.json             --npm-sbom artifacts/gate0-sbom/npm-lock.cdx.json             --pip-audit-exit-code "${{ steps.python_sbom.outputs.pip_audit_exit_code }}"             --output artifacts/gate0-sbom/manifest.json
+
+      - name: Validate bounded manifest semantics
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path("artifacts/gate0-sbom/manifest.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          assert data["source_sha"] == "${{ env.SOURCE_SHA }}"
+          assert data["claim_scope"] == "G6_SBOM_PROOF_ONLY"
+          assert data["release_admission"] is False
+          assert data["independent_validation"] is False
+          assert len(data["artifacts"]) == 2
+          PY
+
+      - name: Upload public SBOM proof artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gate0-release-sbom-${{ env.SOURCE_SHA }}
+          path: artifacts/gate0-sbom/
+          if-no-files-found: error
+          retention-days: 30

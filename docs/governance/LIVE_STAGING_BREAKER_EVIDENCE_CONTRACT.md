@@ -30,11 +30,11 @@ The fault contains no empirical observation, protected mapping, custody material
 
 ## Exact-source binding
 
-The PR workflow:
+The credentialed workflow is manual-only and restricted to `refs/heads/main`. It:
 
-1. checks out the exact PR head;
+1. checks out the exact dispatched main commit with persisted Git credentials disabled;
 2. creates a single-run exercise identity from workflow run, attempt, and source SHA;
-3. deploys that exact source to a Vercel preview;
+3. deploys that exact main source to a Vercel preview;
 4. retrieves Vercel deployment metadata;
 5. requires `READY`, a non-production target, a concrete deployment ID, and exact source SHA equality;
 6. exercises the deployed endpoint once for that run attempt;
@@ -43,6 +43,8 @@ The PR workflow:
 9. emits an attempt-bound evidence document plus SHA-256 sidecar.
 
 A later rerun is a different attempt and must retain its own evidence. A failed attempt is not erased by a later successful attempt.
+
+The workflow binds to the GitHub `Preview` environment and scopes Vercel deployment/bypass secrets to the individual steps that require them. This source binding does not itself establish that the GitHub environment has eligible independent reviewers, branch restrictions, or sufficient provider-side access policy; those controls require separate settings evidence and adjudication.
 
 ## Evidence class
 
