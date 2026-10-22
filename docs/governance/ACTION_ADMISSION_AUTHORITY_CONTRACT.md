@@ -118,6 +118,33 @@ may still need revision after actual key compromise. This design matrix
 does not establish the overlap window, key-custody protocol, effective-time
 proof, or revocation infrastructure.
 
+### Historical proof-of-existence (candidate rule; not implemented)
+
+A valid signature over a self-declared issued_at field does not independently
+establish when that signature was created. A trusted timestamp applied only
+to the unsigned receipt payload might establish earlier existence of the
+payload, not the signature. To establish that specific signed evidence existed
+no later than a witness time, a separately admitted time/proof authority
+must attest the exact signature bytes and admitted signing-key identity,
+with validated imprint, authority, temporal policy, key usage and
+compromise/revocation history.
+
+Even genuine evidence of this type supplies a latest possible signing time,
+not proof of the exact signing instant, effect truth, or present authorization.
+
+| Presented evidence | Permissible timing claim |
+| --- | --- |
+| Self-declared time plus valid signature | HISTORICAL_TIME_NOT_ESTABLISHED |
+| Timestamp binding only unsigned payload | Signature existence time NOT_ESTABLISHED |
+| Missing, untrusted, invalid or conflicting proof | HISTORICAL_TIME_NOT_ESTABLISHED |
+| Trusted witness bound to exact signature and signer | Conditional SIGNATURE_EXISTED_NO_LATER_THAN_TRUSTED_WITNESS_TIME |
+
+This proposed, non-authorizing clarification is controlled under issue #758
+and uses the historical negative-control evidence in issue #1022.
+RFC 3161 is relevant prior art, not evidence of a deployed DGAF timestamp
+authority. No runtime, provider, key, issued AAR, or scientific/authorization
+claim is created by this proposal.
+
 ## Commit ordering
 
 The normative provider-neutral ordering is:
