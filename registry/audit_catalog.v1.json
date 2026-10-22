@@ -5,7 +5,7 @@
     "status": "PARTIAL_CORE_FAMILIES_ONLY",
     "known_gaps": [
       "Many current workflows, assurance scripts, governance tests, security checks, documentation audits, and historical audit families still require classification and mapping. After the 2026-09-24 current-family waves, remaining unmapped workflow definitions are dominated by historical/experiment epoch lanes, Mode-T security/execution families, diagnostics/rehearsals, execution/deployment workflows, and other mechanisms requiring family-vs-instance adjudication.",
-      "Current protected-main readback identifies PPTL CI, Governance CI, and PR Issue-State Keyword Guard as required contexts, and all three now have exact workflow-path catalog mappings; exact job/ruleset administration semantics and broader protected-branch configuration remain incomplete for the catalog.",
+      "Current protected-main readback identifies PPTL CI, Governance CI, PR Issue-State Keyword Guard, security-scan, test (3.10), test (3.11), and test (3.12) as required contexts. The Python workflow has mixed requiredness: four job contexts are required while sibling jobs such as staging-evidence and integration-tests are not globally required by that fact alone; broader exact job/ruleset administration semantics remain incomplete for the catalog.",
       "Shared-dependency and independence analysis remains incomplete across the wider assurance surface; some cataloged families intentionally reuse repository-local validators.",
       "Historical dated audit reports still require family-versus-execution-instance classification.",
       "External-runtime ingress has bounded source/contract assurance through repository tests, but no provider integration, live runtime evidence, runtime authority, provider compatibility/trust, or exactly-once execution guarantee is established."
@@ -643,7 +643,7 @@
         "SUCCESS",
         "FAILURE"
       ],
-      "decision_effect": "Provides recurring source-quality, regression, security-threshold, and deterministic staging-evidence assurance for a candidate; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "decision_effect": "Provides recurring source-quality, regression, security-threshold, deterministic staging-evidence, and integration evidence. Protected main separately requires the security-scan and Python 3.10/3.11/3.12 job contexts; sibling jobs in this workflow are not globally required by that fact alone.",
       "non_effects": [
         "Does not establish scientific efficacy or independent validation.",
         "Does not establish successful deployment or production health.",
@@ -657,9 +657,20 @@
         "Codecov upload is explicitly non-blocking and continue-on-error.",
         "Integration execution is skipped when tests/integration is absent.",
         "The full Bandit report is advisory; the blocking threshold is medium-or-higher severity with medium-or-higher confidence and excludes one exact immutable historical Epoch 001 materializer.",
-        "Workflow failure semantics do not imply protected-branch requiredness; current protected-main required-context readback does not list this workflow."
+        "Workflow-level blocking is mixed: security-scan and test (3.10/3.11/3.12) are protected-main required job contexts, while staging-evidence and integration-tests remain non-required sibling jobs. This catalog does not create branch requiredness."
       ],
-      "lifecycle": "CURRENT"
+      "lifecycle": "CURRENT",
+      "blocking_semantics": "MIXED_JOB_CONTEXTS",
+      "required_job_contexts": [
+        "security-scan",
+        "test (3.10)",
+        "test (3.11)",
+        "test (3.12)"
+      ],
+      "nonrequired_sibling_job_contexts": [
+        "staging-evidence",
+        "integration-tests"
+      ]
     },
     {
       "id": "AUD-CI-UI-COMMAND-CENTER",
