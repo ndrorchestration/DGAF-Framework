@@ -1,7 +1,7 @@
 # DGAF v1 claims-and-evidence register (proposed seed)
 
 **Status:** INITIAL NON-ADJUDICATED SEED. No claim is promoted by this file.
-Controller: https://github.com/ndrorchestration/DGAF-Framework/issues/1421
+Controller: <https://github.com/ndrorchestration/DGAF-Framework/issues/1421>
 
 | Claim | Candidate status | Evidence pointer | Independence | Limitations |
 | --- | --- | --- | --- | --- |
@@ -14,6 +14,7 @@ Controller: https://github.com/ndrorchestration/DGAF-Framework/issues/1421
 | High assurance or universal containment | EXPLICITLY_NOT_CLAIMED | DGAF control state | None admitted | Not authorized |
 
 ## Required fields on promotion
+
 claim_id, exact_public_wording, supported_action_class, evidence_uri,
 raw_artifact_digest_sha256, exact_source_commit, test_or_experiment_id,
 verifier_identity, independence_class, reviewer_COI, scope, assumptions,
