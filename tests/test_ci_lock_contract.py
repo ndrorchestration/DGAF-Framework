@@ -400,7 +400,7 @@ def test_track_a_coordinated_dependency_maintenance_is_exact_bundle_only() -> No
 
     for workflow in workflows:
         source = workflow.read_text(encoding="utf-8")
-        assert "TRACK_A_COORDINATED_DEPENDENCY_MAINTENANCE=EXACT_BUNDLE" in source
-        assert "coordinated dependency maintenance must match the frozen 10-path bundle exactly" in source
+        assert source.count("TRACK_A_COORDINATED_DEPENDENCY_MAINTENANCE=EXACT_BUNDLE") == 1
+        assert source.count("coordinated dependency maintenance must match the frozen 10-path bundle exactly") == 1
         for path in expected:
             assert source.count(path) >= 1, (workflow, path)
