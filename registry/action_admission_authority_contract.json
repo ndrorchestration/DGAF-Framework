@@ -103,7 +103,26 @@
         "TRUSTED_EFFECT_GATE"
       ],
       "historical_verification_is_effect_authorization": false,
-      "historical_verification_is_postcondition_proof": false
+      "historical_verification_is_postcondition_proof": false,
+      "candidate_historical_time_provenance": {
+        "status": "PROPOSED_NON_AUTHORIZING_REVIEW_REQUIRED",
+        "claimed_issued_at_establishes_signing_time": false,
+        "timestamp_over_unsigned_payload_establishes_signature_existence": false,
+        "historical_proof_could_support_only": "SIGNATURE_EXISTED_NO_LATER_THAN_TRUSTED_WITNESS_TIME",
+        "exact_signing_instant_from_proof_alone": false,
+        "proof_must_bind": "EXACT_SIGNATURE_BYTES_AND_ADMITTED_KEY_IDENTITY",
+        "proof_authority": "INDEPENDENTLY_ADMITTED_TIME_OR_EXISTENCE_WITNESS",
+        "required_claim_prerequisites": [
+          "TRUSTED_WITNESS_IDENTITY_AND_POLICY",
+          "WITNESS_SIGNATURE_AND_IMPRINT_VERIFIED",
+          "EXACT_SIGNED_RECEIPT_AND_KEY_IDENTITY_BOUND",
+          "ELIGIBLE_EVENT_TIME_AND_KEY_USAGE_WINDOW",
+          "RECONCILED_COMPROMISE_AND_REVOCATION_HISTORY"
+        ],
+        "missing_untrusted_or_conflicting_proof": "HISTORICAL_TIME_NOT_ESTABLISHED",
+        "time_proof_is_effect_authorization": false,
+        "time_proof_is_postcondition_proof": false
+      }
     }
   },
   "commit_order": [
