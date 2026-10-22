@@ -2,7 +2,7 @@
 
 Status: preliminary source/settings evidence, not frozen criteria or gate acceptance.
 Baseline: `1a95b94332dffb404c5a3ce026d70781a8c10b90`; remote main rechecked on neontic.
-Tracking: https://github.com/ndrorchestration/DGAF-Framework/issues/1421
+Tracking: [Gate 0 issue #1421](https://github.com/ndrorchestration/DGAF-Framework/issues/1421)
 
 ## Reproduction and coverage
 
@@ -39,6 +39,7 @@ The default Python 3.14 and installed Python 3.12 lacked PyYAML. A task-scoped d
 ## Concrete remediation proposal
 
 deployment-boundaries.patch is an unapplied review candidate, not a tested/admitted fix. It:
+
 - adds a main-ref restriction to production deployment;
 - stops cancellation of an in-progress production deployment;
 - binds production/preview jobs to their corresponding environments;
@@ -62,3 +63,7 @@ Vercel connector readback identifies production deployment `dpl_6JkzUxhJnMrH9bn6
 ## Validation receipt
 
 Candidate workflow texts parse with PyYAML 6.0.3 and the unapplied patch passes `git apply --check`. Inventory rerun is byte-identical; all 55 job identities are unique; the 68-step sum and Python API inclusion were checked. These checks do not establish runtime behavior of the proposed deployment changes.
+
+## First hosted verification findings
+
+At initial head 82fce3b, PR-scope Markdown lint found a bare link and missing blank line; changed-Python checks found formatting violations in inventory.py. These author-introduced issues were corrected in the follow-up commit. Original failed runs remain retained: 39714247448 and 39714247455. The same Python workflow also reported certifi 2026.7.22 / PYSEC-2026-4320, with fix version 2026.10.19; this dependency finding is not fixed by this documentation-only PR. GitHub Dependabot separately reports open high alerts 46 (source-map-js) and 47 (sharp). These are reported scanner findings requiring dependency/reachability review, not proof of exploitation.
