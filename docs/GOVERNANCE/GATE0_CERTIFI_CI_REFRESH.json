@@ -1,0 +1,39 @@
+{
+  "status": "CANDIDATE_NOT_ADMITTED",
+  "baseline": "1a95b94332dffb404c5a3ce026d70781a8c10b90",
+  "source_failed_run": 39714475323,
+  "advisory": "PYSEC-2026-4320",
+  "package": "certifi",
+  "old_version": "2026.7.22",
+  "new_version": "2026.10.19",
+  "wheel": "certifi-2026.10.19-py3-none-any.whl",
+  "wheel_sha256": "42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b",
+  "metadata_source": "https://pypi.org/pypi/certifi/2026.10.19/json",
+  "locks": [
+    {
+      "path": "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
+      "parent_sha256": "208c68c614cbb4a3e17dfc7eaeffdd39b57ee3688f3b662c7c22e7e64d802b70",
+      "candidate_sha256": "d949db017eab42149419fc451936cae93852a2611119746db94c09b29a888514",
+      "candidate_resolved_set_sha256": "731ea9b06da154aecf8b5ebb4a17d6f92b5bf15ad5cc85de0cd5c203da0ba533"
+    },
+    {
+      "path": "requirements-ci-py310-ubuntu2404-x64.lock",
+      "parent_sha256": "18206a193da4de952c25d5384187edd82fa134eb4a9a3c5322f6999258a6d05c",
+      "candidate_sha256": "5acb034e41e5798c4ae00ebd3ce6192906004b63b094f531797d52cac430a1ec",
+      "candidate_resolved_set_sha256": "2e7975f08253948cf8f1a0d11ad28f6874d1826ba213581d116f2eeafc209e86"
+    },
+    {
+      "path": "requirements-ci-py311-ubuntu2404-x64.lock",
+      "parent_sha256": "ff5111b07dc1949c06a6a364722bdece93f1f10e70a0c6e719704c091096344d",
+      "candidate_sha256": "b1ae39d1fdd70865ea217f94b4653454a1c61ad465196a52917be9bc4548da9e",
+      "candidate_resolved_set_sha256": "3021c5238ffe857cf82291e3295fe97146b078dc3ecdb154a7685c63af3a3951"
+    },
+    {
+      "path": "requirements-ci-py312-ubuntu2404-x64.lock",
+      "parent_sha256": "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
+      "candidate_sha256": "484d795b8a1624644867ad1db1ea0747411425c15e107d58f5f979a8b70749d9",
+      "candidate_resolved_set_sha256": "c44b00aadba22d8614e72e141d707aab77684f2cd19ba0eb5a34702636af67b2"
+    }
+  ],
+  "scope": "Only certifi package pin/hash changed; provenance and test identities rebound. Ubuntu hosted verification required; no scientific or release acceptance."
+}
