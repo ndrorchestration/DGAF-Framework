@@ -1,7 +1,10 @@
-# CANONICAL CONTROL-PLANE CI LOCK — promoted from successful #986 proof
-# proof_head: fb26ea011fbc4eb50457a640173a18d6c1a1b314
-# proof_artifact_id: 10801225833
-# resolved_set_sha256: e18eb434f83c2f0e2801f218c77b1fbb8db76526dc57c57a734b3f12a3ed7b41
+# parent_lock_sha256: 208c68c614cbb4a3e17dfc7eaeffdd39b57ee3688f3b662c7c22e7e64d802b70
+# CI LOCK UPDATE CANDIDATE - certifi security refresh; hosted verification pending
+# historical_proof_head: fb26ea011fbc4eb50457a640173a18d6c1a1b314
+# historical_proof_artifact_id: 10801225833
+# prior_resolved_set_sha256: e18eb434f83c2f0e2801f218c77b1fbb8db76526dc57c57a734b3f12a3ed7b41
+# resolved_set_sha256: 731ea9b06da154aecf8b5ebb4a17d6f92b5bf15ad5cc85de0cd5c203da0ba533
+# resolved_set_format: sorted [name,version,wheel_sha256] tuples; compact JSON
 # source: requirements-ci.txt + pandas==3.0.5
 # source_sha256: 1abada5e8dabbcb6706e33c5b5dfa30c45b784e8b9a9b18166a52562b5c3dfa9
 # overlay_sha256: 0f7011f8e062802ab40c0bcfa852c079b99f0097f1a3ea085d2eacfef42263f9
@@ -27,8 +30,8 @@ boolean-py==5.0 \
     --hash=sha256:ef28a70bd43115208441b53a045d1549e2f0ec6e3d08a9d142cbc41c1938e8d9
 cachecontrol==0.14.4 \
     --hash=sha256:b7ac014ff72ee199b5f8af1de29d60239954f223e948196fa3d84adaffc71d2b
-certifi==2026.7.22 \
-    --hash=sha256:62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775
+certifi==2026.10.19 \
+    --hash=sha256:42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b
 charset-normalizer==3.5.1 \
     --hash=sha256:b9af956078716df40d985fb0dfeb2c2120c5ca92ba4ff4b388acfd01cdc14d08
 click==8.5.0 \
