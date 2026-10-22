@@ -130,7 +130,9 @@ const state = await kv.get(`ahg:session:${sessionId}:latest`)
 ## Security Notes
 
 - Set `AHG_HERALD_API_KEY` in Vercel env before going to production.
-- Without it, the endpoint is open (dev mode only).
+- Without it, requests are denied by default. Unauthenticated local/development use requires explicit AHG_HERALD_ALLOW_INSECURE_LOCAL=true; preview and production remain denied without a key.
 - The API key should match `AHG_HERALD_API_KEY` on the Python/ensemble side.
 - Rotate keys via `vercel env rm AHG_HERALD_API_KEY` + re-add.
 - The endpoint does not store records itself — KV holds only the **latest** state per session. Full record history lives in JSONL files on the ensemble host.
+
+[executed on device: neontic (fd6ceb3c-855d-43bd-a34e-d95659a36a0f)]
