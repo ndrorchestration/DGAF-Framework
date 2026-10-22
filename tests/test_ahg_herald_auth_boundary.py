@@ -12,9 +12,7 @@ def clear_auth_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.mark.parametrize("vercel_env", ["production", "preview", "unexpected"])
-def test_missing_key_denies_deployed_or_unknown_environments(
-    monkeypatch: pytest.MonkeyPatch, vercel_env: str
-) -> None:
+def test_missing_key_denies_deployed_or_unknown_environments(monkeypatch: pytest.MonkeyPatch, vercel_env: str) -> None:
     monkeypatch.setenv("VERCEL_ENV", vercel_env)
     assert ahg_herald._check_auth({}) is False
 
