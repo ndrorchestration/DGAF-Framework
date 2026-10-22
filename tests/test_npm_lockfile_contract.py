@@ -63,6 +63,21 @@ class TestNpmLockfileContract(unittest.TestCase):
         self.assertNotIn("git push", workflow)
         self.assertIn("package-lock.json", workflow)
 
+    def test_permanent_workflow_fails_on_current_npm_advisories(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        step = "      - name: Audit npm lockfile against current advisory database"
+        command = "npm audit --package-lock-only --audit-level=moderate"
+        assert workflow.count(step) == 1
+        assert workflow.count(command) == 1
+        audit = workflow.split(step, 1)[1].split("      - name: Reject secret-like lockfile material", 1)[0]
+        assert "set -euo pipefail" in audit
+        assert command in audit
+        assert "continue-on-error" not in audit
+        assert "|| true" not in audit
+        assert "--omit=dev" not in audit
+        assert workflow.index("Verify clean lockfile-consuming install and build") < workflow.index(step)
+        assert workflow.index(step) < workflow.index("Emit validation evidence")
+
     def test_one_time_bootstrap_workflow_is_not_retained(self) -> None:
         self.assertFalse((ROOT / ".github" / "workflows" / "npm-lockfile-bootstrap.yml").exists())
 
