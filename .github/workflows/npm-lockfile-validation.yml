@@ -95,6 +95,11 @@ jobs:
             --no-fund
           npm run build
 
+      - name: Audit npm lockfile against current advisory database
+        run: |
+          set -euo pipefail
+          npm audit --package-lock-only --audit-level=moderate
+
       - name: Reject secret-like lockfile material
         run: |
           set -euo pipefail
