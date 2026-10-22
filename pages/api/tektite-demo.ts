@@ -15,6 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ status: 'method_not_allowed' })
   }
 
+  if (process.env.VERCEL_ENV === 'production') {
+    return res.status(404).json({
+      status: 'not_available',
+      reason: 'TEKTITE_DEMO_PRODUCTION_DISABLED',
+      boundary: 'EXCLUDED_FROM_PRODUCTION',
+    })
+  }
+
   if (process.env.TEKTITE_DEMO_ENABLED !== 'true') {
     return res.status(503).json({
       status: 'blocked',
