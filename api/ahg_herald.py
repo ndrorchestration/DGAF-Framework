@@ -121,9 +121,7 @@ def _is_production() -> bool:
 
 def _allow_insecure_local() -> bool:
     """Permit unauthenticated local/dev only under an explicit opt-in flag."""
-    explicit_opt_in = (
-        os.environ.get("AHG_HERALD_ALLOW_INSECURE_LOCAL", "").strip().lower() == "true"
-    )
+    explicit_opt_in = os.environ.get("AHG_HERALD_ALLOW_INSECURE_LOCAL", "").strip().lower() == "true"
     vercel_env = os.environ.get("VERCEL_ENV", "").strip().lower()
     return explicit_opt_in and vercel_env in {"", "development"}
 
@@ -276,8 +274,7 @@ class handler(BaseHTTPRequestHandler):
                 "endpoint": "P-01 AHG Herald Fan-Out",
                 "version": "1.0",
                 "kv_configured": bool(os.environ.get("AHG_KV_REST_API_URL")),
-                "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY"))
-                or _is_production(),
+                "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY")) or _is_production(),
                 "tribunal_webhook": bool(os.environ.get("AHG_TRIBUNAL_WEBHOOK_URL")),
             },
         )
