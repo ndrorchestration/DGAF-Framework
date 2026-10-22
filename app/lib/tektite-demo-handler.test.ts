@@ -3,6 +3,90 @@ import test from 'node:test'
 
 import handler from '../../pages/api/tektite-demo.ts'
 
+type MockResponse = {
+  statusCode: number
+  body: unknown
+  setHeader: () => void
+  status: (code: number) => MockResponse
+  json: (value: unknown) => MockResponse
+}
+
+function response(): MockResponse {
+  return {
+    statusCode: 0,
+    body: undefined,
+    setHeader() {},
+    status(code: number) {
+      this.statusCode = code
+      return this
+    },
+    json(value: unknown) {
+      this.body = value
+      return this
+    },
+  }
+}
+
+test('disabled Tektite demo fails closed without attempting a network request', async () => {
+  const previousEnabled = process.env.TEKTITE_DEMO_ENABLED
+  const previousFetch = globalThis.fetch
+  delete process.env.TEKTITE_DEMO_ENABLED
+
+  let fetchCalls = 0
+  globalThis.fetch = (async () => {
+    fetchCalls += 1
+    throw new Error('fetch must not run while demo is disabled')
+  }) as typeof fetch
+
+  const res = response()
+  try {
+    await handler({ method: 'POST', headers: {}, body: { scenario: 'authorized' } } as never, res as never)
+    assert.equal(res.statusCode, 503)
+    assert.deepEqual(res.body, {
+      status: 'blocked',
+      reason: 'TEKTITE_DEMO_NOT_ENABLED',
+      boundary: 'FAIL_CLOSED_DEMO_DISABLED',
+    })
+    assert.equal(fetchCalls, 0)
+  } finally {
+    globalThis.fetch = previousFetch
+    if (previousEnabled === undefined) delete process.env.TEKTITE_DEMO_ENABLED
+    else process.env.TEKTITE_DEMO_ENABLED = previousEnabled
+  }
+})
+
+test('enabled Tektite demo without its internal token fails closed before network access', async () => {
+  const previousEnabled = process.env.TEKTITE_DEMO_ENABLED
+  const previousToken = process.env.TEKTITE_DEMO_INTERNAL_TOKEN
+  const previousFetch = globalThis.fetch
+  process.env.TEKTITE_DEMO_ENABLED = 'true'
+  delete process.env.TEKTITE_DEMO_INTERNAL_TOKEN
+
+  let fetchCalls = 0
+  globalThis.fetch = (async () => {
+    fetchCalls += 1
+    throw new Error('fetch must not run without the internal token')
+  }) as typeof fetch
+
+  const res = response()
+  try {
+    await handler({ method: 'POST', headers: {}, body: { scenario: 'authorized' } } as never, res as never)
+    assert.equal(res.statusCode, 503)
+    assert.deepEqual(res.body, {
+      status: 'blocked',
+      reason: 'TEKTITE_DEMO_INTERNAL_TOKEN_UNAVAILABLE',
+      boundary: 'FAIL_CLOSED_NO_DEMO_ISSUANCE',
+    })
+    assert.equal(fetchCalls, 0)
+  } finally {
+    globalThis.fetch = previousFetch
+    if (previousEnabled === undefined) delete process.env.TEKTITE_DEMO_ENABLED
+    else process.env.TEKTITE_DEMO_ENABLED = previousEnabled
+    if (previousToken === undefined) delete process.env.TEKTITE_DEMO_INTERNAL_TOKEN
+    else process.env.TEKTITE_DEMO_INTERNAL_TOKEN = previousToken
+  }
+})
+
 test('hostile forwarded headers cannot redirect the credentialed audit request', async () => {
   const previous = {
     enabled: process.env.TEKTITE_DEMO_ENABLED,
