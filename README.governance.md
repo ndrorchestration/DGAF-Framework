@@ -46,7 +46,7 @@ Interpretation rules:
 
 - **Cataloged recurring assurance** means the repository has an explicit current mapping for that family and implementation path.
 - **Unmapped / unclassified** means only that the current catalog has not adjudicated that workflow; it is not evidence that the workflow is non-assurance.
-- **Protected-branch requiredness** is a separate repository property. Current protected-main readback identifies **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard** as required contexts.
+- **Protected-branch requiredness** is a separate repository property. Current protected-main readback identifies **PPTL CI**, **Governance CI**, **PR Issue-State Keyword Guard**, **security-scan**, **test (3.10)**, **test (3.11)**, and **test (3.12)** as required contexts. The four Python contexts are job-level checks from `Python Tests & Quality Checks`; sibling jobs in that workflow are not automatically required.
 - A workflow can be a recurring assurance family without being a required merge context.
 - Catalog coverage does not establish exhaustive security, governance, scientific, compliance, or audit coverage.
 
