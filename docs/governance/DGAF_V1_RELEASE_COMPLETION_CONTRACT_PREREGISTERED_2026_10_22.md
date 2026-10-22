@@ -1,11 +1,12 @@
 # DGAF v1: Bounded Release Completion and Epistemic Assurance — Preregistered Oracles v1
 
 **Disposition:** ORACLES PREREGISTERED / OWNER-OPERATOR FROZEN / INDEPENDENT GATE ACCEPTANCE NOT ESTABLISHED / RELEASE HOLD. 2026-10-22.
-**Controller:** https://github.com/ndrorchestration/DGAF-Framework/issues/1421
-**Proposed Notion source:** https://app.notion.com/p/401f5bad238b8140bcc2d19ec3c82b28
+**Controller:** <https://github.com/ndrorchestration/DGAF-Framework/issues/1421>
+**Proposed Notion source:** <https://app.notion.com/p/401f5bad238b8140bcc2d19ec3c82b28>
 **Source baseline:** protected main `1a95b94332dffb404c5a3ce026d70781a8c10b90` (revalidate before decisions).
 
 ## Bounded meaning of finished
+
 DGAF v1 completion is bounded software product/release evidence, not scientific certification.
 The release must be reviewed against criteria frozen **before** classifying issues or
 claims, by independent and eligible reviewers with written conflict-of-interest
@@ -15,6 +16,7 @@ unavailable authority and fallback-to-allow attempts, without extrapolating
 from those tests to global safety.
 
 ## Gate 0: mandatory prior preregistration
+
 Freeze before audit: release scope, supported action classes, excluded and
 unreachable execution paths, exact candidate SHA, public-claim vocabulary,
 seven gate oracles, threat model, severity taxonomy, reviewer eligibility,
@@ -23,6 +25,7 @@ explicit rationale, affected evidence, and fresh eligible review. Existing
 CI success cannot retroactively satisfy an unregistered oracle.
 
 ## Frozen release-gate oracles
+
 - **G1 Scope freeze:** action-class matrix, versions, assumptions, boundaries,
   user-facing interfaces, supported/unsupported deployment topology.
 - **G2 Release safety:** independently adjudicated P0/critical problems;
@@ -44,6 +47,7 @@ Each gate needs `gate_id`, `owner`, `verifier`, `COI`, `date`,
 (PASS, FAIL or BLOCKED), and attributed `signoff`. Missing = BLOCKED.
 
 ## Frozen reviewer eligibility and change control
+
 An eligible independent release reviewer must not be an author or contributor to
 the evaluated change, must not hold direct commit/write authority for the
 evaluated repository during the review, must disclose employment, funding,
@@ -58,12 +62,14 @@ evidence, and re-open any disposition that depends on the changed oracle.
 Owner/operator preregistration is not independent acceptance.
 
 ## Public claims and evidence
+
 Every claim must bind claim text, capability/action class, code commit, evidence
 digest, verifier, independence level, test/protocol, assumptions and limitations.
 Allowed statuses: SUPPORTED / TESTED_ONLY / ASPIRATIONAL / EXPLICITLY_NOT_CLAIMED.
 A test success does not prove general correctness or efficacy.
 
 ## Threat, reachability and reviewer assumptions
+
 Identify authorization/evidence assets, issuer/request/execution boundaries,
 source-aware adversaries, key compromise, replay/concurrency, service outage,
 potential artifact recipients and excluded deployment environments. An exclusion
@@ -72,6 +78,7 @@ unreachability test. Independently adjudicate reviewer conflicts, not just
 non-authorship; P0/critical defects may not be self-approved.
 
 ## Open release classification candidates (not decisions)
+
 - #1399 / draft PR #1414: possible P0 public artifact producer; resolve guard or
   prove the producer unreachable before release.
 - #758 / draft #1416: trust lifecycle **design only**, not live issuer admission.
@@ -82,6 +89,7 @@ non-authorship; P0/critical defects may not be self-approved.
   engineering-release review; no automatic scientific promotion.
 
 ## Epistemic non-goals and state
+
 SemVer 1.0.0 defines a public API, not validated scientific superiority, global
 security, universal agent correctness, certification or high assurance.
 Until independently accepted evidence and release authorization:

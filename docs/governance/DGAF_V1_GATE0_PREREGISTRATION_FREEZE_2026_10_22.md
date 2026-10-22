@@ -1,7 +1,7 @@
 # DGAF v1 Gate 0 — owner/operator preregistration freeze record
 
 **Effective date:** 2026-10-22
-**Controller:** https://github.com/ndrorchestration/DGAF-Framework/issues/1421
+**Controller:** <https://github.com/ndrorchestration/DGAF-Framework/issues/1421>
 **Protected-main baseline at freeze:** `1a95b94332dffb404c5a3ce026d70781a8c10b90`
 **Freeze class:** OWNER_OPERATOR_PREREGISTRATION / SAME_SYSTEM_NONINDEPENDENT
 **Independent Gate 0 acceptance:** NOT_ESTABLISHED
@@ -14,10 +14,10 @@ audits or operator classifications into accepted evidence.
 
 | Document | SHA-256 | Role |
 | --- | --- | --- |
-| DGAF v1 bounded release completion and epistemic assurance | `53e98e1c889e6aa7c7ff6876431e81192ce845952181f4e53d937c5a51d3837d` | release scope/oracles, non-goals, reviewer eligibility and change control |
-| claims-and-evidence register seed | `78aabcefe32445deb84bc97664feb0f1a1c91075babf916f71c003f77fce3946` | claim vocabulary and evidence-binding schema |
-| gate evidence/exclusion template | `fe05a25000d8aa2f5805e892c4d461b3333b68d43be152fb2be4c95d1e38ef19` | evidence, severity, reachability and threat-model schema |
-| preliminary source reachability inventory | `ecb70a23eddbbb915237e67871b0dfcf4575be9b06330520e067c93b289b1d15` | pre-freeze inventory only; not accepted gate evidence |
+| DGAF v1 bounded release completion and epistemic assurance | `106d359e4b2a82e6a51a1b05d48e044b24c64bd6b61605c64587ed75cf9f8477` | release scope/oracles, non-goals, reviewer eligibility and change control |
+| claims-and-evidence register seed | `a95edc10535ab23989e9af7304fd823cdcc42013545495f71435d01107cd222b` | claim vocabulary and evidence-binding schema |
+| gate evidence/exclusion template | `257946af2196ab2c018245380edb93d025419653e362adced509fecad294226b` | evidence, severity, reachability and threat-model schema |
+| preliminary source reachability inventory | `b942662ccdeb781a64573a336b88a5da4e8e8d466d89d6116e7f114b89ca45e4` | pre-freeze inventory only; not accepted gate evidence |
 
 ## Freeze semantics
 
@@ -47,3 +47,13 @@ evidence list, and re-opening any dependent disposition.
 The workstation used for this preregistration does not currently expose a configured
 commit-signing key. Repository publication of this record may therefore be unsigned;
 that is an explicit release-admission limitation, not evidence of signing.
+
+## Formatting-only source rehash candidate
+
+The parent commit `ded5cf5e99b5f56f0e31bad60e234edcdd43fe1e` retains the original Gate 0 source
+bytes and hashes. This isolated candidate repairs Markdown heading/list spacing
+and bare URL markup without changing the wording of acceptance oracles,
+gate statuses, or eligibility requirements. Updated hashes in the table above
+supersede parent hashes only if this candidate is explicitly re-preregistered
+under a recorded new digest and eligible review; no retrospective gate PASS
+or release authority is implied.

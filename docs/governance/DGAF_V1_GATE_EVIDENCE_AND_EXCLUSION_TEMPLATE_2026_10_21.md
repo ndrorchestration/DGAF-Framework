@@ -1,10 +1,11 @@
 # DGAF v1 release evidence and gate adjudication template
 
-**Controller:** https://github.com/ndrorchestration/DGAF-Framework/issues/1421
+**Controller:** <https://github.com/ndrorchestration/DGAF-Framework/issues/1421>
 **Status:** TEMPLATE ONLY / NO GATE ACCEPTANCE.
 **Prerequisite:** bind every disposition to the frozen Gate 0 oracle version/hash; independent acceptance remains required before filing a PASS.
 
 ## Evidence record
+
 - gate_id: G0|G1|G2|G3|G4|G5|G6|G7
 - gate_criteria_version_and_sha256:
 - support_envelope_and_action_class:
@@ -30,6 +31,7 @@
 - downstream_claims_affected:
 
 ## Release blocker classification
+
 - P0 critical: probable unauthorized consequential action, protected disclosure or
   unbounded trust bypass. Cannot self-close. Eligible independent confirmation required.
 - P1 high: reproducible severe violation within advertised supported scope.
@@ -38,6 +40,7 @@
 This severity taxonomy is frozen with the Gate 0 oracle version. Severity application and release-blocker closure still require evidence and eligible independent adjudication.
 
 ## Exclusion reachability worksheet
+
 - excluded_capability:
 - runtime entry points and alternate routes:
 - deployment and routing assumptions:
@@ -50,6 +53,7 @@ This severity taxonomy is frozen with the Gate 0 oracle version. Severity applic
 - disposition: BLOCKED
 
 ## Threat-model worksheet
+
 - protected_asset:
 - trust_boundary:
 - adversary_capability_and_assumptions:

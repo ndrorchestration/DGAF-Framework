@@ -2,9 +2,10 @@
 
 **Classification:** OPERATOR-LOCAL / PRE-GATE-0 / NOT ACCEPTED.
 **Source:** protected main `1a95b94332dffb404c5a3ce026d70781a8c10b90`.
-**Controller:** https://github.com/ndrorchestration/DGAF-Framework/issues/1421
+**Controller:** <https://github.com/ndrorchestration/DGAF-Framework/issues/1421>
 
 ## Inspected existing paths
+
 | Source path | Observed source semantics | Provisional disposition | Missing evidence |
 | --- | --- | --- | --- |
 | `pages/api/audit.ts` | POST calls `validateAuditAdmission`, denies invalid request with HTTP 403, and calls `consumeAuditAdmission(record.record_id)` before an effect | Candidate limited action path, not generalized authorization | Deployment authentication, cross-instance replay, revocation failure injection and reachability audit |
@@ -14,6 +15,7 @@
 | `packages/governed-repo/src/governed_repo/core.py` and `github_adapter.py` | Package source present on protected main | Candidate distribution subset | API compatibility, actor permissions, signed build and clean-install reproduction |
 
 ## Important status distinctions
+
 - Current main contains source paths above; path presence alone never proves a route is externally reachable or unreachable.
 - `/api/audit` has explicit denial branches, but negative source inspection does **not** establish all potential fallback-to-allow paths absent.
 - #1414 is an **unmerged** publication guard; do not infer protected main has the candidate guard.
@@ -23,6 +25,7 @@
 - Gate 0 is proposed and not frozen; this inventory cannot backfill gate acceptance.
 
 ## Next source-bound audit criteria
+
 1. Identify all executable action entry points by exact path and action class, including GitHub workflow triggers and alternate dispatch mechanisms.
 2. For each class: define protected effect, authority source, denial oracles, failure modes, dependency unavailability, and what class can be hard-disabled.
 3. Enumerate upload and other data-egress routes, distinguishing dry-run structural outputs from protected scientific data; do not claim global containment from #1414 alone.
