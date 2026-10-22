@@ -173,6 +173,7 @@ jobs:
           set -euo pipefail
           base="${{ github.event.pull_request.base.sha }}"
           mapfile -t changed < <(git diff --name-only "$base" HEAD)
+          test "${#changed[@]}" -gt 0
           coordinated_bundle=(
             ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
             ".github/workflows/track-a-epoch-002-dataset-lock.yml"
