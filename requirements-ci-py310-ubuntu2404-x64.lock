@@ -1,12 +1,12 @@
-# CANONICAL CI LOCK — security-remediation candidate #1424
-# remediation_basis: PR #1427 hosted resolver proof + exact-lock verification
-# proof_artifact_id: 10799922222
-# resolved_set_sha256: db50a943311b60bb9680cd57ca6f3e3f8814f66aac9397b001ab914a0576e032
+# CANONICAL CI LOCK — security-remediation candidate #1477
+# remediation_basis: PR #1478 hosted resolver proof + surgical exact-lock verification
+# proof_artifact_id: 12450997497
+# resolved_set_sha256: c79c11631fed07649e1c0cdbb9a4c2a2269e338b37d743be0e4e7e22cea76421
 # source: requirements-ci.txt
-# source_sha256: be5239699db277731960d7336a8fbdb9c72bb31a39a97252e50e553bb83b161a
+# source_sha256: 9c6a5d1115cf1236c983e6f81bb51530199e22dc8da28a6574e83381c18f4054
 # python_requested: 3.10
 # python_minor: 3.10
-# python_full: 3.10.21
+# python_full: 3.10.22
 # runner_os: ubuntu-24.04
 # runner_arch: x64
 # resolver: pip==26.2.1
@@ -22,8 +22,8 @@ backports-asyncio-runner==1.2.0 \
     --hash=sha256:0da0a936a8aeb554eccb426dc55af3ba63bcdc69fa1a600b5bb305413a4477b5
 bandit==1.9.4 \
     --hash=sha256:f89ffa663767f5a0585ea075f01020207e966a9c0f2b9ef56a57c7963a3f6f8e
-black==26.5.1 \
-    --hash=sha256:22f2cd76d069cc54c71f10360744ba8983fbb616903b4304a85b734915c8e1b4
+black==26.10.1 \
+    --hash=sha256:d5bd3518d8e97138fef295230b1e9804076d69fa4e3594071494a8c68abe6266
 boolean-py==5.0 \
     --hash=sha256:ef28a70bd43115208441b53a045d1549e2f0ec6e3d08a9d142cbc41c1938e8d9
 cachecontrol==0.14.4 \
