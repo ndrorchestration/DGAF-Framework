@@ -627,6 +627,22 @@ def test_ci_workflow_uses_hash_locked_dependencies_without_cross_lane_trigger() 
     assert source.count('      - "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
     assert source.count('            "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
 
+    accepted_maintenance = source.split(
+        "      - name: Enforce accepted-state maintenance PR surface",
+        1,
+    )[1].split(
+        "      - name: Validate exact authorization creation event",
+        1,
+    )[0]
+    mapfile_marker = 'mapfile -t changed < <(git diff --name-only "$base" HEAD)'
+    nonempty_marker = 'test "${#changed[@]}" -gt 0'
+    coordinated_marker = "coordinated_bundle=("
+    assert mapfile_marker in accepted_maintenance
+    assert nonempty_marker in accepted_maintenance
+    assert coordinated_marker in accepted_maintenance
+    assert accepted_maintenance.index(mapfile_marker) < accepted_maintenance.index(nonempty_marker)
+    assert accepted_maintenance.index(nonempty_marker) < accepted_maintenance.index(coordinated_marker)
+
 
 def test_procedure_preserves_prospective_fail_closed_boundary() -> None:
     assert PROCEDURE_PATH.exists(), "Epoch 002 primary-analysis authorization procedure is missing"
