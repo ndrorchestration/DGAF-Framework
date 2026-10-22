@@ -614,7 +614,16 @@ def test_ci_workflow_uses_hash_locked_dependencies_without_cross_lane_trigger() 
     assert "actions/setup-python@v4" not in source
     assert "cache: pip" not in source
     assert "python -m pip install -r requirements-ci.txt" not in source
-    assert "tests/test_ci_lock_contract.py" not in source
+    trigger_section = source.split("jobs:", 1)[0]
+    assert "tests/test_ci_lock_contract.py" not in trigger_section
+    assert '            "tests/test_ci_lock_contract.py"' in source
+    for maintenance_lock in (
+        "requirements-ci-py310-ubuntu2404-x64.lock",
+        "requirements-ci-py311-ubuntu2404-x64.lock",
+        "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
+    ):
+        assert maintenance_lock not in trigger_section
+        assert f'            "{maintenance_lock}"' in source
     assert source.count('      - "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
     assert source.count('            "requirements-ci-py312-ubuntu2404-x64.lock"') == 1
 
