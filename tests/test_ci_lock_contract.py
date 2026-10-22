@@ -377,3 +377,30 @@ def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
     assert "--no-index" in bootstrap
     assert "--find-links" in bootstrap
     assert "sha256sum" in bootstrap
+
+
+def test_track_a_coordinated_dependency_maintenance_is_exact_bundle_only() -> None:
+    workflows = (
+        ROOT / ".github" / "workflows" / "track-a-epoch-002-primary-analysis-authorization.yml",
+        ROOT / ".github" / "workflows" / "track-a-epoch-002-dataset-lock.yml",
+        ROOT / ".github" / "workflows" / "track-a-epoch-002-materialization.yml",
+    )
+    expected = (
+        ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml",
+        ".github/workflows/track-a-epoch-002-dataset-lock.yml",
+        ".github/workflows/track-a-epoch-002-materialization.yml",
+        "requirements-ci.txt",
+        "requirements-ci-py310-ubuntu2404-x64.lock",
+        "requirements-ci-py311-ubuntu2404-x64.lock",
+        "requirements-ci-py312-ubuntu2404-x64.lock",
+        "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
+        "tests/test_ci_lock_contract.py",
+        "tests/test_track_a_epoch_002_primary_analysis_authorization.py",
+    )
+
+    for workflow in workflows:
+        source = workflow.read_text(encoding="utf-8")
+        assert 'TRACK_A_COORDINATED_DEPENDENCY_MAINTENANCE=EXACT_BUNDLE' in source
+        assert 'coordinated dependency maintenance must match the frozen 10-path bundle exactly' in source
+        for path in expected:
+            assert source.count(path) >= 1, (workflow, path)
