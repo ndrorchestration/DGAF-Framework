@@ -5,6 +5,8 @@ on:
     paths:
       - '.github/workflows/ci-dependency-lock-generation-proof.yml'
       - 'requirements-ci.txt'
+      - 'package.json'
+      - 'package-lock.json'
 
 permissions:
   contents: read
