@@ -229,7 +229,7 @@ Current protected-main behavior includes:
 - deterministic discovery of current workflow definitions not yet mapped by the catalog;
 - explicit non-effects and bounded verdict semantics for mapped families.
 
-Current protected-main branch-protection required contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. A workflow can be cataloged as a recurring assurance family without being a required merge context, and an unmapped workflow remains **unclassified**, not automatically “non-assurance.”
+Current protected-main branch-protection required contexts are separately read as **PPTL CI**, **Governance CI**, **PR Issue-State Keyword Guard**, **security-scan**, **test (3.10)**, **test (3.11)**, and **test (3.12)**. The four Python contexts are job-level required checks emitted by the broader `Python Tests & Quality Checks` workflow; sibling jobs such as `staging-evidence` and `integration-tests` are not thereby globally required. A workflow can be cataloged as a recurring assurance family without being a required merge context, and an unmapped workflow remains **unclassified**, not automatically “non-assurance.”
 
 ## What is established — and what is not
 
