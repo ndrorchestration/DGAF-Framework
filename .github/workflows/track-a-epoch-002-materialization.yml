@@ -216,7 +216,10 @@ jobs:
           allowed=(
             '.github/workflows/track-a-epoch-002-materialization.yml'
             'requirements-ci.txt'
+            'requirements-ci-py310-ubuntu2404-x64.lock'
+            'requirements-ci-py311-ubuntu2404-x64.lock'
             'requirements-ci-py312-ubuntu2404-x64.lock'
+            'requirements-ci-control-plane-py312-ubuntu2404-x64.lock'
             'scripts/bootstrap_ci_pip.sh'
             'tests/test_ci_lock_contract.py'
             'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json'
