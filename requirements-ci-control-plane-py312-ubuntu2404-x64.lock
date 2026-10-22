@@ -1,13 +1,13 @@
-# CANONICAL CONTROL-PLANE CI LOCK — security-remediation candidate #1424
-# remediation_basis: PR #1427 hosted resolver proof + exact-lock verification
-# proof_artifact_id: 10801225833
-# resolved_set_sha256: 4fea32ec11a8f73ec57ac61aff2030b33a2ecd8336e387cbecafe1e99fd34689
+# CANONICAL CONTROL-PLANE CI LOCK — security-remediation candidate #1477
+# remediation_basis: PR #1478 hosted resolver proof + surgical exact-lock verification
+# proof_artifact_id: 12450333764
+# resolved_set_sha256: 52050689f4954020daf570da1365a1e44f6e0c52f4e81d988f21b4331e37356f
 # source: requirements-ci.txt + pandas==3.0.5
-# source_sha256: be5239699db277731960d7336a8fbdb9c72bb31a39a97252e50e553bb83b161a
+# source_sha256: 9c6a5d1115cf1236c983e6f81bb51530199e22dc8da28a6574e83381c18f4054
 # overlay_sha256: 0f7011f8e062802ab40c0bcfa852c079b99f0097f1a3ea085d2eacfef42263f9
 # python_requested: 3.12
 # python_minor: 3.12
-# python_full_proof: 3.12.14
+# python_full_proof: 3.12.15
 # runner_os: ubuntu-24.04
 # runner_arch: x64
 # resolver: pip==26.2.1
@@ -21,8 +21,8 @@ attrs==26.1.0 \
     --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
 bandit==1.9.4 \
     --hash=sha256:f89ffa663767f5a0585ea075f01020207e966a9c0f2b9ef56a57c7963a3f6f8e
-black==26.5.1 \
-    --hash=sha256:9d98d4137277c75dfb898ec8d846c4fd68ba1e9cf77f95e2865c203dc18f4c3d
+black==26.10.1 \
+    --hash=sha256:b5347d760f0c02bb00dd249384cab71c3bf828b4f68d5b401eb116e0390f147d
 boolean-py==5.0 \
     --hash=sha256:ef28a70bd43115208441b53a045d1549e2f0ec6e3d08a9d142cbc41c1938e8d9
 cachecontrol==0.14.4 \
