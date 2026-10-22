@@ -1,9 +1,9 @@
-# CANONICAL CI LOCK — promoted from successful #984 proof
-# proof_head: 61129f93e2eab7245557918294446eedc80b819d
+# CANONICAL CI LOCK — security-remediation candidate #1424
+# remediation_basis: certifi remediation + Black 26.10.1 security update; hosted exact-lock verification required
 # proof_artifact_id: 10799643634
-# resolved_set_sha256: 7931d5f2ad8b22cbd71dea2cc60ce4c1f8a3b4ccde34a46be0fa5e284526fba9
+# resolved_set_sha256: 3d1a223f0f15c4aacfe0799a1789e1ed9ef2596b5ff6b44efb17fc9a3139ed68
 # source: requirements-ci.txt
-# source_sha256: 1abada5e8dabbcb6706e33c5b5dfa30c45b784e8b9a9b18166a52562b5c3dfa9
+# source_sha256: 9c6a5d1115cf1236c983e6f81bb51530199e22dc8da28a6574e83381c18f4054
 # python_requested: 3.12
 # python_minor: 3.12
 # python_full: 3.12.14
@@ -20,14 +20,14 @@ attrs==26.1.0 \
     --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
 bandit==1.9.4 \
     --hash=sha256:f89ffa663767f5a0585ea075f01020207e966a9c0f2b9ef56a57c7963a3f6f8e
-black==26.5.1 \
-    --hash=sha256:9d98d4137277c75dfb898ec8d846c4fd68ba1e9cf77f95e2865c203dc18f4c3d
+black==26.10.1 \
+    --hash=sha256:b5347d760f0c02bb00dd249384cab71c3bf828b4f68d5b401eb116e0390f147d
 boolean-py==5.0 \
     --hash=sha256:ef28a70bd43115208441b53a045d1549e2f0ec6e3d08a9d142cbc41c1938e8d9
 cachecontrol==0.14.4 \
     --hash=sha256:b7ac014ff72ee199b5f8af1de29d60239954f223e948196fa3d84adaffc71d2b
-certifi==2026.7.22 \
-    --hash=sha256:62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775
+certifi==2026.10.19 \
+    --hash=sha256:42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b
 charset-normalizer==3.5.1 \
     --hash=sha256:b9af956078716df40d985fb0dfeb2c2120c5ca92ba4ff4b388acfd01cdc14d08
 click==8.5.0 \
