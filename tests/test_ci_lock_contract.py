@@ -361,13 +361,14 @@ def test_epoch002_materialization_uses_bound_lock_and_post_receipt_route() -> No
     assert "MATERIALIZATION_TOOLING_EXECUTES_PRIMARY_ANALYSIS=FALSE" in workflow
     assert "SCIENTIFIC_N_INCREMENT=0" in workflow
     assert "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED" in workflow
-    for path in (
-        "requirements-ci.txt",
-        "requirements-ci-py312-ubuntu2404-x64.lock",
-        "scripts/bootstrap_ci_pip.sh",
-        "tests/test_ci_lock_contract.py",
-    ):
-        assert workflow.count(f"            '{path}'") == 1
+    expected_maintenance_occurrences = {
+        "requirements-ci.txt": 2,
+        "requirements-ci-py312-ubuntu2404-x64.lock": 2,
+        "scripts/bootstrap_ci_pip.sh": 1,
+        "tests/test_ci_lock_contract.py": 2,
+    }
+    for path, expected_count in expected_maintenance_occurrences.items():
+        assert workflow.count(f"            '{path}'") == expected_count
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
@@ -398,15 +399,15 @@ def test_track_a_coordinated_dependency_maintenance_is_exact_bundle_only() -> No
         "tests/test_track_a_epoch_002_primary_analysis_authorization.py",
     )
 
-    bundle_pattern = re.compile(
-        r"coordinated_bundle=\\(\\n(?P<body>(?:\\s+['\\\"].+['\\\"]\\n)+)\\s+\\)\\n\\s+coordinated=true"
-    )
-
     for workflow in workflows:
         source = workflow.read_text(encoding="utf-8")
         assert source.count("TRACK_A_COORDINATED_DEPENDENCY_MAINTENANCE=EXACT_BUNDLE") == 1
         assert source.count("coordinated dependency maintenance must match the frozen 10-path bundle exactly") == 1
-        match = bundle_pattern.search(source)
-        assert match is not None, workflow
-        observed = tuple(line.strip().strip("'\\\"") for line in match.group("body").splitlines())
+        before, marker, remainder = source.partition("coordinated_bundle=(\n")
+        assert marker, workflow
+        assert "coordinated_bundle=(" not in before
+        body, end_marker, after = remainder.partition("          )\n          coordinated=true")
+        assert end_marker, workflow
+        assert "coordinated_bundle=(" not in after
+        observed = tuple(line.strip().strip("'\\\"") for line in body.splitlines() if line.strip())
         assert observed == expected, workflow
