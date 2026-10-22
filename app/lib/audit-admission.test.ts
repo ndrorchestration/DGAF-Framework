@@ -6,7 +6,7 @@ import auditHandler from '../../pages/api/audit.ts'
 
 type MockRequest = {
   method: string
-  body?: Record<string, unknown>
+  body?: unknown
   headers?: Record<string, string>
 }
 
@@ -50,7 +50,7 @@ function response(): MockResponse {
 
 function invoke(
   method: string,
-  body?: Record<string, unknown>,
+  body?: unknown,
   headers?: Record<string, string>,
 ): MockResponse {
   const res = response()
@@ -119,58 +119,84 @@ function turnCount(): number {
   return current.payload.turn_count as number
 }
 
-function assertDeniedWithoutMutation(body: Record<string, unknown>): MockResponse {
+function assertDeniedWithoutMutation(body: unknown, expectedReason?: string): MockResponse {
   const before = turnCount()
   const denied = invoke('POST', body)
   assert.equal(denied.statusCode, 403)
   assert.equal(denied.payload?.status, 'denied')
+  if (expectedReason !== undefined) assert.equal(denied.payload?.reason, expectedReason)
+  assert.equal(denied.payload?.execution_receipt, undefined)
   assert.equal(turnCount(), before)
   return denied
 }
 
-test('POST /api/audit fails closed without an Action Admission Record and does not mutate state', () => {
-  const before = turnCount()
-  assertDeniedWithoutMutation({ turn_count: before + 1 })
-})
+test('POST /api/audit fails closed on non-object bodies or missing/malformed Action Admission Records', () => {
+  assertDeniedWithoutMutation(null, 'INVALID_REQUEST')
+  assertDeniedWithoutMutation([], 'INVALID_REQUEST')
+  assertDeniedWithoutMutation('not-an-object', 'INVALID_REQUEST')
 
-test('POST /api/audit rejects malformed Action Admission Records', () => {
   const before = turnCount()
-  assertDeniedWithoutMutation({ turn_count: before + 1, aar: { version: 'AAR_V1' } })
+  assertDeniedWithoutMutation({ turn_count: before + 1 }, 'AAR_REQUIRED_OR_MALFORMED')
+  assertDeniedWithoutMutation(
+    { turn_count: before + 1, aar: { version: 'AAR_V1' } },
+    'AAR_REQUIRED_OR_MALFORMED',
+  )
 })
 
 test('POST /api/audit rejects widened delegated authority', () => {
   const before = turnCount()
   const parameters = { turn_count: before + 1 }
-  assertDeniedWithoutMutation({
-    ...parameters,
-    aar: aar(parameters, { parent_scope: ['audit:read'], delegated_scope: ['audit:read', 'audit:counter:update'] }),
-  })
+  assertDeniedWithoutMutation(
+    {
+      ...parameters,
+      aar: aar(parameters, { parent_scope: ['audit:read'], delegated_scope: ['audit:read', 'audit:counter:update'] }),
+    },
+    'DELEGATION_WIDENED',
+  )
 })
 
 test('POST /api/audit rejects revoked and expired authorization', () => {
   const before = turnCount()
   const parameters = { turn_count: before + 1 }
-  assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters, { revoked: true }) })
-  assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters, { expires_at: '2020-01-01T00:00:00.000Z' }) })
+  assertDeniedWithoutMutation(
+    { ...parameters, aar: aar(parameters, { revoked: true }) },
+    'AUTHORIZATION_REVOKED',
+  )
+  assertDeniedWithoutMutation(
+    { ...parameters, aar: aar(parameters, { expires_at: '2020-01-01T00:00:00.000Z' }) },
+    'AUTHORIZATION_EXPIRED',
+  )
 })
 
 test('POST /api/audit rejects action-digest substitution and UNKNOWN verifier state', () => {
   const before = turnCount()
   const parameters = { turn_count: before + 1 }
-  assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters, { action_digest: '0'.repeat(64) }) })
-  assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters, { verifier_status: 'UNKNOWN' }) })
+  assertDeniedWithoutMutation(
+    { ...parameters, aar: aar(parameters, { action_digest: '0'.repeat(64) }) },
+    'ACTION_DIGEST_MISMATCH',
+  )
+  assertDeniedWithoutMutation(
+    { ...parameters, aar: aar(parameters, { verifier_status: 'UNKNOWN' }) },
+    'VERIFIER_NOT_PASS',
+  )
 })
 
 test('POST /api/audit rejects fields outside the registered action parameter set', () => {
   const before = turnCount()
   const parameters = { turn_count: before + 1, unregistered_field: 1 }
-  assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters) })
+  assertDeniedWithoutMutation(
+    { ...parameters, aar: aar(parameters) },
+    'ACTION_PARAMETERS_NOT_REGISTERED',
+  )
 })
 
 test('POST /api/audit rejects forged attestations and fails closed when the trust anchor is unavailable', () => {
   const before = turnCount()
   const parameters = { turn_count: before + 1 }
-  assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters, { attestation: '0'.repeat(64) }) })
+  assertDeniedWithoutMutation(
+    { ...parameters, aar: aar(parameters, { attestation: '0'.repeat(64) }) },
+    'AAR_ATTESTATION_INVALID',
+  )
 
   const previous = process.env.DGAF_AAR_HMAC_KEY
   delete process.env.DGAF_AAR_HMAC_KEY
