@@ -201,8 +201,10 @@ test('POST /api/audit rejects forged attestations and fails closed when the trus
   const previous = process.env.DGAF_AAR_HMAC_KEY
   delete process.env.DGAF_AAR_HMAC_KEY
   try {
-    const denied = assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters) })
-    assert.equal(denied.payload?.reason, 'TRUST_ANCHOR_UNAVAILABLE')
+    assertDeniedWithoutMutation(
+      { ...parameters, aar: aar(parameters) },
+      'TRUST_ANCHOR_UNAVAILABLE',
+    )
   } finally {
     process.env.DGAF_AAR_HMAC_KEY = previous
   }
@@ -224,6 +226,8 @@ test('POST /api/audit accepts an exact trusted AAR once, emits a receipt, and re
   const replay = invoke('POST', { ...parameters, aar: record })
   assert.equal(replay.statusCode, 403)
   assert.equal(replay.payload?.status, 'denied')
+  assert.equal(replay.payload?.reason, 'AAR_REPLAY')
+  assert.equal(replay.payload?.execution_receipt, undefined)
   assert.equal(turnCount(), before + 1)
 })
 
