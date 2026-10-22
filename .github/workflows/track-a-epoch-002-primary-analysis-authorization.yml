@@ -203,6 +203,36 @@ jobs:
           set -euo pipefail
           base="${{ github.event.pull_request.base.sha }}"
           mapfile -t changed < <(git diff --name-only "$base" HEAD)
+          coordinated_bundle=(
+            ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
+            ".github/workflows/track-a-epoch-002-dataset-lock.yml"
+            ".github/workflows/track-a-epoch-002-materialization.yml"
+            "requirements-ci.txt"
+            "requirements-ci-py310-ubuntu2404-x64.lock"
+            "requirements-ci-py311-ubuntu2404-x64.lock"
+            "requirements-ci-py312-ubuntu2404-x64.lock"
+            "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
+            "tests/test_ci_lock_contract.py"
+            "tests/test_track_a_epoch_002_primary_analysis_authorization.py"
+          )
+          coordinated=true
+          for required in \
+            ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml" \
+            ".github/workflows/track-a-epoch-002-dataset-lock.yml" \
+            ".github/workflows/track-a-epoch-002-materialization.yml"
+          do
+            printf '%s\n' "${changed[@]}" | grep -Fxq -- "$required" || coordinated=false
+          done
+          if [ "$coordinated" = true ]; then
+            mapfile -t expected < <(printf '%s\n' "${coordinated_bundle[@]}" | sort)
+            mapfile -t actual < <(printf '%s\n' "${changed[@]}" | sort)
+            if ! diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${actual[@]}"); then
+              echo "coordinated dependency maintenance must match the frozen 10-path bundle exactly" >&2
+              exit 1
+            fi
+            echo "TRACK_A_COORDINATED_DEPENDENCY_MAINTENANCE=EXACT_BUNDLE"
+            exit 0
+          fi
           allowed=(
             ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
             "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
