@@ -1,20 +1,13 @@
 name: Live Staging Breaker Evidence
 
 on:
-  pull_request:
-    paths:
-      - 'pages/api/staging-breaker.ts'
-      - '.github/workflows/live-staging-breaker.yml'
-      - '.github/workflows/deploy.yml'
-      - 'docs/governance/LIVE_STAGING_BREAKER_EVIDENCE_CONTRACT.md'
-      - 'tests/test_live_staging_breaker_contract.py'
   workflow_dispatch: {}
 
 permissions:
   contents: read
 
 concurrency:
-  group: live-staging-breaker-${{ github.event.pull_request.number || github.ref }}
+  group: live-staging-breaker-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -22,20 +15,20 @@ env:
   VERCEL_ORG_ID: team_TJWNcGa1Xh9ARKF3SYbKKxKp
   VERCEL_PROJECT_ID: prj_euzjAnhqct0wayTWWojizanKN3cX
   EXPECTED_ENSEMBLE_VERSION: 1.8.0
-  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  SOURCE_SHA: ${{ github.sha }}
   VERCEL_CLI_VERSION: 59.11.7
 
 jobs:
   exercise:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    environment: Preview
     name: Exact-source preview breaker exercise
     runs-on: ubuntu-latest
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
+          persist-credentials: false
 
       - name: Prove checkout is exact source
         run: |
@@ -55,6 +48,9 @@ jobs:
           test "$actual_version" = "$VERCEL_CLI_VERSION"
 
       - name: Require preview credentials
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
           test -n "$VERCEL_TOKEN"
@@ -67,10 +63,11 @@ jobs:
           exercise_id="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SOURCE_SHA}"
           echo "exercise_id=$exercise_id" >> "$GITHUB_OUTPUT"
 
-      - name: Deploy exact PR source to Vercel preview
+      - name: Deploy exact main source to Vercel preview
         id: deploy
         env:
           EXERCISE_ID: ${{ steps.identity.outputs.exercise_id }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           vercel deploy \
@@ -87,6 +84,7 @@ jobs:
       - name: Verify preview deployment identity
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           host="${DEPLOYMENT_URL#https://}"
@@ -112,6 +110,7 @@ jobs:
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
           EXERCISE_ID: ${{ steps.identity.outputs.exercise_id }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
           curl -fsS \
@@ -133,6 +132,7 @@ jobs:
       - name: Verify post-rollback staging health
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
           health=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DEPLOYMENT_URL/api/health")
@@ -163,7 +163,7 @@ jobs:
       - name: Upload staging evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: live-staging-breaker-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          name: live-staging-breaker-${{ github.sha }}-${{ github.run_attempt }}
           path: |
             preview_deployment_metadata.json
             staging_breaker_response.json

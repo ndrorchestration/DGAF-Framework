@@ -74,7 +74,7 @@ The accepted sequence is:
 Important semantics:
 
 - catalog membership is not the same as protected-branch requiredness;
-- current protected-main required contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**;
+- current protected-main required contexts are separately read as **PPTL CI**, **Governance CI**, **PR Issue-State Keyword Guard**, **security-scan**, **test (3.10)**, **test (3.11)**, and **test (3.12)**; the four Python contexts are job-level required checks emitted by the broader `Python Tests & Quality Checks` workflow, while sibling jobs such as `staging-evidence` and `integration-tests` are not thereby globally required;
 - an unmapped workflow is a coverage gap only;
 - `UNMAPPED` or `UNCLASSIFIED` must not be translated into “non-assurance” without explicit adjudication;
 - catalog coverage remains partial and does not claim exhaustive audit, security, governance, or scientific assurance.

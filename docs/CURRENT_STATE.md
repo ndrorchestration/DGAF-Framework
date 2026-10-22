@@ -303,7 +303,7 @@ State-Space Explorer V0 establishes only a discrete categorical reachability pro
 - **PR #782** added `collect_unmapped_workflows(...)`, which discovers current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by accepted catalog `implementation` paths. An unmapped workflow is a coverage gap only; no role is inferred from its filename or apparent purpose.
 - **PR #785**, merged as `6b89529da3e7ff13e14eaea415756579d859fb26`, added seven source-verified recurring assurance families while explicitly preserving partial coverage.
 
-The current protected-main required status contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. A recurring-assurance catalog entry does not imply branch-protection requiredness, and absence from the catalog does not prove that a workflow is non-assurance.
+The current protected-main required status contexts are separately read as **PPTL CI**, **Governance CI**, **PR Issue-State Keyword Guard**, **security-scan**, **test (3.10)**, **test (3.11)**, and **test (3.12)**. The four Python contexts are job-level required checks emitted by `Python Tests & Quality Checks`; sibling jobs in that workflow remain separate evidence surfaces. A recurring-assurance catalog entry does not imply branch-protection requiredness, and absence from the catalog does not prove that a workflow is non-assurance.
 
 Known catalog gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance coverage, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
 
