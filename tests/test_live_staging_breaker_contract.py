@@ -67,3 +67,14 @@ def test_documentation_refuses_persistent_production_claim() -> None:
     assert "persistent distributed breaker state across serverless instances" in text
     assert "does not establish a persistent production breaker implementation" in text
     assert "PASS_STRUCTURAL_LIVE_STAGING_ONLY" in text
+
+
+def test_production_deploy_excludes_tektite_demo() -> None:
+    text = DEPLOY.read_text(encoding="utf-8")
+    assert "TEKTITE_DEMO_ENABLED production" in text
+    assert "false | vercel env add TEKTITE_DEMO_ENABLED production" in text
+    assert "TEKTITE_DEMO_AAR_HMAC_KEY production" not in text
+    assert "TEKTITE_DEMO_INTERNAL_TOKEN production" not in text
+    assert "Verify Tektite proof of operation" not in text
+    assert "TEKTITE_DEMO_PRODUCTION_DISABLED" in text
+    assert "EXCLUDED_FROM_PRODUCTION" in text
