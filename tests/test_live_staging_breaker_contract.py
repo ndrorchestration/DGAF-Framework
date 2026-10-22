@@ -22,9 +22,13 @@ def test_endpoint_is_preview_only_and_fixed_threshold() -> None:
 
 def test_preview_workflow_exact_source_and_attempt_binding() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
-    assert "pull_request:" in text
-    assert "SOURCE_SHA:" in text
-    assert "github.event.pull_request.head.sha || github.sha" in text
+    assert "pull_request:" not in text
+    assert "workflow_dispatch: {}" in text
+    assert "github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'" in text
+    assert "environment: Preview" in text
+    assert "SOURCE_SHA: ${{ github.sha }}" in text
+    assert "github.event.pull_request" not in text
+    assert "persist-credentials: false" in text
     assert "Prove checkout is exact source" in text
     assert "--target=preview" in text
     assert "--env DGAF_STAGING_BREAKER_EXERCISE_ENABLED=true" in text
@@ -35,6 +39,18 @@ def test_preview_workflow_exact_source_and_attempt_binding() -> None:
     assert "STAGING -> ACTIVE -> BREAKER_OPEN -> FROZEN -> ROLLBACK -> VERIFIED" in text
     assert "post_rollback_health" in text
     assert "live_staging_breaker_evidence.json.sha256" in text
+    assert text.count("VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}") == 3
+    assert text.count("VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}") == 3
+
+
+def test_production_deploy_is_serialized_main_only_and_environment_bound() -> None:
+    text = DEPLOY.read_text(encoding="utf-8")
+    assert "group: vercel-production-deploy" in text
+    assert "cancel-in-progress: false" in text
+    assert "github.ref == 'refs/heads/main'" in text
+    assert "environment: Production" in text
+    assert "persist-credentials: false" in text
+    assert text.count("VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}") == 4
 
 
 def test_production_deploy_has_negative_control() -> None:
