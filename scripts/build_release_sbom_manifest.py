@@ -18,7 +18,7 @@ def tool_version(command: list[str]) -> str:
 
 
 def load_cyclonedx(path: Path) -> dict:
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
     if data.get("bomFormat") != "CycloneDX":
         raise ValueError(f"{path} is not a CycloneDX JSON document")
     if not isinstance(data.get("components", []), list):
