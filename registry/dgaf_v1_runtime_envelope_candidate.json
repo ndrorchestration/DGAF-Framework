@@ -1,0 +1,133 @@
+{
+  "version": "DGAF_V1_RUNTIME_ENVELOPE_CANDIDATE_V1",
+  "status": "CANDIDATE_NOT_ADMITTED",
+  "protected_main_baseline": "1a95b94332dffb404c5a3ce026d70781a8c10b90",
+  "gate_controller": 1445,
+  "claim_boundary": {
+    "release_admission": false,
+    "independent_validation": false,
+    "scientific_n_increment": 0,
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED"
+  },
+  "registered_consequential_actions": [
+    {
+      "action_class": "AUDIT_COUNTER_UPDATE_V1",
+      "target": "/api/audit",
+      "aar_required": true,
+      "enforcement_state": "ENFORCED_BOUNDED",
+      "replay_class": "PROCESS_LOCAL",
+      "revocation_class": "RECORD_LOCAL",
+      "trust_anchor_class": "SERVER_HMAC_ENV",
+      "issuer_class": "NOT_ESTABLISHED",
+      "decision_effect": "NON_SCIENTIFIC_EPHEMERAL_AUDIT_COUNTER_UPDATE_ONLY",
+      "limitations": [
+        "NO_DURABLE_CROSS_INSTANCE_REPLAY_PREVENTION",
+        "NO_AUTHORITATIVE_POST_ISSUANCE_REVOCATION",
+        "NO_PRODUCTION_AAR_ISSUER",
+        "NO_TRUST_ANCHOR_CUSTODY_ROTATION_POLICY",
+        "NO_DURABLE_ACTION_LEDGER",
+        "NO_OTHER_ACTION_CLASS_COVERAGE"
+      ]
+    }
+  ],
+  "non_authoritative_external_ingress": [
+    {
+      "action_class": "NON_CONSEQUENTIAL_RECORD_INGRESS",
+      "transition": "RECORD_ONLY",
+      "authority_effect": "NONE"
+    },
+    {
+      "action_class": "CONSEQUENTIAL_ACTION_REQUEST",
+      "transition": "REQUEST_ACTION_ADMISSION",
+      "authority_effect": "NONE"
+    }
+  ],
+  "interfaces": [
+    {
+      "path": "api/ahg_herald.py",
+      "route": "/api/ahg_herald",
+      "classification": "RELEASE_BLOCKED_OPERATIONAL_INGRESS",
+      "source_sha256": "ae4c9b21dec5862aadcddaff041f15e620e64fa8ee4e56984538c42b901bb70d"
+    },
+    {
+      "path": "pages/api/audit.ts",
+      "route": "/api/audit",
+      "classification": "SUPPORTED_BOUNDED_EFFECT_AND_READ_ONLY_STATE_VIEW",
+      "source_sha256": "5f859e13cdbbd8994e9e8ea1bdde99f269eedd2a42bbb23722759e0d12cbd4c7"
+    },
+    {
+      "path": "pages/api/health.ts",
+      "route": "/api/health",
+      "classification": "SUPPORTED_READ_ONLY_INFORMATIONAL",
+      "source_sha256": "6fd5196b497965599e26d4393c6a4aaab69f10ad3466bd4625c191f6a6c3fb8d"
+    },
+    {
+      "path": "pages/api/mandate.ts",
+      "route": "/api/mandate",
+      "classification": "EXCLUDED_HARD_DISABLED",
+      "source_sha256": "3cee97c471b940ae95292fc68efece8f006bcc2f80d92fcfa07181cd71589d2f"
+    },
+    {
+      "path": "pages/api/orchestrate.ts",
+      "route": "/api/orchestrate",
+      "classification": "NON_AUTHORITATIVE_COMPUTATION_ONLY",
+      "source_sha256": "0c8279139f6bc8829307fbe80432bfd64463b8391db1966ac48d6bad12f291ea"
+    },
+    {
+      "path": "pages/api/roster.ts",
+      "route": "/api/roster",
+      "classification": "SUPPORTED_READ_ONLY_INFORMATIONAL",
+      "source_sha256": "1589bc9edc6fd55df4c1fad02760712c7d227a7253de48506288595eba8ec958"
+    },
+    {
+      "path": "pages/api/staging-breaker.ts",
+      "route": "/api/staging-breaker",
+      "classification": "TEST_ONLY_PREVIEW_EXCLUDED_FROM_PRODUCTION",
+      "source_sha256": "a9454121d2d20b9cfa1b7bdc5f4f2fc5c20aedf6a99fd19f1e54132aa2024ad4"
+    },
+    {
+      "path": "pages/api/sweep.ts",
+      "route": "/api/sweep",
+      "classification": "NON_MUTATING_ANALYSIS_ONLY",
+      "source_sha256": "b0994579ebe11b44bcbda8158f6b33b0da29210d8f5b88778092000b50a4b8a0"
+    },
+    {
+      "path": "pages/api/tektite-demo.ts",
+      "route": "/api/tektite-demo",
+      "classification": "DEMO_ONLY_WRAPPER",
+      "source_sha256": "e6b50bd60865d4b6714922aa2faac3b6c7a532a9385d19456bfe6b26546febac"
+    },
+    {
+      "path": "pages/api/triad.ts",
+      "route": "/api/triad",
+      "classification": "NON_AUTHORITATIVE_COMPUTATION_ONLY",
+      "source_sha256": "8f13960f8acdc6b88b9d0e1f7ce277aad26e0814ad7d2b831d4c2e7893d47381"
+    }
+  ],
+  "explicitly_not_supported": [
+    "AAR_V2_RUNTIME",
+    "DURABLE_CROSS_INSTANCE_REPLAY_GUARANTEE",
+    "EXACTLY_ONCE_PROTECTED_EFFECT",
+    "AUTHORITATIVE_POST_ISSUANCE_REVOCATION",
+    "PRODUCTION_AAR_ISSUER",
+    "TRUST_ANCHOR_LIFECYCLE_CUSTODY_ROTATION",
+    "DURABLE_ACTION_LEDGER",
+    "AAR_ACTION_CLASSES_OTHER_THAN_AUDIT_COUNTER_UPDATE_V1",
+    "EXTERNAL_PROVIDER_TRUST_FROM_INGRESS",
+    "SCIENTIFIC_UNBLINDING_OR_PRIMARY_ANALYSIS_AUTHORIZATION_VIA_PRODUCT_APIS",
+    "GENERAL_CONTAINMENT_OR_HIGH_ASSURANCE"
+  ],
+  "blocked_release_boundaries": [
+    {
+      "id": "HERALD_OPERATIONAL_INGRESS",
+      "controller": 1425,
+      "required_disposition": "ADMIT_1426_OR_PROVE_HARD_DISABLED_UNREACHABLE"
+    },
+    {
+      "id": "RESEARCH_ARTIFACT_PRODUCERS",
+      "controller": 1414,
+      "required_disposition": "ADMIT_PUBLICATION_CUSTODY_CONTROLS_OR_PROVE_RELEASE_UNREACHABLE"
+    }
+  ]
+}
