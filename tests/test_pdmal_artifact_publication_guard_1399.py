@@ -38,7 +38,18 @@ def _assert_fail_closed_publication_contract(source: str) -> None:
     assert "pull_request:" in source
     assert "push:" in source
     assert "retention-days: 14" in source
-    assert "PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}" in source
+    secret_binding = "PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}"
+    assert source.count(secret_binding) == 2
+    job_header = source.split("    steps:", 1)[0]
+    assert "PDMAL_BLINDING_KEY" not in job_header
+    fail_fast = source.split("      - name: Fail fast if blinding secret is unavailable", 1)[1].split(
+        "      - name: Run deterministic smoke case twice", 1
+    )[0]
+    generate = source.split("      - name: Generate one-seed masked dry-run CSV", 1)[1].split(
+        "      - name: Validate dry-run CSV schema", 1
+    )[0]
+    assert secret_binding in fail_fast
+    assert secret_binding in generate
 
 
 def test_pdmal_dry_run_blocks_all_unapproved_artifact_production_before_processing() -> None:

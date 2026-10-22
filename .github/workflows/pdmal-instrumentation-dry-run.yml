@@ -22,7 +22,6 @@ jobs:
       contents: read
       actions: read
     env:
-      PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
       PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
     steps:
       - name: Block unapproved structural artifact publication (#1399)
@@ -126,6 +125,8 @@ jobs:
         working-directory: experiments/pdmal_topology
         run: python -m pip install --require-hashes -r requirements.txt
       - name: Fail fast if blinding secret is unavailable
+        env:
+          PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
         run: |
           python - <<'PY'
           import os
@@ -146,6 +147,8 @@ jobs:
         run: pytest -q test_manifest.py test_graph_harness.py test_semantics.py test_experiment.py test_determinism.py test_artifacts.py
       - name: Generate one-seed masked dry-run CSV
         working-directory: experiments/pdmal_topology
+        env:
+          PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
         run: |
           python - <<'PY'
           from experiment import run_structural_pilot
