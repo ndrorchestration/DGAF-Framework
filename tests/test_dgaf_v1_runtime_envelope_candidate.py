@@ -77,9 +77,7 @@ def test_external_ingress_stays_non_authoritative() -> None:
         },
     ]
 
-    contract = json.loads(
-        (ROOT / "registry/external_runtime_adapter_contract_v1.json").read_text(encoding="utf-8")
-    )
+    contract = json.loads((ROOT / "registry/external_runtime_adapter_contract_v1.json").read_text(encoding="utf-8"))
     assert contract["status"] == "NON_AUTHORITATIVE_INGRESS_CONTRACT"
     assert contract["authority_semantics"] == "PRESENTED_NOT_GRANTED"
     assert contract["non_effects"]["authorization"] == "NONE"
