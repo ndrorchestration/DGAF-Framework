@@ -3,7 +3,7 @@
   "evidence_class": "NPM_DIRECT_DEPENDENCY_STATE_V1",
   "purpose": "Fail-closed declaration of the exact root npm dependency surface. Any direct dependency change must deliberately update this record and re-pass NPM Lockfile Validation.",
   "dependencies": {
-    "next": "16.3.8",
+    "next": "16.4.2",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
@@ -22,5 +22,21 @@
     "validation": "PR #1266 exact head 7ee7c596aeecbf4b00616b2e894b07476037d1b8 passed the permanent NPM Lockfile Validation, UI Command Center Validation, Python quality, regression, governance, truth/evidence, documentation, custody, and other current hosted gates; local verification also passed the 5-test npm contract, npm ci, npm audit with 0 vulnerabilities, 111/111 UI tests, production build, and diff hygiene.",
     "scientific_state_effect": "NONE"
   },
-  "control_state": "PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED / N=0"
+  "control_state": "PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED / N=0",
+  "candidate_scope_adjudication": {
+    "source_pr": 1480,
+    "predecessor_pr": 1429,
+    "candidate_state": "DRAFT_UNSIGNED_NOT_ADMITTED",
+    "finding": "A new Next.js vulnerability audit flagged Next 16.4.0 from the lock as vulnerable; the same security correction is evaluated with the sharp/source-map-js npm remediation.",
+    "advisory_ids": [
+      "GHSA-2464-fhr4-w9xw",
+      "GHSA-p3m5-59mp-jv5r",
+      "GHSA-673q-mjm6-r5xr"
+    ],
+    "proposed_next_pin": "16.4.2",
+    "operator_local_result": "npm audit: 0 vulnerabilities/63 dependencies; 117/117 source JS tests PASS; integrated 119/119 and Next production build PASS",
+    "required_admission": "Verified signed exact-head candidate; clean hosted npm-lockfile validation and other applicable checks; eligible independent review and counted non-author GitHub approval",
+    "scientific_state_effect": "NONE",
+    "authorization_effect": "NONE"
+  }
 }
