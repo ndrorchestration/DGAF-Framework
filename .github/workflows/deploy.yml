@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: vercel-production-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -64,14 +64,15 @@ jobs:
   deploy:
     name: Vercel Production Deploy
     needs: classify
-    if: needs.classify.outputs.should_deploy == 'true'
+    if: github.ref == 'refs/heads/main' && needs.classify.outputs.should_deploy == 'true'
+    environment: Production
     runs-on: ubuntu-latest
     outputs:
       deployment_url: ${{ steps.deploy.outputs.deployment_url }}
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
 
       - name: Set up Node 24
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -86,28 +87,29 @@ jobs:
           test "$actual_version" = "$VERCEL_CLI_VERSION"
 
       - name: Require deployment credential
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           test -n "$VERCEL_TOKEN"
 
       - name: Establish production runtime configuration
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           printf '%s\n' "$EXPECTED_ENSEMBLE_VERSION" | vercel env add ENSEMBLE_VERSION production --token="$VERCEL_TOKEN" --force
           printf '%s\n' enabled | vercel env add PSI_CHECK production --token="$VERCEL_TOKEN" --force
 
-          # Tektite uses a per-deployment server-only trust channel. These
-          # values are never exposed to the browser and do not establish the
-          # general DGAF_AAR_HMAC_KEY production issuer.
-          tektite_demo_key="$(openssl rand -hex 32)"
-          tektite_demo_token="$(openssl rand -hex 32)"
-          printf '%s\n' true | vercel env add TEKTITE_DEMO_ENABLED production --token="$VERCEL_TOKEN" --force
-          printf '%s\n' "$tektite_demo_key" | vercel env add TEKTITE_DEMO_AAR_HMAC_KEY production --token="$VERCEL_TOKEN" --force
-          printf '%s\n' "$tektite_demo_token" | vercel env add TEKTITE_DEMO_INTERNAL_TOKEN production --token="$VERCEL_TOKEN" --force
-          unset tektite_demo_key tektite_demo_token
+          # Tektite is an internal demonstration fixture, not a production
+          # release capability. Keep the environment flag fail-closed; the
+          # route also rejects production independently of this setting.
+          printf '%s\n' false | vercel env add TEKTITE_DEMO_ENABLED production --token="$VERCEL_TOKEN" --force
 
       - name: Deploy to Vercel production
         id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           vercel deploy --prod --yes --token="$VERCEL_TOKEN" | tee vercel_deploy.log
@@ -118,6 +120,7 @@ jobs:
       - name: Verify exact Vercel deployment identity
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           host="${DEPLOYMENT_URL#https://}"
@@ -220,15 +223,19 @@ jobs:
           test "$(jq -r '.axiom_count' <<< "$audit")" = 1
           test -n "$(jq -r '._warning // empty' <<< "$audit")"
 
-      - name: Verify Tektite proof of operation
-        run: python3 scripts/verify_tektite_demo_live.py
-
-      - name: Upload Tektite proof evidence
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: tektite-proof-${{ github.sha }}
-          path: tektite_proof_of_operation.json
+      - name: Prove Tektite demo is unavailable in production
+        run: |
+          set -euo pipefail
+          status=$(curl -sS -o tektite_production_response.json -w '%{http_code}' \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+            -d '{"scenario":"authorized"}' \
+            "$DGAF_URL/api/tektite-demo")
+          test "$status" = 404
+          test "$(jq -r '.status' tektite_production_response.json)" = not_available
+          test "$(jq -r '.reason' tektite_production_response.json)" = TEKTITE_DEMO_PRODUCTION_DISABLED
+          test "$(jq -r '.boundary' tektite_production_response.json)" = EXCLUDED_FROM_PRODUCTION
 
       - name: Runtime verification evidence
         run: |
@@ -236,7 +243,7 @@ jobs:
             --arg source "$GITHUB_SHA" \
             --arg run "$GITHUB_RUN_ID" \
             --arg url "$DGAF_URL" \
-            '{evidence_class:"RUNTIME_VERIFICATION",source_commit:$source,workflow_run_id:$run,deployment_url:$url,result:"PASS_WITH_LIMITATION",limitations:["Audit state is in-memory and does not establish cross-request persistence.","Phi-Closure checkpoints remain fail-closed until live audit state is wired into /api/orchestrate.","The staging breaker exercise endpoint is unavailable in production; preview-only staging evidence does not establish a persistent production breaker.","Runtime integration evidence does not establish experimental efficacy, freeze, or authorization."]}' > runtime_verification.json
+            '{evidence_class:"RUNTIME_VERIFICATION",source_commit:$source,workflow_run_id:$run,deployment_url:$url,result:"PASS_WITH_LIMITATION",limitations:["Audit state is in-memory and does not establish cross-request persistence.","Phi-Closure checkpoints remain fail-closed until live audit state is wired into /api/orchestrate.","The staging breaker exercise endpoint is unavailable in production; preview-only staging evidence does not establish a persistent production breaker.","The Tektite demonstration endpoint is excluded from production and this deployment verifies that negative control.","Runtime integration evidence does not establish experimental efficacy, freeze, or authorization."]}' > runtime_verification.json
 
       - name: Upload runtime verification evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
