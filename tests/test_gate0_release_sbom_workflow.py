@@ -43,3 +43,17 @@ def test_manifest_builder_encodes_non_claims() -> None:
     assert '"independent_validation": False' in text
     assert '"security_scan_pass": args.pip_audit_exit_code == 0' in text
     assert "SBOM generation is not a security-scan waiver or release admission." in text
+
+
+def test_manifest_builder_accepts_utf8_bom(tmp_path) -> None:
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("sbom_manifest", SCRIPT)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    path = tmp_path / "bom.json"
+    path.write_bytes(b"\xef\xbb\xbf" + b'{"bomFormat":"CycloneDX","components":[]}')
+    data = module.load_cyclonedx(path)
+    assert data["bomFormat"] == "CycloneDX"
