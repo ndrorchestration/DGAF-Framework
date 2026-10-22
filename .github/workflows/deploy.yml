@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: vercel-production-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -64,14 +64,15 @@ jobs:
   deploy:
     name: Vercel Production Deploy
     needs: classify
-    if: needs.classify.outputs.should_deploy == 'true'
+    if: github.ref == 'refs/heads/main' && needs.classify.outputs.should_deploy == 'true'
+    environment: Production
     runs-on: ubuntu-latest
     outputs:
       deployment_url: ${{ steps.deploy.outputs.deployment_url }}
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
 
       - name: Set up Node 24
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -86,11 +87,15 @@ jobs:
           test "$actual_version" = "$VERCEL_CLI_VERSION"
 
       - name: Require deployment credential
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           test -n "$VERCEL_TOKEN"
 
       - name: Establish production runtime configuration
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           printf '%s\n' "$EXPECTED_ENSEMBLE_VERSION" | vercel env add ENSEMBLE_VERSION production --token="$VERCEL_TOKEN" --force
@@ -108,6 +113,8 @@ jobs:
 
       - name: Deploy to Vercel production
         id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           vercel deploy --prod --yes --token="$VERCEL_TOKEN" | tee vercel_deploy.log
@@ -118,6 +125,7 @@ jobs:
       - name: Verify exact Vercel deployment identity
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
           host="${DEPLOYMENT_URL#https://}"
