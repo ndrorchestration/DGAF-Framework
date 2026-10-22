@@ -60,5 +60,3 @@ def test_key_requires_correct_bearer_in_production(
     assert ahg_herald._check_auth({}) is False
     assert ahg_herald._check_auth({"authorization": "Bearer wrong"}) is False
     assert ahg_herald._check_auth({"authorization": "Bearer secret"}) is True
-
-[executed on device: neontic (fd6ceb3c-855d-43bd-a34e-d95659a36a0f)]
