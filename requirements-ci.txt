@@ -8,7 +8,7 @@ pytest-timeout==2.4.0
 numpy==2.2.6
 mypy==2.3.1
 flake8==7.3.0
-black==26.5.1
+black==26.10.1
 isort==8.0.1
 pydantic==2.13.4
 jsonschema==4.26.0
@@ -16,3 +16,4 @@ setuptools==83.0.0
 bandit==1.9.4
 pip-audit==2.10.1
 pip==26.2.1
+certifi==2026.10.19
