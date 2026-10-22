@@ -16,3 +16,4 @@ setuptools==83.0.0
 bandit==1.9.4
 pip-audit==2.10.1
 pip==26.2.1
+certifi==2026.10.19
