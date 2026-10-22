@@ -102,3 +102,21 @@ def test_missing_implementation_path_is_reported_deterministically(tmp_path):
         {"audit_id": "AUD-A", "path": "missing/a.yml"},
         {"audit_id": "AUD-Z", "path": "missing/z.yml"},
     ]
+
+
+def test_python_quality_catalog_encodes_current_mixed_requiredness() -> None:
+    catalog = load_catalog(CATALOG_PATH)
+    entry = next(item for item in catalog["audits"] if item["id"] == "AUD-CI-PYTHON-QUALITY")
+
+    assert entry["blocking"] is False
+    assert entry["blocking_semantics"] == "MIXED_JOB_CONTEXTS"
+    assert entry["required_job_contexts"] == [
+        "security-scan",
+        "test (3.10)",
+        "test (3.11)",
+        "test (3.12)",
+    ]
+    assert entry["nonrequired_sibling_job_contexts"] == [
+        "staging-evidence",
+        "integration-tests",
+    ]
