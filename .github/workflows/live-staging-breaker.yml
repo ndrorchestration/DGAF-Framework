@@ -169,7 +169,3 @@ jobs:
             staging_breaker_response.json
             live_staging_breaker_evidence.json
             live_staging_breaker_evidence.json.sha256
-
-[executed on device: neontic (fd6ceb3c-855d-43bd-a34e-d95659a36a0f)]
-
-Note: you've used 88% of this month's Desktop Commander usage. Visit https://mcp.desktopcommander.app/ to learn more about usage and resets.
