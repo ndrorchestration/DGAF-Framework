@@ -1,0 +1,3725 @@
+{
+  "api_file_count": 10,
+  "api_files": [
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "api/ahg_herald.py",
+      "sha256": "ae4c9b21dec5862aadcddaff041f15e620e64fa8ee4e56984538c42b901bb70d"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/audit.ts",
+      "sha256": "5f859e13cdbbd8994e9e8ea1bdde99f269eedd2a42bbb23722759e0d12cbd4c7"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/health.ts",
+      "sha256": "6fd5196b497965599e26d4393c6a4aaab69f10ad3466bd4625c191f6a6c3fb8d"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/mandate.ts",
+      "sha256": "3cee97c471b940ae95292fc68efece8f006bcc2f80d92fcfa07181cd71589d2f"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/orchestrate.ts",
+      "sha256": "0c8279139f6bc8829307fbe80432bfd64463b8391db1966ac48d6bad12f291ea"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/roster.ts",
+      "sha256": "1589bc9edc6fd55df4c1fad02760712c7d227a7253de48506288595eba8ec958"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/staging-breaker.ts",
+      "sha256": "a9454121d2d20b9cfa1b7bdc5f4f2fc5c20aedf6a99fd19f1e54132aa2024ad4"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/sweep.ts",
+      "sha256": "b0994579ebe11b44bcbda8158f6b33b0da29210d8f5b88778092000b50a4b8a0"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/tektite-demo.ts",
+      "sha256": "e6b50bd60865d4b6714922aa2faac3b6c7a532a9385d19456bfe6b26546febac"
+    },
+    {
+      "disposition": "SOURCE_ENTRYPOINT_DEPLOYED_REACHABILITY_NOT_ESTABLISHED",
+      "path": "pages/api/triad.ts",
+      "sha256": "8f13960f8acdc6b88b9d0e1f7ce277aad26e0814ad7d2b831d4c2e7893d47381"
+    }
+  ],
+  "baseline": "1a95b94332dffb404c5a3ce026d70781a8c10b90",
+  "jobs": [
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact workflow head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "persist-credentials": false
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read",
+        "pull-requests": "read"
+      },
+      "environment": null,
+      "job": "inventory",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 5,
+          "name": "Upload inventory evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "branch-disposition-ledger",
+            "path": "branch-disposition-ledger.json",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/branch-disposition-inventory.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact authorization commit",
+          "uses": "actions/checkout@v4",
+          "with": {
+            "fetch-depth": 2
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "execute-blinded-epoch",
+      "job_if": "github.event_name == 'push'",
+      "job_secret_references": [
+        "token_hex"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "RECOVERABLE_BLINDING_KEY_CUSTODY"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/canonical-epoch-004-execution.yml",
+            "experiments/pdmal_pilot/run_canonical_epoch_004.py",
+            "experiments/pdmal_pilot/canonical_epoch_004_adapter.py",
+            "experiments/pdmal_pilot/test_canonical_epoch_004_runner.py",
+            "docs/experiment/CANONICAL_EPOCH_004_COLLECTION_CONTRACT.json",
+            "docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.json"
+          ]
+        },
+        "push": {
+          "branches": [
+            "solo-canonical-epoch-004/run-*"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload locked blinded Epoch 004 dataset",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "canonical-epoch-004-dataset-${{ github.sha }}",
+            "path": "${{ runner.temp }}/canonical-epoch-004-output/\n${{ runner.temp }}/canonical-epoch-004-archive/\n${{ runner.temp }}/CANONICAL_EPOCH_004_DATASET_LOCK.json\n",
+            "retention-days": 90
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 9,
+          "name": "Upload recoverable Epoch 004 blinding key separately",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "canonical-epoch-004-blinding-key-${{ github.sha }}",
+            "path": "${{ runner.temp }}/canonical_epoch_004_blinding_key.txt",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/canonical-epoch-004-execution.yml",
+      "workflow_secret_references": [
+        "token_hex"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact PR source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "preflight-nonempirical",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "docs/experiment/CANONICAL_EPOCH_004_TREATMENT_INPUT_PREFLIGHT.json",
+            "docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.json",
+            "docs/governance/CANONICAL_PDMAL_TREATMENT_PROFILE_CANDIDATE_V1.json",
+            "docs/qa/APOGEE_11Q_DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1_S077*",
+            "experiments/pdmal_pilot/analysis.py",
+            "experiments/pdmal_pilot/canonical_p30_qualification.py",
+            "pptl/triadic_governance_loop.py",
+            "scripts/validate_canonical_epoch_004_treatment_input_preflight.py",
+            "scripts/validate_canonical_epoch_004_preregistration.py",
+            "scripts/validate_canonical_profile_11q_qualification.py",
+            "scripts/validate_canonical_treatment_profile.py",
+            ".github/workflows/canonical-epoch-004-treatment-input-preflight.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 5,
+          "name": "Upload preflight artifact",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "warn",
+            "name": "canonical-epoch-004-treatment-input-preflight-${{ github.event.pull_request.head.sha }}",
+            "path": "test-artifacts/canonical_epoch_004_treatment_input_preflight.json",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/canonical-epoch-004-treatment-input-preflight.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact PR source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "diagnostic",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "experiments/pdmal_pilot/canonical_profile_tgl_diagnostic.py",
+            "experiments/pdmal_pilot/test_canonical_profile_tgl_diagnostic.py",
+            "docs/experiment/CANONICAL_PROFILE_TGL_DIAGNOSTIC_V1_PREREGISTRATION.md",
+            ".github/workflows/canonical-profile-tgl-diagnostic.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 8,
+          "name": "Upload diagnostic artifact",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "warn",
+            "name": "canonical-profile-tgl-diagnostic-${{ github.sha }}",
+            "path": "test-artifacts/canonical_profile_tgl_diagnostic.json",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/canonical-profile-tgl-diagnostic.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact PR source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "diagnostic",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/canonical-topology-mechanism-diagnostic.yml",
+            "experiments/pdmal_pilot/canonical_topology_mechanism_diagnostic.py"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 5,
+          "name": "Upload retained diagnostic artifact",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "canonical-topology-mechanism-diagnostic-${{ github.sha }}",
+            "path": "test-artifacts/CANONICAL_TOPOLOGY_MECHANISM_DIAGNOSTIC.json",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/canonical-topology-mechanism-diagnostic.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 1
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "scan",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "branches": [
+            "main",
+            "develop"
+          ],
+          "paths": [
+            "**/*.md",
+            "**/*.py",
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.yml",
+            "**/*.yaml",
+            "**/*.json",
+            ".github/workflows/claim-hygiene.yml"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main",
+            "develop"
+          ],
+          "paths": [
+            "**/*.md",
+            "**/*.py",
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.yml",
+            "**/*.yaml",
+            "**/*.json",
+            ".github/workflows/claim-hygiene.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Upload claim hygiene evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "claim-hygiene-evidence-${{ github.sha }}",
+            "path": "ci-artifacts/claim-hygiene.json"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/claim-hygiene.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "actions": "read",
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "completion-controller",
+      "job_if": "github.event.workflow_run.conclusion == 'success'",
+      "job_secret_references": [
+        "GITHUB_TOKEN"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW"
+      ],
+      "triggers": {
+        "workflow_run": {
+          "types": [
+            "completed"
+          ],
+          "workflows": [
+            "PDMAL Instrumentation Dry Run",
+            "P9 Independent Verification"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Upload completion report",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-completion-controller-report",
+            "path": "/tmp/completion-report.json",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/completion-controller.yml",
+      "workflow_secret_references": [
+        "GITHUB_TOKEN"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Check out exact evaluated commit",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "persist-credentials": false,
+            "ref": "${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "reconcile",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/completion-state-reconciler.yml",
+            "registry/dgaf_completion_state_reconciler.v0.1.json",
+            "scripts/derive_dgaf_completion_state.py",
+            "tests/test_dgaf_completion_state_reconciler.py",
+            "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json",
+            "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json",
+            "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json",
+            "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md",
+            "scripts/run_track_a_successor_custody_drill.py",
+            "scripts/validate_track_a_successor_solo_custody_receipt.py",
+            "scripts/validate_track_a_epoch_002_runner.py",
+            "experiments/pdmal_pilot/run_track_a_epoch_002.py",
+            "docs/experiment/track_a_runs/**"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/completion-state-reconciler.yml",
+            "registry/dgaf_completion_state_reconciler.v0.1.json",
+            "scripts/derive_dgaf_completion_state.py",
+            "tests/test_dgaf_completion_state_reconciler.py",
+            "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json",
+            "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json",
+            "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json",
+            "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md",
+            "scripts/run_track_a_successor_custody_drill.py",
+            "scripts/validate_track_a_successor_solo_custody_receipt.py",
+            "scripts/validate_track_a_epoch_002_runner.py",
+            "experiments/pdmal_pilot/run_track_a_epoch_002.py",
+            "docs/experiment/track_a_runs/**"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Publish reconciler evidence packet",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-completion-state-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "${{ runner.temp }}/dgaf-completion-state.json",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/completion-state-reconciler.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "deploy",
+      "job_if": "needs.classify.outputs.should_deploy == 'true'",
+      "job_secret_references": [
+        "VERCEL_TOKEN"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW"
+      ],
+      "triggers": {
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "workflow_dispatch": {}
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 7,
+          "name": "Upload deployment provenance",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "deployment-provenance-${{ github.sha }}",
+            "path": "deployment_provenance.json"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/deploy.yml",
+      "workflow_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET",
+        "VERCEL_TOKEN"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "verify",
+      "job_if": null,
+      "job_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "workflow_dispatch": {}
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 8,
+          "name": "Upload regression results",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "regression-${{ github.sha }}",
+            "path": "regression_results_v17.json"
+          }
+        },
+        {
+          "if": "always()",
+          "index": 11,
+          "name": "Upload Tektite proof evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "tektite-proof-${{ github.sha }}",
+            "path": "tektite_proof_of_operation.json"
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 13,
+          "name": "Upload runtime verification evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "runtime-verification-${{ github.sha }}",
+            "path": "runtime_verification.json"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/deploy.yml",
+      "workflow_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET",
+        "VERCEL_TOKEN"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF candidate",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "materialize-cold-start-same-system-execution",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/dgaf-cold-start-same-system-execution-artifact.yml",
+            ".github/workflows/dgaf-cold-start-scaffold-artifact.yml",
+            "docs/qa/DGAF_OPERATOR_SELFTEST.md",
+            "registry/dgaf_self_application_cold_start_manifest_v1.json",
+            "scripts/build_dgaf_self_application_cold_start_execution_record.py",
+            "scripts/validate_dgaf_self_application_cold_start_execution_record.py",
+            "scripts/run_dgaf_self_application_cold_start_same_system_execution.py",
+            "tests/test_dgaf_self_application_cold_start_same_system_artifact_workflow.py",
+            "tests/test_dgaf_self_application_cold_start_same_system_execution.py"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 5,
+          "name": "Upload retained same-system cold-start execution artifact",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-cold-start-same-system-execution-${{ github.sha }}",
+            "path": "artifacts/dgaf_self_application_cold_start_same_system_execution/**"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-cold-start-same-system-execution-artifact.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF candidate",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "materialize-cold-start-scaffold",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/dgaf-cold-start-scaffold-artifact.yml",
+            "registry/dgaf_self_application_cold_start_manifest_v1.json",
+            "scripts/build_dgaf_self_application_cold_start_execution_record.py",
+            "scripts/validate_dgaf_self_application_cold_start_execution_record.py",
+            "scripts/materialize_dgaf_self_application_cold_start_scaffold.py",
+            "tests/test_dgaf_self_application_cold_start_scaffold_artifact_workflow.py",
+            "tests/test_dgaf_self_application_cold_start_scaffold_materializer.py"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 5,
+          "name": "Upload retained cold-start scaffold artifact",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-cold-start-scaffold-${{ github.sha }}",
+            "path": "artifacts/dgaf_self_application_cold_start_scaffold/**"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-cold-start-scaffold-artifact.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF candidate",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "operator-selftest-contract",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/dgaf-operator-selftest.yml",
+            "scripts/run_dgaf_operator_selftest.py",
+            "scripts/run_dgaf_operator_selftest.ps1",
+            "docs/qa/DGAF_OPERATOR_SELFTEST.md",
+            "scripts/aoss_stage_a/**",
+            "scripts/run_aoss_v0_6_stage_a.py",
+            "scripts/quick_check.py",
+            "tests/test_aoss*.py"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 7,
+          "name": "Upload internal self-test evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "warn",
+            "name": "dgaf-operator-selftest-internal-evidence",
+            "path": "${{ runner.temp }}/dgaf-operator-selftest-results/**"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-operator-selftest.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF candidate",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "windows-operator-selftest",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/dgaf-operator-selftest.yml",
+            "scripts/run_dgaf_operator_selftest.py",
+            "scripts/run_dgaf_operator_selftest.ps1",
+            "docs/qa/DGAF_OPERATOR_SELFTEST.md",
+            "scripts/aoss_stage_a/**",
+            "scripts/run_aoss_v0_6_stage_a.py",
+            "scripts/quick_check.py",
+            "tests/test_aoss*.py"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 8,
+          "name": "Upload Windows operator evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "warn",
+            "name": "dgaf-operator-selftest-windows-evidence",
+            "path": "${{ runner.temp }}/dgaf-operator-selftest-windows-results/**"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-operator-selftest.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact pushed main revision",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "canary",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "push": {
+          "branches": [
+            "main"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 8,
+          "name": "Upload canary evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-post-merge-canary-v1-${{ github.sha }}",
+            "path": "artifacts/dgaf-post-merge-canary-v1/result.json",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-post-merge-canary-v1.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "detector-ablation",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "registry/dgaf_self_application_mutations_v1.json",
+            "scripts/run_dgaf_self_application_mutations.py",
+            "scripts/run_dgaf_self_application_detector_ablation.py",
+            "tests/test_dgaf_self_application_detector_ablation.py",
+            ".github/workflows/dgaf-self-application-detector-ablation.yml"
+          ]
+        },
+        "workflow_dispatch": {}
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 5,
+          "name": "Upload retained ablation evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-self-application-detector-ablation-${{ github.event.pull_request.head.sha || github.sha }}",
+            "path": "ci-artifacts/dgaf-self-application-detector-ablation.json\nci-artifacts/dgaf-self-application-detector-ablation.json.sha256\n"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-self-application-detector-ablation.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "mutation-benchmark",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "registry/dgaf_self_application_mutations_v1.json",
+            "scripts/run_dgaf_self_application_mutations.py",
+            "tests/test_dgaf_self_application_mutations.py",
+            ".github/workflows/dgaf-self-application-mutation.yml"
+          ]
+        },
+        "workflow_dispatch": {}
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 5,
+          "name": "Upload retained mutation evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-self-application-mutation-${{ github.event.pull_request.head.sha || github.sha }}",
+            "path": "ci-artifacts/dgaf-self-application-mutation-results.json\nci-artifacts/dgaf-self-application-mutation-results.json.sha256\n"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-self-application-mutation.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact evaluated commit",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "smoke",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/dgaf-smoke-v1.yml",
+            "specs/DGAF_SMOKE_CONTRACT_V1.md",
+            "scripts/run_dgaf_smoke_v1.py",
+            "tests/test_dgaf_smoke_v1.py",
+            "pptl/control_plane.py",
+            "pptl/governance_envelope.py",
+            "pptl/budget_ledger.py",
+            "pptl/state_identity.py",
+            "pptl/branch_registry.py",
+            "pptl/triadic_governance_loop.py",
+            "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
+            "scripts/bootstrap_ci_pip.sh"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/dgaf-smoke-v1.yml",
+            "specs/DGAF_SMOKE_CONTRACT_V1.md",
+            "scripts/run_dgaf_smoke_v1.py",
+            "tests/test_dgaf_smoke_v1.py",
+            "pptl/control_plane.py",
+            "pptl/governance_envelope.py",
+            "pptl/budget_ledger.py",
+            "pptl/state_identity.py",
+            "pptl/branch_registry.py",
+            "pptl/triadic_governance_loop.py"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 8,
+          "name": "Upload smoke evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-smoke-v1-${{ github.event.pull_request.head.sha || github.sha }}",
+            "path": "artifacts/dgaf-smoke-v1/result.json",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/dgaf-smoke-v1.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact target tree",
+          "uses": "actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+          "with": {
+            "ref": "${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "verify",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "requirements-epistemic.txt",
+            "requirements-epistemic.lock",
+            "docs/governance/E2B_VERIFIER_LOCK_POLICY.md",
+            ".github/workflows/e2b-verifier-lock.yml"
+          ]
+        },
+        "workflow_dispatch": {
+          "inputs": {
+            "expected_target_sha": {
+              "description": "Exact Git commit SHA required for this verification run",
+              "required": true,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 7,
+          "name": "Upload dependency fingerprint evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "e2b-dependency-fingerprint",
+            "path": "e2b-dependency-fingerprint.txt"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/e2b-verifier-lock.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "audit-ecosystem",
+      "job_if": null,
+      "job_secret_references": [
+        "GITHUB_TOKEN"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "BROAD_PATH_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "registry/**",
+            "tests/test_ecosystem_registry_projection_hygiene.py",
+            ".github/workflows/ecosystem-audit.yml",
+            "repos/README.md",
+            "docs/ECOSYSTEM_AUDIT_STATUS.md"
+          ]
+        },
+        "push": {
+          "paths": [
+            "registry/**",
+            "tests/test_ecosystem_registry_projection_hygiene.py",
+            ".github/workflows/ecosystem-audit.yml",
+            "repos/README.md",
+            "docs/ECOSYSTEM_AUDIT_STATUS.md"
+          ]
+        },
+        "schedule": [
+          {
+            "cron": "0 * * * *"
+          }
+        ],
+        "workflow_dispatch": {}
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 5,
+          "name": "Upload audit log",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "ecosystem-audit-log-${{ github.run_id }}",
+            "path": "registry/",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/ecosystem-audit.yml",
+      "workflow_secret_references": [
+        "GITHUB_TOKEN"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact candidate",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "full-repo-audit",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": null,
+        "push": null,
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 2,
+          "name": "Upload complete coverage manifest",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "full-repo-audit-${{ github.sha }}",
+            "path": "full_repo_audit.json",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/full-repo-audit.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "governance-ci",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "branches": [
+            "main"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 5,
+          "name": "Upload E2b/M6 evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "dgaf-freeze-control-evidence",
+            "path": "artifacts/freeze_controls/*.json\nartifacts/e2b_environment/*\n"
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 13,
+          "name": "Upload evaluation evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "dgaf-evaluation-evidence",
+            "path": "artifacts/role_boundary_coherence.json\nartifacts/governance_schema_conformance.json\nartifacts/contraction_proof_fidelity.json\nartifacts/evaluation_integrity_fixture_suite.json\n"
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 19,
+          "name": "Upload formal model evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "dgaf-tlc-model-check",
+            "path": "artifacts/tlc_model_check.txt\nartifacts/tlc_evidence.json\n"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/governance-ci.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@v4"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "release-provenance-candidate",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "components/governed_repo.py",
+            "packages/governed-repo/**",
+            "registry/governed_repo_release_provenance_v1.schema.json",
+            "scripts/build_governed_repo_release_provenance.py",
+            "tests/test_governed_repo_release_provenance.py",
+            ".github/workflows/governed-repo-package.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Upload non-publishing release candidate evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "governed-repo-release-provenance-${{ github.event.pull_request.head.sha }}",
+            "path": "artifacts/governed-repo-release-provenance.json\npackages/governed-repo/dist/*.whl\npackages/governed-repo/dist/*.tar.gz\n"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/governed-repo-package.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "exercise",
+      "job_if": null,
+      "job_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET",
+        "VERCEL_TOKEN"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "pages/api/staging-breaker.ts",
+            ".github/workflows/live-staging-breaker.yml",
+            ".github/workflows/deploy.yml",
+            "docs/governance/LIVE_STAGING_BREAKER_EVIDENCE_CONTRACT.md",
+            "tests/test_live_staging_breaker_contract.py"
+          ]
+        },
+        "workflow_dispatch": {}
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 12,
+          "name": "Upload staging evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "live-staging-breaker-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}",
+            "path": "preview_deployment_metadata.json\nstaging_breaker_response.json\nlive_staging_breaker_evidence.json\nlive_staging_breaker_evidence.json.sha256\n"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/live-staging-breaker.yml",
+      "workflow_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET",
+        "VERCEL_TOKEN"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "validate-lockfile",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "package.json",
+            "package-lock.json",
+            ".github/workflows/npm-lockfile-validation.yml",
+            "tests/test_npm_lockfile_contract.py",
+            "docs/security/DEPENDENCY_PIN_REVIEW_2026-09-09.md",
+            "docs/security/npm-direct-dependency-state.json"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "package.json",
+            "package-lock.json",
+            ".github/workflows/npm-lockfile-validation.yml",
+            "tests/test_npm_lockfile_contract.py",
+            "docs/security/DEPENDENCY_PIN_REVIEW_2026-09-09.md",
+            "docs/security/npm-direct-dependency-state.json"
+          ]
+        },
+        "workflow_dispatch": {}
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 9,
+          "name": "Upload validation evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "npm-lockfile-validation-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}",
+            "path": "npm-lockfile-validation.json\nnpm-lockfile-validation.json.sha256\n"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/npm-lockfile-validation.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "p2-runtime",
+      "job_if": null,
+      "job_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "workflow_dispatch": {
+          "inputs": {
+            "base_url": {
+              "description": "Exact deployment URL for deployment_id",
+              "required": true,
+              "type": "string"
+            },
+            "candidate_sha": {
+              "description": "Exact Git SHA of the candidate being verified",
+              "required": true,
+              "type": "string"
+            },
+            "deployment_id": {
+              "description": "Exact Vercel deployment ID for candidate_sha",
+              "required": true,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 3,
+          "name": "Upload P2 provenance",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p2-runtime-verification-${{ inputs.candidate_sha }}",
+            "path": "p2-runtime-verification.json",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p2-runtime-verification.yml",
+      "workflow_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "build",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-b-mode-t-cross-runner-repro.yml",
+            "docs/governance/P4_B_MODE_T_CROSS_RUNNER_REPRODUCIBILITY_2026-09-05.md",
+            "experiments/pdmal_pilot/mode_t_strict_verifier.go"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Upload digest/provenance only",
+          "uses": "actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-b-repro-${{ matrix.label }}-${{ env.EVIDENCE_SHA }}",
+            "path": "test-artifacts/repro/${{ matrix.label }}.txt\ntest-artifacts/repro/${{ matrix.label }}.txt.sha256\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-b-mode-t-cross-runner-repro.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "compare",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-b-mode-t-cross-runner-repro.yml",
+            "docs/governance/P4_B_MODE_T_CROSS_RUNNER_REPRODUCIBILITY_2026-09-05.md",
+            "experiments/pdmal_pilot/mode_t_strict_verifier.go"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 3,
+          "name": "Upload combined reproducibility evidence",
+          "uses": "actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-b-cross-runner-repro-${{ env.EVIDENCE_SHA }}",
+            "path": "comparison/result/cross-runner-reproducibility.txt\ncomparison/result/cross-runner-reproducibility.txt.sha256\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-b-mode-t-cross-runner-repro.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "leakage-contract",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-b-mode-t-leakage-contract.yml",
+            ".github/workflows/p4-b-mode-t-strict-verifier-prototype.yml",
+            ".github/workflows/p4-b-mode-t-cross-runner-repro.yml",
+            ".github/workflows/p4-b-mode-t-live-synthetic-continuity.yml",
+            "experiments/pdmal_pilot/mode_t_strict_verifier.go",
+            "experiments/pdmal_pilot/validate_mode_t_leakage_contract.py",
+            "docs/governance/P4_B_MODE_T_LEAKAGE_CONTRACT_2026-09-06.md"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 4,
+          "name": "Upload non-secret leakage-contract evidence",
+          "uses": "actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-b-mode-t-leakage-contract-${{ env.EVIDENCE_SHA }}",
+            "path": "test-artifacts/p4-b-leakage-contract/contract-result.txt\ntest-artifacts/p4-b-leakage-contract/contract-result.txt.sha256\ntest-artifacts/p4-b-leakage-contract/evidence.txt\ntest-artifacts/p4-b-leakage-contract/evidence.txt.sha256\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-b-mode-t-leakage-contract.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "live-synthetic-continuity",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-b-mode-t-live-synthetic-continuity.yml",
+            "docs/governance/P4_B_MODE_T_LIVE_SYNTHETIC_CONTINUITY_2026-09-06.md",
+            "experiments/pdmal_pilot/mode_t_strict_verifier.go",
+            "experiments/pdmal_pilot/mode_t_strict_verifier_live_test.go"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 11,
+          "name": "Upload synthetic continuity evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-b-mode-t-live-synthetic-continuity-${{ env.EVIDENCE_SHA }}",
+            "path": "test-artifacts/p4-b-live-synthetic/evidence.txt\ntest-artifacts/p4-b-live-synthetic/evidence.txt.sha256\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-b-mode-t-live-synthetic-continuity.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "prepare-offline-bundle",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-b-mode-t-offline-repro-bundle.yml",
+            "experiments/pdmal_pilot/mode_t_strict_verifier.go"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Upload public offline reproduction inputs",
+          "uses": "actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "with": {
+            "compression-level": 0,
+            "if-no-files-found": "error",
+            "name": "p4-b-mode-t-offline-repro-inputs-${{ env.EVIDENCE_SHA }}",
+            "path": "offline-repro-bundle.tar.gz\noffline-repro-bundle.tar.gz.sha256\nOFFLINE_REPRO_MANIFEST.txt\n",
+            "retention-days": 7
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-b-mode-t-offline-repro-bundle.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "pinned-source-audit",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-b-mode-t-strict-chain-source-audit.yml",
+            "docs/governance/P4_B_MODE_T_STRICT_CHAIN_SOURCE_AUDIT_2026-09-05.md",
+            "experiments/pdmal_pilot/mode_t_strict_chain_source_audit.py",
+            "experiments/pdmal_pilot/test_mode_t_strict_chain_source_audit.py",
+            "experiments/pdmal_pilot/requirements-full-lock.txt"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 9,
+          "name": "Upload non-secret source-audit evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-b-mode-t-strict-chain-source-audit-${{ env.EVIDENCE_SHA }}",
+            "path": "test-artifacts/p4-b-mode-t-strict-chain-source-audit.json\ntest-artifacts/p4-b-mode-t-strict-chain-source-audit.json.sha256\ntest-artifacts/p4-b-mode-t-strict-chain-source-audit-binding.txt\ntest-artifacts/upstream-tlock/tlock.go\ntest-artifacts/upstream-tlock/tlock_age.go\ntest-artifacts/upstream-tlock/tle.go\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-b-mode-t-strict-chain-source-audit.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact DGAF evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "validate-strict-verifier-prototype",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-b-mode-t-strict-verifier-prototype.yml",
+            "docs/governance/P4_B_MODE_T_STRICT_VERIFIER_PROTOTYPE_2026-09-05.md",
+            "experiments/pdmal_pilot/mode_t_strict_verifier.go",
+            "experiments/pdmal_pilot/mode_t_strict_verifier_test.go"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 9,
+          "name": "Upload non-secret prototype evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-b-mode-t-strict-verifier-prototype-${{ env.EVIDENCE_SHA }}",
+            "path": "test-artifacts/strict-verifier/build-evidence.txt\ntest-artifacts/strict-verifier/build-evidence.txt.sha256\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-b-mode-t-strict-verifier-prototype.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "full-pilot-task-shape",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-mode-t-full-pilot-task-timing.yml",
+            "docs/governance/P4_MODE_T_FULL_BOUNDARY_TIMING_CORRECTION_2026-09-06.md",
+            "experiments/pdmal_pilot/mode_t_full_pilot_timing.py",
+            "experiments/pdmal_pilot/test_mode_t_full_pilot_timing.py",
+            "experiments/pdmal_pilot/mode_t_timing_study.py",
+            "experiments/pdmal_pilot/run_pilot.py",
+            "experiments/pdmal_pilot/task_engine.py",
+            "experiments/pdmal_pilot/harness_contract.py",
+            "experiments/pdmal_pilot/analysis.py",
+            "experiments/pdmal_pilot/requirements-full-lock.txt"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload bounded timing evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-mode-t-full-pilot-task-timing-${{ env.EVIDENCE_SHA }}",
+            "path": "test-artifacts/p4-mode-t-full-pilot-task-timing.json\ntest-artifacts/p4-mode-t-full-pilot-task-timing.json.sha256\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-mode-t-full-pilot-task-timing.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact requested head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read",
+        "id-token": "write"
+      },
+      "environment": null,
+      "job": "execute-public-rekor",
+      "job_if": "${{ inputs.confirm_public_rekor_entry == 'I_UNDERSTAND_PUBLIC_REKOR_ENTRY' }}",
+      "job_secret_references": [],
+      "review_flags": [
+        "WRITE_CAPABILITY_REVIEW"
+      ],
+      "triggers": {
+        "workflow_dispatch": {
+          "inputs": {
+            "confirm_public_rekor_entry": {
+              "default": "NO",
+              "description": "Execution creates an irreversible public Rekor entry",
+              "options": [
+                "NO",
+                "I_UNDERSTAND_PUBLIC_REKOR_ENTRY"
+              ],
+              "required": true,
+              "type": "choice"
+            },
+            "evidence_sha": {
+              "description": "Exact 40-character commit SHA to bind and execute",
+              "required": true,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload non-secret synthetic Rekor timing evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-mode-t-rekor-timing-${{ env.EVIDENCE_SHA }}-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "test-artifacts/rekor/synthetic-non-authorization.json\ntest-artifacts/rekor/cosign-bundle.json\ntest-artifacts/rekor/rekor-timing-evidence.json\ntest-artifacts/rekor/rekor-timing-evidence.json.sha256\ntest-artifacts/rekor/rekor-timing-binding.txt\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-mode-t-rekor-timing.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact evidence head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ env.EVIDENCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "actions": "read",
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "partial-synthetic-timing",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-mode-t-timing-study.yml",
+            "docs/governance/P4_MODE_T_TIMING_STUDY_DESIGN_2026-09-05.md",
+            "experiments/pdmal_pilot/mode_t_timing_study.py",
+            "experiments/pdmal_pilot/test_mode_t_timing_study.py",
+            "experiments/pdmal_pilot/mode_t_publication_timing.py",
+            "experiments/pdmal_pilot/test_mode_t_publication_timing.py",
+            "experiments/pdmal_pilot/analysis.py",
+            "experiments/pdmal_pilot/run_pilot.py",
+            "experiments/pdmal_pilot/task_engine.py",
+            "experiments/pdmal_pilot/harness_contract.py",
+            "experiments/pdmal_pilot/requirements-full-lock.txt"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 10,
+          "name": "Measure dummy artifact publication",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "compression-level": 0,
+            "if-no-files-found": "error",
+            "name": "${{ steps.publication_start.outputs.artifact_name }}",
+            "path": "test-artifacts/publication-fixture.bin",
+            "retention-days": 1
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 15,
+          "name": "Upload partial non-empirical timing evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-mode-t-timing-partial-${{ env.EVIDENCE_SHA }}",
+            "path": "test-artifacts/p4-mode-t-publication-timing.json\ntest-artifacts/p4-mode-t-publication-timing.json.sha256\ntest-artifacts/p4-mode-t-timing-partial.json\ntest-artifacts/p4-mode-t-timing-partial.json.sha256\ntest-artifacts/p4-mode-t-timing-encryption.json\ntest-artifacts/p4-mode-t-timing-encryption.json.sha256\ntest-artifacts/tlock-quicknet-metadata.yml\ntlock-timing-prerequisite-evidence.txt\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-mode-t-timing-study.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "verify-tlock-release",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/p4-mode-t-tlock-supply-chain.yml",
+            "docs/governance/P4_MODE_T_TLOCK_SUPPLY_CHAIN_VERIFICATION_2026-09-05.md"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 2,
+          "name": "Upload non-secret verification evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p4-mode-t-tlock-supply-chain-${{ env.EVIDENCE_SHA }}",
+            "path": "checksums.txt\ntlock-supply-chain-evidence.txt\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p4-mode-t-tlock-supply-chain.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "p6a-cors",
+      "job_if": null,
+      "job_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "workflow_dispatch": {
+          "inputs": {
+            "allowed_origin": {
+              "description": "Expected allowed origin",
+              "required": true,
+              "type": "string"
+            },
+            "base_url": {
+              "description": "Exact deployment URL for deployment_id",
+              "required": true,
+              "type": "string"
+            },
+            "candidate_sha": {
+              "description": "Exact Git SHA of the candidate being verified",
+              "required": true,
+              "type": "string"
+            },
+            "deployment_id": {
+              "description": "Exact Vercel deployment ID for candidate_sha",
+              "required": true,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 3,
+          "name": "Upload P6a provenance",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "p6a-cors-verification-${{ inputs.candidate_sha }}",
+            "path": "p6a-cors-verification.json",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p6a-cors-verification.yml",
+      "workflow_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact P8 verification commit",
+          "uses": "actions/checkout@v4",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ inputs.p8_verification_commit_sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "final-p9",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "workflow_dispatch": {
+          "inputs": {
+            "freeze_commit_sha": {
+              "description": "Exact 40-hex immutable freeze commit",
+              "required": true,
+              "type": "string"
+            },
+            "freeze_sha256": {
+              "description": "Externally retained SHA-256 of frozen PDMAL_IMMUTABLE_FREEZE.json bytes",
+              "required": true,
+              "type": "string"
+            },
+            "p8_verification_commit_sha": {
+              "description": "Exact descendant commit containing the separate P8 freeze-verification record",
+              "required": true,
+              "type": "string"
+            },
+            "p8_verification_sha256": {
+              "description": "Externally retained SHA-256 of PDMAL_P8_FREEZE_VERIFICATION.json bytes",
+              "required": true,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload source P9 evidence",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-p9-final-frozen-chain-evidence",
+            "path": "/tmp/p9-final/p9-final-frozen-chain-evidence.json\n/tmp/p9-final/p9-final-frozen-chain-evidence.json.sha256\n",
+            "retention-days": 30
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 10,
+          "name": "Upload source-bound P9 registry",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-p9-final-frozen-chain-registry",
+            "path": "/tmp/p9-final/p9-final-registry.json\n/tmp/p9-final/p9-final-registry.json.sha256\n",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/p9-final-frozen-chain.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout control plane for candidate resolution",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "actions": "read",
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "blinding-operational-test",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/pdmal-blinding-operational-test.yml",
+            "docs/experiment/NEW_CANDIDATE_MANIFEST.md",
+            "docs/experiment/PDMAL_BLINDING_OPERATIONAL_VERIFICATION.md",
+            "experiments/pdmal_pilot/blinding_operational_test.py",
+            "experiments/pdmal_topology/CONTROL_PLANE_EVIDENCE_TRIGGER.md"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/pdmal-blinding-operational-test.yml",
+            "docs/experiment/NEW_CANDIDATE_MANIFEST.md",
+            "docs/experiment/PDMAL_BLINDING_OPERATIONAL_VERIFICATION.md",
+            "experiments/pdmal_pilot/blinding_operational_test.py",
+            "experiments/pdmal_topology/CONTROL_PLANE_EVIDENCE_TRIGGER.md"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload exact-candidate synthetic P4 evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-p4-synthetic-blinding-evidence",
+            "path": "blinding_artifacts/pdmal-p4-synthetic-operational-evidence.json\nblinding_artifacts/pdmal-p4-synthetic-operational-evidence.json.sha256\n",
+            "retention-days": 30
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 10,
+          "name": "Upload source-bound P4 registry",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-p4-synthetic-registry",
+            "path": "blinding_artifacts/pdmal-p4-synthetic-registry.json",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-blinding-operational-test.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "contract-validation",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": null,
+        "push": {
+          "branches": [
+            "epistemic/evidence-architecture-v1"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 7,
+          "name": "Upload validation artifacts",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-harness-validation-${{ github.sha }}",
+            "path": "test-artifacts/",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-harness-validation.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout control plane for candidate resolution",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "persist-credentials": false,
+            "ref": "${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}"
+          }
+        },
+        {
+          "name": "Checkout designated runtime candidate",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "persist-credentials": false,
+            "ref": "${{ steps.candidate.outputs.candidate_sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "actions": "read",
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "pdmal-dry-run",
+      "job_if": null,
+      "job_secret_references": [
+        "PDMAL_BLINDING_KEY"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "BROAD_PATH_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "experiments/pdmal_topology/**",
+            ".github/workflows/pdmal-instrumentation-dry-run.yml"
+          ]
+        },
+        "push": {
+          "paths": [
+            "experiments/pdmal_topology/**",
+            ".github/workflows/pdmal-instrumentation-dry-run.yml"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 12,
+          "name": "Upload dry-run artifacts",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-instrumentation-dry-run",
+            "path": "/tmp/pdmal-artifact/raw_pilot_*.csv*",
+            "retention-days": 14
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 16,
+          "name": "Upload exact-candidate evidence registry",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "dgaf-evidence-registry",
+            "path": "/tmp/dgaf-evidence-registry.json",
+            "retention-days": 14
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-instrumentation-dry-run.yml",
+      "workflow_secret_references": [
+        "PDMAL_BLINDING_KEY"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact PR source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "diagnostic",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "experiments/pdmal_pilot/p30_remediation_diagnostic.py",
+            "docs/experiment/SOLO_P30_REMEDIATION_EPOCH_002_PREREGISTRATION.md",
+            ".github/workflows/pdmal-p30-remediation-diagnostic.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 6,
+          "name": "Upload diagnostic artifact",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "warn",
+            "name": "pdmal-p30-remediation-diagnostic-${{ github.sha }}",
+            "path": "test-artifacts/p30_remediation_diagnostic.json",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-p30-remediation-diagnostic.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout control plane for historical evidence resolution",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "actions": "read",
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "runner-contract",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": null,
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/pdmal-pre-freeze-runner.yml",
+            "docs/experiment/NEW_CANDIDATE_MANIFEST.md",
+            "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md",
+            "experiments/pdmal_pilot/**",
+            "experiments/pdmal_topology/CONTROL_PLANE_EVIDENCE_TRIGGER.md"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 12,
+          "name": "Upload historical-runtime-evidence structural evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-pre-freeze-contract-evidence",
+            "path": "test-artifacts/pdmal-pre-freeze-p3-p5-evidence.json\ntest-artifacts/pdmal-pre-freeze-p3-p5-evidence.json.sha256\n",
+            "retention-days": 30
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 14,
+          "name": "Upload source-bound P3/P5 registry",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-pre-freeze-p3-p5-registry",
+            "path": "test-artifacts/pdmal-pre-freeze-p3-p5-registry.json",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-pre-freeze-runner.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout current branch head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "ref": "${{ github.ref }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "runtime-characterization",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW"
+      ],
+      "triggers": {
+        "push": {
+          "branches": [
+            "epistemic/evidence-architecture-v1"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 5,
+          "name": "Upload runtime characterization artifact",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-runtime-characterization-${{ github.sha }}",
+            "path": "runtime_artifacts/",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-runtime-characterization.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact run commit",
+          "uses": "actions/checkout@v4",
+          "with": {
+            "fetch-depth": 2
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "execute-blinded-variant",
+      "job_if": "github.event_name == 'push'",
+      "job_secret_references": [
+        "token_hex"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "RECOVERABLE_BLINDING_KEY_CUSTODY"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/pdmal-solo-p30-variant-execution.yml",
+            "experiments/pdmal_pilot/run_p30_variant.py",
+            "experiments/pdmal_pilot/analyze_p30_variant.py",
+            "experiments/pdmal_pilot/test_p30_variant_track.py",
+            "docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.md",
+            "docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.json"
+          ]
+        },
+        "push": {
+          "branches": [
+            "solo-p30-variant/run-*"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 7,
+          "name": "Upload locked blinded Epoch 003 dataset",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-solo-p30-variant-epoch-003-dataset-${{ github.sha }}",
+            "path": "${{ runner.temp }}/pdmal-solo-p30-variant-output/\n${{ runner.temp }}/pdmal-solo-p30-variant-archive/\n${{ runner.temp }}/SOLO_P30_VARIANT_EPOCH_003_DATASET_LOCK.json\n",
+            "retention-days": 90
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload recoverable Epoch 003 blinding key",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-solo-p30-variant-epoch-003-blinding-key-${{ github.sha }}",
+            "path": "${{ runner.temp }}/pdmal_solo_p30_variant_blinding_key.txt",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-solo-p30-variant-execution.yml",
+      "workflow_secret_references": [
+        "token_hex"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact run commit",
+          "uses": "actions/checkout@v4",
+          "with": {
+            "fetch-depth": 2
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "execute-solo-pilot",
+      "job_if": "github.event_name == 'push'",
+      "job_secret_references": [
+        "token_hex"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "RECOVERABLE_BLINDING_KEY_CUSTODY"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/pdmal-solo-pilot-execution.yml"
+          ]
+        },
+        "push": {
+          "branches": [
+            "solo-pilot/run-*"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 7,
+          "name": "Upload blinded Solo evidence",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-solo-pilot-evidence-${{ github.sha }}",
+            "path": "${{ runner.temp }}/pdmal-solo-output/\n${{ runner.temp }}/pdmal-solo-archive/\n${{ runner.temp }}/SOLO_COLLECTION_MANIFEST.json\n",
+            "retention-days": 90
+          }
+        },
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload recoverable Solo blinding key",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-solo-pilot-blinding-key-${{ github.sha }}",
+            "path": "${{ runner.temp }}/pdmal_solo_blinding_key.txt",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-solo-pilot-execution.yml",
+      "workflow_secret_references": [
+        "token_hex"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact source head",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "persist-credentials": false,
+            "ref": "${{ env.SOURCE_SHA }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "replicate",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            "experiments/pdmal_weighted_forman_replication.py",
+            "tests/test_pdmal_weighted_forman_replication.py",
+            "docs/experiment/PDMAL_WEIGHTED_FORMAN_REPLICATION_PROTOCOL_2026-09-09.md",
+            ".github/workflows/pdmal-weighted-forman-replication.yml",
+            "tools/pdmal/lattice_harness.py"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 8,
+          "name": "Upload exact-head research evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "pdmal-weighted-forman-replication-${{ env.SOURCE_SHA }}",
+            "path": "weighted-forman-replication.json\nweighted-forman-replication.json.sha256\n",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/pdmal-weighted-forman-replication.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "propagation-consistency",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": null,
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 3,
+          "name": "Upload propagation report",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "propagation-consistency-report",
+            "path": "propagation-report.json"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/propagation-consistency.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "staging-evidence",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "branches": [
+            "main",
+            "develop"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main",
+            "develop"
+          ],
+          "paths": [
+            "**/*.py",
+            "**/*.pyi",
+            "requirements*.txt",
+            "requirements-ci-py*-ubuntu2404-x64.lock",
+            "scripts/bootstrap_ci_pip.sh",
+            "tests/test_ci_lock_contract.py",
+            "pyproject.toml",
+            ".flake8",
+            ".github/workflows/python-tests.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Upload staging evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "staging-circuit-breaker-evidence",
+            "path": "test-artifacts/staging-circuit-breaker-evidence.json"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/python-tests.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "test",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "branches": [
+            "main",
+            "develop"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main",
+            "develop"
+          ],
+          "paths": [
+            "**/*.py",
+            "**/*.pyi",
+            "requirements*.txt",
+            "requirements-ci-py*-ubuntu2404-x64.lock",
+            "scripts/bootstrap_ci_pip.sh",
+            "tests/test_ci_lock_contract.py",
+            "pyproject.toml",
+            ".flake8",
+            ".github/workflows/python-tests.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 14,
+          "name": "Upload pytest diagnostics",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "pytest-diagnostics-py${{ matrix.python-version }}",
+            "path": "ci-artifacts/"
+          }
+        },
+        {
+          "if": "always()",
+          "index": 16,
+          "name": "Upload coverage reports",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "coverage-report-py${{ matrix.python-version }}",
+            "path": "htmlcov/"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/python-tests.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "security-scan",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "branches": [
+            "main",
+            "develop"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main",
+            "develop"
+          ],
+          "paths": [
+            "**/*.py",
+            "**/*.pyi",
+            "requirements*.txt",
+            "requirements-ci-py*-ubuntu2404-x64.lock",
+            "scripts/bootstrap_ci_pip.sh",
+            "tests/test_ci_lock_contract.py",
+            "pyproject.toml",
+            ".flake8",
+            ".github/workflows/python-tests.yml"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 7,
+          "name": "Upload security reports",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "security-reports",
+            "path": "bandit-report.json\nbandit-report.txt\nbandit-report.status\npip-audit-report.json\npip-audit-report.txt\npip-audit-report.status\n"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/python-tests.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "live-regression",
+      "job_if": "github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'\n",
+      "job_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
+      ],
+      "review_flags": [
+        "SECRET_REFERENCE_REVIEW",
+        "FAILURE_PATH_UPLOAD_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "branches": [
+            "main"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "schedule": [
+          {
+            "cron": "0 */6 * * *"
+          }
+        ],
+        "workflow_dispatch": {
+          "inputs": {
+            "dgaf_url": {
+              "default": "",
+              "description": "Override DGAF_URL for live regression",
+              "required": false
+            }
+          }
+        }
+      },
+      "uploads": [
+        {
+          "if": "always()",
+          "index": 6,
+          "name": "Upload regression results",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "regression-results-${{ github.run_id }}",
+            "path": "regression_results_v17.json"
+          }
+        }
+      ],
+      "workflow": ".github/workflows/regression.yml",
+      "workflow_secret_references": [
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
+      ]
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact source",
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false,
+            "ref": "${{ github.event.pull_request.head.sha || github.sha }}"
+          }
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "synthetic-oracle",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [
+        "BROAD_PATH_REVIEW"
+      ],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/track-a-epoch-002-synthetic-oracle.yml",
+            "docs/experiment/TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RUN.json",
+            "scripts/run_track_a_epoch_002_synthetic_oracle.py",
+            "tests/test_track_a_epoch_002_synthetic_oracle.py",
+            "experiments/pdmal_pilot/track_a_epoch_002_analysis.py",
+            "experiments/pdmal_pilot/requirements-full-lock.txt"
+          ]
+        },
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/track-a-epoch-002-synthetic-oracle.yml",
+            "docs/experiment/TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RUN.json",
+            "scripts/run_track_a_epoch_002_synthetic_oracle.py",
+            "tests/test_track_a_epoch_002_synthetic_oracle.py",
+            "experiments/pdmal_pilot/track_a_epoch_002_analysis.py",
+            "experiments/pdmal_pilot/requirements-full-lock.txt"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 7,
+          "name": "Upload synthetic-only evidence",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "track-a-epoch002-synthetic-oracle",
+            "path": "synthetic-artifacts/track-a-epoch002-oracle/",
+            "retention-days": 30
+          }
+        }
+      ],
+      "workflow": ".github/workflows/track-a-epoch-002-synthetic-oracle.yml",
+      "workflow_secret_references": []
+    },
+    {
+      "checkout": [
+        {
+          "name": "Checkout exact PR source",
+          "uses": "actions/checkout@v4"
+        }
+      ],
+      "disposition": "SOURCE_INVENTORIED_CONTENT_AND_RECIPIENT_ADMISSION_NOT_ESTABLISHED",
+      "effective_declared_permissions": {
+        "contents": "read"
+      },
+      "environment": null,
+      "job": "validate",
+      "job_if": null,
+      "job_secret_references": [],
+      "review_flags": [],
+      "triggers": {
+        "pull_request": {
+          "paths": [
+            ".github/workflows/track-a-topology-robustness-profile.yml",
+            "docs/governance/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1.json",
+            "experiments/pdmal_pilot/topology_robustness_profile.py",
+            "experiments/pdmal_pilot/test_topology_robustness_profile.py",
+            "experiments/pdmal_pilot/task_engine.py",
+            "experiments/pdmal_pilot/harness_contract.py"
+          ]
+        }
+      },
+      "uploads": [
+        {
+          "if": "success() [implicit]",
+          "index": 6,
+          "name": "Upload Track A structural probe",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "if-no-files-found": "error",
+            "name": "track-a-topology-robustness-probe-${{ github.sha }}",
+            "path": "test-artifacts/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_PROBE.json",
+            "retention-days": 90
+          }
+        }
+      ],
+      "workflow": ".github/workflows/track-a-topology-robustness-profile.yml",
+      "workflow_secret_references": []
+    }
+  ],
+  "limitations": [
+    "Not a complete transitive call-graph or network-egress audit.",
+    "No artifact payloads, credentials or empirical outcomes read.",
+    "No independent gate acceptance.",
+    "YAML safe_load uses YAML 1.1; on/True key normalized explicitly.",
+    "Runtime reachability, artifact ACLs and provider credential scopes remain unverified."
+  ],
+  "method": "static YAML job inventory; no workflow or route execution; flags are review signals, not vulnerability classifications",
+  "parse_errors": [],
+  "python": "3.12.10",
+  "pyyaml": "6.0.3",
+  "upload_job_count": 55,
+  "upload_step_count": 68,
+  "workflow_count": 144,
+  "workflows": [
+    {
+      "path": ".github/workflows/agent-ontology-adjudication.yml",
+      "sha256": "9b4bea0817c373cb6d20ee9807d70d59aaafc77fa3995bdf7baad942b32b6687"
+    },
+    {
+      "path": ".github/workflows/aoss-stage-a-collector-foundation.yml",
+      "sha256": "ebb4da408e6f66dec6ae4a45296c0370ab7c5ceab8bdfcbd46ecfb667f079dc1"
+    },
+    {
+      "path": ".github/workflows/aoss-v0-6-stage-a-collection-authorization.yml",
+      "sha256": "307ce87e83fdec89e082a44bf18db49137af5843743db0820d6102faf57b92f2"
+    },
+    {
+      "path": ".github/workflows/aoss-v0-6-stage-a-predata-readiness.yml",
+      "sha256": "58b6040623af551dd97e1e4c02d6b01e308c46ef3d1637063de5673d04772900"
+    },
+    {
+      "path": ".github/workflows/b1-integration-adjudication.yml",
+      "sha256": "c551c6395faab88a2088250abfa1936e61a1f6612ca5f4cc2f4a08e1e8f4a590"
+    },
+    {
+      "path": ".github/workflows/b1-p30-11q-qualification.yml",
+      "sha256": "137661d0d8e22b2f5a464e4b12a355735e0cb1bfe9a3f1a7adac19107eb56566"
+    },
+    {
+      "path": ".github/workflows/b1-semantic-routing-safety-profile.yml",
+      "sha256": "c6c900ecf40f385c29295621d64178548d6de2de8888e2b977c9065d8d9f0d18"
+    },
+    {
+      "path": ".github/workflows/b2-integration-adjudication.yml",
+      "sha256": "418258c26b538bf2c9c11989444a17bc6d912554fccaa086d226afefe5b7701f"
+    },
+    {
+      "path": ".github/workflows/b2-p30-11q-qualification.yml",
+      "sha256": "469a969e5183c538f7c8787d02ead0a6d2471eb6fca7578ba61498393ff52a07"
+    },
+    {
+      "path": ".github/workflows/b2-stateful-context-closure-profile.yml",
+      "sha256": "1ef50783629a324c7de54a339465c35e04b553c589d45156e4477fa463903478"
+    },
+    {
+      "path": ".github/workflows/b3-integration-adjudication.yml",
+      "sha256": "506d673e83516ecb550e6301472678ab571c518cf04cb142ef8a57579ce35fbe"
+    },
+    {
+      "path": ".github/workflows/b3-p30-11q-qualification.yml",
+      "sha256": "c73ba36daa713453ac0ca97dfbd6b095616e75f5780826732a3ddd90d8725055"
+    },
+    {
+      "path": ".github/workflows/b3-p33-convergence-profile.yml",
+      "sha256": "e8fcd63d3cd7bffd8dd00f91e5d9aafee11293dcec05632cfaf823c17de3140a"
+    },
+    {
+      "path": ".github/workflows/branch-disposition-inventory.yml",
+      "sha256": "f3f05905094400a8df2039e2f2b91bb4356bf4d852845fca5a140ac2a7c00028"
+    },
+    {
+      "path": ".github/workflows/canonical-epoch-004-collection-contract.yml",
+      "sha256": "62420761b2870894e916a3a1c5d6bf5d23e0dfdc2368a35ad6ea52874a1b9379"
+    },
+    {
+      "path": ".github/workflows/canonical-epoch-004-execution.yml",
+      "sha256": "f6a09452af4b73329925cdcb8e017e8069e1cbfba289e23672b47a5f5c215bdc"
+    },
+    {
+      "path": ".github/workflows/canonical-epoch-004-preregistration.yml",
+      "sha256": "25f7ff125cd03da17823543e46a5c57d695cd9e0141356d0e09d341808ca86aa"
+    },
+    {
+      "path": ".github/workflows/canonical-epoch-004-primary-result.yml",
+      "sha256": "d5711d56ec8270cc559ed2f06818910325231bcb081f0c474b8a373b955f0c97"
+    },
+    {
+      "path": ".github/workflows/canonical-epoch-004-treatment-input-preflight.yml",
+      "sha256": "e172d090e1a78ba91e26640df2b374399796c0a58d4d18b11f681a9947278ae0"
+    },
+    {
+      "path": ".github/workflows/canonical-profile-11q-qualification.yml",
+      "sha256": "582ea56aab8ac2d0da8389e7be74cc9f8443bf5260f3ff308983a41beb5a35e7"
+    },
+    {
+      "path": ".github/workflows/canonical-profile-tgl-diagnostic.yml",
+      "sha256": "592a97dac1aa9fc649b372734958c8fa146f4c8dd1e39511fee7f70205ac42dc"
+    },
+    {
+      "path": ".github/workflows/canonical-topology-mechanism-diagnostic.yml",
+      "sha256": "d44f91192dcc9de178aa8606087ff3bb39230bf872b1e6083a9345eeafdb74f8"
+    },
+    {
+      "path": ".github/workflows/canonical-treatment-profile.yml",
+      "sha256": "35a4054a8dd10488865ebab92e4fff89f66c11f77cc3641b2a40c0b349051800"
+    },
+    {
+      "path": ".github/workflows/claim-hygiene.yml",
+      "sha256": "3f894cfd55044e1f83edaf49312692b1834f54f1b7736a5d40a263cfec2ad1e2"
+    },
+    {
+      "path": ".github/workflows/completion-controller.yml",
+      "sha256": "8f6cb81737cb09057af2feaf9ac1243e9eb92bc5e5f3caf4bc9a5c569275eb25"
+    },
+    {
+      "path": ".github/workflows/completion-state-reconciler.yml",
+      "sha256": "6ec797359c404d0d6abd8650ba0573bebba268905650c7182d8adb27a45b2c8a"
+    },
+    {
+      "path": ".github/workflows/control-plane-contract.yml",
+      "sha256": "83409b8659c2005ae88f7c18bff5c0a7cabfbcdad6a75f1555b178e8ad4afee5"
+    },
+    {
+      "path": ".github/workflows/control-state-consistency.yml",
+      "sha256": "54ddb24e3f88fdd693f1482c9642e37944be3ca5f86fb1ab30b0b43f51803f94"
+    },
+    {
+      "path": ".github/workflows/critical-pr-lane-custody.yml",
+      "sha256": "119fe795e32c68f6b71548fefac210a4c245b04294d743367f0c4ba26dcf173f"
+    },
+    {
+      "path": ".github/workflows/deploy.yml",
+      "sha256": "37faa35fc9e116b6871e7beb341e282ef51b153a1c42f5fadc5efd42dbe7abc1"
+    },
+    {
+      "path": ".github/workflows/dgaf-cold-start-same-system-execution-artifact.yml",
+      "sha256": "385b0ee61f8691764aa9ed20b03e1cf2e693f59ac94e1f38a66d1500b2adf206"
+    },
+    {
+      "path": ".github/workflows/dgaf-cold-start-scaffold-artifact.yml",
+      "sha256": "d0ec16b8c1d539840f4979493368f015ec2e9b36965bb21f0f2609509d7b4143"
+    },
+    {
+      "path": ".github/workflows/dgaf-operator-selftest.yml",
+      "sha256": "7751f559da90476b96f91b7f288f4c4d50da36380f62d2cd24a1fc892d2dd67c"
+    },
+    {
+      "path": ".github/workflows/dgaf-post-merge-canary-v1.yml",
+      "sha256": "b30170fabc989cdc60a6dbd19410b63c7b6aef36ed649d1a8157e0ff0522f6b2"
+    },
+    {
+      "path": ".github/workflows/dgaf-self-application-detector-ablation.yml",
+      "sha256": "d27592862ada20f7ad230fdd2b29373a518627da18142a943ff0256f9e2f9c11"
+    },
+    {
+      "path": ".github/workflows/dgaf-self-application-mutation.yml",
+      "sha256": "3991b06a98b90271c1b8f44d406be062c4d02ca5757a86657765ad7dc7773867"
+    },
+    {
+      "path": ".github/workflows/dgaf-smoke-v1.yml",
+      "sha256": "176d849ceef18db2026c51e2141700ea1c1682a1467c58995f0a6d1179665fe7"
+    },
+    {
+      "path": ".github/workflows/discovery-harness.yml",
+      "sha256": "69f625cf38daf90399ce684b079049763dd71127227c692885d221e10d868d93"
+    },
+    {
+      "path": ".github/workflows/doc-lint-pr-scope.yml",
+      "sha256": "c394571111222f4aa0e84004df6d5aad20935ca781cfa435df982dd93212a2ca"
+    },
+    {
+      "path": ".github/workflows/doc-lint.yml",
+      "sha256": "4d734746cd0c02db00ec092913a0eec5c9ab8f39be1f07c336bb0b7b550cf200"
+    },
+    {
+      "path": ".github/workflows/e2b-verifier-lock.yml",
+      "sha256": "4f053ba7711f366e002f6e6a4ff1e4df7571a2b2a1204f6b90e83b931b657e03"
+    },
+    {
+      "path": ".github/workflows/ecosystem-audit.yml",
+      "sha256": "a1d8df0b5f4c470b771696f9c07597173eaa08f5d1cd77a6f76917fa081f7429"
+    },
+    {
+      "path": ".github/workflows/epistemic-evidence-validation.yml",
+      "sha256": "c42412b89bfcd5aa89bf1e6435b90a2b35e661e40c33ed6e8a8569cc7f95b8c2"
+    },
+    {
+      "path": ".github/workflows/epoch004-post-fidelity-claim-ceiling.yml",
+      "sha256": "dc4200d80542aa29e24fed7eae57398f5b8bf7ccc195d2ae88b92c98ba80c698"
+    },
+    {
+      "path": ".github/workflows/external-acceptance-readiness-validation.yml",
+      "sha256": "8bf328e46e18e7ade8ae34f0fe5d5215f4d7f88a792fca5e53a4525f98d46cf9"
+    },
+    {
+      "path": ".github/workflows/full-repo-audit.yml",
+      "sha256": "2084f7053e20493825ede326c02b67ae5f6f366dc12fc4e44a5069b767e62be3"
+    },
+    {
+      "path": ".github/workflows/governance-ci.yml",
+      "sha256": "c88766a4745e3b9235d327b7fc57e44525a7a1c847c22e41b58cc210bda9783f"
+    },
+    {
+      "path": ".github/workflows/governance-sweep.yml",
+      "sha256": "2cd4dc490e719866a93a721a980fb61586e4d672e4db0aaa335ce8303e158a58"
+    },
+    {
+      "path": ".github/workflows/governed-repo-action.yml",
+      "sha256": "43efe4dac6525435a1f36291efb5a629780e9cf25fe8dc1bd59ffa12997b6333"
+    },
+    {
+      "path": ".github/workflows/governed-repo-package.yml",
+      "sha256": "a0f903875befbcf1696a5a55605a155a04fe0844d6dd07863aecf3fe328f5faf"
+    },
+    {
+      "path": ".github/workflows/ip-hygiene.yml",
+      "sha256": "dba5193e39d8fadd8e93a82161ea65cbdea024ad3fcc2778d7ae6d36ed2e9e1a"
+    },
+    {
+      "path": ".github/workflows/kappa-v36-authority.yml",
+      "sha256": "9ccd7d4513ea9388400164fbe0633bf78699dc4aae44f4a46996b8df4c898152"
+    },
+    {
+      "path": ".github/workflows/live-staging-breaker.yml",
+      "sha256": "0cea72726febba178ffa7a7861e24e970a0137d585a4bc1c8867b18f3ab34889"
+    },
+    {
+      "path": ".github/workflows/main-push-provenance-audit.yml",
+      "sha256": "f2e58023aa73ac8971198d03920cafbcd21c4723eb1be5b718712a037106045c"
+    },
+    {
+      "path": ".github/workflows/mode-t-external-acceptance-handoff.yml",
+      "sha256": "095090ec1470eab348b9e553588815aea5f9c6acf6505516a945f01f033e7c27"
+    },
+    {
+      "path": ".github/workflows/mode-t-external-result-intake.yml",
+      "sha256": "04b83fc73f17aecfd0b8991fcc2eaaa93e011be2dc83ce9310d64bc5b8fcb863"
+    },
+    {
+      "path": ".github/workflows/npm-lockfile-validation.yml",
+      "sha256": "f50e05ebb338740a1b743b3420a692bb97faddf3c586a00598cc0c8876fd0061"
+    },
+    {
+      "path": ".github/workflows/p2-runtime-verification.yml",
+      "sha256": "d38e72d3a36a7a86e95968b679fcbc542fe178f5aa377d5dea62efece82729a5"
+    },
+    {
+      "path": ".github/workflows/p4-b-mode-t-continuity-acceptance.yml",
+      "sha256": "f8bd888a0a1ff6fa81843e8003c48c63d0ed2a82c436ea8539e16409b2447768"
+    },
+    {
+      "path": ".github/workflows/p4-b-mode-t-cross-runner-repro.yml",
+      "sha256": "356e744ca580762ca52b4cc60ffd897a95c9c6ec9a472ab418eea602e17c459b"
+    },
+    {
+      "path": ".github/workflows/p4-b-mode-t-leakage-contract.yml",
+      "sha256": "043d2c9a73401e2ce9a4c25d3889480c718575c765a528c33c447de35e48d8a9"
+    },
+    {
+      "path": ".github/workflows/p4-b-mode-t-live-synthetic-continuity.yml",
+      "sha256": "6e64aa33ce13eeda00d0d44cf6b85d89fd57b9c0b795cf0e4ae023a34fc70acf"
+    },
+    {
+      "path": ".github/workflows/p4-b-mode-t-offline-repro-bundle.yml",
+      "sha256": "abf6f2fc8b65708920ad25434f8f4a3622993f94de01fd2dd47e5e557a017c91"
+    },
+    {
+      "path": ".github/workflows/p4-b-mode-t-strict-chain-source-audit.yml",
+      "sha256": "44989ba52778f8037447dda5a5343955fbec51dca15667fa792bc0e9ec779145"
+    },
+    {
+      "path": ".github/workflows/p4-b-mode-t-strict-verifier-prototype.yml",
+      "sha256": "ee199d2c8c92d6cf6c68e619abc3ceefee587d37959dca9bb0a78dc6741268fd"
+    },
+    {
+      "path": ".github/workflows/p4-blinding-noninterference.yml",
+      "sha256": "63149a2a912f0144311d686f66ce613ca0ef17f0b2b8ad38ebf4de0d49199b45"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-confidential-space-admission-contract.yml",
+      "sha256": "b9c2639679498e074ca8fbb0362c03942e09bef2b44d08bde162014e50128cee"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-confidential-space-launch-contract.yml",
+      "sha256": "53b81765e75e4dcd148d5b75a2b89f77d4a5563513727a01df0a5f369ee7ba5a"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-full-pilot-task-timing.yml",
+      "sha256": "be80b079dcf0e3ccd93a8a8b2b0ed8b20ae4f1e73f0321ae306b3c8e61977cb7"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-google-oidc-verifier.yml",
+      "sha256": "84c63777186c9f24a488ade18acb09144307839f2991604c7ac20198bb65b29b"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-integrated-lifecycle.yml",
+      "sha256": "0533badd8241a097565ca81273700f5439a18cac243f01b5e6fb226cd37765e4"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-rekor-timing.yml",
+      "sha256": "29edabca27ace0f1fd67021db1d0c01a954d5a6454b4f9390e76179e8f73e068"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-retention-contract.yml",
+      "sha256": "873b3f4fa77442381c8af37d690782908b68130511487ad3f436b77c0026558c"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-sigstore-verifier.yml",
+      "sha256": "4c2aceb3545ab48bcaba2eb05ee968344aedf38a9421eeef8592124f84e16ed2"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-timing-study.yml",
+      "sha256": "84e916007deb555f29be2405bdfae61c92ecfad02293eba4dd74aac9f23046ac"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-tlock-supply-chain.yml",
+      "sha256": "c8c8488d2a8d4daa629876146d00f017861aa18a4e88f579f96d80548e004d53"
+    },
+    {
+      "path": ".github/workflows/p6a-cors-verification.yml",
+      "sha256": "f1af328994f01bd0bdf1b1716581daafa83066e1ca2a848d838b1d1a5358d575"
+    },
+    {
+      "path": ".github/workflows/p9-final-frozen-chain.yml",
+      "sha256": "6eafa73190002e27d0e153cd69be5dd332b01f9f09a9e13833e2718182eba6d1"
+    },
+    {
+      "path": ".github/workflows/pdmal-blinding-operational-test.yml",
+      "sha256": "6af3128812ab65fab6f5a4eb8c8034faf1e78e6bf86df90d6d330b6deb243933"
+    },
+    {
+      "path": ".github/workflows/pdmal-harness-validation.yml",
+      "sha256": "827f742f15002f272ca379e73d8733ee9276d863f412a2558a3ed427bc12cbff"
+    },
+    {
+      "path": ".github/workflows/pdmal-instrumentation-dry-run.yml",
+      "sha256": "c535ed711bec47a36091ea97adfbc7a0c72c3de72f42d9e6c52936498543d00e"
+    },
+    {
+      "path": ".github/workflows/pdmal-p30-remediation-diagnostic.yml",
+      "sha256": "7e2bd792df0ef93a4e8d3b0ab5c6f48cb27db39d4a52645ed40b304c72b49067"
+    },
+    {
+      "path": ".github/workflows/pdmal-pre-freeze-runner.yml",
+      "sha256": "c6b5c9082e30c6a6a1c9b76ef727f685eb83a2dce925b23e0ea703fbeb77ce0e"
+    },
+    {
+      "path": ".github/workflows/pdmal-preauth-security.yml",
+      "sha256": "c69f5273123f8eaaeac7c3dddfc1abe19faae393df76a8e92fa8266e82517242"
+    },
+    {
+      "path": ".github/workflows/pdmal-runtime-characterization.yml",
+      "sha256": "5f17d4f40e46f3e4aca653829625da2edac2cf84f95c43c5cef6822db67a55d7"
+    },
+    {
+      "path": ".github/workflows/pdmal-solo-final-experiment.yml",
+      "sha256": "afba5d26f95b507891b8869411be52467bd29505cc7a4e9916353accecb7d8a0"
+    },
+    {
+      "path": ".github/workflows/pdmal-solo-p30-variant-execution.yml",
+      "sha256": "23e9d0f8e0905d2317bf2f610ed6c1b73af33f271b0af78885c65d45e5683c73"
+    },
+    {
+      "path": ".github/workflows/pdmal-solo-pilot-execution.yml",
+      "sha256": "aab27b4a9a7aedbfe85f315c5cde9f0df87ee2b3c92922dd52914918255d7918"
+    },
+    {
+      "path": ".github/workflows/pdmal-v076-contract-rehearsal.yml",
+      "sha256": "bb9d2afbe8337fa25547dc7f49612bbeb720c53aca88d6f53a46c5f093256fcc"
+    },
+    {
+      "path": ".github/workflows/pdmal-weighted-forman-replication.yml",
+      "sha256": "f53db5f66f21ce3bcc632bbf2529b645f2309f6b7dad6f0c25fea3f90f5c75c2"
+    },
+    {
+      "path": ".github/workflows/pptl-ci.yml",
+      "sha256": "b4c720b7e47ca31bd3bf05679dff7837d235ff8d50b44e03db9dc8ca31efb097"
+    },
+    {
+      "path": ".github/workflows/pr-issue-closure-keyword-guard.yml",
+      "sha256": "03f0bbfd45a78ff0b83c6da0fd9dd68f90e13571a0547ccb3543d948028a98e9"
+    },
+    {
+      "path": ".github/workflows/propagation-consistency.yml",
+      "sha256": "4cd5c5fe741e664b98e1b3a40d73f0eb6d9143b9d26ac052ed57d12e45e2cc20"
+    },
+    {
+      "path": ".github/workflows/protected-main-required-context-policy.yml",
+      "sha256": "95d3a0fff79d07e925f5ff62a78dbf965ed3be0799ce67bccd449ba166b251f1"
+    },
+    {
+      "path": ".github/workflows/python-tests.yml",
+      "sha256": "b3c0fbf250b57e91802c456f87dfe30b262fe3daa1be6fc3cfca68874dab587b"
+    },
+    {
+      "path": ".github/workflows/regression.yml",
+      "sha256": "c049f1d97cd49d82054aeb499ef740f5924833089deac5aee860563a4ee6c842"
+    },
+    {
+      "path": ".github/workflows/semantic-source-git-binding.yml",
+      "sha256": "d97a3d754bf35d31b8a745aed146e8c61d20910ad95498fd2331858a3bf97bb6"
+    },
+    {
+      "path": ".github/workflows/sentinel-deontic-precedence.yml",
+      "sha256": "cb58d4b96197adad8c4d115312c90599cac422461add394b07b4329971772c2c"
+    },
+    {
+      "path": ".github/workflows/seven-gate-treatment-fidelity-audit.yml",
+      "sha256": "588e13ff4eb957bd8da0c0015668d18dc7a6e24b2bcd06ddd9f3b22a9ec2a38f"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-analysis-lock.yml",
+      "sha256": "4d586204b84c97bd67b5960d00fcec13992aaa6433e65d4b010ba7df28cde0bd"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-collection-authorization.yml",
+      "sha256": "1d6d7578fa26acac91fee403a8a8347fbf068a00956e0a924828be0ca44ea325"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-collection-receipt.yml",
+      "sha256": "95d55dd60fbb39468f519a4c512b9ef5a30fbd572224d4525b3bb176dc0086ad"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-custody-key-preflight.yml",
+      "sha256": "8e44ff2ed22d054b07a656d6c0cade86c229e7bc423ab883d259909c09e9c161"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-final-closure.yml",
+      "sha256": "5ca94123914ce8584679efa6e0c8daff4b306f7944f2754f448fa44266efbf06"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-immutable-freeze.yml",
+      "sha256": "19cffa7488c28baf3cbd4f88d793eb3b08dd7217d111cfde26625704c57e02c6"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-precollection-preflight.yml",
+      "sha256": "d36e70c88481e87f1b17065c603d210f9d87a2fc9e78a72afe0aed75675b426e"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-preregistration.yml",
+      "sha256": "bde0cda9378afaf49548ccbdc60a03ca40999448a8e217d0324a607f5ded674c"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-primary-analysis-authorization.yml",
+      "sha256": "f8f48a62730ac72cbdeae58add65214467e42e9a57450099934d3265a0269977"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-runner.yml",
+      "sha256": "6a098cbeaf0852febbb1da4e684c36153e6ef5d6b8c4b6610dfd637ee948d0f6"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-unblinded-input-receipt.yml",
+      "sha256": "30add839ce3529aa0f4d28a87fd58e3095575a5afb80fda1b4d2eaf3d8a0456a"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-unblinding-authorization.yml",
+      "sha256": "bf5c0b292a1d349d168ecf9745a550844d13bee246343f5ba22d9c2786762c86"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-unblinding-materialization.yml",
+      "sha256": "4a0b4cd2f33babd32565382772c70d12479645fa41f8e5f04b58cf85c331839c"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-verification-classification.yml",
+      "sha256": "1b684d9837bfd9815c8d22026352dc49b060d7dcc6aa3e182ee5303e6a70c123"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-analysis-lock.yml",
+      "sha256": "99e178d6035f95e7a04bff88f5b9fe3bf283d0af35e05c81bf726d678c29c503"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-collection-authorization-boundary.yml",
+      "sha256": "97584a41670767f08d73c1f7f9fb6c85efe5270b315f449ebb489063e5565e75"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-dataset-lock.yml",
+      "sha256": "6f3b5736207369895d05de5e7c3f45b5ec6db08709d1516c40065514da48005e"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-final-closure.yml",
+      "sha256": "9db5a4068c856376bde02fd48d0734a6224e55b724dbee9f94bb4a495d29b3f9"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-immutable-freeze.yml",
+      "sha256": "cf866403f29326de187b4c1ec028ca3d8b1c66638b3b5df05dc6a547d6ee8830"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-interpretation.yml",
+      "sha256": "c71e8450626c7ebb204376d430929164952750afb51b8abf26dc83d1562a5a58"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-locked-result-admission.yml",
+      "sha256": "c2aaea4d5209372606846ee35e657c856181bbf644a6d60094c9d3f82c8e1c65"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-materialization.yml",
+      "sha256": "d4a94a1af551ab405492cf4469c7dfd88bd0e55984b02181ea0f69359f858ba1"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-operator-admission.yml",
+      "sha256": "fb7b524eec61313a011ab6c7e17803367211dc691e92bcddfc5f0fe706267f29"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-post-interpretation-disposition.yml",
+      "sha256": "b819d106fa9ec00cc88ebccfb2564bc396d2067a9558fb6c47aeaeaad7fa3c18"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-preflight.yml",
+      "sha256": "29bbcff7d18f61906fef45b0470782a0d8c629f659887ec48b21bc038637b66a"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-preregistration.yml",
+      "sha256": "e800cbeb66ca9b901a2b81b46c83ab5eafd56c45c74725fc76937e806bb7019f"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml",
+      "sha256": "cb202efb93aa2382ce278a247d169ed4061586f758180f3362667b779787e04d"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-primary-analysis-autopilot.yml",
+      "sha256": "6e6bb9e40f1ef8230d93939a4a12bb409b5b8f44110304d7fb5dfa434bf5c903"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-primary-analysis-runner.yml",
+      "sha256": "2306938f5fe77dd6529f63c3336e98c91613a71abeaac7511b54691ca9e6f4ba"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-result-record-semantics.yml",
+      "sha256": "2a9457fdb4563793b830b5c1b4631d0f34c83ae55ad7b29ac4855fd29d0760e1"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-runner.yml",
+      "sha256": "47a9847ff4820d7b7c3bcefde8e3a04cb2d15c934fc8f63dc377cc2a6c3112a0"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-synthetic-oracle.yml",
+      "sha256": "0aeab64499d2493ece97aa97b9281fb2ba92b398450bf5e531324f53b3818b7b"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-unblinding-decision.yml",
+      "sha256": "c4c5009e3e4553bd398b8693cb8efad66855392e219e307783cc3de9afab99d4"
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-verification-classification.yml",
+      "sha256": "f7fa7d8f6ad16fb712f608b077527c1e764de9098c3c51a45aa65a35a855806c"
+    },
+    {
+      "path": ".github/workflows/track-a-matrix-adjudication.yml",
+      "sha256": "ab23c81f83c7bf36d89389edc47d942cd86c46bc91af0b9b9187279759bda954"
+    },
+    {
+      "path": ".github/workflows/track-a-p30-11q-qualification.yml",
+      "sha256": "4894b81f1652b3681d59c454cb75d22832b7d7582e6af27614dfcc45a4e81cd1"
+    },
+    {
+      "path": ".github/workflows/track-a-successor-solo-custody.yml",
+      "sha256": "5475139fbdc8d5af76dcb22c3a79c0aa0d02cf0f746eb9cdba76b07765821616"
+    },
+    {
+      "path": ".github/workflows/track-a-topology-robustness-profile.yml",
+      "sha256": "6b822f82ad0734f6ae052fa106b58404ed2f9bfb5e68bc1e635d5c00e7411524"
+    },
+    {
+      "path": ".github/workflows/track-c-nonempirical-composition.yml",
+      "sha256": "512729188d26db9b01f3da7a0b84f6f30833a60f29ca935795cf8d12c9e83307"
+    },
+    {
+      "path": ".github/workflows/truth-layer-tests.yml",
+      "sha256": "b8e8a6d3f42ed245a3fde603c14d455b2b9831d3e289c5a3bd2001c4a78474ae"
+    },
+    {
+      "path": ".github/workflows/truth-layer.yml",
+      "sha256": "a65d557647c11c32ba3af86f919dac134200c73f9cd015721be9cff29583f1c8"
+    },
+    {
+      "path": ".github/workflows/ui-command-center-validation.yml",
+      "sha256": "7936668a72070cca48c7bb63ad3da3d58a64e692addc460e5d158de7fc063205"
+    },
+    {
+      "path": ".github/workflows/validate-control-state-head.yml",
+      "sha256": "b714617f673d0042c4135a8f689ace76bb3ff8cda9f8aefabc8dcdcf32dbee5a"
+    },
+    {
+      "path": ".github/workflows/vocabulary-translation-matrix.yml",
+      "sha256": "08490a7cc2a6cc7aeb69f68b678576f9042fdb8ab8b3f695d93e3a27aba5dfc1"
+    },
+    {
+      "path": ".github/workflows/workload-specific-evaluation-tracks.yml",
+      "sha256": "f84f6b40c716e41b2ebb5a785f88139e8d77831cbeb75570ceb5f82d6f8e1c72"
+    }
+  ]
+}
