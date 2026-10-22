@@ -119,15 +119,20 @@ def _is_production() -> bool:
     return os.environ.get("VERCEL_ENV", "").strip().lower() == "production"
 
 
-def _check_auth(headers: dict) -> bool:
-    """Validate Bearer token against AHG_HERALD_API_KEY env var.
+def _allow_insecure_local() -> bool:
+    """Permit unauthenticated local/dev only under an explicit opt-in flag."""
+    explicit_opt_in = (
+        os.environ.get("AHG_HERALD_ALLOW_INSECURE_LOCAL", "").strip().lower() == "true"
+    )
+    vercel_env = os.environ.get("VERCEL_ENV", "").strip().lower()
+    return explicit_opt_in and vercel_env in {"", "development"}
 
-    Production fails closed when the key is absent. Local/dev environments
-    may remain open for integration testing.
-    """
+
+def _check_auth(headers: dict) -> bool:
+    """Validate Bearer token; deny missing credentials unless local mode is explicit."""
     expected = os.environ.get("AHG_HERALD_API_KEY")
     if not expected:
-        return not _is_production()
+        return _allow_insecure_local()
     auth = headers.get("authorization", headers.get("Authorization", ""))
     if not auth.startswith("Bearer "):
         return False
@@ -142,7 +147,12 @@ def _check_auth(headers: dict) -> bool:
 def _process_records(records: list) -> dict:
     """Process a batch of AHGTraceRecord dicts. Returns fan-out summary."""
     if not records:
-        return {"accepted": 0, "tribunal_alerts": 0, "ndr_stasis_events": 0, "session_id": "unknown"}
+        return {
+            "accepted": 0,
+            "tribunal_alerts": 0,
+            "ndr_stasis_events": 0,
+            "session_id": "unknown",
+        }
 
     log_full = os.environ.get("AHG_LOG_FULL_RECORDS", "").lower() == "true"
     tribunal_alerts = 0
@@ -266,10 +276,13 @@ class handler(BaseHTTPRequestHandler):
                 "endpoint": "P-01 AHG Herald Fan-Out",
                 "version": "1.0",
                 "kv_configured": bool(os.environ.get("AHG_KV_REST_API_URL")),
-                "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY")) or _is_production(),
+                "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY"))
+                or _is_production(),
                 "tribunal_webhook": bool(os.environ.get("AHG_TRIBUNAL_WEBHOOK_URL")),
             },
         )
 
     def do_DELETE(self):
         self._send_json(405, {"error": "Method not allowed"})
+
+[executed on device: neontic (fd6ceb3c-855d-43bd-a34e-d95659a36a0f)]
