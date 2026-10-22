@@ -625,7 +625,7 @@ def test_ci_workflow_uses_hash_locked_dependencies_without_cross_lane_trigger() 
         assert maintenance_lock not in trigger_section
         assert f'            "{maintenance_lock}"' in source
     assert source.count('      - "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
-    assert source.count('            "requirements-ci-py312-ubuntu2404-x64.lock"') == 1
+    assert source.count('            "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
 
 
 def test_procedure_preserves_prospective_fail_closed_boundary() -> None:
