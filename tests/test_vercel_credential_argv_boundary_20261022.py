@@ -13,8 +13,8 @@ def test_vercel_api_token_never_in_cli_or_curl_argv(file: Path) -> None:
     assert '--token="$VERCEL_TOKEN"' not in source
     assert '-H "Authorization: Bearer $VERCEL_TOKEN"' not in source
     assert 'VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}' in source
-    assert 'curl -fsS --config - --get' in source
-    assert 'printf \'header = "Authorization: Bearer %s"\\n\' "$VERCEL_TOKEN"' in source
+    assert 'curl -fsS -H @- --get' in source
+    assert 'printf \'Authorization: Bearer %s\\n\' "$VERCEL_TOKEN"' in source
 
 def test_restricted_environment_and_ref_both_remain() -> None:
     prod = FILES[0].read_text(encoding="utf8")
@@ -31,8 +31,8 @@ def test_restricted_environment_and_ref_both_remain() -> None:
 def test_bypass_credentials_do_not_appear_in_curl_argv(file: Path) -> None:
     text = file.read_text(encoding="utf8")
     assert '-H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET"' not in text
-    assert 'curl -fsS --config -' in text
-    assert 'printf \'header = "x-vercel-protection-bypass: %s"\\n\' "$VERCEL_AUTOMATION_BYPASS_SECRET"' in text
+    assert 'curl -fsS -H @-' in text
+    assert 'printf \'x-vercel-protection-bypass: %s\\n\' "$VERCEL_AUTOMATION_BYPASS_SECRET"' in text
 
 
 def test_production_verifier_uses_protected_environment_and_step_scoped_bypass() -> None:
@@ -59,3 +59,12 @@ def test_vercel_git_automatic_deployments_remain_disabled() -> None:
     import json
     config = json.loads((ROOT / "vercel.json").read_text(encoding="utf8"))
     assert config.get("git", {}).get("deploymentEnabled") is False
+
+
+@pytest.mark.parametrize(("file", "expected"), [(FILES[0], 5), (FILES[1], 3)])
+def test_each_curl_header_stdin_use_rejects_credential_crlf(file: Path, expected: int) -> None:
+    source = file.read_text(encoding="utf8")
+    assert source.count("-H @-") == expected
+    assert source.count("Malformed credential header (CR/LF)") == expected
+    assert "--config -" not in source
+    assert "|| true" not in source
