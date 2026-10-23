@@ -73,7 +73,7 @@ jobs:
           vercel deploy \
             --target=preview \
             --yes \
-            --token="$VERCEL_TOKEN" \
+            \
             --env DGAF_STAGING_BREAKER_EXERCISE_ENABLED=true \
             --env DGAF_STAGING_BREAKER_EXERCISE_ID="$EXERCISE_ID" \
             | tee vercel_preview.log
@@ -89,11 +89,11 @@ jobs:
           set -euo pipefail
           host="${DEPLOYMENT_URL#https://}"
           host="${host#http://}"
-          curl -fsS --get \
+          [[ "$VERCEL_TOKEN" != *$'\r'* && "$VERCEL_TOKEN" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          printf 'Authorization: Bearer %s\n' "$VERCEL_TOKEN" | curl -fsS -H @- --get \
             --data-urlencode "teamId=$VERCEL_ORG_ID" \
             --data-urlencode 'withGitRepoInfo=true' \
-            "https://api.vercel.com/v13/deployments/$host" \
-            -H "Authorization: Bearer $VERCEL_TOKEN" > preview_deployment_metadata.json
+            "https://api.vercel.com/v13/deployments/$host" > preview_deployment_metadata.json
           ready=$(jq -r '.readyState // empty' preview_deployment_metadata.json)
           target=$(jq -r '.target // empty' preview_deployment_metadata.json)
           id=$(jq -r '.id // empty' preview_deployment_metadata.json)
@@ -113,10 +113,10 @@ jobs:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          curl -fsS \
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -fsS -H @- \
             -X POST \
             -H "Content-Type: application/json" \
-            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
             -H "x-dgaf-staging-exercise-id: $EXERCISE_ID" \
             -d '{}' \
             "$DEPLOYMENT_URL/api/staging-breaker" > staging_breaker_response.json
@@ -135,7 +135,8 @@ jobs:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          health=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DEPLOYMENT_URL/api/health")
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          health=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -fsS -H @- "$DEPLOYMENT_URL/api/health")
           test "$(jq -r '.psi_cubic' <<< "$health")" = true
           test "$(jq -r '.version' <<< "$health")" = "$EXPECTED_ENSEMBLE_VERSION"
 
