@@ -125,7 +125,8 @@ jobs:
           set -euo pipefail
           host="${DEPLOYMENT_URL#https://}"
           host="${host#http://}"
-          { [[ "$VERCEL_TOKEN" != *$'\r'* && "$VERCEL_TOKEN" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }; printf 'Authorization: Bearer %s\n' "$VERCEL_TOKEN"; } | curl -fsS -H @- --get \
+          [[ "$VERCEL_TOKEN" != *$'\r'* && "$VERCEL_TOKEN" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          printf 'Authorization: Bearer %s\n' "$VERCEL_TOKEN" | curl -fsS -H @- --get \
             --data-urlencode "teamId=$VERCEL_ORG_ID" \
             --data-urlencode 'withGitRepoInfo=true' \
             "https://api.vercel.com/v13/deployments/$host" > deployment_metadata.json
@@ -189,7 +190,8 @@ jobs:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          health=$({ [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }; printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET"; } | curl -fsS -H @- "$DGAF_URL/api/health")
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          health=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -fsS -H @- "$DGAF_URL/api/health")
           echo "$health" | jq .
           test "$(jq -r '.psi_cubic' <<< "$health")" = true
           test "$(jq -r '.version' <<< "$health")" = "$EXPECTED_ENSEMBLE_VERSION"
@@ -199,7 +201,8 @@ jobs:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          status=$({ [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }; printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET"; } | curl -sS -H @- -o staging_breaker_production_response.json -w '%{http_code}' \
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          status=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -sS -H @- -o staging_breaker_production_response.json -w '%{http_code}' \
             -X POST \
             -H "Content-Type: application/json" \
             -H 'x-dgaf-staging-exercise-id: production-must-reject' \
@@ -226,7 +229,8 @@ jobs:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          audit=$({ [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }; printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET"; } | curl -fsS -H @- "$DGAF_URL/api/audit")
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          audit=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -fsS -H @- "$DGAF_URL/api/audit")
           echo "$audit" | jq .
           test "$(jq -r '.status' <<< "$audit")" = ok
           test "$(jq -r '.version' <<< "$audit")" = "$EXPECTED_ENSEMBLE_VERSION"
@@ -238,7 +242,8 @@ jobs:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          status=$({ [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }; printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET"; } | curl -sS -H @- -o tektite_production_response.json -w '%{http_code}' \
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          status=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -sS -H @- -o tektite_production_response.json -w '%{http_code}' \
             -X POST \
             -H "Content-Type: application/json" \
             -d '{"scenario":"authorized"}' \

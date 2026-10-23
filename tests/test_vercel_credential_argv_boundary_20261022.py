@@ -68,3 +68,20 @@ def test_each_curl_header_stdin_use_rejects_credential_crlf(file: Path, expected
     assert source.count("Malformed credential header (CR/LF)") == expected
     assert "--config -" not in source
     assert "|| true" not in source
+
+@pytest.mark.parametrize(("file", "expected"), [(FILES[0], 5), (FILES[1], 3)])
+def test_preflight_blocks_curl_process_creation(file: Path, expected: int) -> None:
+    """Validate outside the pipeline so malformed credentials never launch curl."""
+    lines = file.read_text(encoding="utf8").splitlines()
+    found = [(index, line.strip()) for index, line in enumerate(lines)
+             if "Malformed credential header (CR/LF)" in line]
+    assert len(found) == expected
+    for index, guard in found:
+        assert guard.startswith("[[ "), "A preflight inside a pipe can still launch curl"
+        assert "exit 1; }" in guard
+        assert "| curl" not in guard
+        assert index + 1 < len(lines)
+        pipe = lines[index + 1].strip()
+        assert "printf " in pipe
+        assert " | curl " in pipe
+        assert "-H @-" in pipe
