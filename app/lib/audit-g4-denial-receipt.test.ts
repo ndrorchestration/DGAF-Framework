@@ -45,6 +45,7 @@ test('G4 non-object POST requests deny without receipts or state mutation', () =
     const result = invoke(body)
     assert.equal(result.code, 403)
     assert.equal(result.payload.status, 'denied')
+    assert.equal(result.payload.reason, 'INVALID_REQUEST')
     assert.equal(Object.hasOwn(result.payload, 'execution_receipt'), false)
     assert.equal(getTurnCount(), before)
   }
@@ -56,6 +57,7 @@ test('G4 malformed and missing AAR deny without an execution receipt', () => {
     const result = invoke(body)
     assert.equal(result.code, 403)
     assert.equal(result.payload.status, 'denied')
+    assert.equal(result.payload.reason, 'AAR_REQUIRED_OR_MALFORMED')
     assert.equal(Object.hasOwn(result.payload, 'execution_receipt'), false)
     assert.equal(getTurnCount(), before)
   }
