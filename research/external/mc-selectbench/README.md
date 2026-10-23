@@ -4,7 +4,7 @@
 
 **Inspired by:** Jean Charbonneau's October 8, 2026 article, *MC Chat: weaving several perspectives into one AI answer*. The article describes explicit perspective channels, word-interleaved streaming, logged corrections, and two-pass synthesis. We appreciate the idea and aim to evaluate it without assuming that visible channels are independent reasoning processes.
 
-**Authorship and boundaries:** This is a separately scoped research proposal prepared within the [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) ecosystem. It is not affiliated with or endorsed by Jean Charbonneau or MC Chat. Original MC Chat repository cited in the article: https://github.com/TheLightFramework/MC-Chat — access was not verified on 2026-10-22 (GitHub returned 404). Channel names, API signatures, and implementations therefore remain provisional.
+**Authorship and boundaries:** This is a separately scoped research proposal prepared within the [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) ecosystem. It is not affiliated with or endorsed by Jean Charbonneau or MC Chat. Original MC Chat repository cited in the article: [TheLightFramework/MC-Chat](https://github.com/TheLightFramework/MC-Chat) — access was not verified on 2026-10-22 (GitHub returned 404). Channel names, API signatures, and implementations therefore remain provisional.
 
 ## Research question
 
