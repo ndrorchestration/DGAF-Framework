@@ -1,0 +1,24 @@
+{
+  "schema": "mc-selectbench/0.1",
+  "research_status": "NOT_RUN",
+  "task_id": "EVIDENCE-001",
+  "arm": "G_TASK_MATCHED",
+  "replicate": 1,
+  "channels": [
+    "Correctness",
+    "Critique",
+    "Uncertainty"
+  ],
+  "model_snapshot": null,
+  "task_sha256": null,
+  "raw_stream_sha256": null,
+  "protocol_valid": null,
+  "model_corrections": [],
+  "parser_repairs": [],
+  "critical_findings_retained": null,
+  "answer_quality_100": null,
+  "input_tokens": null,
+  "output_tokens": null,
+  "latency_ms": null,
+  "status": "NOT_RUN"
+}
