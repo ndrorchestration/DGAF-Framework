@@ -98,13 +98,13 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' "$EXPECTED_ENSEMBLE_VERSION" | vercel env add ENSEMBLE_VERSION production --token="$VERCEL_TOKEN" --force
-          printf '%s\n' enabled | vercel env add PSI_CHECK production --token="$VERCEL_TOKEN" --force
+          printf '%s\n' "$EXPECTED_ENSEMBLE_VERSION" | vercel env add ENSEMBLE_VERSION production --force
+          printf '%s\n' enabled | vercel env add PSI_CHECK production --force
 
           # Tektite is an internal demonstration fixture, not a production
           # release capability. Keep the environment flag fail-closed; the
           # route also rejects production independently of this setting.
-          printf '%s\n' false | vercel env add TEKTITE_DEMO_ENABLED production --token="$VERCEL_TOKEN" --force
+          printf '%s\n' false | vercel env add TEKTITE_DEMO_ENABLED production --force
 
       - name: Deploy to Vercel production
         id: deploy
@@ -112,7 +112,7 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
-          vercel deploy --prod --yes --token="$VERCEL_TOKEN" | tee vercel_deploy.log
+          vercel deploy --prod --yes | tee vercel_deploy.log
           url=$(grep -Eo 'https://[^[:space:]]+\.vercel\.app' vercel_deploy.log | tail -1)
           test -n "$url"
           echo "deployment_url=$url" >> "$GITHUB_OUTPUT"
@@ -125,11 +125,11 @@ jobs:
           set -euo pipefail
           host="${DEPLOYMENT_URL#https://}"
           host="${host#http://}"
-          curl -fsS --get \
+          [[ "$VERCEL_TOKEN" != *$'\r'* && "$VERCEL_TOKEN" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          printf 'Authorization: Bearer %s\n' "$VERCEL_TOKEN" | curl -fsS -H @- --get \
             --data-urlencode "teamId=$VERCEL_ORG_ID" \
             --data-urlencode 'withGitRepoInfo=true' \
-            "https://api.vercel.com/v13/deployments/$host" \
-            -H "Authorization: Bearer $VERCEL_TOKEN" > deployment_metadata.json
+            "https://api.vercel.com/v13/deployments/$host" > deployment_metadata.json
           ready=$(jq -r '.readyState // empty' deployment_metadata.json)
           target=$(jq -r '.target // empty' deployment_metadata.json)
           id=$(jq -r '.id // empty' deployment_metadata.json)
@@ -157,13 +157,15 @@ jobs:
   verify:
     name: Health + Regression Check
     needs: deploy
+    environment: Production
     runs-on: ubuntu-latest
     env:
       DGAF_URL: ${{ needs.deploy.outputs.deployment_url }}
-      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
       EXPECTED_ENSEMBLE_VERSION: 1.8.0
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.12
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
@@ -174,6 +176,8 @@ jobs:
         run: python -m pip install --disable-pip-version-check "httpx==${HTTPX_VERSION}" -q
 
       - name: Require runtime bypass credential
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
           test -n "$VERCEL_AUTOMATION_BYPASS_SECRET"
@@ -182,20 +186,25 @@ jobs:
         run: sleep 20
 
       - name: Health preflight
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          health=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/health")
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          health=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -fsS -H @- "$DGAF_URL/api/health")
           echo "$health" | jq .
           test "$(jq -r '.psi_cubic' <<< "$health")" = true
           test "$(jq -r '.version' <<< "$health")" = "$EXPECTED_ENSEMBLE_VERSION"
 
       - name: Prove staging breaker is unavailable in production
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          status=$(curl -sS -o staging_breaker_production_response.json -w '%{http_code}' \
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          status=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -sS -H @- -o staging_breaker_production_response.json -w '%{http_code}' \
             -X POST \
             -H "Content-Type: application/json" \
-            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
             -H 'x-dgaf-staging-exercise-id: production-must-reject' \
             -d '{}' \
             "$DGAF_URL/api/staging-breaker")
@@ -204,6 +213,8 @@ jobs:
           test "$(jq -r '.scientific_state_effect' staging_breaker_production_response.json)" = NONE
 
       - name: 30-turn live regression
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: python3 scripts/live_regression_v17.py
 
       - name: Upload regression results
@@ -214,9 +225,12 @@ jobs:
           path: regression_results_v17.json
 
       - name: Audit baseline
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          audit=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/audit")
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          audit=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -fsS -H @- "$DGAF_URL/api/audit")
           echo "$audit" | jq .
           test "$(jq -r '.status' <<< "$audit")" = ok
           test "$(jq -r '.version' <<< "$audit")" = "$EXPECTED_ENSEMBLE_VERSION"
@@ -224,12 +238,14 @@ jobs:
           test -n "$(jq -r '._warning // empty' <<< "$audit")"
 
       - name: Prove Tektite demo is unavailable in production
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           set -euo pipefail
-          status=$(curl -sS -o tektite_production_response.json -w '%{http_code}' \
+          [[ "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\r'* && "$VERCEL_AUTOMATION_BYPASS_SECRET" != *$'\n'* ]] || { echo "::error::Malformed credential header (CR/LF)" >&2; exit 1; }
+          status=$(printf 'x-vercel-protection-bypass: %s\n' "$VERCEL_AUTOMATION_BYPASS_SECRET" | curl -sS -H @- -o tektite_production_response.json -w '%{http_code}' \
             -X POST \
             -H "Content-Type: application/json" \
-            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
             -d '{"scenario":"authorized"}' \
             "$DGAF_URL/api/tektite-demo")
           test "$status" = 404
