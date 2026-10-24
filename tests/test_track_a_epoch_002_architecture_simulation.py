@@ -79,3 +79,50 @@ def test_synthetic_experiment_never_promotes_research_or_executes_analysis() -> 
         "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
     ):
         assert required in authorization["non_effects"]
+
+
+def test_locked_analysis_engine_on_synthetic_epoch002_matrix() -> None:
+    """Execute the real locked math against fake observations, never research data."""
+    spec = importlib.util.spec_from_file_location(
+        "synthetic_epoch002_analysis",
+        ROOT / "experiments/pdmal_pilot/track_a_epoch_002_analysis.py",
+    )
+    assert spec is not None and spec.loader is not None
+    import sys
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    try:
+        spec.loader.exec_module(module)
+        records = [
+            {
+                "seed_id": seed,
+                "topology": topology,
+                "failure_count": failures,
+                "ffcr_success": False,
+                "algorithm_id": module.ALGORITHM_ID,
+            }
+            for seed in module.SEEDS
+            for topology in module.TOPOLOGIES
+            for failures in module.FAILURE_COUNTS
+        ]
+        assert len(records) == 2250
+        analysis = module.analyze(records)
+        assert analysis["paired_seed_count"] == 50
+        assert analysis["bootstrap_resamples"] == 10_000
+        assert analysis["estimate_pdmal_minus_random_regular"] == 0.0
+        assert analysis["classification"] == "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED"
+        assert analysis["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+        assert analysis["high_assurance"] == "NOT_AUTHORIZED_N0"
+
+        # The identical synthetic data with an invalid registered identity must fail.
+        tampered = [dict(record) for record in records]
+        tampered[0]["algorithm_id"] = "UNREGISTERED_ALGORITHM"
+        with pytest.raises(ValueError, match="algorithm identity"):
+            module.analyze(tampered)
+
+        duplicated = [dict(record) for record in records]
+        duplicated[0] = dict(duplicated[1])
+        with pytest.raises(ValueError, match="duplicate matrix cell"):
+            module.analyze(duplicated)
+    finally:
+        sys.modules.pop(spec.name, None)
