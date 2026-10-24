@@ -736,3 +736,33 @@ def test_architecture_synthetic_locked_analysis_2250_cells() -> None:
             module.analyze(duplicate)
     finally:
         sys.modules.pop(spec.name, None)
+
+
+def test_architecture_fault_injection_denies_missing_head_custody_and_interrupted_receipt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Synthetic custody loss must stop before analysis or authorization."""
+    validator = load_validator()
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
+    state["receipt_exists_head"] = False
+    with pytest.raises(SystemExit, match="materialization receipt must remain present"):
+        validate_event_fixture(validator, head, parent)
+
+    state["receipt_exists_head"] = True
+    state["receipt_bytes_head"] = b""
+    with pytest.raises(SystemExit, match="materialization receipt bytes changed"):
+        validate_event_fixture(validator, head, parent)
+
+
+def test_architecture_fault_injection_denies_stale_parent_and_result_preexistence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Reject synthetic stale source parent and premature result publication."""
+    validator = load_validator()
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
+    with pytest.raises(SystemExit, match="parent is not the accepted"):
+        validate_event_fixture(validator, head, "f" * 40)
+
+    state["result_exists_head"] = True
+    with pytest.raises(SystemExit, match="locked analysis result must remain absent"):
+        validate_event_fixture(validator, head, parent)
