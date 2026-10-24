@@ -766,3 +766,42 @@ def test_architecture_fault_injection_denies_stale_parent_and_result_preexistenc
     state["result_exists_head"] = True
     with pytest.raises(SystemExit, match="locked analysis result must remain absent"):
         validate_event_fixture(validator, head, parent)
+
+
+
+def test_architecture_fault_injection_rejects_interrupted_result_and_byte_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    _, _, state = install_accepted_state_fixture(monkeypatch, validator)
+
+    # Interrupted result creation cannot be represented as accepted closed state.
+    original_exists = validator.git_object_exists
+    monkeypatch.setattr(
+        validator, "git_object_exists",
+        lambda spec: False if spec == f"HEAD:{validator.RESULT_REL}" else original_exists(spec),
+    )
+    with pytest.raises(SystemExit, match="accepted state requires locked analysis result"):
+        validator.validate_accepted_state()
+
+    monkeypatch.setattr(validator, "git_object_exists", original_exists)
+    state["result_head_bytes"] = b"corrupted-result-content\n"
+    with pytest.raises(SystemExit, match="locked analysis result bytes drifted"):
+        validator.validate_accepted_state()
+
+
+def test_architecture_fault_injection_rejects_result_history_replay(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    _, result_event, _ = install_accepted_state_fixture(monkeypatch, validator)
+    original_git = validator.git
+
+    def replayed_git(*args: str) -> str:
+        if args == ("log", "--format=%H", "HEAD", "--", validator.RESULT_REL):
+            return f"{result_event}\n{'f' * 40}"
+        return original_git(*args)
+
+    monkeypatch.setattr(validator, "git", replayed_git)
+    with pytest.raises(SystemExit, match="one immutable history event"):
+        validator.validate_accepted_state()
