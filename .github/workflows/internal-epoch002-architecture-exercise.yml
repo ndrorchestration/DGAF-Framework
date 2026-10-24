@@ -1,0 +1,44 @@
+name: Internal Epoch 002 Synthetic Architecture Exercise
+
+on:
+  pull_request:
+    paths:
+      - tests/test_track_a_epoch_002_architecture_simulation.py
+      - .github/workflows/internal-epoch002-architecture-exercise.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-exercise:
+    name: synthetic-epoch002-architecture
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact candidate commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Confirm exact source
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          echo "SIMULATION_ONLY=TRUE"
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: "3.12.3"
+      - name: Bootstrap locked pip
+        run: bash scripts/bootstrap_ci_pip.sh
+      - name: Install exact hash-locked CI dependencies
+        run: python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r requirements-ci-py312-ubuntu2404-x64.lock
+      - name: Exercise synthetic matrix and real validators
+        run: python -m pytest -q tests/test_track_a_epoch_002_architecture_simulation.py
+      - name: Preserve scientific non-effects
+        if: always()
+        run: |
+          echo "PRIMARY_ANALYSIS_REAL_DATA=NOT_RUN"
+          echo "SCIENTIFIC_N_INCREMENT=0"
+          echo "INDEPENDENT_VALIDATION=NOT_ESTABLISHED"
+          echo "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED"
+          echo "HIGH_ASSURANCE=NOT_AUTHORIZED"
