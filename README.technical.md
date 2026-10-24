@@ -155,3 +155,8 @@ Historical implementation records and earlier terminology remain available for p
 ---
 
 *This reference is an implementation map, not a certification, regulatory-conformance statement, deployment attestation, or efficacy report. Updated 2026-09-18. Exact source identity is established by Git history and the protected `main` commit at the time of use; this document does not embed a volatile SHA as a standing current-state claim.*
+
+
+## DGAF v1 — dated release evidence and approval policy (2026-10-23)
+
+Current release-admission facts, independent reviewer role separation, exact signed candidate ancestry, G2/G3/G4 regression receipts, remaining exclusions and scientific claim ceilings are consolidated in [the dated DGAF v1 release handoff](docs/governance/DGAF_V1_RELEASE_HANDOFF_2026-10-23.md). This operational evidence is **NOT release admission**: `DGAF_V1_RELEASE=HOLD`, scientific N remains zero, and protected-main required checks alone do not replace valid signatures, non-author latest-push approval, stale-review rules or an independent Role A disposition. Recheck live repository settings and the [release controller](https://github.com/ndrorchestration/DGAF-Framework/issues/1453) before relying on this dated snapshot. Historical snapshots and preregistration remain unchanged.
