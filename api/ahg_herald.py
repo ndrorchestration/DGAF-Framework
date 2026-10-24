@@ -14,8 +14,10 @@ Receives batched AHGTraceRecord payloads from HeraldHTTPSink
 
 Auth:
   Requests must include header: Authorization: Bearer <AHG_HERALD_API_KEY>
-  In production, AHG_HERALD_API_KEY is mandatory and the endpoint fails closed
-  when the secret is absent. Local/dev environments may remain open.
+  Missing AHG_HERALD_API_KEY denies by default in all environments.
+  Unauthenticated local/development operation requires the explicit
+  AHG_HERALD_ALLOW_INSECURE_LOCAL=true opt-in and VERCEL_ENV unset or development.
+  Preview, production, and unknown environments cannot use this opt-in.
 
 Expected request body:
   {
@@ -30,7 +32,8 @@ Response:
   405     — method not allowed
 
 Environment variables:
-  AHG_HERALD_API_KEY          — Bearer token (required in production)
+  AHG_HERALD_API_KEY          — Bearer token (required except explicit local opt-in)
+  AHG_HERALD_ALLOW_INSECURE_LOCAL — true permits no-key local/development only
   AHG_KV_REST_API_URL         — Vercel KV REST URL (optional)
   AHG_KV_REST_API_TOKEN       — Vercel KV REST token (optional)
   AHG_TRIBUNAL_WEBHOOK_URL    — Slack/webhook URL for Tribunal alerts (optional)
