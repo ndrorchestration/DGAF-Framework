@@ -690,3 +690,49 @@ def test_event_shape_resolves_symbolic_head(monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setattr(validator, "git_object_exists", lambda spec: False)
 
     assert validator.validate_authorization_event_shape("HEAD") == parent
+
+
+
+def test_architecture_synthetic_locked_analysis_2250_cells() -> None:
+    """Real locked math on fake observations; no real analysis authorization."""
+    import sys
+
+    analysis_path = ROOT / "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
+    spec = importlib.util.spec_from_file_location("epoch002_synthetic_math", analysis_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    try:
+        spec.loader.exec_module(module)
+        rows = [
+            {
+                "seed_id": seed,
+                "topology": topology,
+                "failure_count": failures,
+                "ffcr_success": False,
+                "algorithm_id": module.ALGORITHM_ID,
+            }
+            for seed in module.SEEDS
+            for topology in module.TOPOLOGIES
+            for failures in module.FAILURE_COUNTS
+        ]
+        assert len(rows) == 2250
+        result = module.analyze(rows)
+        assert result["paired_seed_count"] == 50
+        assert result["bootstrap_resamples"] == 10_000
+        assert result["estimate_pdmal_minus_random_regular"] == 0.0
+        assert result["classification"] == "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED"
+        assert result["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+        assert result["high_assurance"] == "NOT_AUTHORIZED_N0"
+
+        wrong_identity = [dict(row) for row in rows]
+        wrong_identity[0]["algorithm_id"] = "FORGED"
+        with pytest.raises(ValueError, match="algorithm identity"):
+            module.analyze(wrong_identity)
+
+        duplicate = [dict(row) for row in rows]
+        duplicate[0] = dict(duplicate[1])
+        with pytest.raises(ValueError, match="duplicate matrix cell"):
+            module.analyze(duplicate)
+    finally:
+        sys.modules.pop(spec.name, None)
