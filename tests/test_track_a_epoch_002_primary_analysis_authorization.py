@@ -805,3 +805,40 @@ def test_architecture_fault_injection_rejects_result_history_replay(
     monkeypatch.setattr(validator, "git", replayed_git)
     with pytest.raises(SystemExit, match="one immutable history event"):
         validator.validate_accepted_state()
+
+
+def test_architecture_recovery_requires_complete_result_after_interruption(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Fail closed during missing-result interruption, then accept restored fixture."""
+    validator = load_validator()
+    authorization_event, result_event, _ = install_accepted_state_fixture(monkeypatch, validator)
+    original_exists = validator.git_object_exists
+    availability = {"result_present": False}
+
+    def simulated_exists(spec: str) -> bool:
+        if spec == f"HEAD:{validator.RESULT_REL}":
+            return availability["result_present"]
+        return original_exists(spec)
+
+    monkeypatch.setattr(validator, "git_object_exists", simulated_exists)
+    with pytest.raises(SystemExit, match="accepted state requires locked analysis result"):
+        validator.validate_accepted_state()
+
+    availability["result_present"] = True
+    assert validator.validate_accepted_state() == (authorization_event, result_event)
+    # The transition is only a simulated Git readback; it does not retry or
+    # recover a real interrupted process, nor authorize real analysis.
+
+
+def test_architecture_cross_event_authorization_consistency_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Reject changed authorization bytes between result parent and result event."""
+    validator = load_validator()
+    authorization_event, result_event, state = install_accepted_state_fixture(monkeypatch, validator)
+    assert validator.validate_accepted_state() == (authorization_event, result_event)
+
+    state["authorization_result_event_bytes"] = b"substituted-authorization-record\\n"
+    with pytest.raises(SystemExit, match="authorization bytes changed"):
+        validator.validate_accepted_state()
