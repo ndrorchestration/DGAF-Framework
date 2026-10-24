@@ -194,3 +194,8 @@ Current machine/agent authority is role-based. Persona labels are compatibility/
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
 *Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
 *README.governance v1.12 · post-#872/#873 interpretation-admission / projection reconciliation · 2026-09-19*
+
+
+## DGAF v1 — dated release evidence and approval policy (2026-10-23)
+
+Current release-admission facts, independent reviewer role separation, exact signed candidate ancestry, G2/G3/G4 regression receipts, remaining exclusions and scientific claim ceilings are consolidated in [the dated DGAF v1 release handoff](docs/governance/DGAF_V1_RELEASE_HANDOFF_2026-10-23.md). This operational evidence is **NOT release admission**: `DGAF_V1_RELEASE=HOLD`, scientific N remains zero, and protected-main required checks alone do not replace valid signatures, non-author latest-push approval, stale-review rules or an independent Role A disposition. Recheck live repository settings and the [release controller](https://github.com/ndrorchestration/DGAF-Framework/issues/1453) before relying on this dated snapshot. Historical snapshots and preregistration remain unchanged.

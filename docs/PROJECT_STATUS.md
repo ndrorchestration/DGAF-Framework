@@ -132,3 +132,8 @@ Do not place private keys, passphrases, protected plaintext mappings, numerical 
 The DGAF Governance Command Center and ORBIT/Evidence Observer surfaces are read-only or presentation-layer companions to repository truth. They may expose current state, evidence, blockers, reachability, provenance, and runtime freshness, but they are not independent governance authorities and cannot upgrade evidence or scientific state.
 
 A deployment being READY, unavailable, stale, quota-blocked, or otherwise operationally healthy/unhealthy is a separate dimension from source verification, governance authority, experimental authorization, and empirical support.
+
+
+## DGAF v1 — dated release evidence and approval policy (2026-10-23)
+
+Current release-admission facts, independent reviewer role separation, exact signed candidate ancestry, G2/G3/G4 regression receipts, remaining exclusions and scientific claim ceilings are consolidated in [the dated DGAF v1 release handoff](governance/DGAF_V1_RELEASE_HANDOFF_2026-10-23.md). This operational evidence is **NOT release admission**: `DGAF_V1_RELEASE=HOLD`, scientific N remains zero, and protected-main required checks alone do not replace valid signatures, non-author latest-push approval, stale-review rules or an independent Role A disposition. Recheck live repository settings and the [release controller](https://github.com/ndrorchestration/DGAF-Framework/issues/1453) before relying on this dated snapshot. Historical snapshots and preregistration remain unchanged.
