@@ -690,3 +690,155 @@ def test_event_shape_resolves_symbolic_head(monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setattr(validator, "git_object_exists", lambda spec: False)
 
     assert validator.validate_authorization_event_shape("HEAD") == parent
+
+
+
+def test_architecture_synthetic_locked_analysis_2250_cells() -> None:
+    """Real locked math on fake observations; no real analysis authorization."""
+    import sys
+
+    analysis_path = ROOT / "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
+    spec = importlib.util.spec_from_file_location("epoch002_synthetic_math", analysis_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    try:
+        spec.loader.exec_module(module)
+        rows = [
+            {
+                "seed_id": seed,
+                "topology": topology,
+                "failure_count": failures,
+                "ffcr_success": False,
+                "algorithm_id": module.ALGORITHM_ID,
+            }
+            for seed in module.SEEDS
+            for topology in module.TOPOLOGIES
+            for failures in module.FAILURE_COUNTS
+        ]
+        assert len(rows) == 2250
+        result = module.analyze(rows)
+        assert result["paired_seed_count"] == 50
+        assert result["bootstrap_resamples"] == 10_000
+        assert result["estimate_pdmal_minus_random_regular"] == 0.0
+        assert result["classification"] == "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED"
+        assert result["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+        assert result["high_assurance"] == "NOT_AUTHORIZED_N0"
+
+        wrong_identity = [dict(row) for row in rows]
+        wrong_identity[0]["algorithm_id"] = "FORGED"
+        with pytest.raises(ValueError, match="algorithm identity"):
+            module.analyze(wrong_identity)
+
+        duplicate = [dict(row) for row in rows]
+        duplicate[0] = dict(duplicate[1])
+        with pytest.raises(ValueError, match="duplicate matrix cell"):
+            module.analyze(duplicate)
+    finally:
+        sys.modules.pop(spec.name, None)
+
+
+def test_architecture_fault_injection_denies_missing_head_custody_and_interrupted_receipt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Synthetic custody loss must stop before analysis or authorization."""
+    validator = load_validator()
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
+    state["receipt_exists_head"] = False
+    with pytest.raises(SystemExit, match="materialization receipt must remain present"):
+        validate_event_fixture(validator, head, parent)
+
+    state["receipt_exists_head"] = True
+    state["receipt_bytes_head"] = b""
+    with pytest.raises(SystemExit, match="materialization receipt bytes changed"):
+        validate_event_fixture(validator, head, parent)
+
+
+def test_architecture_fault_injection_denies_stale_parent_and_result_preexistence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Reject synthetic stale source parent and premature result publication."""
+    validator = load_validator()
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
+    with pytest.raises(SystemExit, match="parent is not the accepted"):
+        validate_event_fixture(validator, head, "f" * 40)
+
+    state["result_exists_head"] = True
+    with pytest.raises(SystemExit, match="locked analysis result must remain absent"):
+        validate_event_fixture(validator, head, parent)
+
+
+
+def test_architecture_fault_injection_rejects_interrupted_result_and_byte_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    _, _, state = install_accepted_state_fixture(monkeypatch, validator)
+
+    # Interrupted result creation cannot be represented as accepted closed state.
+    original_exists = validator.git_object_exists
+    monkeypatch.setattr(
+        validator, "git_object_exists",
+        lambda spec: False if spec == f"HEAD:{validator.RESULT_REL}" else original_exists(spec),
+    )
+    with pytest.raises(SystemExit, match="accepted state requires locked analysis result"):
+        validator.validate_accepted_state()
+
+    monkeypatch.setattr(validator, "git_object_exists", original_exists)
+    state["result_head_bytes"] = b"corrupted-result-content\n"
+    with pytest.raises(SystemExit, match="locked analysis result bytes drifted"):
+        validator.validate_accepted_state()
+
+
+def test_architecture_fault_injection_rejects_result_history_replay(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    _, result_event, _ = install_accepted_state_fixture(monkeypatch, validator)
+    original_git = validator.git
+
+    def replayed_git(*args: str) -> str:
+        if args == ("log", "--format=%H", "HEAD", "--", validator.RESULT_REL):
+            return f"{result_event}\n{'f' * 40}"
+        return original_git(*args)
+
+    monkeypatch.setattr(validator, "git", replayed_git)
+    with pytest.raises(SystemExit, match="one immutable history event"):
+        validator.validate_accepted_state()
+
+
+def test_architecture_recovery_requires_complete_result_after_interruption(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Fail closed during missing-result interruption, then accept restored fixture."""
+    validator = load_validator()
+    authorization_event, result_event, _ = install_accepted_state_fixture(monkeypatch, validator)
+    original_exists = validator.git_object_exists
+    availability = {"result_present": False}
+
+    def simulated_exists(spec: str) -> bool:
+        if spec == f"HEAD:{validator.RESULT_REL}":
+            return availability["result_present"]
+        return original_exists(spec)
+
+    monkeypatch.setattr(validator, "git_object_exists", simulated_exists)
+    with pytest.raises(SystemExit, match="accepted state requires locked analysis result"):
+        validator.validate_accepted_state()
+
+    availability["result_present"] = True
+    assert validator.validate_accepted_state() == (authorization_event, result_event)
+    # The transition is only a simulated Git readback; it does not retry or
+    # recover a real interrupted process, nor authorize real analysis.
+
+
+def test_architecture_cross_event_authorization_consistency_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Reject changed authorization bytes between result parent and result event."""
+    validator = load_validator()
+    authorization_event, result_event, state = install_accepted_state_fixture(monkeypatch, validator)
+    assert validator.validate_accepted_state() == (authorization_event, result_event)
+
+    state["authorization_result_event_bytes"] = b"substituted-authorization-record\\n"
+    with pytest.raises(SystemExit, match="authorization bytes changed"):
+        validator.validate_accepted_state()
