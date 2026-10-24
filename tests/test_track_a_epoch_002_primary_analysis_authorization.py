@@ -690,3 +690,12 @@ def test_event_shape_resolves_symbolic_head(monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setattr(validator, "git_object_exists", lambda spec: False)
 
     assert validator.validate_authorization_event_shape("HEAD") == parent
+
+
+# Development-only synthetic experiment architecture cases; imported by the
+# existing exact-head authorization workflow. This does not run real analysis.
+from test_track_a_epoch_002_architecture_simulation import (
+    test_synthetic_experiment_proves_authority_bound_then_fails_closed,
+    test_synthetic_experiment_never_promotes_research_or_executes_analysis,
+    test_locked_analysis_engine_on_synthetic_epoch002_matrix,
+)
