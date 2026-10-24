@@ -8,7 +8,8 @@
       "Current protected-main readback identifies PPTL CI, Governance CI, PR Issue-State Keyword Guard, security-scan, test (3.10), test (3.11), and test (3.12) as required contexts. The Python workflow has mixed requiredness: four job contexts are required while sibling jobs such as staging-evidence and integration-tests are not globally required by that fact alone; broader exact job/ruleset administration semantics remain incomplete for the catalog.",
       "Shared-dependency and independence analysis remains incomplete across the wider assurance surface; some cataloged families intentionally reuse repository-local validators.",
       "Historical dated audit reports still require family-versus-execution-instance classification.",
-      "External-runtime ingress has bounded source/contract assurance through repository tests, but no provider integration, live runtime evidence, runtime authority, provider compatibility/trust, or exactly-once execution guarantee is established."
+      "External-runtime ingress has bounded source/contract assurance through repository tests, but no provider integration, live runtime evidence, runtime authority, provider compatibility/trust, or exactly-once execution guarantee is established.",
+      "Dated DGAF v1 review and admission status, full branch-protection semantics, and signed-candidate/test receipts are documented in docs/governance/DGAF_V1_RELEASE_HANDOFF_2026-10-23.md; catalog membership is not release admission or independent validation."
     ]
   },
   "audits": [
