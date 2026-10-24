@@ -13,8 +13,8 @@ Receives batched AHGTraceRecord payloads from HeraldHTTPSink
   3. Tribunal alert webhook (if AHG_TRIBUNAL_WEBHOOK_URL set)
 
 Auth:
-  Requests must include header: Authorization: Bearer <AHG_HERALD_API_KEY>
-  Missing AHG_HERALD_API_KEY denies by default in all environments.
+  Requests require Authorization: Bearer <AHG_HERALD_API_KEY> when the key is configured.
+  A missing AHG_HERALD_API_KEY denies by default in all environments.
   Unauthenticated local/development operation requires the explicit
   AHG_HERALD_ALLOW_INSECURE_LOCAL=true opt-in and VERCEL_ENV unset or development.
   Preview, production, and unknown environments cannot use this opt-in.
