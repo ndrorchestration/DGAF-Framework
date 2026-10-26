@@ -83,3 +83,79 @@ def test_invalid_bootstrap_spacing_fail_closed(monkeypatch):
     monkeypatch.setattr(probe, "FIXED_BOOTSTRAP_STEP", 0.003)
     with pytest.raises(ValueError):
         probe.validate_fixture()
+
+def test_runtime_fixture_digest_must_match_frozen_identity(monkeypatch):
+    assert probe.fixture_sha256() == probe.EXPECTED_FIXTURE_SHA256
+    monkeypatch.setattr(probe, "COUPLING", 1.2)
+    assert probe.fixture_sha256() != probe.EXPECTED_FIXTURE_SHA256
+    with pytest.raises(ValueError, match="fixture identity changed"):
+        probe.validate_fixture()
+
+
+@pytest.mark.parametrize(
+    "field,invalid",
+    [
+        ("GRID", 0.0),
+        ("GRID", float("nan")),
+        ("HORIZON", float("inf")),
+        ("COUPLING", False),
+        ("COUPLING", -1.0),
+        ("FIXED_BOOTSTRAP_STEP", 0.0),
+        ("FIXED_BOOTSTRAP_STEP", float("nan")),
+        ("ADAPTIVE_MAX_STEP", 0.0),
+        ("ADAPTIVE_MAX_STEP", float("inf")),
+    ],
+)
+def test_runtime_fixture_rejects_nonfinite_or_out_of_range_scalars(monkeypatch, field, invalid):
+    monkeypatch.setattr(probe, field, invalid)
+    with pytest.raises(ValueError):
+        probe.validate_fixture()
+
+
+def test_mock_sampling_preserves_all_early_times_and_adaptive_handoff():
+    """Mock only: validates time requests, never claims DDE solver correctness."""
+
+    class FakeSolver:
+        def __init__(self):
+            self.calls = []
+
+        def integrate_blindly(self, time, step):
+            self.calls.append(("blind", time, step))
+            return probe.INITIAL
+
+        def integrate(self, time):
+            self.calls.append(("adaptive", time, None))
+            return probe.INITIAL
+
+    fake = FakeSolver()
+    trace = probe.collect_reference_trajectory(fake, probe.validate_fixture())
+    assert len(trace) == 41
+    assert all(state == probe.INITIAL for state in trace)
+    assert len(fake.calls) == 40
+    assert fake.calls[0] == ("blind", 0.02, 0.001)
+    assert fake.calls[5] == ("blind", 0.12, 0.001)
+    assert fake.calls[6] == ("adaptive", 0.14, None)
+    assert fake.calls[-1] == ("adaptive", 0.8, None)
+    assert [call[1] for call in fake.calls] == [round(i * 0.02, 12) for i in range(1, 41)]
+
+
+@pytest.mark.parametrize("bad_state", [(0.0,), (0.0, 0.0, float("nan"), 0.0)])
+def test_mock_solver_malformed_output_fails_closed(bad_state):
+    """Mock only: reject bad external outputs before writing JSON receipts."""
+
+    class FakeSolver:
+        def integrate_blindly(self, time, step):
+            return bad_state
+
+        def integrate(self, time):
+            return bad_state
+
+    with pytest.raises(ArithmeticError):
+        probe.collect_reference_trajectory(FakeSolver(), 1)
+
+
+def test_mock_sampler_rejects_bad_sample_count():
+    with pytest.raises(ValueError):
+        probe.collect_reference_trajectory(object(), True)
+    with pytest.raises(ValueError):
+        probe.collect_reference_trajectory(object(), 0)
