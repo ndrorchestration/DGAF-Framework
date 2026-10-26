@@ -56,6 +56,6 @@ Order parameter measures oscillator coherence only. It is **not** semantic corre
 
 ## Peer-reviewed foundations (background only; no validation of this sandbox)
 
-- Yeung & Strogatz (1999), *Time Delay in the Kuramoto Model of Coupled Oscillators*, Physical Review Letters: https://doi.org/10.1103/PhysRevLett.82.648
-- Earl & Strogatz (2003), *Synchronization in Oscillator Networks with Delayed Coupling: A Stability Criterion*, Physical Review E: https://doi.org/10.1103/PhysRevE.67.036204 . Its assumptions do not imply blanket stability for heterogeneous directed delays.
-- Pecora & Carroll (1998), *Master Stability Functions for Synchronized Coupled Systems*, Physical Review Letters: https://doi.org/10.1103/PhysRevLett.80.2109 . Applicability depends on the system and coupling assumptions.
+- Yeung & Strogatz (1999), *Time Delay in the Kuramoto Model of Coupled Oscillators*, Physical Review Letters: [DOI](https://doi.org/10.1103/PhysRevLett.82.648)
+- Earl & Strogatz (2003), *Synchronization in Oscillator Networks with Delayed Coupling: A Stability Criterion*, Physical Review E: [DOI](https://doi.org/10.1103/PhysRevE.67.036204) . Its assumptions do not imply blanket stability for heterogeneous directed delays.
+- Pecora & Carroll (1998), *Master Stability Functions for Synchronized Coupled Systems*, Physical Review Letters: [DOI](https://doi.org/10.1103/PhysRevLett.80.2109) . Applicability depends on the system and coupling assumptions.
