@@ -51,7 +51,8 @@ def mcp_req():
 
 def mcp_resp(**changes):
     data = {
-        "jsonrpc": "2.0", "id": 1,
+        "jsonrpc": "2.0",
+        "id": 1,
         "result": {"resultType": "complete", "content": [], "isError": False},
     }
     if "error" in changes and "result" not in changes:
