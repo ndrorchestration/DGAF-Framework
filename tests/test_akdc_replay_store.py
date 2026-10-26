@@ -38,9 +38,14 @@ def mcp(seq=1, **fields):
              runtime_id='akdc-run-01', source_id='akdc-mcp-source',
              event_id=f'akdc-mcp-event-{seq}', effect_id=f'akdc-mcp-effect-{seq}',
              observed_at='2026-10-26T12:00:00Z',
-             payload={'method': 'tools/call', 'response': {'jsonrpc': '2.0', 'id': seq,
-                                                          'result': {'resultType': 'complete',
-                                                                   'content': [], 'isError': False}}})
+             payload={
+                 'method': 'tools/call',
+                 'response': {
+                     'jsonrpc': '2.0',
+                     'id': seq,
+                     'result': {'resultType': 'complete', 'content': [], 'isError': False},
+                 },
+             })
     d.update(fields)
     return ProtocolObservation(**d)
 
