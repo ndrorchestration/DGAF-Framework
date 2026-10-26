@@ -16,7 +16,10 @@ from test_akdc_raw_wire_research import (
 )
 
 from experiments.akdc.akdc_ingress_bridge import canonical_bytes
-from experiments.akdc.raw_wire_research import normalize_a2a_status_update, normalize_mcp_tools_call
+from experiments.akdc.raw_wire_research import (
+    normalize_a2a_status_update,
+    normalize_mcp_tools_call,
+)
 from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
 
