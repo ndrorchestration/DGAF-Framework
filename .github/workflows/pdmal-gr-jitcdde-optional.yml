@@ -4,11 +4,6 @@ name: PDMAL-GR Optional JiTCDDE Probe (Non-Admitted)
 # outside the security-controlled, hash-locked production/test environments.
 on:
   workflow_dispatch:
-  push:
-    branches: [research/pdmal-delay-sandbox-20261026]
-    paths:
-      - '.github/workflows/pdmal-gr-jitcdde-optional.yml'
-      - 'tools/pdmal/jitcdde_reference_probe.py'
   pull_request:
     types: [opened, synchronize]
     branches: [main]
@@ -49,13 +44,27 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          files="$(git show --pretty=format: --name-only HEAD)"
-          if grep -Eq '^(\.github/workflows/pdmal-gr-jitcdde-optional\.yml|tools/pdmal/jitcdde_reference_probe\.py)$' <<< "$files"; then
-            echo 'run_numeric=true' >> "$GITHUB_OUTPUT"
-            echo 'Exact HEAD changed numerical workflow/probe; execute diagnostic.'
+          changed_files="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+          echo "Exact checked-out HEAD: $(git rev-parse HEAD)"
+          echo "Files in this single commit:"
+          printf '%s\n' "$changed_files"
+          run_numeric=false
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            run_numeric=true
           else
-            echo 'run_numeric=false' >> "$GITHUB_OUTPUT"
-            echo 'Exact HEAD did not change numerical code; skip optional solver.'
+            while IFS= read -r changed; do
+              case "$changed" in
+                ".github/workflows/pdmal-gr-jitcdde-optional.yml"|"tools/pdmal/jitcdde_reference_probe.py")
+                  run_numeric=true
+                  ;;
+              esac
+            done <<< "$changed_files"
+          fi
+          echo "run_numeric=$run_numeric" >> "$GITHUB_OUTPUT"
+          if [[ "$run_numeric" == "true" ]]; then
+            echo 'Numerical workflow/probe changed; execute bounded diagnostic.'
+          else
+            echo 'Documentation-only or unrelated commit; skip DDE package install and integration.'
           fi
 
       - name: Set up isolated Python 3.11
