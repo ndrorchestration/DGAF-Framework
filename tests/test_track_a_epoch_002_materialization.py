@@ -368,3 +368,32 @@ def test_cli_rejects_obsolete_external_evidence_arguments() -> None:
     )
     assert result.returncode != 0
     assert "unrecognized arguments" in (result.stdout + result.stderr)
+
+
+def test_materialization_paths_cover_single_lock_only_changes() -> None:
+    """One-file changes to every admitted CI lock must trigger this workflow."""
+    import fnmatch
+    import re
+
+    workflow = (ROOT / ".github" / "workflows" / "track-a-epoch-002-materialization.yml").read_text(
+        encoding="utf-8"
+    )
+    for event in ("pull_request", "push"):
+        event_body = re.split(r"\n  [a-z_]+:", workflow.split(f"  {event}:\n", 1)[1], maxsplit=1)[0]
+        paths_body = event_body.split("    paths:\n", 1)[1]
+        patterns = tuple(
+            line.strip().removeprefix("- ").strip("'\\\"")
+            for line in paths_body.splitlines()
+            if line.startswith("      - ")
+        )
+        assert patterns, event
+        for lock in (
+            "requirements-ci-py310-ubuntu2404-x64.lock",
+            "requirements-ci-py311-ubuntu2404-x64.lock",
+            "requirements-ci-py312-ubuntu2404-x64.lock",
+            "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
+        ):
+            assert any(fnmatch.fnmatchcase(lock, pattern) for pattern in patterns), (
+                event,
+                lock,
+            )
