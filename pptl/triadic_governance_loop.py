@@ -153,7 +153,7 @@ class TriadicGovernanceLoop:
     ]
 
     # Required gates. Step 7 is conditional on Phi-Closure PASS.
-    REQUIRED_STEPS = frozenset({1, 2, 3, 4, 5, 6, 8})
+    REQUIRED_STEPS = frozenset({0, 1, 2, 3, 4, 5, 6, 8})
 
     def __init__(
         self,
@@ -244,9 +244,31 @@ class TriadicGovernanceLoop:
         timestamp = datetime.now(timezone.utc).isoformat()
         gates: list[GateRecord] = []
 
+        # Gate 0 is admission-critical. No downstream hook may run if the
+        # predicate is absent: a SKIP is not evidence that invariants passed.
+        if self.hooks.premise_check_fn is None:
+            gates.append(
+                GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.SKIP, "UNVERIFIED: predicate not wired")
+            )
+            gates.extend(
+                GateRecord(step, pattern, name, GateResult.SKIP, "blocked by unverified P-35")
+                for step, pattern, name in self.GATE_MANIFEST
+                if 1 <= step <= 8
+            )
+            audit = TurnAuditRecord(
+                self.session_id, self._turn_counter, self.agent_id,
+                input_hash, gates, TurnStatus.ESCALATE, timestamp,
+            )
+            return self._emit_herald_and_seal(audit, context)
+
         try:
             self._premise_gate.evaluate(input_text, check_fn=self.hooks.premise_check_fn)
-            gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS))
+            gates.append(
+                GateRecord(
+                    0, "P-35", "ProcludingPremiseGate", GateResult.PASS,
+                    "configured predicate returned True; verifier provenance NOT_ESTABLISHED",
+                )
+            )
         except PremiseViolationError as exc:
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, str(exc)[:120]))
             audit = TurnAuditRecord(
@@ -260,6 +282,17 @@ class TriadicGovernanceLoop:
             )
             self._emit_herald_and_seal(audit, context, raise_premise=exc)
             return audit
+        except Exception:
+            # An invalid return, exception or miswired predicate is not a
+            # constitutional violation; nonetheless it cannot authorize work.
+            gates.append(
+                GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, "predicate evaluation failed")
+            )
+            audit = TurnAuditRecord(
+                self.session_id, self._turn_counter, self.agent_id,
+                input_hash, gates, TurnStatus.KILL, timestamp,
+            )
+            return self._emit_herald_and_seal(audit, context)
 
         hook_sequence = [
             (1, "P-31", "SCPE_Prune", self.hooks.scpe_fn),
