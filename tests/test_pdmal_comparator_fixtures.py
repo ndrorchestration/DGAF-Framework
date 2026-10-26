@@ -13,6 +13,7 @@ from tools.pdmal.comparator_fixtures import (
     relabel_cubic_graph,
     relabel_directed_delays,
     relabel_vertex_values,
+    structural_distance_profile,
     validate_cubic_graph,
 )
 from tools.pdmal.delay_sandbox import simulate_delayed_kuramoto
@@ -225,3 +226,23 @@ def test_placement_sampling_separate_from_label_mapping():
 def test_prospective_placement_rejects_invalid_inputs(master, arm, replicate):
     with pytest.raises(ValueError):
         prospective_perturbation_vertex(master, arm, replicate)
+
+
+def test_distance_profile_preserved_at_same_structural_site_after_relabeling():
+    """Graph distances are label-invariant metadata, not robustness outcomes."""
+    for arm, edges in named_comparator_edges(seed=271828).items():
+        source = prospective_perturbation_vertex(90210, arm, 0)
+        permutation = label_permutation(90210, arm, 0)
+        original_profile = structural_distance_profile(edges, source)
+        mapped_graph = relabel_cubic_graph(edges, permutation)
+        mapped_profile = structural_distance_profile(mapped_graph, permutation[source])
+        assert original_profile == mapped_profile
+        assert len(original_profile) == 20
+        assert original_profile[:4] == (0, 1, 1, 1)
+        assert all(distance >= 0 for distance in original_profile)
+
+
+@pytest.mark.parametrize("invalid_site", [True, -1, 20, 1.5, "0"])
+def test_distance_profile_rejects_invalid_site_indices(invalid_site):
+    with pytest.raises(ValueError):
+        structural_distance_profile(DODECAHEDRAL_EDGES, invalid_site)
