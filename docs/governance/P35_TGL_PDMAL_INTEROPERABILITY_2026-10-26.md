@@ -48,6 +48,18 @@ Static inspection confirms each constructs `TGLHooks` and uses `decision_from_au
 - Security: fix dependency CVE via separately admitted signed maintenance; do not bypass `pip-audit`, rewrite dependency locks here or claim overall green CI from passing subset.
 - Release gate: signed reviewed integration successor reconciles #1388, #1387 and #1367; separately accepted authority, not same-system green tests, controls main admission.
 
+## #1387 event redaction and #1367 authenticated provenance boundary
+
+The same integration rehearsal includes signed-source [PR #1387](https://github.com/ndrorchestration/DGAF-Framework/pull/1387)'s narrow TGL runner-error event redaction: `TGL_RUNNER_FAILURE.reason` is the constant `"TGL runner exception"`, not `str(exc)`. Its two signed-source adversarial tests check multiline synthetic secret injection and an exception whose `__str__` raises. The #1388 verifier's independent structural checks remain in force. **The #1387 commit itself is signed, but its reauthored copy on this integration branch is unsigned**. The original exception remains chained as Python `__cause__`, so downstream exception/traceback consumers require their own confidentiality review; redacted audit events alone do not provide end-to-end secrecy.
+
+[Issue #1367](https://github.com/ndrorchestration/DGAF-Framework/issues/1367) is **not remedied** by this rehearsal. A complete audit record bound to `SHA256(input_text)` can be self-sealed by an untrusted runner, reused for the same input under different authority contexts, and lack any independent verification of policy freshness. A prospective control-plane evidence contract therefore needs all of:
+- A control-plane-owned attempt identifier or nonce, task/session/agent identity, policy/invariant-set version, authorization context digest and canonical input digest.
+- A trusted-runner boundary and an externally verifiable attestation/signature or an explicitly limited internal trust decision; do not treat an unkeyed, runner-generated hash as a signature.
+- Replay-specific binding and atomic attempt consumption with negative controls for stale, cross-context and cross-task records.
+- A separate versioned protocol, key/lifecycle/revocation policy, reviewer approval and integration test authorization before any accepted security-assurance claim.
+
+No new cryptographic origin primitive or context-binding authority is supplied here. A configured `True` predicate still reports only a local callback outcome, **not proven current/authorized constitutional verification**.
+
 ## Non-effects
 
 No frozen experimental input, protocol, statistical analysis, custody material, interpretation, locked result or claim state is changed by this engineering note. No PDMAL empirical execution or external authorization is requested. **RELEASE=HOLD; SCIENTIFIC_N_INCREMENT=0; INDEPENDENT_VALIDATION=NOT_ESTABLISHED; CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED; HIGH_ASSURANCE=NOT_AUTHORIZED.**
