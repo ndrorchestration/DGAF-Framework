@@ -42,8 +42,12 @@ def _both_layers(result):
     return [
         lambda: classify(observation),
         lambda: normalize_mcp_tools_call(
-            request, response, witness, negotiated_version="2026-07-28",
-            capture_key=TEST_CAPTURE_KEY, key_id=TEST_KEY_ID,
+            request,
+            response,
+            witness,
+            negotiated_version="2026-07-28",
+            capture_key=TEST_CAPTURE_KEY,
+            key_id=TEST_KEY_ID,
         ),
     ]
 
