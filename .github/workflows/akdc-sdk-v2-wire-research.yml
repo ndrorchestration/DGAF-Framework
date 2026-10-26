@@ -32,15 +32,14 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
-      - name: Resolve direct-version-pinned published SDK in scratch
+      - name: Install artifact-matched frozen research npm lock
         shell: bash
         run: |
           set -euo pipefail
           test -f package.json
-          npm install --package-lock-only --ignore-scripts --no-fund --no-audit
           test -s package-lock.json
-          echo "PROVISIONAL-NOT-REVIEWED-NOT-CANONICAL-LOCK"
-          sha256sum package-lock.json
+          echo "aebc3f74fedec3a5d3927d992609a6a3a1dc1460d456f561f186e47c45646afd  package-lock.json" | sha256sum -c -
+          echo "HOSTED-CAPTURED-FROZEN-RESEARCH-LOCK-NOT-INDEPENDENTLY-APPROVED"
           npm ci --ignore-scripts --no-fund --no-audit
           npm ls --depth=0
       - name: Exercise real SDK in-process HTTP transport
@@ -80,8 +79,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
-      - name: Independently resolve temporary npm lock and audit
+      - name: Install frozen research lock and audit exact SDK dependency tree
         run: |
           set -euo pipefail
-          npm install --package-lock-only --ignore-scripts --no-fund --no-audit
+          echo "aebc3f74fedec3a5d3927d992609a6a3a1dc1460d456f561f186e47c45646afd  package-lock.json" | sha256sum -c -
+          npm ci --ignore-scripts --no-fund --no-audit
           npm audit --audit-level=high
