@@ -4,6 +4,7 @@ import unittest
 
 from experiments.akdc.akdc_ingress_bridge import ProtocolObservation, classify
 from experiments.akdc.raw_wire_research import ReceiverWitness, normalize_mcp_tools_call
+from test_akdc_raw_wire_research import TEST_CAPTURE_KEY, TEST_KEY_ID
 
 
 def _fixture(result):
@@ -40,7 +41,10 @@ def _both_layers(result):
     observation, witness, request, response = _fixture(result)
     return [
         lambda: classify(observation),
-        lambda: normalize_mcp_tools_call(request, response, witness, negotiated_version="2026-07-28"),
+        lambda: normalize_mcp_tools_call(
+            request, response, witness, negotiated_version="2026-07-28",
+            capture_key=TEST_CAPTURE_KEY, key_id=TEST_KEY_ID,
+        ),
     ]
 
 
