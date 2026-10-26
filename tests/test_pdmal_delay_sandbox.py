@@ -3,6 +3,7 @@
 import math
 
 import pytest
+
 from tools.pdmal.delay_sandbox import circular_order_parameter, simulate_delayed_kuramoto
 from tools.pdmal.lattice_harness import DODECAHEDRAL_EDGES
 
