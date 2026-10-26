@@ -27,7 +27,31 @@ GRID = 0.02
 
 
 def _max_phase_difference(left: tuple[float, ...], right: tuple[float, ...]) -> float:
+    if not left or len(left) != len(right):
+        raise ValueError("phase vectors must be nonempty and have equal dimensions")
+    if any(not math.isfinite(v) for v in (*left, *right)):
+        raise ValueError("phase vectors must contain only finite numbers")
     return max(abs(a - b) for a, b in zip(left, right))
+
+
+def validate_reference_grid(segment: float, rtol: float, atol: float) -> int:
+    """Reject invalid or discontinuity-misaligned segments before integration.
+
+    This conservative fixed-fixture gate requires every positive physical
+    delay and the horizon to be integral multiples of the segment duration.
+    It does not assess numerical accuracy or scientific validity.
+    """
+    for name, value in (("segment", segment), ("rtol", rtol), ("atol", atol)):
+        if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+            raise ValueError(f"{name} must be a finite, positive real number")
+    positive_delays = [delay for delay in DELAYS.values() if delay > 0]
+    if segment > min(positive_delays):
+        raise ValueError("segment exceeds the smallest positive directed delay")
+    for period in (HORIZON, *positive_delays):
+        count = period / segment
+        if not math.isfinite(count) or not math.isclose(count, round(count), rel_tol=0, abs_tol=1e-9):
+            raise ValueError("segment must evenly divide horizon and all directed delays")
+    return round(HORIZON / segment)
 
 
 def reference_trajectory(segment: float, rtol: float, atol: float) -> tuple[tuple[float, ...], ...]:
@@ -38,6 +62,7 @@ def reference_trajectory(segment: float, rtol: float, atol: float) -> tuple[tupl
     Zero-delay neighbors use the current ODE stage. Negative time has the
     frozen theta(0) history; no future stage is interpolated.
     """
+    n_segments = validate_reference_grid(segment, rtol, atol)
     try:
         from scipy.integrate import solve_ivp
     except ImportError as exc:
@@ -51,7 +76,7 @@ def reference_trajectory(segment: float, rtol: float, atol: float) -> tuple[tupl
     boundaries: list[float] = []
     dense_segments: list = []
     states: list[tuple[float, ...]] = [INITIAL]
-    for k in range(round(HORIZON / segment)):
+    for k in range(n_segments):
         start = round(k * segment, 12)
         end = round((k + 1) * segment, 12)
 
@@ -131,6 +156,19 @@ def main() -> None:
         }
 
     sandbox_path = Path(__file__).with_name("delay_sandbox.py")
+    probe_path = Path(__file__)
+    fixture = {
+        "graph": GRAPH,
+        "initial_phases": INITIAL,
+        "frequencies": FREQUENCIES,
+        "directed_physical_delays": [[u, v, tau] for (u, v), tau in sorted(DELAYS.items())],
+        "coupling": COUPLING,
+        "horizon": HORIZON,
+        "grid": GRID,
+    }
+    canonical_fixture = json.dumps(fixture, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    errors = [comparisons[str(step)]["full_trace_max_phase_error_rad"] for step in (0.02, 0.01, 0.005, 0.0025)]
+    halving_ratios = [float(errors[i] / errors[i + 1]) for i in range(len(errors) - 1)]
     receipt = {
         "status": "LOCAL_NUMERICAL_PROBE_ONLY",
         "admission": "NON_ADMITTED_NOT_EXTERNAL_DDE_VALIDATION",
@@ -140,6 +178,12 @@ def main() -> None:
         "dde_history": "author-coded method of steps, fixed negative-time constant history",
         "model_fixture": "4-node directed heterogeneous delay; K=1.1; t_end=0.8s",
         "sandbox_source_sha256": hashlib.sha256(sandbox_path.read_bytes()).hexdigest(),
+        "probe_source_sha256": hashlib.sha256(probe_path.read_bytes()).hexdigest(),
+        "fixture_sha256": hashlib.sha256(canonical_fixture).hexdigest(),
+        "reference_segment_s": 0.02,
+        "refinement_segment_s": 0.01,
+        "sample_grid_s": GRID,
+        "observed_error_halving_ratios": halving_ratios,
         "reference_tolerances": {"rtol": 1e-11, "atol": 1e-13},
         "reference_refinement_max_phase_error_rad": refinement_difference,
         "terminal_reference_phase_unwrapped_rad": coarse_reference[-1],
