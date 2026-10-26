@@ -16,6 +16,7 @@ from experiments.akdc.akdc_ingress_bridge import (
     canonical_bytes,
     content_digest,
     make_dgaf_envelope,
+    validate_mcp_input_required,
 )
 
 A2A_PIN = "1.0.1"
@@ -183,9 +184,8 @@ def normalize_mcp_tools_call(
             if type(result.get("isError", False)) is not bool:
                 raise ValueError("MCP isError must be bool")
         elif result_type == "input_required":
-            # This fixture records only the discriminator, not an input workflow.
-            if "content" in result or "isError" in result:
-                raise ValueError("unsupported hybrid MCP input_required")
+            # Capture requirements without fulfilling untrusted input requests.
+            validate_mcp_input_required(result)
         else:
             raise ValueError("missing or unsupported MCP 2026 resultType")
     # Provide only the response shape expected by the preexisting bridge;
