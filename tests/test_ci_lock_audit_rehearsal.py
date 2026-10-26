@@ -33,11 +33,7 @@ def scanner_json(*, vulnerable: bool = False) -> str:
                 {
                     "name": "filelock",
                     "version": "4.0.3",
-                    "vulns": [
-                        {"id": "CVE-SYNTHETIC-1", "fix_versions": ["4.2.1"]}
-                    ]
-                    if vulnerable
-                    else [],
+                    "vulns": [{"id": "CVE-SYNTHETIC-1", "fix_versions": ["4.2.1"]}] if vulnerable else [],
                 },
                 {"name": "setuptools", "version": "83.0.0", "vulns": []},
             ],
@@ -88,10 +84,7 @@ def test_vulnerability_reports_block_and_preserve_advisory_ids(fixture_root: Pat
     result = rehearsal.rehearse(fixture_root, tmp_path / "report.json", runner=vulnerable_runner)
     assert result["result"] == "BLOCKED_VULNERABILITIES"
     assert all(entry["status"] == "VULNERABILITIES_FOUND" for entry in result["locks"][1:])
-    assert all(
-        entry["findings"][0]["advisory_ids"] == ["CVE-SYNTHETIC-1"]
-        for entry in result["locks"][1:]
-    )
+    assert all(entry["findings"][0]["advisory_ids"] == ["CVE-SYNTHETIC-1"] for entry in result["locks"][1:])
 
 
 @pytest.mark.parametrize("bad_output", ["not json", "{}", '{"dependencies":[{}]}'])
@@ -116,9 +109,7 @@ def test_nonzero_scan_without_findings_is_error(fixture_root: Path, tmp_path: Pa
     assert report["result"] == "AUDIT_ERROR"
 
 
-def test_auditor_exception_fails_closed_and_keeps_remaining_receipts(
-    fixture_root: Path, tmp_path: Path
-) -> None:
+def test_auditor_exception_fails_closed_and_keeps_remaining_receipts(fixture_root: Path, tmp_path: Path) -> None:
     def timeout_runner(command, **kwargs):
         if "--local" in command:
             raise subprocess.TimeoutExpired(command, kwargs["timeout"])
@@ -177,9 +168,7 @@ def test_missing_package_cannot_be_reported_clean(fixture_root: Path, tmp_path: 
     "mutation",
     ["wrong-version", "unknown-package", "duplicate-package", "missing-version"],
 )
-def test_substituted_or_duplicate_packages_fail_closed(
-    fixture_root: Path, tmp_path: Path, mutation: str
-) -> None:
+def test_substituted_or_duplicate_packages_fail_closed(fixture_root: Path, tmp_path: Path, mutation: str) -> None:
     def tampered_runner(command, **kwargs):
         _ = kwargs
         payload = json.loads(scanner_json())
@@ -199,9 +188,7 @@ def test_substituted_or_duplicate_packages_fail_closed(
     assert all(row["status"] == "AUDIT_ERROR" for row in report["locks"][1:])
 
 
-def test_empty_installed_environment_scan_never_establishes_cleanliness(
-    fixture_root: Path, tmp_path: Path
-) -> None:
+def test_empty_installed_environment_scan_never_establishes_cleanliness(fixture_root: Path, tmp_path: Path) -> None:
     def empty_runner(command, **kwargs):
         _ = kwargs
         return SimpleNamespace(returncode=0, stdout='{"dependencies":[],"fixes":[]}')
