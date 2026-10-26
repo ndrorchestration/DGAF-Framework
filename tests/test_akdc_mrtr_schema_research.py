@@ -28,7 +28,9 @@ def _fixture(result):
         observed_at="2026-10-26T12:00:00Z",
     )
     request = {
-        "jsonrpc": "2.0", "id": 1, "method": "tools/call",
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
         "params": {"_meta": {}, "name": "fixture", "arguments": {}},
     }
     return observation, witness, request, response
