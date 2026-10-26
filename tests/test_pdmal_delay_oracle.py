@@ -142,6 +142,4 @@ def test_nonuniform_stationary_state_balances_nonzero_coupling():
     trajectory = simulate_delayed_kuramoto(
         GRAPH, INITIAL, balanced_frequencies, delays=delays, coupling=COUPLING, dt=0.02, steps=40
     )
-    assert max(
-        _maximum_phase_difference(INITIAL, state) for state in trajectory
-    ) < 1e-12
+    assert max(_maximum_phase_difference(INITIAL, state) for state in trajectory) < 1e-12
