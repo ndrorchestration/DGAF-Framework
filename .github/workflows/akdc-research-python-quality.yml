@@ -1,0 +1,82 @@
+name: AKDC Research Python Quality (Nonrelease)
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - research/akdc-functor-ingress-gate3-20261026
+    paths:
+      - 'experiments/akdc/**'
+      - 'tests/test_akdc_*.py'
+      - '.github/workflows/akdc-research-python-quality.yml'
+
+jobs:
+  research-quality:
+    name: AKDC syntax, format, types, tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Bootstrap pinned pip
+        run: bash scripts/bootstrap_ci_pip.sh
+      - name: Install hash-locked CI toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          minor="${{ matrix.python-version }}"
+          lock="requirements-ci-py${minor//./}-ubuntu2404-x64.lock"
+          test -s "$lock"
+          python -m pip install --disable-pip-version-check --require-hashes \
+            --only-binary=:all: -r "$lock"
+      - name: Research static and type quality
+        shell: bash
+        run: |
+          set -euo pipefail
+          targets=(
+            experiments/akdc/akdc_ingress_bridge.py
+            experiments/akdc/replay_store_research.py
+            tests/test_akdc_ingress_research.py
+            tests/test_akdc_replay_store.py
+          )
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          python -m compileall -q "${targets[@]}"
+          flake8 "${targets[@]}" --count --select=E9,F63,F82 --show-source --statistics
+          flake8 "${targets[@]}" --count --statistics --max-line-length=120
+          black --check "${targets[@]}" --line-length=120 --diff
+          isort --check-only "${targets[@]}" --profile=black --diff
+          mypy "${targets[@]}" --explicit-package-bases --ignore-missing-imports --no-implicit-optional
+      - name: Run pinned DGAF ingress and replay tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          python -W error::ResourceWarning -m pytest \
+            tests/test_akdc_ingress_research.py tests/test_akdc_replay_store.py -q
+
+  advisory-security:
+    name: AKDC inherited toolchain security audit (blocking evidence)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: '3.11'
+      - name: Bootstrap pinned pip
+        run: bash scripts/bootstrap_ci_pip.sh
+      - name: Install locked toolchain
+        run: >-
+          python -m pip install
+          --disable-pip-version-check --require-hashes --only-binary=:all:
+          -r requirements-ci-py311-ubuntu2404-x64.lock
+      - name: Report existing dependency vulnerabilities without waiver
+        run: python -m pip_audit --local
