@@ -696,6 +696,7 @@ def test_event_shape_resolves_symbolic_head(monkeypatch: pytest.MonkeyPatch) -> 
 def test_primary_authorization_event_filters_select_single_lock_only_changes() -> None:
     """A one-file lock change must dispatch both PR and protected-main push CI."""
     import fnmatch
+    import re
 
     source = WORKFLOW_PATH.read_text(encoding="utf-8")
     locks = (
@@ -705,7 +706,7 @@ def test_primary_authorization_event_filters_select_single_lock_only_changes() -
         "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
     )
     for event in ("pull_request", "push"):
-        event_body = source.split(f"  {event}:\n", 1)[1].split("\n  ", 1)[0]
+        event_body = re.split(r"\n  [a-z_]+:", source.split(f"  {event}:\n", 1)[1], maxsplit=1)[0]
         paths_body = event_body.split("    paths:\n", 1)[1]
         filters = tuple(
             line.strip().removeprefix("- ").strip("'\\\"")
