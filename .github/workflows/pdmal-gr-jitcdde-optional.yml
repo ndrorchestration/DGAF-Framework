@@ -177,6 +177,122 @@ jobs:
           }, indent=2))
           PY
 
+      - name: Compare discontinuity-aligned integration on late common times
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import math
+          import platform
+          from importlib.metadata import version
+          from pathlib import Path
+
+          from jitcdde import jitcdde, t, y
+          from symengine import sin
+
+          from tools.pdmal import jitcdde_reference_probe as fixture
+          from tools.pdmal.delay_sandbox import simulate_delayed_kuramoto
+
+          n_samples = fixture.validate_fixture()
+          source_path = Path("artifacts/pdmal-gr-jitcdde/bootstrap-sensitivity.json")
+          sensitivity = json.loads(source_path.read_text(encoding="utf-8"))
+          variants = sensitivity["variants"]
+          assert [v["bootstrap_step_s"] for v in variants] == [0.001, 0.0005, 0.00025]
+          fine_reference = variants[-1]["complete_trajectory"]
+          assert len(fine_reference) == n_samples + 1
+
+          solver = jitcdde(
+              fixture.build_symbolic_rhs(y, t, sin),
+              n=len(fixture.INITIAL),
+              verbose=False,
+          )
+          solver.set_integration_parameters(
+              atol=1e-12,
+              rtol=1e-10,
+              first_step=0.00025,
+              max_step=fixture.ADAPTIVE_MAX_STEP,
+          )
+          solver.constant_past(fixture.INITIAL, time=0.0)
+          solver.step_on_discontinuities(propagations=1)
+          start_time = float(solver.t)
+          if not math.isfinite(start_time):
+              raise ArithmeticError("nonfinite discontinuity-aligned startup time")
+
+          lags = {key: round(delay / fixture.GRID) for key, delay in fixture.DELAYS.items()}
+          rk4 = simulate_delayed_kuramoto(
+              fixture.GRAPH,
+              fixture.INITIAL,
+              fixture.FREQUENCIES,
+              delays=lags,
+              coupling=fixture.COUPLING,
+              dt=fixture.GRID,
+              steps=n_samples,
+          )
+
+          samples = []
+          for index in range(1, n_samples + 1):
+              requested = round(index * fixture.GRID, 12)
+              if requested <= start_time + 1e-9:
+                  continue
+              state = [float(value) for value in solver.integrate(requested)]
+              if len(state) != len(fixture.INITIAL) or not all(math.isfinite(v) for v in state):
+                  raise ArithmeticError("invalid discontinuity-aligned late trajectory")
+              samples.append({
+                  "sample_index": index,
+                  "time_s": requested,
+                  "phase_unwrapped_rad": state,
+                  "max_error_to_fine_blind_rad": max(
+                      abs(a - b) for a, b in zip(state, fine_reference[index])
+                  ),
+                  "max_error_to_rk4_rad": max(
+                      abs(a - b) for a, b in zip(state, rk4[index])
+                  ),
+              })
+
+          receipt = {
+              "status": "AUTHOR_OPERATED_ALTERNATE_DISCONTINUITY_POLICY_NUMERICAL_DIAGNOSTIC",
+              "admission": "NON_ADMITTED_NOT_NON_AUTHOR_REPRODUCTION",
+              "policy": "step_on_discontinuities(propagations=1); sample only after returned solver.t",
+              "solver_time_after_discontinuity_alignment_s": start_time,
+              "early_grid_states_not_evaluated": n_samples - len(samples),
+              "first_comparable_time_s": samples[0]["time_s"] if samples else None,
+              "last_comparable_time_s": samples[-1]["time_s"] if samples else None,
+              "max_late_error_to_fine_blind_rad": max(
+                  (p["max_error_to_fine_blind_rad"] for p in samples), default=None
+              ),
+              "max_late_error_to_rk4_rad": max(
+                  (p["max_error_to_rk4_rad"] for p in samples), default=None
+              ),
+              "late_common_grid_samples": samples,
+              "reference_fine_blind_step_s": 0.00025,
+              "fixture_sha256": fixture.EXPECTED_FIXTURE_SHA256,
+              "python_version": platform.python_version(),
+              "jitcdde_version": version("jitcdde"),
+              "symengine_version": version("symengine"),
+              "scientific_n_increment": 0,
+              "pilot_authorization": "NOT_GRANTED",
+              "independent_validation": "NOT_ESTABLISHED",
+              "limitations": [
+                  "early grid states before solver startup time are missing, not zero-error observations",
+                  "comparison shares an author-coded equation and library; no independent verification",
+                  "one fixture and one discontinuity-propagation setting provide no accuracy proof",
+              ],
+          }
+          output = Path("artifacts/pdmal-gr-jitcdde/discontinuity-alignment.json")
+          output.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "status": receipt["status"],
+              "start_time_s": start_time,
+              "omitted_early_samples": receipt["early_grid_states_not_evaluated"],
+              "compared_late_samples": len(samples),
+              "max_late_error_to_fine_blind_rad": receipt["max_late_error_to_fine_blind_rad"],
+              "max_late_error_to_rk4_rad": receipt["max_late_error_to_rk4_rad"],
+          }, indent=2))
+          if not samples:
+              raise RuntimeError("discontinuity-aligned solver has no later comparable grid points")
+          PY
+
       - name: Upload diagnostic evidence even on failed execution
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
