@@ -5,6 +5,7 @@ import importlib
 import sys
 from pathlib import Path
 from types import ModuleType
+from typing import Any
 
 from artifact_schema import (
     ARTIFACT_SCHEMA_VERSION,
@@ -185,7 +186,7 @@ def test_p35_unverified_three_adapter_paths_are_nonempirical_fail_closed(monkeyp
     gate_module = importlib.import_module("pptl.triadic_governance_loop")
     GateResult, TurnStatus = gate_module.GateResult, gate_module.TurnStatus
 
-    def synthetic_state() -> ConsensusState:
+    def synthetic_state() -> Any:
         return ConsensusState(
             seed_id=20260817,
             iteration=3,
