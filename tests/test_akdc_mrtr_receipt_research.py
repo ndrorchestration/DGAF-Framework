@@ -29,17 +29,26 @@ class MRTRResearchReceiptTests(unittest.TestCase):
 
     def record(self, store=None, **kw):
         options = dict(
-            nonce=NONCE, principal_claim="asserted-fixture-only",
-            action="akdc-confirm-fixture", operation_digest=DIGEST
+            nonce=NONCE, principal_claim="asserted-fixture-only", action="akdc-confirm-fixture", operation_digest=DIGEST
         )
         options.update(kw)
         return (store or self.store).record(**options)
 
     def cli(self, *, crash="", nonce=NONCE, key=KEY):
         cmd = [
-            sys.executable, "-m", "experiments.akdc.mrtr_receipt_ledger_research",
-            "--db", self.db, "--nonce", nonce, "--principal", "asserted-fixture-only",
-            "--action", "akdc-confirm-fixture", "--operation-digest", DIGEST,
+            sys.executable,
+            "-m",
+            "experiments.akdc.mrtr_receipt_ledger_research",
+            "--db",
+            self.db,
+            "--nonce",
+            nonce,
+            "--principal",
+            "asserted-fixture-only",
+            "--action",
+            "akdc-confirm-fixture",
+            "--operation-digest",
+            DIGEST,
         ]
         if crash:
             cmd.extend(["--crash", crash])
@@ -60,13 +69,24 @@ class MRTRResearchReceiptTests(unittest.TestCase):
 
     def test_concurrent_independent_processes_one_first(self):
         cmd = [
-            sys.executable, "-m", "experiments.akdc.mrtr_receipt_ledger_research",
-            "--db", self.db, "--nonce", NONCE, "--principal", "asserted-fixture-only",
-            "--action", "akdc-confirm-fixture", "--operation-digest", DIGEST,
+            sys.executable,
+            "-m",
+            "experiments.akdc.mrtr_receipt_ledger_research",
+            "--db",
+            self.db,
+            "--nonce",
+            NONCE,
+            "--principal",
+            "asserted-fixture-only",
+            "--action",
+            "akdc-confirm-fixture",
+            "--operation-digest",
+            DIGEST,
         ]
         env = dict(os.environ, AKDC_RESEARCH_RECEIPT_KEY_HEX=KEY.hex())
-        runners = [subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env)
-                   for _ in range(8)]
+        runners = [
+            subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env) for _ in range(8)
+        ]
         outputs = [p.communicate(timeout=25) for p in runners]
         self.assertTrue(all(p.returncode == 0 for p in runners), outputs)
         self.assertEqual(sum('"receipt": "FIRST_RECORDED"' in out[0] for out in outputs), 1)
@@ -110,8 +130,10 @@ class MRTRResearchReceiptTests(unittest.TestCase):
 
     def test_wrong_claim_shape_fails_before_any_write(self):
         for kw in (
-            dict(nonce="unsealed"), dict(principal_claim="claim with spaces"),
-            dict(action="execute-payment"), dict(operation_digest="bad"),
+            dict(nonce="unsealed"),
+            dict(principal_claim="claim with spaces"),
+            dict(action="execute-payment"),
+            dict(operation_digest="bad"),
             dict(crash="unknown"),
         ):
             with self.subTest(kw=kw), self.assertRaises(MRTRReceiptRefusal):
