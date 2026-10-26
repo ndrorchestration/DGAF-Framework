@@ -192,7 +192,6 @@ def relabel_directed_delays(lags: dict[tuple[int, int], int], old_to_new: Sequen
     return remapped
 
 
-
 def structural_distance_profile(edges: Sequence[tuple[int, int]], source_vertex: int) -> tuple[int, ...]:
     """Sorted shortest-path distances from one vertex; topology-only metadata.
 
