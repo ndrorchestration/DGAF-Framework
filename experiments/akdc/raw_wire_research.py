@@ -241,7 +241,13 @@ def _metadata_only_response(response: dict[str, Any]) -> dict[str, Any]:
 
 
 def normalize_mcp_tools_call(
-    request: dict[str, Any], response: dict[str, Any], witness: ReceiverWitness, *, negotiated_version: str, capture_key: bytes, key_id: str
+    request: dict[str, Any],
+    response: dict[str, Any],
+    witness: ReceiverWitness,
+    *,
+    negotiated_version: str,
+    capture_key: bytes,
+    key_id: str,
 ) -> CapturedObservation:
     """Pair raw MCP JSON-RPC request/response; never infer method from reply."""
     if negotiated_version != MCP_PIN:
