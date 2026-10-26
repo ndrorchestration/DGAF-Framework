@@ -185,7 +185,7 @@ def _metadata_only_response(response: dict[str, Any]) -> dict[str, Any]:
     Canonical-decoded frame-pair digest is recorded separately; hashing is not
     secrecy, authentication or assured suppression of low-entropy values.
     """
-    safe = {
+    safe: dict[str, Any] = {
         "jsonrpc": "2.0",
         "id": "correlation-" + content_digest(["mcp-correlation", response["id"]])[7:],
     }
@@ -193,6 +193,7 @@ def _metadata_only_response(response: dict[str, Any]) -> dict[str, Any]:
         safe["error"] = {"code": response["error"]["code"], "message": "REDACTED"}
     else:
         result = response["result"]
+        safe_result: dict[str, Any]
         if result["resultType"] == "input_required":
             safe_result = {"resultType": "input_required"}
             if "requestState" in result:
