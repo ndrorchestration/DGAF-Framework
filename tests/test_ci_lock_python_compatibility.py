@@ -86,3 +86,16 @@ def test_untrusted_or_malformed_package_input_rejected(fake_locks: Path) -> None
         evaluate_matrix(fake_locks, "../../filelock", "4.2.1", ">=3.11", METADATA_SOURCE)
     with pytest.raises(LockEvidenceError, match="HTTPS"):
         evaluate_matrix(fake_locks, "filelock", "4.2.1", ">=3.11", "http://untrusted.test")
+
+def test_checked_in_canonical_locks_produce_bounded_metadata_report() -> None:
+    """Exercise the real four-lock parser; do not assert future lock versions."""
+    root = Path(__file__).resolve().parents[1]
+    report = evaluate_matrix(root, "filelock", "4.2.1", ">=3.11", METADATA_SOURCE)
+    assert len(report["locks"]) == len(LOCKS)
+    assert [entry["python_minor"] for entry in report["locks"]] == [minor for _, minor in LOCKS]
+    assert all(len(entry["lock_sha256"]) == 64 for entry in report["locks"])
+    assert all(entry["installed_pin"] for entry in report["locks"])
+    assert report["metadata_authenticated"] is False
+    assert report["security_clearance"] == "NOT_ESTABLISHED"
+    assert report["classification"] in {"INCOMPATIBLE", "METADATA_COMPATIBLE_ONLY"}
+
