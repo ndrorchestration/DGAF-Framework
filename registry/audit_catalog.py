@@ -159,7 +159,7 @@ def collect_missing_implementation_paths(repo_root: Path | str, catalog: dict[st
     unmapped repository path is itself an audit.
     """
 
-    root = Path(repo_root)
+    root = Path(repo_root).resolve()
     missing: list[dict[str, str]] = []
     audits = catalog.get("audits")
     if not isinstance(audits, list):
@@ -175,7 +175,16 @@ def collect_missing_implementation_paths(repo_root: Path | str, catalog: dict[st
         for value in implementation:
             if not isinstance(value, str) or not value:
                 continue
-            if not (root / value).exists():
+            binding = Path(value)
+            # Catalog bindings must remain relative to this repository, even
+            # when an existing symlink would otherwise resolve outside it.
+            target = root / binding
+            if (
+                binding.is_absolute()
+                or ".." in binding.parts
+                or not target.exists()
+                or not target.resolve().is_relative_to(root)
+            ):
                 missing.append({"audit_id": str(audit_id or ""), "path": value})
 
     return sorted(missing, key=lambda item: (item["audit_id"], item["path"]))

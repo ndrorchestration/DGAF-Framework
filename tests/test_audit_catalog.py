@@ -102,3 +102,40 @@ def test_missing_implementation_path_is_reported_deterministically(tmp_path):
         {"audit_id": "AUD-A", "path": "missing/a.yml"},
         {"audit_id": "AUD-Z", "path": "missing/z.yml"},
     ]
+
+def test_implementation_bindings_reject_absolute_and_parent_escape(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "internal.yml").write_text("name: Internal\n", encoding="utf-8")
+    external = tmp_path / "external.yml"
+    external.write_text("name: External\n", encoding="utf-8")
+
+    catalog = {
+        "audits": [
+            _entry(
+                id="AUD-PATH-BOUNDARY",
+                implementation=["internal.yml", str(external), "../external.yml"],
+            )
+        ]
+    }
+    assert collect_missing_implementation_paths(repo, catalog) == [
+        {"audit_id": "AUD-PATH-BOUNDARY", "path": path}
+        for path in sorted(["../external.yml", str(external)])
+    ]
+
+
+def test_implementation_bindings_reject_symlink_escape(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    external = tmp_path / "external.yml"
+    external.write_text("name: External\n", encoding="utf-8")
+    link = repo / "linked.yml"
+    try:
+        link.symlink_to(external)
+    except (NotImplementedError, OSError) as exc:
+        pytest.skip(f"symlink creation unavailable: {exc}")
+
+    catalog = {"audits": [_entry(implementation=["linked.yml"])]}
+    assert collect_missing_implementation_paths(repo, catalog) == [
+        {"audit_id": "AUD-TEST-001", "path": "linked.yml"}
+    ]
