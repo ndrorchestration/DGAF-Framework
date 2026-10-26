@@ -175,9 +175,7 @@ def test_p35_unverified_three_adapter_paths_are_nonempirical_fail_closed(monkeyp
 
     # Dynamic import after namespace isolation prevents isort from hoisting
     # these imports ahead of the test-only dependency boundary.
-    CanonicalEpoch004TGLAdapter = importlib.import_module(
-        "canonical_epoch_004_adapter"
-    ).CanonicalEpoch004TGLAdapter
+    CanonicalEpoch004TGLAdapter = importlib.import_module("canonical_epoch_004_adapter").CanonicalEpoch004TGLAdapter
     CanonicalQualifiedTGLAdapter = importlib.import_module(
         "canonical_profile_tgl_diagnostic"
     ).CanonicalQualifiedTGLAdapter
