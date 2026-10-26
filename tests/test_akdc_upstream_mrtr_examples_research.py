@@ -8,7 +8,13 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-from test_akdc_raw_wire_research import NOW, TEST_CAPTURE_KEY, TEST_KEY_ID, mcp_req, witness
+from test_akdc_raw_wire_research import (
+    NOW,
+    TEST_CAPTURE_KEY,
+    TEST_KEY_ID,
+    mcp_req,
+    witness,
+)
 
 from experiments.akdc.mrtr_upstream_fixture_research import observe_mrtr_example
 from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
