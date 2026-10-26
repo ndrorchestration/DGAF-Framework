@@ -1,0 +1,82 @@
+name: AKDC SDK v2 In-Process Wire Research (Nonrelease)
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - research/akdc-sdk-v2-wire-capture-gate11-20261026
+    paths:
+      - 'experiments/akdc/sdk_v2_probe/**'
+      - '.github/workflows/akdc-sdk-v2-wire-research.yml'
+  pull_request:
+    branches:
+      - research/akdc-official-mrtr-fixtures-gate10-20261026
+    paths:
+      - 'experiments/akdc/sdk_v2_probe/**'
+      - '.github/workflows/akdc-sdk-v2-wire-research.yml'
+
+jobs:
+  in-process-sdk-wire:
+    name: Published v2 SDK 2026 in-process wire witness (not production)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: experiments/akdc/sdk_v2_probe
+    steps:
+      - name: Checkout research branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - name: Setup Node 24
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Resolve direct-version-pinned published SDK in scratch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f package.json
+          npm install --package-lock-only --ignore-scripts --no-fund --no-audit
+          test -s package-lock.json
+          echo "PROVISIONAL-NOT-REVIEWED-NOT-CANONICAL-LOCK"
+          sha256sum package-lock.json
+          npm ci --ignore-scripts --no-fund --no-audit
+          npm ls --depth=0
+      - name: Exercise real SDK in-process HTTP transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          node probe.mjs
+          test -s evidence/sdk_wire_synthetic.json
+          test -s evidence/trace_manifest.json
+          sha256sum evidence/sdk_wire_synthetic.json evidence/trace_manifest.json
+      - name: Upload synthetic wire and provisional lock proof
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: akdc-sdk-v2-inprocess-provisional-${{ github.sha }}
+          path: |
+            experiments/akdc/sdk_v2_probe/evidence/sdk_wire_synthetic.json
+            experiments/akdc/sdk_v2_probe/evidence/trace_manifest.json
+            experiments/akdc/sdk_v2_probe/package-lock.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  sdk-dependency-audit:
+    name: Published SDK v2 dependency security audit (nonwaived)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: experiments/akdc/sdk_v2_probe
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Independently resolve temporary npm lock and audit
+        run: |
+          set -euo pipefail
+          npm install --package-lock-only --ignore-scripts --no-fund --no-audit
+          npm audit --audit-level=high
