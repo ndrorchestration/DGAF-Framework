@@ -33,3 +33,14 @@ The SDK trace artifact contains **synthetic test-only input/output**, deliberate
 4. Add independently produced official SDK traces across capability negotiation, MRTR rounds and network transport **only** after privacy/security review.
 
 **Hard ceilings:** `DGAF_V1_RELEASE=HOLD`; `SCIENTIFIC_N_INCREMENT=0`; `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`; `HIGH_ASSURANCE=NOT_AUTHORIZED`. No protected main, production runtime, authorization, scientific experiment, pilot state, or SYN-AUTH-01 #1508 changes.
+
+
+## Verified hosted execution and dependency-lock closure (2026-10-26)
+
+Official TypeScript SDK v2 in-process wire job **SUCCESS** at commit `6f0f72cd61fbf21dd756431ae926f6dfd9b756d4`, workflow run `40335433472`, job `121615612128`. Its separate **non-waived npm audit SUCCESS**, job `121615611669`, after updating isolated research fixture Zod direct pin from `4.2.0` to audit-reported `4.6.7` for `GHSA-mrhx-c7xc-m3w5`. The earlier Zod vulnerability was observed, not waived. These results do not remediate inherited Python CI advisories in #1477/#1530.
+
+The actual SDK negotiated **MCP 2026-07-28**, generated exactly **two correlated raw JSON-RPC tools/call exchanges** with result types `complete` and `input_required`, and both were admitted as non-authorizing DGAF observations through the original pinned DGAF ingress code. Raw synthetic wire fixture SHA-256: `f07f8a3ca2f266b2e6e312e97d54bd872c4898abca076ffa0594eee63f380796`. This demonstrates tested in-process SDK behavior only; no live network, real identity or side-effect execution.
+
+Hosted Actions artifact `12656947266` captured the 15-entry npm lock plus trace; exact extracted `package-lock.json` SHA-256 `aebc3f74fedec3a5d3927d992609a6a3a1dc1460d456f561f186e47c45646afd`, Git blob `1b047420c3677d13bd2aac9432b1acf08dbadd3e`. The exact archived lock bytes were committed into this stacked **DRAFT** PR, and the branch's research workflow was revised to enforce SHA-256 equality and use **npm ci** for both SDK execution and npm audit. This moves from initial floating transitive resolution to pinned-integrity reproducibility at the *research dependency tree* level. It is not a signed official DGAF bootstrap or independently reviewed security authorization.
+
+**Next acceptance checkpoint:** verify the *new exact head* SHA-lock enforcement workflow; prior green jobs are historical and do not certify the revised workflow. Its result remains an explicit open gate until observed.
