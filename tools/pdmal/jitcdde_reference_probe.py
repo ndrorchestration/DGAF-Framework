@@ -83,11 +83,9 @@ def build_symbolic_rhs(y, t, sin) -> list:
         neighbors[v].append(u)
     return [
         FREQUENCIES[i]
-        + COUPLING / len(neighbors[i])
-        * sum(
-            sin((y(j, t - DELAYS[(i, j)]) if (i, j) in DELAYS else y(j)) - y(i))
-            for j in neighbors[i]
-        )
+        + COUPLING
+        / len(neighbors[i])
+        * sum(sin((y(j, t - DELAYS[(i, j)]) if (i, j) in DELAYS else y(j)) - y(i)) for j in neighbors[i])
         for i in range(len(INITIAL))
     ]
 
@@ -105,9 +103,7 @@ def run_probe() -> dict[str, object]:
         ) from exc
 
     solver = jitcdde(build_symbolic_rhs(y, t, sin), n=len(INITIAL), verbose=False)
-    solver.set_integration_parameters(
-        atol=1e-12, rtol=1e-10, first_step=0.001, max_step=ADAPTIVE_MAX_STEP
-    )
+    solver.set_integration_parameters(atol=1e-12, rtol=1e-10, first_step=0.001, max_step=ADAPTIVE_MAX_STEP)
     solver.constant_past(INITIAL, time=0.0)
 
     # Avoid step_on_discontinuities here: it advances beyond early requested
