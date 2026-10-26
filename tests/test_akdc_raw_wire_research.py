@@ -220,8 +220,8 @@ class TestMCPRawPair(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "resultType"):
             self.parse(resp={"jsonrpc": "2.0", "id": 1, "result": {"content": []}})
 
-    def test_input_required_minimal_discriminator_observed(self):
-        x = self.parse(resp=mcp_resp(result={"resultType": "input_required"}))
+    def test_input_required_with_opaque_state_observed(self):
+        x = self.parse(resp=mcp_resp(result={"resultType": "input_required", "requestState": "opaque"}))
         self.assertEqual(x.observation.payload["response"]["result"]["resultType"], "input_required")
         self.assertTrue(validate_external_runtime_envelope(x.record_only_envelope(), now=NOW)["admitted"])
 
