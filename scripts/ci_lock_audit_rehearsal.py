@@ -52,25 +52,51 @@ def inspect_locks(root: Path) -> list[dict]:
                 "python_minor": expected_minor,
                 "sha256": hashlib.sha256(raw).hexdigest(),
                 "package_count": len(packages),
+                # Internal check only: never report clean if a scanner silently omits a pin.
+                "_expected_pins": {
+                    name.lower().replace("_", "-").replace(".", "-"): version
+                    for name, version in packages
+                },
             }
         )
     return rows
 
 
-def interpret_result(exit_code: int, output: str) -> dict:
-    """Distinguish vulnerability findings from a scanner execution failure."""
+def interpret_result(exit_code: int, output: str, expected_pins: dict | None = None) -> dict:
+    """Fail on partial/substituted/duplicated reports as well as actual advisories."""
     try:
         payload = json.loads(output)
     except (json.JSONDecodeError, ValueError):
         return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
     deps = payload.get("dependencies") if isinstance(payload, dict) else None
-    if not isinstance(deps, list) or any(not isinstance(dep, dict) for dep in deps):
+    if not isinstance(deps, list) or not deps or any(not isinstance(dep, dict) for dep in deps):
         return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
+    observed = {}
+    for dep in deps:
+        name, version = dep.get("name"), dep.get("version")
+        if not isinstance(name, str) or not name.strip() or not isinstance(version, str) or not version.strip():
+            return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
+        normalized = name.lower().replace("_", "-").replace(".", "-")
+        if normalized in observed:
+            return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
+        observed[normalized] = version
+    if expected_pins is not None and observed != expected_pins:
+        return {
+            "status": "AUDIT_ERROR",
+            "exit_code": exit_code,
+            "vulnerability_count": None,
+            "coverage": "MISSING_SUBSTITUTED_OR_EXTRA_PACKAGE",
+            "expected_package_count": len(expected_pins),
+            "observed_package_count": len(observed),
+        }
     count = 0
     findings_by_package = []
     for dep in deps:
         findings = dep.get("vulns")
-        if not isinstance(findings, list):
+        if not isinstance(findings, list) or any(
+            not isinstance(vuln, dict) or not isinstance(vuln.get("id"), str)
+            for vuln in findings
+        ):
             return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
         if findings:
             findings_by_package.append(
@@ -135,7 +161,11 @@ def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
             command = audit_command(path)
             try:
                 process = runner(command, text=True, capture_output=True, timeout=180)
-                result = interpret_result(process.returncode, process.stdout)
+                result = interpret_result(
+                    process.returncode,
+                    process.stdout,
+                    None if item is None else item["_expected_pins"],
+                )
             except (OSError, subprocess.TimeoutExpired) as exc:
                 result = {
                     "status": "AUDIT_ERROR",
@@ -145,7 +175,8 @@ def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
                 }
             record = {"target": "auditor_environment" if item is None else "canonical_lock"}
             if item is not None:
-                record.update(item)
+                # Keep the expected package mapping internal; expose only verified count.
+                record.update({key: value for key, value in item.items() if key != "_expected_pins"})
             record["command_flags"] = command[3:]
             record.update(result)
             report["locks"].append(record)
