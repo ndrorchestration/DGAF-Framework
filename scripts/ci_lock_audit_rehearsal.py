@@ -41,8 +41,11 @@ def inspect_locks(root: Path) -> list[dict]:
         names = [p.lower().replace("_", "-").replace(".", "-") for p, _ in packages]
         if not names or len(names) != len(set(names)):
             raise ValueError(f"missing or duplicate package pins in {name}")
-        if not all("--hash=sha256:" in source for _ in [None]):
-            raise ValueError(f"unhashed canonical lock: {name}")
+        for package, version in packages:
+            escaped = re.escape(f"{package}=={version}")
+            hash_line = rf"^{escaped}[ \t]*\\\r?\n[ \t]+--hash=sha256:[0-9a-f]{{64}}(?:\r?\n|$)"
+            if re.search(hash_line, source, re.MULTILINE) is None:
+                raise ValueError(f"missing exact hash for {package} in {name}")
         rows.append(
             {
                 "filename": name,
@@ -64,10 +67,19 @@ def interpret_result(exit_code: int, output: str) -> dict:
     if not isinstance(deps, list) or any(not isinstance(dep, dict) for dep in deps):
         return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
     count = 0
+    findings_by_package = []
     for dep in deps:
         findings = dep.get("vulns")
         if not isinstance(findings, list):
             return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
+        if findings:
+            findings_by_package.append(
+                {
+                    "package": str(dep.get("name", "UNKNOWN"))[:100],
+                    "version": str(dep.get("version", "UNKNOWN"))[:50],
+                    "advisory_ids": [str(vuln.get("id", "UNKNOWN"))[:100] for vuln in findings],
+                }
+            )
         count += len(findings)
     if exit_code == 0 and count == 0:
         status = "NO_REPORTED_VULNERABILITIES"
@@ -80,6 +92,7 @@ def interpret_result(exit_code: int, output: str) -> dict:
         "exit_code": exit_code,
         "vulnerability_count": count,
         "dependency_count": len(deps),
+        "findings": findings_by_package,
     }
 
 
