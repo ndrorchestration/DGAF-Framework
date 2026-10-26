@@ -34,8 +34,10 @@ def test_zero_coupling_has_exact_uncoupled_analytic_reference():
 
 
 def test_uniform_equilibrium_is_stationary_even_with_delay():
-    states = simulate_delayed_kuramoto(EDGES, (0.5,) * 3, (0.0,) * 3,
-                                         delays={(0, 1): 3, (2, 1): 7}, steps=40)
+    states = simulate_delayed_kuramoto(
+        EDGES, (0.5,) * 3, (0.0,) * 3,
+        delays={(0, 1): 3, (2, 1): 7}, steps=40,
+    )
     assert all(x == pytest.approx(0.5) for state in states for x in state)
     assert circular_order_parameter(states[-1]) == pytest.approx(1.0)
 
@@ -50,8 +52,10 @@ def test_delays_affect_numerical_trajectory_without_changing_initial_condition()
 def test_constant_global_phase_shift_is_invariant():
     lag = {(0, 1): 2, (1, 2): 1, (2, 0): 4}
     base = run(delays=lag)
-    shifted = simulate_delayed_kuramoto(EDGES, tuple(x + 1.7 for x in INITIAL),
-                                          OMEGA, delays=lag, dt=0.04, steps=25)
+    shifted = simulate_delayed_kuramoto(
+        EDGES, tuple(x + 1.7 for x in INITIAL),
+        OMEGA, delays=lag, dt=0.04, steps=25,
+    )
     for state_a, state_b in zip(base, shifted):
         for a, b in zip(state_a, state_b):
             assert b - a == pytest.approx(1.7, abs=1e-12)
@@ -63,8 +67,10 @@ def test_zero_lag_explicit_map_equals_default():
 
 def test_dodecahedral_proxy_can_run_without_extra_dependencies():
     theta = tuple(0.1 * i for i in range(20))
-    traces = simulate_delayed_kuramoto(DODECAHEDRAL_EDGES, theta, (0.0,) * 20,
-                                         delays={(0, 1): 2, (10, 0): 1}, dt=0.05, steps=2)
+    traces = simulate_delayed_kuramoto(
+        DODECAHEDRAL_EDGES, theta, (0.0,) * 20,
+        delays={(0, 1): 2, (10, 0): 1}, dt=0.05, steps=2,
+    )
     assert len(traces[-1]) == 20
     assert len(traces) == 3
 
