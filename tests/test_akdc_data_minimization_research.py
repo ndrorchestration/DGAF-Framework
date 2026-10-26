@@ -3,7 +3,7 @@
 import json
 import unittest
 
-from test_akdc_raw_wire_research import NOW, mcp_req, mcp_resp, witness
+from test_akdc_raw_wire_research import NOW, TEST_CAPTURE_KEY, TEST_KEY_ID, mcp_req, mcp_resp, witness
 
 from experiments.akdc.raw_wire_research import normalize_mcp_tools_call
 from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
@@ -16,6 +16,8 @@ class TestAKDCCaptureMinimization(unittest.TestCase):
             response if response is not None else mcp_resp(),
             witness(),
             negotiated_version="2026-07-28",
+            capture_key=TEST_CAPTURE_KEY,
+            key_id=TEST_KEY_ID,
         )
 
     def assert_not_retained(self, captured, *secrets):
