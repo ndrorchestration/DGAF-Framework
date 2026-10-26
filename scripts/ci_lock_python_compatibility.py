@@ -3,6 +3,7 @@
 This is a bounded metadata check, NOT a vulnerability scan, package resolver,
 signed-lock attestation, approval, or permission to change required CI lanes.
 """
+
 from __future__ import annotations
 
 import argparse
