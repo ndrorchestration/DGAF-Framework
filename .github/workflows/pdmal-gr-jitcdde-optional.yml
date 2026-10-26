@@ -10,12 +10,6 @@ on:
     paths:
       - '.github/workflows/pdmal-gr-jitcdde-optional.yml'
       - 'tools/pdmal/jitcdde_reference_probe.py'
-  pull_request:
-    types: [opened, synchronize]
-    branches: [main]
-    paths:
-      - '.github/workflows/pdmal-gr-jitcdde-optional.yml'
-      - 'tools/pdmal/jitcdde_reference_probe.py'
 
 permissions:
   contents: read
@@ -26,11 +20,7 @@ concurrency:
 
 jobs:
   optional-maintained-dde-library-smoke:
-    if: >-
-      (github.event_name == 'push' && github.ref == 'refs/heads/research/pdmal-delay-sandbox-20261026') ||
-      (github.event_name == 'pull_request' &&
-       github.event.pull_request.head.repo.full_name == 'ndrorchestration/DGAF-Framework' &&
-       github.event.pull_request.head.ref == 'research/pdmal-delay-sandbox-20261026')
+    if: github.ref == 'refs/heads/research/pdmal-delay-sandbox-20261026'
     runs-on: ubuntu-24.04
     timeout-minutes: 18
     env:
@@ -41,7 +31,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           persist-credentials: false
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
 
       - name: Set up isolated Python 3.11
         uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
