@@ -38,7 +38,8 @@ def scanner_json(*, vulnerable: bool = False) -> str:
                     ]
                     if vulnerable
                     else [],
-                }
+                },
+                {"name": "setuptools", "version": "83.0.0", "vulns": []},
             ],
             "fixes": [],
         }
@@ -156,3 +157,74 @@ def test_reject_duplicate_package_versions(fixture_root: Path) -> None:
     )
     with pytest.raises(ValueError, match="duplicate"):
         rehearsal.inspect_locks(fixture_root)
+
+def test_missing_package_cannot_be_reported_clean(fixture_root: Path, tmp_path: Path) -> None:
+    def partial_runner(command, **kwargs):
+        _ = kwargs
+        raw = json.loads(scanner_json())
+        if "--local" not in command:
+            raw["dependencies"] = raw["dependencies"][:1]
+        return SimpleNamespace(returncode=0, stdout=json.dumps(raw))
+
+    report = rehearsal.rehearse(fixture_root, tmp_path / "partial.json", runner=partial_runner)
+    assert report["result"] == "AUDIT_ERROR"
+    assert all(item["status"] == "AUDIT_ERROR" for item in report["locks"][1:])
+    assert all(item["coverage"] == "MISSING_SUBSTITUTED_OR_EXTRA_PACKAGE" for item in report["locks"][1:])
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["wrong-version", "unknown-package", "duplicate-package", "missing-version"],
+)
+def test_substituted_or_duplicate_packages_fail_closed(
+    fixture_root: Path, tmp_path: Path, mutation: str
+) -> None:
+    def tampered_runner(command, **kwargs):
+        _ = kwargs
+        payload = json.loads(scanner_json())
+        if "--local" not in command:
+            if mutation == "wrong-version":
+                payload["dependencies"][0]["version"] = "4.2.1"
+            elif mutation == "unknown-package":
+                payload["dependencies"][1]["name"] = "invented"
+            elif mutation == "duplicate-package":
+                payload["dependencies"].append(payload["dependencies"][0].copy())
+            else:
+                payload["dependencies"][0].pop("version")
+        return SimpleNamespace(returncode=0, stdout=json.dumps(payload))
+
+    report = rehearsal.rehearse(fixture_root, tmp_path / "tampered.json", runner=tampered_runner)
+    assert report["result"] == "AUDIT_ERROR"
+    assert all(row["status"] == "AUDIT_ERROR" for row in report["locks"][1:])
+
+
+def test_empty_installed_environment_scan_never_establishes_cleanliness(
+    fixture_root: Path, tmp_path: Path
+) -> None:
+    def empty_runner(command, **kwargs):
+        _ = kwargs
+        return SimpleNamespace(returncode=0, stdout='{"dependencies":[],"fixes":[]}')
+
+    report = rehearsal.rehearse(fixture_root, tmp_path / "empty.json", runner=empty_runner)
+    assert report["result"] == "AUDIT_ERROR"
+    assert all(row["status"] == "AUDIT_ERROR" for row in report["locks"])
+
+
+def test_source_binding_distinguishes_merge_sha_from_pr_head(
+    fixture_root: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_SHA", "merge-tree-sha")
+    monkeypatch.setenv("PR_HEAD_SHA", "authored-head-sha")
+    monkeypatch.setenv("PR_BASE_SHA", "base-sha")
+
+    def safe_runner(command, **kwargs):
+        _ = (command, kwargs)
+        return SimpleNamespace(returncode=0, stdout=scanner_json())
+
+    result = rehearsal.rehearse(fixture_root, tmp_path / "provenance.json", runner=safe_runner)
+    assert result["result"] == "NO_REPORTED_VULNERABILITIES_ONLY"
+    assert result["github_event_sha"] == "merge-tree-sha"
+    assert result["pr_head_sha"] == "authored-head-sha"
+    assert result["pr_base_sha"] == "base-sha"
+    assert result["github_event_sha"] != result["pr_head_sha"]
+
