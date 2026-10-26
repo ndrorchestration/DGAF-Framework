@@ -154,16 +154,24 @@ class ProcludingPremiseGate:
             Return True  = invariant satisfied (pass)
             Return False = invariant violated (KILL)
 
-        If check_fn is None, defaults to True (pass-through, for integration testing).
+        An absent, non-callable or non-boolean predicate cannot establish an
+        invariant result. None/invalid predicates raise ValueError rather than
+        inventing a constitutional violation or silently returning PASS.
 
         Raises:
-            PremiseViolationError on first violated invariant (fail-fast).
+            ValueError for missing/invalid predicate evidence.
+            PremiseViolationError on a verified local False result (fail-fast).
         """
+        if not callable(check_fn):
+            raise ValueError("P-35 predicate/check_fn is required and must be callable")
+
         input_hash = self._hash_input(input_text)
         timestamp = datetime.now(timezone.utc).isoformat()
 
         for inv in sorted(self._invariants, key=lambda i: i.id):
-            satisfied = check_fn(input_text, inv) if check_fn is not None else True
+            satisfied = check_fn(input_text, inv)
+            if type(satisfied) is not bool:
+                raise ValueError("P-35 predicate/check_fn must return a strict boolean")
             if not satisfied:
                 event = PremiseViolationEvent(
                     invariant_id=inv.id,
