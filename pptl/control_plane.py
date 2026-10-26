@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from enum import Enum
 from types import MappingProxyType
@@ -11,7 +12,7 @@ from .branch_registry import BranchRecord, BranchRegistry
 from .budget_ledger import BudgetExceeded, BudgetLedger, Consumption
 from .governance_envelope import GovernanceEnvelope, ResourceBudget
 from .state_identity import StateRegistry
-from .triadic_governance_loop import TurnAuditRecord
+from .triadic_governance_loop import GateResult, TriadicGovernanceLoop, TurnAuditRecord
 
 
 class TaskState(str, Enum):
@@ -277,6 +278,56 @@ class ControlPlane:
         self._transition(task, TaskState.EVALUATING)
         self._set_runtime(task, reset_tgl=True)
 
+    @staticmethod
+    def _valid_complete_tgl_audit(result: object) -> bool:
+        """Validate sealed TGL evidence against the canonical execution shape and decision lattice."""
+        if not isinstance(result, TurnAuditRecord) or not result.verify_seal():
+            return False
+
+        gates = result.gate_records
+        if not gates:
+            return False
+
+        manifest = {step: (pattern, gate_name) for step, pattern, gate_name in TriadicGovernanceLoop.GATE_MANIFEST}
+        steps = [gate.step for gate in gates]
+        if len(set(steps)) != len(steps):
+            return False
+        if steps[-1] != 9:
+            return False
+
+        for gate in gates:
+            expected = manifest.get(gate.step)
+            if expected is None or expected != (gate.pattern, gate.gate_name):
+                return False
+
+        pre_herald = gates[:-1]
+        if not pre_herald or pre_herald[0].step != 0:
+            return False
+        if pre_herald[0].result not in {GateResult.PASS, GateResult.KILL}:
+            return False
+
+        terminal = next((gate for gate in pre_herald if gate.result == GateResult.KILL), None)
+        expected_pre_steps = list(range(0, terminal.step + 1)) if terminal else list(range(0, 9))
+        if [gate.step for gate in pre_herald] != expected_pre_steps:
+            return False
+
+        if any(gate.result == GateResult.KILL for gate in pre_herald[:-1]):
+            return False
+
+        if any(gate.step == 7 for gate in pre_herald):
+            phi = next((gate for gate in pre_herald if gate.step == 6), None)
+            hpg = next(gate for gate in pre_herald if gate.step == 7)
+            if phi is None:
+                return False
+            if phi.result != GateResult.PASS and hpg.result != GateResult.SKIP:
+                return False
+
+        expected_status = TriadicGovernanceLoop._reduce_status(gates)
+        if result.final_status != expected_status:
+            return False
+
+        return True
+
     def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
         if self._tgl_runner is None:
             raise ControlPlaneViolation("no TGL runner configured")
@@ -286,16 +337,23 @@ class ControlPlane:
         try:
             result = self._tgl_runner(input_text, context or {})
         except Exception as exc:
-            self._events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": str(exc)})
+            self._events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": "TGL runner exception"})
             self._escalate(task, "TGL runner exception")
             raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
-        status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
-        seal_valid = isinstance(result, TurnAuditRecord) and result.verify_seal()
-        if status is None or not seal_valid:
+        try:
+            status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
+            audit_valid = self._valid_complete_tgl_audit(result) and (
+                result.input_hash == hashlib.sha256(input_text.encode("utf-8")).hexdigest()
+            )
+            seal = result.seal_hash if audit_valid else None
+        except Exception as exc:
             self._set_runtime(task, reset_tgl=True)
-            self._escalate(task, "TGL result lacks a valid cryptographic seal")
-            raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
-        seal = result.seal_hash
+            self._escalate(task, "TGL evidence verification raised an exception")
+            raise ControlPlaneViolation("TGL result verification failed; task escalated") from exc
+        if status is None or not audit_valid or not seal:
+            self._set_runtime(task, reset_tgl=True)
+            self._escalate(task, "TGL result lacks valid sealed evidence: incomplete or noncanonical audit")
+            raise ControlPlaneViolation("TGL result lacks valid sealed evidence: incomplete or noncanonical audit")
         self._set_runtime(task, tgl_status=status, tgl_seal=seal)
         self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
         if status in {"KILL", "KILL_REC"}:

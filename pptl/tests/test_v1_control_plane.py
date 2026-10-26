@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from types import SimpleNamespace
 
 import pytest
@@ -17,18 +18,41 @@ from pptl.control_plane import (
 )
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.state_identity import StateRegistry, canonical_state, state_id
-from pptl.triadic_governance_loop import TurnAuditRecord, TurnStatus
+from pptl.triadic_governance_loop import (
+    GateRecord,
+    GateResult,
+    TriadicGovernanceLoop,
+    TurnAuditRecord,
+    TurnStatus,
+)
 
 VALID_SEAL = "0" * 64
 
 
-def tgl_result(status: str) -> TurnAuditRecord:
+def tgl_result(status: str, input_text: str = "input") -> TurnAuditRecord:
+    records = [
+        GateRecord(step, pattern, gate_name, GateResult.PASS)
+        for step, pattern, gate_name in TriadicGovernanceLoop.GATE_MANIFEST
+    ]
+    if status == "WARN":
+        records[1] = GateRecord(1, "P-31", "SCPE_Prune", GateResult.WARN)
+    elif status == "ESCALATE":
+        records[1] = GateRecord(1, "P-31", "SCPE_Prune", GateResult.SKIP)
+    elif status == "KILL":
+        records = [
+            GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS),
+            GateRecord(1, "P-31", "SCPE_Prune", GateResult.KILL),
+            GateRecord(9, "P-01", "Herald_FanOut", GateResult.PASS),
+        ]
+    elif status != "PASS":
+        raise ValueError(f"unsupported canonical test status: {status}")
+
     audit = TurnAuditRecord(
         session_id="control-plane-test",
         turn_index=1,
         agent_id="test-agent",
-        input_hash="a" * 64,
-        gate_records=[],
+        input_hash=hashlib.sha256(input_text.encode("utf-8")).hexdigest(),
+        gate_records=records,
         final_status=TurnStatus(status),
         timestamp="2026-09-17T00:00:00+00:00",
     )
@@ -334,7 +358,7 @@ def test_child_requires_active_parent_and_inherits_lineage():
 
 
 def test_commit_ready_requires_explicit_envelope_permission_after_tgl_pass():
-    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("PASS"))
+    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("PASS", input_text=_input))
     task = ControlTask("root", envelope())
     plane.submit(task)
     plane.admit("root")
@@ -356,7 +380,7 @@ def test_merge_ready_requires_successful_tgl_evaluation():
 
 
 def test_merge_ready_rejects_warn_status():
-    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("WARN"))
+    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("WARN", input_text=_input))
     task = ControlTask("root", envelope())
     plane.submit(task)
     plane.admit("root")
@@ -367,7 +391,7 @@ def test_merge_ready_rejects_warn_status():
 
 
 def test_merge_ready_accepts_only_pass_status():
-    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("PASS"))
+    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("PASS", input_text=_input))
     task = ControlTask("root", envelope())
     plane.submit(task)
     plane.admit("root")
@@ -392,7 +416,7 @@ def test_new_evaluation_replaces_previous_tgl_status():
     statuses = iter(("PASS", "ESCALATE"))
 
     def runner(_input, _context):
-        return tgl_result(next(statuses))
+        return tgl_result(next(statuses), input_text=_input)
 
     plane = ControlPlane(tgl_runner=runner)
     task = ControlTask("root", envelope())
@@ -425,6 +449,53 @@ def test_tgl_exception_escalates_and_releases_slot():
     assert task.state is TaskState.ESCALATED
     assert plane.ledgers["root"].active_concurrency == 0
     assert plane._lineage_active[root_lineage(task)] == 0
+
+
+def test_tgl_runner_exception_text_is_not_retained_in_events():
+    canary = "SYNTHETIC_SECRET_CANARY_NO_REAL_SECRET" + chr(10) + "FORGED_EVENT"
+
+    def failing_tgl(_input, _context):
+        raise RuntimeError(canary)
+
+    plane = ControlPlane(tgl_runner=failing_tgl)
+    task = ControlTask("root", envelope())
+    plane.submit(task)
+    plane.admit("root")
+    plane.begin_evaluation("root")
+
+    with pytest.raises(ControlPlaneViolation, match="TGL runner failed") as raised:
+        plane.evaluate_turn("root", "input")
+
+    failures = [event for event in plane.events if event["event"] == "TGL_RUNNER_FAILURE"]
+    assert failures == [{"event": "TGL_RUNNER_FAILURE", "task_id": "root", "reason": "TGL runner exception"}]
+    assert canary not in repr(plane.events)
+    assert canary not in str(raised.value)
+    assert task.state is TaskState.ESCALATED
+    assert task.last_tgl_status is None
+
+
+def test_tgl_runner_exception_with_unsafe_stringification_still_escalates():
+    class UnprintableRunnerError(Exception):
+        def __str__(self):
+            raise RuntimeError("synthetic __str__ failure")
+
+    def failing_tgl(_input, _context):
+        raise UnprintableRunnerError()
+
+    plane = ControlPlane(tgl_runner=failing_tgl)
+    task = ControlTask("root", envelope())
+    plane.submit(task)
+    plane.admit("root")
+    plane.begin_evaluation("root")
+
+    with pytest.raises(ControlPlaneViolation, match="TGL runner failed"):
+        plane.evaluate_turn("root", "input")
+
+    assert task.state is TaskState.ESCALATED
+    assert task.last_tgl_status is None
+    assert [event["reason"] for event in plane.events if event["event"] == "TGL_RUNNER_FAILURE"] == [
+        "TGL runner exception"
+    ]
 
 
 def test_start_expansion_consumes_round_and_node_without_leaking_reservation():
@@ -503,7 +574,7 @@ def _public_control_plane_transition_edges() -> set[tuple[str, str]]:
     observed: set[tuple[str, str]] = set()
 
     def fresh(*, side_effect_mode: str = "PROPOSE_ONLY", with_tgl: bool = False):
-        runner = (lambda _input, _context: tgl_result("PASS")) if with_tgl else None
+        runner = (lambda _input, _context: tgl_result("PASS", input_text=_input)) if with_tgl else None
         plane = ControlPlane(tgl_runner=runner)
         task = ControlTask("root", envelope(side_effect_mode=side_effect_mode))
         observed.add(_observe_state_change(task, lambda: plane.submit(task)))
