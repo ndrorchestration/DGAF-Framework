@@ -18,7 +18,11 @@ def test_hpg_is_not_executed_when_phi_closure_warns() -> None:
     audit = TriadicGovernanceLoop(
         session_id="TGL-ORDER-TEST",
         agent_id="test",
-        hooks=TGLHooks(phi_closure_fn=phi, hpg_fn=hpg),
+        hooks=TGLHooks(
+            premise_check_fn=lambda _text, _invariant: True,
+            phi_closure_fn=phi,
+            hpg_fn=hpg,
+        ),
     ).run_turn("safe")
 
     assert executed == ["phi"]
@@ -39,7 +43,10 @@ def test_hpg_is_not_executed_when_phi_closure_is_unwired() -> None:
     audit = TriadicGovernanceLoop(
         session_id="TGL-ORDER-TEST-SKIP",
         agent_id="test",
-        hooks=TGLHooks(hpg_fn=hpg),
+        hooks=TGLHooks(
+            premise_check_fn=lambda _text, _invariant: True,
+            hpg_fn=hpg,
+        ),
     ).run_turn("safe")
 
     assert executed == []
@@ -64,7 +71,11 @@ def test_hpg_executes_after_phi_closure_passes() -> None:
     audit = TriadicGovernanceLoop(
         session_id="TGL-ORDER-TEST-PASS",
         agent_id="test",
-        hooks=TGLHooks(phi_closure_fn=phi, hpg_fn=hpg),
+        hooks=TGLHooks(
+            premise_check_fn=lambda _text, _invariant: True,
+            phi_closure_fn=phi,
+            hpg_fn=hpg,
+        ),
     ).run_turn("safe")
 
     assert executed == ["phi", "hpg"]
