@@ -71,6 +71,7 @@ def test_downstream_gate_kill_sets_status_and_stops_execution():
         return GateResult.PASS
 
     hooks = TGLHooks(
+        premise_check_fn=lambda _text, _invariant: True,
         demijoul_fn=kill_gate,
         kappa_fn=should_not_run,
         hpg_fn=should_not_run,
@@ -84,7 +85,10 @@ def test_downstream_gate_kill_sets_status_and_stops_execution():
 @pytest.mark.governance
 def test_phi_closure_kill_sets_terminal_kill():
     """P-32 KILL is reduced to terminal KILL."""
-    hooks = TGLHooks(phi_closure_fn=lambda t, c: GateResult.KILL)
+    hooks = TGLHooks(
+        premise_check_fn=lambda _text, _invariant: True,
+        phi_closure_fn=lambda t, c: GateResult.KILL,
+    )
     audit = make_tgl(hooks).run_turn("phi closure fail")
     assert audit.final_status == TurnStatus.KILL
 
@@ -102,6 +106,7 @@ def test_phi_closure_warn_skips_hpg():
     """HPG must not execute unless Phi-Closure returns PASS."""
     executed = []
     hooks = TGLHooks(
+        premise_check_fn=lambda _text, _invariant: True,
         phi_closure_fn=lambda text, ctx: GateResult.WARN,
         hpg_fn=lambda text, ctx: executed.append(True) or GateResult.PASS,
     )
@@ -115,7 +120,10 @@ def test_phi_closure_warn_skips_hpg():
 def test_phi_closure_skip_skips_hpg():
     """An unwired Phi-Closure gate must also prevent HPG execution."""
     executed = []
-    hooks = TGLHooks(hpg_fn=lambda text, ctx: executed.append(True) or GateResult.PASS)
+    hooks = TGLHooks(
+        premise_check_fn=lambda _text, _invariant: True,
+        hpg_fn=lambda text, ctx: executed.append(True) or GateResult.PASS,
+    )
     audit = make_tgl(hooks).run_turn("phi skipped")
     hpg = next(g for g in audit.gate_records if g.step == 7)
     assert hpg.result == GateResult.SKIP
@@ -189,8 +197,11 @@ def test_all_unwired_gates_marked_skip():
 
 
 @pytest.mark.governance
-def test_p35_always_fires_regardless_of_hooks():
+def test_p35_missing_predicate_records_unverified_skip():
     audit = make_tgl().run_turn("p35 check")
     step0 = next(g for g in audit.gate_records if g.step == 0)
     assert step0.pattern == "P-35"
-    assert step0.result == GateResult.PASS
+    assert step0.result is GateResult.SKIP
+    assert "UNVERIFIED" in step0.notes
+    assert audit.final_status is TurnStatus.ESCALATE
+    assert audit.verify_seal()
