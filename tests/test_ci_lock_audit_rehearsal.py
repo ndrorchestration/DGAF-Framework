@@ -158,6 +158,7 @@ def test_reject_duplicate_package_versions(fixture_root: Path) -> None:
     with pytest.raises(ValueError, match="duplicate"):
         rehearsal.inspect_locks(fixture_root)
 
+
 def test_missing_package_cannot_be_reported_clean(fixture_root: Path, tmp_path: Path) -> None:
     def partial_runner(command, **kwargs):
         _ = kwargs
@@ -227,4 +228,3 @@ def test_source_binding_distinguishes_merge_sha_from_pr_head(
     assert result["pr_head_sha"] == "authored-head-sha"
     assert result["pr_base_sha"] == "base-sha"
     assert result["github_event_sha"] != result["pr_head_sha"]
-
