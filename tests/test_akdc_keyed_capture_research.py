@@ -103,8 +103,11 @@ class TestKeyedCaptureContracts(unittest.TestCase):
 
     def test_a2a_uses_keyed_commitment_and_non_authorizing_ingress(self):
         captured = normalize_a2a_status_update(
-            a2a(), witness(), negotiated_version="1.0.1",
-            capture_key=TEST_CAPTURE_KEY, key_id=TEST_KEY_ID,
+            a2a(),
+            witness(),
+            negotiated_version="1.0.1",
+            capture_key=TEST_CAPTURE_KEY,
+            key_id=TEST_KEY_ID,
         )
         self.assertTrue(captured.canonical_frame_digest.startswith("hmac-sha256:"))
         self.assertTrue(validate_external_runtime_envelope(captured.record_only_envelope(), now=NOW)["admitted"])
