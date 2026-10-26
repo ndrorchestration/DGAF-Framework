@@ -418,12 +418,13 @@ def test_dataset_lock_workflow_uses_bound_ci_lock_in_accepted_state() -> None:
 def test_dataset_lock_paths_cover_single_lock_only_pr() -> None:
     """One-file changes to every admitted CI lock must trigger this workflow."""
     import fnmatch
+    import re
 
     workflow = (ROOT / ".github" / "workflows" / "track-a-epoch-002-dataset-lock.yml").read_text(
         encoding="utf-8"
     )
     for event in ("pull_request",):
-        event_body = workflow.split(f"  {event}:\n", 1)[1].split("\n  ", 1)[0]
+        event_body = re.split(r"\n  [a-z_]+:", workflow.split(f"  {event}:\n", 1)[1], maxsplit=1)[0]
         paths_body = event_body.split("    paths:\n", 1)[1]
         patterns = tuple(
             line.strip().removeprefix("- ").strip("'\\\"")
