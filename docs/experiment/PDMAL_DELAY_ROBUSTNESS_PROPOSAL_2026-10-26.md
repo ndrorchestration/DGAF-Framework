@@ -76,3 +76,16 @@ Order parameter measures oscillator coherence only. It is **not** semantic corre
 - [Julia SciML DDEProblem + MethodOfSteps(Tsit5())](https://docs.sciml.ai/DiffEqDocs/dev/tutorials/dde_example/).
 
 An eligible non-author should independently implement the fixed input fixture and verify recorded source/environment versions, directed lag orientation, historical phase inputs, sampled trajectory and full-trajectory error against an external solver. Include discontinuity-adjacent checkpoints and time-step refinement, predeclare acceptance bounds, and retain raw comparison failures. Do not promote the separately coded same-system Euler method to **independent scientific verification**.
+
+## Structural comparator fixture implementation — NON-ADMITTED
+
+**Source:** `tools/pdmal/comparator_fixtures.py`; `tests/test_pdmal_comparator_fixtures.py`. This module constructs and fingerprints candidate comparison graphs but does **not** simulate oscillators, sample phase/noise outcomes, select a winner, or increment empirical N. The work is software design and graph-structure validation; its tests require fresh CI after the new commit.
+
+- The dodecahedral proxy reuses the repository-owned `DODECAHEDRAL_EDGES` constant, never a substituted or re-labeled topology.
+- The 20-node circular ladder consists of two 10-cycles and ten rungs. Each comparator has exactly 20 labeled vertices, 30 distinct undirected edges, degree 3 at every vertex, no loops and connectedness.
+- The random connected cubic control uses uniform randomly permuted degree-three stubs, rejecting loops, parallel edges, and disconnected graphs. Every *labeled simple 3-regular graph* has precisely `(3!)**20` corresponding stub matchings, so conditional rejection preserves uniformity over the *connected labeled simple cubic* sample space, assuming an unbiased PRNG shuffle. This does **not** produce a uniform distribution over unlabeled isomorphism classes. If `max_attempts` is exhausted, it raises rather than silently returning a biased fallback.
+- Graph identifiers are SHA-256 of a versioned, sorted **labeled edge list**. These fingerprints track fixture identity, not structural graph-isomorphism class, spectral features, security authenticity or independent validation.
+- `derive_seed(master_seed, domain, index)` uses domain-separated SHA-256 derivation for `graph` and `perturbation` pseudo-random seed namespaces. Distinct derived integers do not themselves prove statistical independence; independent graph realizations and perturbation sampling must still be prospectively reviewed before experiments.
+- **No experimental configuration is admitted:** coupling/delay grids, graph seeds, perturbation seeds, outcome definitions, blinding and confidence intervals remain unapproved. A graph being degree-3/30-edge matched is *not* proof that all communication cost, distances or dynamical properties are matched.
+
+**Gate:** review this structural generator and its sampling semantics independently before locking a prospective comparator manifest or running phase-drift trials. `SCIENTIFIC_N_INCREMENT=0`, `PILOT_AUTHORIZATION=NOT_GRANTED`, `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`, `DGAF_V1_RELEASE=HOLD`.
