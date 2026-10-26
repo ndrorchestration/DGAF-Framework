@@ -154,3 +154,65 @@ def test_excluded_artifact_requires_reason() -> None:
         assert "exclusion_reason" in str(exc)
     else:
         raise AssertionError("excluded artifact without reason must fail closed")
+
+
+def test_p35_unverified_three_adapter_paths_are_nonempirical_fail_closed() -> None:
+    """Synthetic one-turn control-flow proof, never a scientific/pilot run."""
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    pilot = Path(__file__).resolve().parent
+    for directory in (root, pilot):
+        if str(directory) not in sys.path:
+            sys.path.insert(0, str(directory))
+
+    from canonical_epoch_004_adapter import CanonicalEpoch004TGLAdapter
+    from canonical_profile_tgl_diagnostic import CanonicalQualifiedTGLAdapter
+    from dgaf_tgl_adapter import ConsensusState, DGAF_TGLAdapter
+    from pptl.triadic_governance_loop import GateResult, TurnStatus
+
+    def synthetic_state() -> ConsensusState:
+        return ConsensusState(
+            seed_id=20260817,
+            iteration=3,
+            agent_values=(0.1, -0.2, 0.3, 0.4),
+            alive=(True, True, True, True),
+            original_neighbors=((1, 3), (0, 2), (1, 3), (0, 2)),
+            active_neighbors=((1, 3), (0, 2), (1, 2), (0, 2)),
+            failure_history=((1,),),
+            failure_count_current=1,
+            failure_count_total=1,
+            current_final_std=0.2,
+            current_mean=0.15,
+            runtime_budget_remaining_ms=290000,
+            protocol_id="PDMAL-PREFREEZE-V1",
+        )
+
+    adapters = (
+        DGAF_TGLAdapter(session_id="p35-synthetic-unqualified"),
+        CanonicalQualifiedTGLAdapter(
+            session_id="p35-synthetic-diagnostic",
+            qualification_bytes=b"intentionally-invalid-test-only-qualification",
+        ),
+        CanonicalEpoch004TGLAdapter(
+            session_id="p35-synthetic-epoch004",
+            qualification_bytes=b"intentionally-invalid-test-only-qualification",
+        ),
+    )
+    for adapter in adapters:
+        state = synthetic_state()
+        original_values = tuple(state.agent_values)
+        result = adapter.run_turn(state)
+        assert tuple(state.agent_values) == original_values
+        assert result.next_values is None
+        assert result.decision == "FAIL_CLOSED"
+        assert result.attempt_status.value == "FAILURE"
+        assert result.audit.final_status is TurnStatus.ESCALATE
+        assert result.audit.verify_seal()
+        gates = result.audit.gate_records
+        assert [gate.step for gate in gates] == list(range(10))
+        assert gates[0].result is GateResult.SKIP
+        assert "UNVERIFIED" in gates[0].notes
+        assert all(gate.result is GateResult.SKIP for gate in gates[1:9])
+        assert result.audit.input_hash == result.input_hash
