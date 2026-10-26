@@ -101,8 +101,8 @@ def derive_seed(master_seed: int, domain: str, index: int) -> int:
     """Domain-separated deterministic seed schedule; NOT cryptographic sampling."""
     if type(master_seed) is not int or type(index) is not int or index < 0:
         raise ValueError("master_seed and nonnegative index must be integers")
-    if domain not in ("graph", "perturbation", "label"):
-        raise ValueError("domain must be 'graph', 'perturbation' or 'label'")
+    if domain not in ("graph", "perturbation", "label", "placement"):
+        raise ValueError("domain must be 'graph', 'perturbation', 'label' or 'placement'")
     payload = f"pdmal-gr-seed-v1|{master_seed}|{domain}|{index}".encode("ascii")
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big")
 
@@ -110,9 +110,10 @@ def derive_seed(master_seed: int, domain: str, index: int) -> int:
 def label_permutation(master_seed: int, arm: str, replicate: int) -> tuple[int, ...]:
     """Generate a reproducible old-to-new vertex map per arm and replicate.
 
-    Independent pseudorandom stream per arm and index prevents accidental
-    reuse of one chosen source vertex across non-isomorphic comparator arms.
-    A new vertex label is not a guarantee of matching structural position.
+    Separate deterministic PRNG seed namespaces generate distinct indexing
+    streams; collisions are still possible and no statistical independence
+    is proved. Relabeling physical nodes and all their attributes together
+    does NOT randomize their structural positions or disturbance exposure.
     No oscillator simulation, perturbation or experimental result is created.
     """
     valid_arms = ("dodecahedral_proxy", "circular_ladder", "random_connected_cubic")
@@ -125,6 +126,25 @@ def label_permutation(master_seed: int, arm: str, replicate: int) -> tuple[int, 
     mapping = list(range(N_NODES))
     rng.shuffle(mapping)
     return tuple(mapping)
+
+
+
+def prospective_perturbation_vertex(master_seed: int, arm: str, replicate: int) -> int:
+    """Return a distinct, prospectively sampled *source-label* disturbance site.
+
+    This selection uses a separate 'placement' PRNG seed stream, NOT the
+    vertex label-permutation stream. The site is uniform over twenty labeled
+    vertices, but structural exposures across graph families are not
+    guaranteed equivalent. Calling this helper constructs only a fixture:
+    it does not run, authorize or record a dynamical experiment.
+    """
+    valid_arms = ("dodecahedral_proxy", "circular_ladder", "random_connected_cubic")
+    if type(master_seed) is not int or type(replicate) is not int or replicate < 0:
+        raise ValueError("master_seed and nonnegative replicate must be integers")
+    if arm not in valid_arms:
+        raise ValueError("arm must be a known structural comparator")
+    stream_index = replicate * len(valid_arms) + valid_arms.index(arm)
+    return random.Random(derive_seed(master_seed, "placement", stream_index)).randrange(N_NODES)
 
 
 def relabel_cubic_graph(edges: Sequence[tuple[int, int]], old_to_new: Sequence[int]) -> tuple[tuple[int, int], ...]:
