@@ -118,7 +118,10 @@ def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
         "admission": "NOT_AUTHORIZED",
         "security_clearance": "NOT_ESTABLISHED",
         "scientific_n_increment": 0,
-        "github_sha": os.environ.get("GITHUB_SHA", "UNSET"),
+        # A pull_request GITHUB_SHA is a synthetic test merge, not the PR head.
+        "github_event_sha": os.environ.get("GITHUB_SHA", "UNSET"),
+        "pr_head_sha": os.environ.get("PR_HEAD_SHA", "UNSET"),
+        "pr_base_sha": os.environ.get("PR_BASE_SHA", "UNSET"),
         "github_run_id": os.environ.get("GITHUB_RUN_ID", "UNSET"),
         "scanner_environment": "PYTHON_3_11_EXPECTED_NOT_ATTESTED",
         "locks": [],
