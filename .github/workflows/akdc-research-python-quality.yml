@@ -10,6 +10,7 @@ on:
       - research/akdc-raw-frame-contract-gate6-20261026
       - research/akdc-minimal-evidence-gate8-20261026
       - research/akdc-keyed-capture-gate9-20261026
+      - research/akdc-official-mrtr-fixtures-gate10-20261026
     paths:
       - 'experiments/akdc/**'
       - 'tests/test_akdc_*.py'
@@ -20,6 +21,7 @@ on:
       - research/akdc-transactional-replay-gate4-20261026
       - research/akdc-raw-frame-contract-gate6-20261026
       - research/akdc-minimal-evidence-gate8-20261026
+      - research/akdc-keyed-capture-gate9-20261026
     paths:
       - 'experiments/akdc/**'
       - 'tests/test_akdc_*.py'
@@ -59,11 +61,13 @@ jobs:
             experiments/akdc/akdc_ingress_bridge.py
             experiments/akdc/replay_store_research.py
             experiments/akdc/raw_wire_research.py
+            experiments/akdc/mrtr_upstream_fixture_research.py
             tests/test_akdc_ingress_research.py
             tests/test_akdc_replay_store.py
             tests/test_akdc_raw_wire_research.py
             tests/test_akdc_data_minimization_research.py
             tests/test_akdc_keyed_capture_research.py
+            tests/test_akdc_upstream_mrtr_examples_research.py
             tests/test_akdc_mrtr_schema_research.py
           )
           export PYTHONPATH="$GITHUB_WORKSPACE"
@@ -82,7 +86,8 @@ jobs:
             tests/test_akdc_ingress_research.py tests/test_akdc_replay_store.py \
             tests/test_akdc_raw_wire_research.py tests/test_akdc_mrtr_schema_research.py \
             tests/test_akdc_data_minimization_research.py \
-            tests/test_akdc_keyed_capture_research.py -q
+            tests/test_akdc_keyed_capture_research.py \
+            tests/test_akdc_upstream_mrtr_examples_research.py -q
 
   advisory-security:
     name: AKDC inherited toolchain security audit (blocking evidence)
