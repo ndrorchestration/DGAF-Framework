@@ -16,7 +16,7 @@ PDMAL is **Phi-Driven Multi-Agent Lattice**, not Phi-Driven Pentagonal Multi-Age
 
 For receiver i: d(theta_i)/dt = omega_i + K / deg(i) * Σ_{j neighbor i} sin(theta_j(t − tau_ij) − theta_i(t)).
 
-**Implementation:** tools/pdmal/delay_sandbox.py, exercised by tests/test_pdmal_delay_sandbox.py.
+**Implementation:** `tools/pdmal/delay_sandbox.py`, exercised by `tests/test_pdmal_delay_sandbox.py` and the separate test-only Euler method-of-steps cross-check in `tests/test_pdmal_delay_oracle.py`.
 
 - tau_ij denotes sender j to receiver i (directed), with tau_ij = integer_steps_ij × dt. Each graph edge can have different directional latencies.
 - Fixed undirected simple graph, degree-normalized uniform coupling, fixed natural frequencies; initial negative-time history is constant.
@@ -24,7 +24,7 @@ For receiver i: d(theta_i)/dt = omega_i + K / deg(i) * Σ_{j neighbor i} sin(the
 - No noisy links, lost packets, dynamic tau, switched graphs, variable intrinsic frequency, real transport, task-success metric or safety control is implemented.
 - This is an **uncertified numerical DDE approximation**. RK4 formal order can be reduced at delay/history discontinuities or by the interpolation; independently validate against a separate method-of-steps solver, including step-size convergence at fixed physical delays, before accepting transitions/bifurcation interpretations.
 
-The code has **no benchmark runner, workflow, auto-generated scientific artifact, or dependency on experiments/pdmal_pilot**. Locally, 19 software contract checks were executed on 2026-10-26. They are not evidence of topology efficacy or authorized empirical observations. New-PR exact-head CI is a separate, currently unfulfilled check.
+The code has **no benchmark runner, workflow, auto-generated scientific artifact, or dependency on experiments/pdmal_pilot**. The initial 19 contract tests passed locally on 2026-10-26. Exact-head CI subsequently passed the three Python matrix test jobs on commit `dffe4fea4dda2b24fd6e2ba8fdbff23d333e5bd6`; the aggregate Python workflow still failed on existing CI dependency advisories. The new independent-code-path Euler checks are *pending fresh exact-head CI*. These tests are not evidence of topology efficacy or authorized empirical observations.
 
 ## Prospective, unapproved experimental design
 
@@ -44,8 +44,10 @@ Order parameter measures oscillator coherence only. It is **not** semantic corre
 
 - [x] Pure-standard-library isolated numerical implementation and local tests.
 - [x] Local replay, global-phase-shift, equilibrium, zero-K analytic, explicit zero-delay, directed-input validation, and fixed-physical-delay refinement tests (19 local checks).
-- [ ] Independently verify branch exact-head tests in CI; inspect scope and negative-case test adequacy.
-- [ ] Independently cross-check the DDE solver on matched physical time/delay against a second implementation and documented numerical tolerances.
+- [x] Earlier exact-head Python 3.10/3.11/3.12 configured test jobs passed at `dffe4fea4d`; aggregate Python workflow remains FAIL on existing locked dependency vulnerabilities.
+- [ ] Verify latest head including separate test-only Euler oracle, all security checks, and negative-case adequacy.
+- [x] Implement a **same-system**, algorithmically separate explicit-Euler method-of-steps reference with physically fixed directed delays (0.04–0.12 s), constant negative-time history, 0.0005-s reference integration, 0.8-s endpoint, and <0.001-radian maximum terminal-phase agreement tolerance against RK4 (0.02-s step). These are prespecified numerical checks, not external validation.
+- [ ] Obtain **external, non-author** independent DDE solver reproduction and tolerances, including convergence at the delay/history junctions.
 - [ ] Create independently reviewed prospective benchmark fixtures, graph and perturbation seed hierarchy, negative controls and primary-analysis/censoring protocol.
 - [ ] Run any comparative synthetic experiment only under its explicit new exploratory authorization, never under the canonical PDMAL pilot identity or empirical N.
 - [ ] Specify operational mapping for real agent phase, transport latency, queueing/retries, semantics, success/failure and governance boundaries before claiming real-world transfer.
