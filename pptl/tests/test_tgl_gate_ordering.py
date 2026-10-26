@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pptl.triadic_governance_loop import GateResult, TriadicGovernanceLoop, TGLHooks
+from pptl.triadic_governance_loop import GateResult, TGLHooks, TriadicGovernanceLoop
 
 
 def test_hpg_is_not_executed_when_phi_closure_warns() -> None:
