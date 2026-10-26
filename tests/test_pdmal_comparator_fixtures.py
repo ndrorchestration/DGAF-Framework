@@ -7,11 +7,11 @@ from tools.pdmal.comparator_fixtures import (
     derive_seed,
     fixture_fingerprint,
     label_permutation,
+    named_comparator_edges,
+    random_connected_cubic_edges,
     relabel_cubic_graph,
     relabel_directed_delays,
     relabel_vertex_values,
-    named_comparator_edges,
-    random_connected_cubic_edges,
     validate_cubic_graph,
 )
 from tools.pdmal.delay_sandbox import simulate_delayed_kuramoto
@@ -184,9 +184,7 @@ def test_delayed_oscillator_is_equivariant_under_coordinated_vertex_relabeling()
     frequencies = tuple(0.02 * (i % 5 - 2) for i in range(20))
     directed_lags = {(0, 1): 2, (1, 0): 3, (0, 10): 1, (10, 0): 4}
     mapping = label_permutation(8888, "dodecahedral_proxy", 2)
-    base = simulate_delayed_kuramoto(
-        base_edges, theta, frequencies, delays=directed_lags, dt=0.05, steps=6
-    )
+    base = simulate_delayed_kuramoto(base_edges, theta, frequencies, delays=directed_lags, dt=0.05, steps=6)
     moved = simulate_delayed_kuramoto(
         relabel_cubic_graph(base_edges, mapping),
         relabel_vertex_values(theta, mapping),
