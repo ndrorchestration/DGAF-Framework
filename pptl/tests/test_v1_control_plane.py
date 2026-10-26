@@ -451,6 +451,53 @@ def test_tgl_exception_escalates_and_releases_slot():
     assert plane._lineage_active[root_lineage(task)] == 0
 
 
+def test_tgl_runner_exception_text_is_not_retained_in_events():
+    canary = "SYNTHETIC_SECRET_CANARY_NO_REAL_SECRET" + chr(10) + "FORGED_EVENT"
+
+    def failing_tgl(_input, _context):
+        raise RuntimeError(canary)
+
+    plane = ControlPlane(tgl_runner=failing_tgl)
+    task = ControlTask("root", envelope())
+    plane.submit(task)
+    plane.admit("root")
+    plane.begin_evaluation("root")
+
+    with pytest.raises(ControlPlaneViolation, match="TGL runner failed") as raised:
+        plane.evaluate_turn("root", "input")
+
+    failures = [event for event in plane.events if event["event"] == "TGL_RUNNER_FAILURE"]
+    assert failures == [{"event": "TGL_RUNNER_FAILURE", "task_id": "root", "reason": "TGL runner exception"}]
+    assert canary not in repr(plane.events)
+    assert canary not in str(raised.value)
+    assert task.state is TaskState.ESCALATED
+    assert task.last_tgl_status is None
+
+
+def test_tgl_runner_exception_with_unsafe_stringification_still_escalates():
+    class UnprintableRunnerError(Exception):
+        def __str__(self):
+            raise RuntimeError("synthetic __str__ failure")
+
+    def failing_tgl(_input, _context):
+        raise UnprintableRunnerError()
+
+    plane = ControlPlane(tgl_runner=failing_tgl)
+    task = ControlTask("root", envelope())
+    plane.submit(task)
+    plane.admit("root")
+    plane.begin_evaluation("root")
+
+    with pytest.raises(ControlPlaneViolation, match="TGL runner failed"):
+        plane.evaluate_turn("root", "input")
+
+    assert task.state is TaskState.ESCALATED
+    assert task.last_tgl_status is None
+    assert [event["reason"] for event in plane.events if event["event"] == "TGL_RUNNER_FAILURE"] == [
+        "TGL runner exception"
+    ]
+
+
 def test_start_expansion_consumes_round_and_node_without_leaking_reservation():
     plane = ControlPlane()
     task = ControlTask("root", envelope())
