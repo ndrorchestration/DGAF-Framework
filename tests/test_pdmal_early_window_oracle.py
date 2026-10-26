@@ -11,7 +11,13 @@ from tools.pdmal.early_window_oracle import (
     initial_window_rhs,
     initial_window_trajectory,
 )
-from tools.pdmal.scipy_reference_probe import COUPLING, DELAYS, FREQUENCIES, GRAPH, INITIAL
+from tools.pdmal.scipy_reference_probe import (
+    COUPLING,
+    DELAYS,
+    FREQUENCIES,
+    GRAPH,
+    INITIAL,
+)
 
 
 def test_first_positive_lag_establishes_exact_ordinary_equation_interval():
