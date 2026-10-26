@@ -1,4 +1,5 @@
 """Regression tests for strict TGL downstream gate ordering."""
+
 from __future__ import annotations
 
 from pptl.triadic_governance_loop import GateResult, TriadicGovernanceLoop, TGLHooks
