@@ -14,6 +14,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 LOCKS = (
     ("requirements-ci-py310-ubuntu2404-x64.lock", "3.10"),
@@ -137,7 +138,7 @@ def audit_command(lock: Path | None) -> list[str]:
 
 def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
     """Always save a report for admissibility review; no advisory waivers."""
-    report = {
+    report: dict[str, Any] = {
         "evidence_class": "SAME_SYSTEM_SECURITY_REHEARSAL",
         "admission": "NOT_AUTHORIZED",
         "security_clearance": "NOT_ESTABLISHED",
@@ -173,7 +174,7 @@ def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
                     "vulnerability_count": None,
                     "error_type": type(exc).__name__,
                 }
-            record = {"target": "auditor_environment" if item is None else "canonical_lock"}
+            record: dict[str, Any] = {"target": "auditor_environment" if item is None else "canonical_lock"}
             if item is not None:
                 # Keep the expected package mapping internal; expose only verified count.
                 record.update({key: value for key, value in item.items() if key != "_expected_pins"})
