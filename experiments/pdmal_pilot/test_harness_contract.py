@@ -1,6 +1,10 @@
 """Deterministic pre-freeze harness tests."""
 
 import hashlib
+import importlib
+import sys
+from pathlib import Path
+from types import ModuleType
 
 from artifact_schema import (
     ARTIFACT_SCHEMA_VERSION,
@@ -156,10 +160,6 @@ def test_excluded_artifact_requires_reason() -> None:
 
 def test_p35_unverified_three_adapter_paths_are_nonempirical_fail_closed(monkeypatch) -> None:
     """Exercise real TGL source in the lean harness, without optional PPTL package dependencies."""
-    import sys
-    from pathlib import Path
-    from types import ModuleType
-
     root = Path(__file__).resolve().parents[2]
     pilot = Path(__file__).resolve().parent
     for directory in (root, pilot):
@@ -173,10 +173,19 @@ def test_p35_unverified_three_adapter_paths_are_nonempirical_fail_closed(monkeyp
     isolated_package.__path__ = [str(root / "pptl")]
     monkeypatch.setitem(sys.modules, "pptl", isolated_package)
 
-    from canonical_epoch_004_adapter import CanonicalEpoch004TGLAdapter
-    from canonical_profile_tgl_diagnostic import CanonicalQualifiedTGLAdapter
-    from dgaf_tgl_adapter import ConsensusState, DGAF_TGLAdapter
-    from pptl.triadic_governance_loop import GateResult, TurnStatus
+    # Dynamic import after namespace isolation prevents isort from hoisting
+    # these imports ahead of the test-only dependency boundary.
+    CanonicalEpoch004TGLAdapter = importlib.import_module(
+        "canonical_epoch_004_adapter"
+    ).CanonicalEpoch004TGLAdapter
+    CanonicalQualifiedTGLAdapter = importlib.import_module(
+        "canonical_profile_tgl_diagnostic"
+    ).CanonicalQualifiedTGLAdapter
+    dgaf_module = importlib.import_module("dgaf_tgl_adapter")
+    ConsensusState = dgaf_module.ConsensusState
+    DGAF_TGLAdapter = dgaf_module.DGAF_TGLAdapter
+    gate_module = importlib.import_module("pptl.triadic_governance_loop")
+    GateResult, TurnStatus = gate_module.GateResult, gate_module.TurnStatus
 
     def synthetic_state() -> ConsensusState:
         return ConsensusState(
