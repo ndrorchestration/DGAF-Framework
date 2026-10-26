@@ -49,7 +49,7 @@ def reference_trajectory(segment: float, rtol: float, atol: float) -> tuple[tupl
         adjacency[v].append(u)
 
     boundaries: list[float] = []
-    dense_segments = []
+    dense_segments: list = []
     states: list[tuple[float, ...]] = [INITIAL]
     for k in range(round(HORIZON / segment)):
         start = round(k * segment, 12)
