@@ -6,10 +6,15 @@ from tools.pdmal.comparator_fixtures import (
     circular_ladder_edges,
     derive_seed,
     fixture_fingerprint,
+    label_permutation,
+    relabel_cubic_graph,
+    relabel_directed_delays,
+    relabel_vertex_values,
     named_comparator_edges,
     random_connected_cubic_edges,
     validate_cubic_graph,
 )
+from tools.pdmal.delay_sandbox import simulate_delayed_kuramoto
 from tools.pdmal.lattice_harness import DODECAHEDRAL_EDGES
 
 
@@ -105,3 +110,90 @@ def test_seed_derivation_invalid_inputs_rejected(master, domain, index):
 
 def test_labeled_fingerprints_distinguish_the_fixed_comparators():
     assert fixture_fingerprint(DODECAHEDRAL_EDGES) != fixture_fingerprint(circular_ladder_edges())
+
+
+def test_relabeling_seed_domains_are_reproducible_and_arm_specific():
+    one = label_permutation(123, "dodecahedral_proxy", 0)
+    assert one == label_permutation(123, "dodecahedral_proxy", 0)
+    assert tuple(sorted(one)) == tuple(range(20))
+    assert one != label_permutation(123, "circular_ladder", 0)
+    assert one != label_permutation(123, "dodecahedral_proxy", 1)
+    assert one != tuple(range(20))
+
+
+def test_relabeling_preserves_graph_identity_up_to_vertex_permutation():
+    for arm, edges in named_comparator_edges(seed=42).items():
+        permutation = label_permutation(1234, arm, 1)
+        remapped = relabel_cubic_graph(edges, permutation)
+        inverse = [0] * 20
+        for old, new in enumerate(permutation):
+            inverse[new] = old
+        assert relabel_cubic_graph(remapped, inverse) == edges
+        assert len(remapped) == 30
+        assert all(sum(node in edge for edge in remapped) == 3 for node in range(20))
+
+
+@pytest.mark.parametrize(
+    "bad_map",
+    [
+        tuple(range(19)),
+        tuple([0] * 20),
+        tuple(range(19)) + (20,),
+        (True,) + tuple(range(1, 20)),
+        (0.0,) + tuple(range(1, 20)),
+    ],
+)
+def test_malformed_vertex_permutations_fail_closed(bad_map):
+    with pytest.raises(ValueError):
+        relabel_cubic_graph(DODECAHEDRAL_EDGES, bad_map)
+    with pytest.raises(ValueError):
+        relabel_vertex_values(tuple(range(20)), bad_map)
+    with pytest.raises(ValueError):
+        relabel_directed_delays({(0, 1): 2}, bad_map)
+
+
+@pytest.mark.parametrize(
+    "master, arm, replicate",
+    [
+        (True, "dodecahedral_proxy", 0),
+        (123, "unknown", 0),
+        (123, "circular_ladder", -1),
+        (123, "random_connected_cubic", 1.25),
+    ],
+)
+def test_labeling_invalid_seed_or_arm_fail_closed(master, arm, replicate):
+    with pytest.raises(ValueError):
+        label_permutation(master, arm, replicate)
+
+
+def test_delay_orientation_validation_survives_relabeling():
+    mapping = label_permutation(55, "dodecahedral_proxy", 0)
+    remapped = relabel_directed_delays({(0, 1): 2, (1, 0): 7}, mapping)
+    assert remapped[(mapping[0], mapping[1])] == 2
+    assert remapped[(mapping[1], mapping[0])] == 7
+    with pytest.raises(ValueError):
+        relabel_directed_delays({(0, 20): 2}, mapping)
+    with pytest.raises(ValueError):
+        relabel_directed_delays({(0, 1): True}, mapping)
+
+
+def test_delayed_oscillator_is_equivariant_under_coordinated_vertex_relabeling():
+    # Metamorphic algorithm test on ONE graph, not any comparison or scientific outcome.
+    base_edges = validate_cubic_graph(DODECAHEDRAL_EDGES)
+    theta = tuple(0.15 * i for i in range(20))
+    frequencies = tuple(0.02 * (i % 5 - 2) for i in range(20))
+    directed_lags = {(0, 1): 2, (1, 0): 3, (0, 10): 1, (10, 0): 4}
+    mapping = label_permutation(8888, "dodecahedral_proxy", 2)
+    base = simulate_delayed_kuramoto(
+        base_edges, theta, frequencies, delays=directed_lags, dt=0.05, steps=6
+    )
+    moved = simulate_delayed_kuramoto(
+        relabel_cubic_graph(base_edges, mapping),
+        relabel_vertex_values(theta, mapping),
+        relabel_vertex_values(frequencies, mapping),
+        delays=relabel_directed_delays(directed_lags, mapping),
+        dt=0.05,
+        steps=6,
+    )
+    for original, relabeled in zip(base, moved):
+        assert max(abs(original[i] - relabeled[mapping[i]]) for i in range(20)) < 1e-12
