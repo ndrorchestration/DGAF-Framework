@@ -1,0 +1,12 @@
+{
+  "name": "akdc-official-sdk-wire-probe-research",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nonrelease, in-process MCP SDK v2 wire-capture research fixture",
+  "dependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/server": "2.4.0",
+    "zod": "4.6.7"
+  }
+}
