@@ -61,3 +61,18 @@ Order parameter measures oscillator coherence only. It is **not** semantic corre
 - Yeung & Strogatz (1999), *Time Delay in the Kuramoto Model of Coupled Oscillators*, Physical Review Letters: [DOI](https://doi.org/10.1103/PhysRevLett.82.648)
 - Earl & Strogatz (2003), *Synchronization in Oscillator Networks with Delayed Coupling: A Stability Criterion*, Physical Review E: [DOI](https://doi.org/10.1103/PhysRevE.67.036204) . Its assumptions do not imply blanket stability for heterogeneous directed delays.
 - Pecora & Carroll (1998), *Master Stability Functions for Synchronized Coupled Systems*, Physical Review Letters: [DOI](https://doi.org/10.1103/PhysRevLett.80.2109) . Applicability depends on the system and coupling assumptions.
+
+## Numerical-solver independent replication gate — source-backed update
+
+**Same-author oracle limitation:** `tests/test_pdmal_delay_oracle.py` uses explicit Euler with a constant negative-time history and integer grid-aligned delays. Agreement with the RK4 sandbox at one 0.8-second endpoint cannot prove solution accuracy, correct propagation of history discontinuities, fourth-order RK accuracy, or absence of numerical bifurcations.
+
+- [Shampine & Thompson (2001), Solving DDEs in Matlab](https://doi.org/10.1016/S0168-9274(00)00055-6) addresses DDE error estimation, short-delay handling and discontinuity tracking. Independent review must test those properties before scientific interpretation.
+- [Bellen & Zennaro (2003), Numerical Methods for Delay Differential Equations](https://doi.org/10.1093/acprof:oso/9780198506546.001.0001) treats continuous extensions, delayed history and convergence. Simple RK4 plus linear history interpolation should not be assigned a global method order without analysis.
+- [Fujii et al. (2026), Emergence of higher-order interactions in systems of coupled Kuramoto oscillators with time delay](https://doi.org/10.1103/s2n5-4ps2), peer-reviewed Physical Review E (2026-07-15), derives effective higher-order interactions under a particular expansion. For the proposed PDMAL comparison, delay-related behavior may not be attributable to topology alone; this is a **mechanistic hypothesis and possible confound**, not a finding about this sandbox.
+
+**No-cost, independently maintained numerical cross-check candidates (NOT installed or executed here):**
+
+- [Python JiTCDDE](https://jitcdde.readthedocs.io/en/latest/), open-source adaptive DDE solver with cubic-Hermite history reconstruction, or
+- [Julia SciML DDEProblem + MethodOfSteps(Tsit5())](https://docs.sciml.ai/DiffEqDocs/dev/tutorials/dde_example/).
+
+An eligible non-author should independently implement the fixed input fixture and verify recorded source/environment versions, directed lag orientation, historical phase inputs, sampled trajectory and full-trajectory error against an external solver. Include discontinuity-adjacent checkpoints and time-step refinement, predeclare acceptance bounds, and retain raw comparison failures. Do not promote the separately coded same-system Euler method to **independent scientific verification**.
