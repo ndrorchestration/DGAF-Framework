@@ -51,6 +51,11 @@ jobs:
           test -s evidence/sdk_wire_synthetic.json
           test -s evidence/trace_manifest.json
           sha256sum evidence/sdk_wire_synthetic.json evidence/trace_manifest.json
+      - name: Validate captured SDK wire through unchanged DGAF record-only ingress
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH="$GITHUB_WORKSPACE" python verify_trace.py
       - name: Upload synthetic wire and provisional lock proof
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
