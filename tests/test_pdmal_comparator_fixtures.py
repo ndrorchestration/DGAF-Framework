@@ -8,6 +8,7 @@ from tools.pdmal.comparator_fixtures import (
     fixture_fingerprint,
     label_permutation,
     named_comparator_edges,
+    prospective_perturbation_vertex,
     random_connected_cubic_edges,
     relabel_cubic_graph,
     relabel_directed_delays,
@@ -195,3 +196,32 @@ def test_delayed_oscillator_is_equivariant_under_coordinated_vertex_relabeling()
     )
     for original, relabeled in zip(base, moved):
         assert max(abs(original[i] - relabeled[mapping[i]]) for i in range(20)) < 1e-12
+
+
+def test_placement_sampling_separate_from_label_mapping():
+    """A sampled *source* disturbance site and a relabeled site are distinct concepts."""
+    site = prospective_perturbation_vertex(1963, "random_connected_cubic", 2)
+    mapping = label_permutation(1963, "random_connected_cubic", 2)
+    assert site == prospective_perturbation_vertex(1963, "random_connected_cubic", 2)
+    assert 0 <= site < 20
+    assert set(mapping) == set(range(20))
+    mapped_site = mapping[site]
+    inverse = [0] * 20
+    for old, new in enumerate(mapping):
+        inverse[new] = old
+    assert inverse[mapped_site] == site
+    assert derive_seed(1963, "label", 0) != derive_seed(1963, "placement", 0)
+
+
+@pytest.mark.parametrize(
+    "master, arm, replicate",
+    [
+        (True, "dodecahedral_proxy", 0),
+        (123, "unknown", 0),
+        (123, "circular_ladder", -1),
+        (123, "random_connected_cubic", 2.5),
+    ],
+)
+def test_prospective_placement_rejects_invalid_inputs(master, arm, replicate):
+    with pytest.raises(ValueError):
+        prospective_perturbation_vertex(master, arm, replicate)
