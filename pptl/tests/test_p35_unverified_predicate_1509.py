@@ -167,3 +167,34 @@ def test_raising_p35_predicate_denies_without_downstream_execution():
     assert audit.final_status is TurnStatus.KILL
     assert audit.gate_records[0].result is GateResult.KILL
     assert audit.verify_seal()
+
+
+@pytest.mark.governance
+def test_noncallable_p35_is_killed_without_downstream_execution():
+    executed = []
+    hooks = _all_downstream_pass(premise_check_fn="NOT_A_PREDICATE")
+    hooks.scpe_fn = lambda _text, _context: executed.append(True) or GateResult.PASS
+    audit = _tgl(hooks).run_turn("bad predicate configuration")
+    assert executed == []
+    assert audit.final_status is TurnStatus.KILL
+    assert audit.gate_records[0].result is GateResult.KILL
+    assert audit.verify_seal()
+
+
+@pytest.mark.governance
+def test_unverified_p35_remains_escalated_after_herald_pass():
+    receipts = []
+
+    def herald(_text, context):
+        receipts.append(context["audit_record"])
+        return GateResult.PASS
+
+    hooks = _all_downstream_pass()
+    hooks.herald_fn = herald
+    audit = _tgl(hooks).run_turn("missing predicate with herald")
+    assert len(receipts) == 1
+    assert receipts[0]["final_status"] == "ESCALATE"
+    assert len(receipts[0]["gates"]) == 9
+    assert audit.gate_records[-1].result is GateResult.PASS
+    assert audit.final_status is TurnStatus.ESCALATE
+    assert audit.verify_seal()
