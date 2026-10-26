@@ -157,16 +157,22 @@ def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
         for item, path in targets:
             command = audit_command(path)
             try:
-                if item is not None and hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
-                    raise ValueError("LOCK_BYTES_CHANGED_BEFORE_SCAN")
+                if item is not None:
+                    if path is None:
+                        raise ValueError("MISSING_LOCK_PATH")
+                    if hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
+                        raise ValueError("LOCK_BYTES_CHANGED_BEFORE_SCAN")
                 process = runner(command, text=True, capture_output=True, timeout=180)
                 result = interpret_result(
                     process.returncode,
                     process.stdout,
                     None if item is None else item["_expected_pins"],
                 )
-                if item is not None and hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
-                    raise ValueError("LOCK_BYTES_CHANGED_DURING_SCAN")
+                if item is not None:
+                    if path is None:
+                        raise ValueError("MISSING_LOCK_PATH")
+                    if hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
+                        raise ValueError("LOCK_BYTES_CHANGED_DURING_SCAN")
             except (OSError, subprocess.TimeoutExpired, ValueError) as exc:
                 result = {
                     "status": "AUDIT_ERROR",
