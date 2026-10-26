@@ -46,7 +46,7 @@ def simulate_delayed_kuramoto(
     for u, v in edges:
         if type(u) is not int or type(v) is not int or not (0 <= u < n_nodes and 0 <= v < n_nodes) or u == v:
             raise ValueError("edges require distinct integer node indices in range")
-        edge = tuple(sorted((u, v)))
+        edge = (min(u, v), max(u, v))
         if edge in seen:
             raise ValueError("duplicate undirected edge")
         seen.add(edge)
