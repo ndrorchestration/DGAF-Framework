@@ -39,9 +39,7 @@ def test_right_acceleration_accounts_for_zero_vs_positive_directed_lags():
 def test_short_interval_ode_agrees_with_existing_rk4_at_both_early_samples():
     """Software paths agree on t<=min delay; not an independent scientific result."""
     lag_steps = {edge: round(physical / 0.02) for edge, physical in DELAYS.items()}
-    full = simulate_delayed_kuramoto(
-        GRAPH, INITIAL, FREQUENCIES, delays=lag_steps, coupling=COUPLING, dt=0.02, steps=2
-    )
+    full = simulate_delayed_kuramoto(GRAPH, INITIAL, FREQUENCIES, delays=lag_steps, coupling=COUPLING, dt=0.02, steps=2)
     short = initial_window_trajectory(0.02)
     assert len(full) == len(short) == 3
     for state, expected in zip(short, full):
