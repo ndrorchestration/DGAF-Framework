@@ -58,6 +58,7 @@ jobs:
             tests/test_akdc_ingress_research.py
             tests/test_akdc_replay_store.py
             tests/test_akdc_raw_wire_research.py
+            tests/test_akdc_mrtr_schema_research.py
           )
           export PYTHONPATH="$GITHUB_WORKSPACE"
           python -m compileall -q "${targets[@]}"
@@ -73,7 +74,7 @@ jobs:
           export PYTHONPATH="$GITHUB_WORKSPACE"
           python -W error::ResourceWarning -m pytest \
             tests/test_akdc_ingress_research.py tests/test_akdc_replay_store.py \
-            tests/test_akdc_raw_wire_research.py -q
+            tests/test_akdc_raw_wire_research.py tests/test_akdc_mrtr_schema_research.py -q
 
   advisory-security:
     name: AKDC inherited toolchain security audit (blocking evidence)
