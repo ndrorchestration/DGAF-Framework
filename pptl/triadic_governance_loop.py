@@ -153,7 +153,7 @@ class TriadicGovernanceLoop:
     ]
 
     # Required gates. Step 7 is conditional on Phi-Closure PASS.
-    REQUIRED_STEPS = frozenset({0, 1, 2, 3, 4, 5, 6, 8})
+    REQUIRED_STEPS = frozenset({1, 2, 3, 4, 5, 6, 8})
 
     def __init__(
         self,
@@ -204,6 +204,10 @@ class TriadicGovernanceLoop:
         """Apply the monotonic gate lattice: KILL > ESCALATE > WARN > PASS."""
         if any(g.result == GateResult.KILL for g in gates):
             return TurnStatus.KILL
+        # P-35 is an admission guard, separate from the frozen experimental
+        # REQUIRED_STEPS manifest. Never reduce an unverified premise to PASS.
+        if any(g.step == 0 and g.result == GateResult.SKIP for g in gates):
+            return TurnStatus.ESCALATE
         if any(g.step in TriadicGovernanceLoop.REQUIRED_STEPS and g.result == GateResult.SKIP for g in gates):
             return TurnStatus.ESCALATE
         if any(g.result == GateResult.WARN for g in gates):
