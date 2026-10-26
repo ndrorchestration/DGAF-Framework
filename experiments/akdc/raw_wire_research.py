@@ -7,6 +7,8 @@ establish total ordering across reconnects. Always treat output as unverified.
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 from dataclasses import dataclass
 from typing import Any
 
@@ -43,6 +45,7 @@ class CapturedObservation:
     receiver_stream_id: str
     receiver_receipt_number: int
     ordering_basis: str
+    commitment_key_id: str
 
     def record_only_envelope(self) -> dict[str, Any]:
         """DGAF ingress still has to verify; admission grants no authority."""
@@ -54,6 +57,8 @@ class CapturedObservation:
             "receiver_receipt_number": self.receiver_receipt_number,
             "ordering_basis": self.ordering_basis,
             "capture_attestation": "NOT_ESTABLISHED",
+            "commitment_scheme": "HMAC-SHA256-V1-RESEARCH",
+            "commitment_key_id": self.commitment_key_id,
             "retention_policy": "CLASSIFICATION_ONLY_NO_RAW_CONTENT",
         }
         evidence["content_digest"] = content_digest(evidence["payload"])
@@ -79,24 +84,50 @@ def _witness(witness: ReceiverWitness) -> None:
             raise ValueError(f"invalid untrusted witness identifier: {key}")
 
 
-def _observed(payload: dict[str, Any], protocol: str, version: str, witness: ReceiverWitness, raw: Any):
+def _capture_key(key: bytes, key_id: str) -> None:
+    """Require caller-owned entropy. No secrets are created, saved, or managed here."""
+    if type(key) is not bytes or len(key) < 32:
+        raise ValueError("capture_key must be a caller-provided >=32-byte secret")
+    if not isinstance(key_id, str) or not key_id or not key_id.isascii():
+        raise ValueError("nonempty ASCII commitment key ID required")
+    if len(key_id) > 48 or not key_id.replace("-", "").replace("_", "").isalnum():
+        raise ValueError("invalid key ID")
+
+
+def _observed(
+    payload: dict[str, Any],
+    protocol: str,
+    version: str,
+    witness: ReceiverWitness,
+    raw: Any,
+    *,
+    capture_key: bytes,
+    key_id: str,
+) -> CapturedObservation:
     _witness(witness)
-    digest = content_digest(raw)
-    # Digest is for canonicalized, decoded JSON, NOT original wire bytes.
-    # Stable for an identical captured frame and receipt; NOT stable across
-    # independent stream IDs or transport reconnects. This is not dedup proof.
-    identity = content_digest(
-        [
-            protocol,
-            version,
-            witness.provider_id,
-            witness.runtime_id,
-            witness.source_id,
-            witness.stream_id,
-            witness.receipt_number,
-            digest,
-        ]
-    )[7:]
+    _capture_key(capture_key, key_id)
+    # Domain-separated keyed commitments for canonically decoded JSON only.
+    # They cannot authenticate an unverified wire sender or ensure secure key custody.
+    message = canonical_bytes(["AKDC-FRAME-V1", protocol, version, raw])
+    digest = "hmac-sha256:" + hmac.new(capture_key, message, hashlib.sha256).hexdigest()
+    identity = hmac.new(
+        capture_key,
+        canonical_bytes(
+            [
+                "AKDC-EVENT-V1",
+                protocol,
+                version,
+                key_id,
+                witness.provider_id,
+                witness.runtime_id,
+                witness.source_id,
+                witness.stream_id,
+                witness.receipt_number,
+                digest,
+            ]
+        ),
+        hashlib.sha256,
+    ).hexdigest()
     obs = ProtocolObservation(
         protocol=protocol,
         version=version,
@@ -109,12 +140,12 @@ def _observed(payload: dict[str, Any], protocol: str, version: str, witness: Rec
         payload=payload,
     )
     return CapturedObservation(
-        obs, digest, witness.stream_id, witness.receipt_number, "UNVERIFIED_RECEIVER_LOCAL_ORDER"
+        obs, digest, witness.stream_id, witness.receipt_number, "UNVERIFIED_RECEIVER_LOCAL_ORDER", key_id
     )
 
 
 def normalize_a2a_status_update(
-    frame: dict[str, Any], witness: ReceiverWitness, *, negotiated_version: str
+    frame: dict[str, Any], witness: ReceiverWitness, *, negotiated_version: str, capture_key: bytes, key_id: str
 ) -> CapturedObservation:
     """Normalize A2A v1.0.1 StreamResponse.statusUpdate, not an SDK test."""
     if negotiated_version != A2A_PIN:
@@ -144,7 +175,7 @@ def normalize_a2a_status_update(
         "state": state,
         "sequence": witness.receipt_number,
     }
-    return _observed(payload, "a2a", A2A_PIN, witness, obj)
+    return _observed(payload, "a2a", A2A_PIN, witness, obj, capture_key=capture_key, key_id=key_id)
 
 
 def _request_id(value: Any) -> bool:
@@ -180,14 +211,13 @@ def _validate_mcp_content(content: list[Any]) -> None:
 
 
 def _metadata_only_response(response: dict[str, Any]) -> dict[str, Any]:
-    """Discard tool content, opaque MRTR state, error data, and raw RPC IDs.
+    """Discard source RPC IDs after correlation; record only inert placeholders.
 
-    Canonical-decoded frame-pair digest is recorded separately; hashing is not
-    secrecy, authentication or assured suppression of low-entropy values.
+    The original captured pair contributes only to its separately keyed HMAC.
     """
     safe: dict[str, Any] = {
         "jsonrpc": "2.0",
-        "id": "correlation-" + content_digest(["mcp-correlation", response["id"]])[7:],
+        "id": "correlation-withheld",
     }
     if "error" in response:
         safe["error"] = {"code": response["error"]["code"], "message": "REDACTED"}
@@ -211,7 +241,13 @@ def _metadata_only_response(response: dict[str, Any]) -> dict[str, Any]:
 
 
 def normalize_mcp_tools_call(
-    request: dict[str, Any], response: dict[str, Any], witness: ReceiverWitness, *, negotiated_version: str
+    request: dict[str, Any],
+    response: dict[str, Any],
+    witness: ReceiverWitness,
+    *,
+    negotiated_version: str,
+    capture_key: bytes,
+    key_id: str,
 ) -> CapturedObservation:
     """Pair raw MCP JSON-RPC request/response; never infer method from reply."""
     if negotiated_version != MCP_PIN:
@@ -256,4 +292,6 @@ def normalize_mcp_tools_call(
     # Store only classification, never decoded tool content or opaque state.
     # Original request/response contributes to the frame-pair digest only.
     payload = {"method": "tools/call", "response": _metadata_only_response(resp)}
-    return _observed(payload, "mcp", MCP_PIN, witness, {"request": req, "response": resp})
+    return _observed(
+        payload, "mcp", MCP_PIN, witness, {"request": req, "response": resp}, capture_key=capture_key, key_id=key_id
+    )
