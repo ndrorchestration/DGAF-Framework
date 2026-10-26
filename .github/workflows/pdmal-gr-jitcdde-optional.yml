@@ -4,6 +4,11 @@ name: PDMAL-GR Optional JiTCDDE Probe (Non-Admitted)
 # outside the security-controlled, hash-locked production/test environments.
 on:
   workflow_dispatch:
+  push:
+    branches: [research/pdmal-delay-sandbox-20261026]
+    paths:
+      - '.github/workflows/pdmal-gr-jitcdde-optional.yml'
+      - 'tools/pdmal/jitcdde_reference_probe.py'
   pull_request:
     types: [opened, synchronize]
     branches: [main]
@@ -21,6 +26,7 @@ concurrency:
 jobs:
   optional-maintained-dde-library-smoke:
     if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/research/pdmal-delay-sandbox-20261026') ||
       (github.event_name == 'pull_request' &&
        github.event.pull_request.head.repo.full_name == 'ndrorchestration/DGAF-Framework' &&
        github.event.pull_request.head.ref == 'research/pdmal-delay-sandbox-20261026') ||
