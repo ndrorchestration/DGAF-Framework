@@ -139,7 +139,6 @@ All reported values are from the **local source-algorithm transcription**, not y
 
 **No comparative oscillator topology trial or governed pilot execution:** `SCIENTIFIC_N_INCREMENT=0`; `PILOT_AUTHORIZATION=NOT_GRANTED`; `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`; `DGAF_V1_RELEASE=HOLD`.
 
-
 ## 2026-10-26 — Executed exact-source SciPy probe + fail-closed reproducibility gate
 
 **Source provenance:** the Python source for `tools/pdmal/delay_sandbox.py` and the original `tools/pdmal/scipy_reference_probe.py` was retrieved from draft [PR #1518](https://github.com/ndrorchestration/DGAF-Framework/pull/1518) head `e748aba9690a2ed8fadd46ddaec312bfa214f9ec`, reconstructed in an isolated execution directory, and independently compared **byte-for-byte through each original Git blob SHA-1** (`7a0bc7d0ad69dd5d81cf1d1ac51ea021034a051d`, `09eedf832d79ae8b8d2848fb4849073ff2a7d75f`). No source algorithm had to be retyped or approximated for this latest run.
