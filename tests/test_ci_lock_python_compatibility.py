@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.ci_lock_python_compatibility import LOCKS, LockEvidenceError, evaluate_matrix
+from scripts.ci_lock_python_compatibility import LockEvidenceError, LOCKS, evaluate_matrix
 
 METADATA_SOURCE = "https://pypi.org/project/filelock/4.2.1/"
 
