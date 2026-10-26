@@ -36,6 +36,9 @@ jobs:
       - name: Run non-empirical negative controls
         run: python -m pytest tests/test_ci_lock_audit_rehearsal.py -q
       - name: Audit scanner environment and four canonical locks (blocking)
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           python scripts/ci_lock_audit_rehearsal.py \
             --output test-artifacts/gate0-lock-audit-rehearsal.json
