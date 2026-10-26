@@ -170,8 +170,7 @@ class IntegratedOrchestrator:
             self.config.premise_check_fn = lambda text, _invariant: not premise_check_fn_justice(text)
             logger.info("Auto-wired P-35 invariant-satisfaction adapter: justice (INV-03)")
         else:
-            self.config.premise_check_fn = lambda _text, _invariant: True
-            logger.info("Domain '%s': P-35 premise_check_fn set to pass-through", domain)
+            logger.warning("Domain '%s': P-35 unverified; no predicate auto-wired", domain)
 
     def _synthesize_response(self, user_input: str, tgl_result: Any) -> str:
         """Placeholder synthesis step; production subclasses may override."""
