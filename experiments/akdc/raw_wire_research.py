@@ -84,8 +84,16 @@ def _observed(payload: dict[str, Any], protocol: str, version: str, witness: Rec
     # Stable for an identical captured frame and receipt; NOT stable across
     # independent stream IDs or transport reconnects. This is not dedup proof.
     identity = content_digest(
-        [protocol, version, witness.provider_id, witness.runtime_id, witness.source_id,
-         witness.stream_id, witness.receipt_number, digest]
+        [
+            protocol,
+            version,
+            witness.provider_id,
+            witness.runtime_id,
+            witness.source_id,
+            witness.stream_id,
+            witness.receipt_number,
+            digest,
+        ]
     )[7:]
     obs = ProtocolObservation(
         protocol=protocol,
@@ -98,8 +106,9 @@ def _observed(payload: dict[str, Any], protocol: str, version: str, witness: Rec
         observed_at=witness.observed_at,
         payload=payload,
     )
-    return CapturedObservation(obs, digest, witness.stream_id, witness.receipt_number,
-                               "UNVERIFIED_RECEIVER_LOCAL_ORDER")
+    return CapturedObservation(
+        obs, digest, witness.stream_id, witness.receipt_number, "UNVERIFIED_RECEIVER_LOCAL_ORDER"
+    )
 
 
 def normalize_a2a_status_update(
