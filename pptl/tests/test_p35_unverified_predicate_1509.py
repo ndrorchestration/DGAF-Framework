@@ -1,8 +1,8 @@
 """Issue #1509: P-35 predicate-absence and pass-through assurance sentinels.
 
-This is a non-experimental, test-only audit candidate. Strict XFAIL tests
-describe currently confirmed gaps; they are NOT remediation or passing proof.
-In particular, supplied all-True predicates are not independent verification.
+These behavioral tests describe a proposed, unadmitted runtime remediation.
+They do not authorize experimental adapters or establish independently verified
+constitutional evaluation. All-True fixtures remain test-only, not proof.
 """
 
 import pytest
@@ -50,10 +50,6 @@ def _tgl(hooks):
 
 
 @pytest.mark.governance
-@pytest.mark.xfail(
-    strict=True,
-    reason="#1509: absent P-35 predicate currently produces a sealed PASS",
-)
 def test_absent_predicate_cannot_pass_with_all_other_hooks_passing():
     audit = _tgl(_all_downstream_pass()).run_turn("synthetic input")
     premise = next(g for g in audit.gate_records if g.step == 0)
@@ -63,10 +59,6 @@ def test_absent_predicate_cannot_pass_with_all_other_hooks_passing():
 
 
 @pytest.mark.governance
-@pytest.mark.xfail(
-    strict=True,
-    reason="#1509: default general domain currently installs an all-True lambda",
-)
 def test_general_domain_does_not_auto_install_unverified_predicate():
     config = OrchestratorConfig(session_id="p35-1509-general", domain="general")
     orchestrator = IntegratedOrchestrator(config)
@@ -74,10 +66,6 @@ def test_general_domain_does_not_auto_install_unverified_predicate():
 
 
 @pytest.mark.governance
-@pytest.mark.xfail(
-    strict=True,
-    reason="#1509: direct P-35 evaluate() currently defaults missing predicate to True",
-)
 def test_direct_gate_requires_an_explicit_predicate():
     gate = ProcludingPremiseGate(
         invariants=DGAF_CONSTITUTIONAL_INVARIANTS,
@@ -89,10 +77,6 @@ def test_direct_gate_requires_an_explicit_predicate():
 
 
 @pytest.mark.governance
-@pytest.mark.xfail(
-    strict=True,
-    reason="#1509: general-domain pass-through can synthesize after other hooks PASS",
-)
 def test_general_domain_no_predicate_never_synthesizes_with_full_hooks():
     orchestrator = IntegratedOrchestrator(OrchestratorConfig(session_id="p35-1509-orch", domain="general"))
     orchestrator.tgl.hooks = _all_downstream_pass(premise_check_fn=orchestrator.config.premise_check_fn)
@@ -108,6 +92,8 @@ def test_supplied_true_predicate_only_proves_callable_returned_true():
     audit = _tgl(_all_downstream_pass(premise_check_fn=lambda _text, _invariant: True)).run_turn("synthetic input")
     assert audit.final_status is TurnStatus.PASS
     assert audit.verify_seal()
+    p35 = next(g for g in audit.gate_records if g.step == 0)
+    assert "NOT_ESTABLISHED" in p35.notes
     # This is an instrumented test fixture; its PASS must not be called
     # externally verified, independently audited, or authorized.
 
@@ -125,3 +111,59 @@ def test_explicit_invariant_denial_stops_before_downstream_hooks():
     with pytest.raises(PremiseViolationError):
         _tgl(hooks).run_turn("synthetic denial")
     assert calls == []
+
+
+@pytest.mark.governance
+def test_missing_p35_does_not_execute_any_downstream_gates():
+    executed = []
+
+    def record_call(_text, _context):
+        executed.append(True)
+        return GateResult.PASS
+
+    hooks = _all_downstream_pass()
+    hooks.scpe_fn = record_call
+    hooks.pdmal_fn = record_call
+    hooks.apogee_fn = record_call
+    audit = _tgl(hooks).run_turn("unverified request")
+    assert executed == []
+    assert audit.final_status is TurnStatus.ESCALATE
+    assert audit.verify_seal()
+    assert {g.step for g in audit.gate_records} == set(range(10))
+    assert all(g.result is GateResult.SKIP for g in audit.gate_records[:9])
+
+
+@pytest.mark.governance
+@pytest.mark.parametrize(
+    "bad_predicate",
+    [
+        lambda _text, _invariant: "True",
+        lambda _text, _invariant: None,
+        lambda _text, _invariant: 1,
+    ],
+)
+def test_nonboolean_p35_denies_without_downstream_execution(bad_predicate):
+    executed = []
+    hooks = _all_downstream_pass(premise_check_fn=bad_predicate)
+    hooks.scpe_fn = lambda _text, _context: executed.append(True) or GateResult.PASS
+    audit = _tgl(hooks).run_turn("nonboolean predicate")
+    assert executed == []
+    assert audit.final_status is TurnStatus.KILL
+    assert audit.gate_records[0].result is GateResult.KILL
+    assert audit.verify_seal()
+
+
+@pytest.mark.governance
+def test_raising_p35_predicate_denies_without_downstream_execution():
+    executed = []
+
+    def fail(_text, _invariant):
+        raise RuntimeError("no valid decision")
+
+    hooks = _all_downstream_pass(premise_check_fn=fail)
+    hooks.scpe_fn = lambda _text, _context: executed.append(True) or GateResult.PASS
+    audit = _tgl(hooks).run_turn("predicate exception")
+    assert executed == []
+    assert audit.final_status is TurnStatus.KILL
+    assert audit.gate_records[0].result is GateResult.KILL
+    assert audit.verify_seal()
