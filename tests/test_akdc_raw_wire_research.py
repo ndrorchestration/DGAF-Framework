@@ -66,8 +66,11 @@ def mcp_resp(**changes):
 class TestA2ARawStatus(unittest.TestCase):
     def parse(self, frame=None, obs=None, *, version="1.0.1"):
         return normalize_a2a_status_update(
-            frame if frame is not None else a2a(), obs or witness(),
-            negotiated_version=version, capture_key=TEST_CAPTURE_KEY, key_id=TEST_KEY_ID
+            frame if frame is not None else a2a(),
+            obs or witness(),
+            negotiated_version=version,
+            capture_key=TEST_CAPTURE_KEY,
+            key_id=TEST_KEY_ID,
         )
 
     def test_status_update_is_observation_not_authorization(self):
@@ -157,8 +160,12 @@ class TestA2ARawStatus(unittest.TestCase):
 class TestMCPRawPair(unittest.TestCase):
     def parse(self, req=None, resp=None, obs=None, *, version="2026-07-28"):
         return normalize_mcp_tools_call(
-            req or mcp_req(), resp or mcp_resp(), obs or witness(),
-            negotiated_version=version, capture_key=TEST_CAPTURE_KEY, key_id=TEST_KEY_ID
+            req or mcp_req(),
+            resp or mcp_resp(),
+            obs or witness(),
+            negotiated_version=version,
+            capture_key=TEST_CAPTURE_KEY,
+            key_id=TEST_KEY_ID,
         )
 
     def test_success_is_record_only(self):
