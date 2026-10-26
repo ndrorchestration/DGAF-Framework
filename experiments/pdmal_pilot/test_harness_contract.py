@@ -156,16 +156,24 @@ def test_excluded_artifact_requires_reason() -> None:
         raise AssertionError("excluded artifact without reason must fail closed")
 
 
-def test_p35_unverified_three_adapter_paths_are_nonempirical_fail_closed() -> None:
-    """Synthetic one-turn control-flow proof, never a scientific/pilot run."""
+def test_p35_unverified_three_adapter_paths_are_nonempirical_fail_closed(monkeypatch) -> None:
+    """Exercise real TGL source in the lean harness, without optional PPTL package dependencies."""
     import sys
     from pathlib import Path
+    from types import ModuleType
 
     root = Path(__file__).resolve().parents[2]
     pilot = Path(__file__).resolve().parent
     for directory in (root, pilot):
         if str(directory) not in sys.path:
-            sys.path.insert(0, str(directory))
+            monkeypatch.syspath_prepend(str(directory))
+
+    # The root pptl/__init__.py eagerly imports the optional pandas-backed
+    # HeraldAgent. This test exercises real TGL + P-35 modules directly,
+    # not that unrelated package convenience import or a simulated gate.
+    isolated_package = ModuleType("pptl")
+    isolated_package.__path__ = [str(root / "pptl")]
+    monkeypatch.setitem(sys.modules, "pptl", isolated_package)
 
     from canonical_epoch_004_adapter import CanonicalEpoch004TGLAdapter
     from canonical_profile_tgl_diagnostic import CanonicalQualifiedTGLAdapter
