@@ -43,43 +43,95 @@ class SQLiteResearchAdmissionStore:
     all filesystems, external effects, or exactly-once delivery.
     """
 
+    _TABLE_SQL = (
+        """CREATE TABLE akdc_event (
+            provider_id TEXT NOT NULL,
+            runtime_id TEXT NOT NULL,
+            event_id TEXT NOT NULL,
+            effect_id TEXT NOT NULL,
+            envelope_digest TEXT NOT NULL,
+            PRIMARY KEY (provider_id, runtime_id, event_id)
+        )""",
+        """CREATE TABLE akdc_effect (
+            provider_id TEXT NOT NULL,
+            runtime_id TEXT NOT NULL,
+            effect_id TEXT NOT NULL,
+            envelope_digest TEXT NOT NULL,
+            PRIMARY KEY (provider_id, runtime_id, effect_id)
+        )""",
+        """CREATE TABLE akdc_a2a_task (
+            provider_id TEXT NOT NULL,
+            runtime_id TEXT NOT NULL,
+            source_id TEXT NOT NULL,
+            task_id TEXT NOT NULL,
+            context_id TEXT NOT NULL,
+            last_sequence INTEGER NOT NULL,
+            last_state TEXT NOT NULL,
+            PRIMARY KEY (provider_id, runtime_id, source_id, task_id)
+        )""",
+    )
+    _TABLE_SHAPE = {
+        'akdc_event': (
+            ('provider_id', 'TEXT', 1), ('runtime_id', 'TEXT', 2),
+            ('event_id', 'TEXT', 3), ('effect_id', 'TEXT', 0),
+            ('envelope_digest', 'TEXT', 0),
+        ),
+        'akdc_effect': (
+            ('provider_id', 'TEXT', 1), ('runtime_id', 'TEXT', 2),
+            ('effect_id', 'TEXT', 3), ('envelope_digest', 'TEXT', 0),
+        ),
+        'akdc_a2a_task': (
+            ('provider_id', 'TEXT', 1), ('runtime_id', 'TEXT', 2),
+            ('source_id', 'TEXT', 3), ('task_id', 'TEXT', 4),
+            ('context_id', 'TEXT', 0), ('last_sequence', 'INTEGER', 0),
+            ('last_state', 'TEXT', 0),
+        ),
+    }
+
+    @classmethod
+    def _validate_table_shapes(cls, conn: sqlite3.Connection) -> None:
+        """Refuse missing or weakened expected tables; not forensic DB integrity."""
+        tables = {
+            row[0] for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+            )
+        }
+        if tables != set(cls._TABLE_SHAPE):
+            raise ValueError('invalid replay schema: unexpected or missing tables')
+        for table, expected in cls._TABLE_SHAPE.items():
+            # Identifiers are compile-time constants, never caller-controlled.
+            info = conn.execute(f'PRAGMA table_info({table})').fetchall()
+            shape = tuple((row[1], row[2].upper(), row[5]) for row in info)
+            if shape != expected or any(row[3] != 1 for row in info):
+                raise ValueError(f'invalid replay schema: missing constraints on {table}')
+
     def __init__(self, path: str | Path):
         if str(path) == ':memory:':
             raise ValueError('research store requires a file path')
         self.path = str(path)
         with closing(self._connect()) as conn:
-            version = conn.execute('PRAGMA user_version').fetchone()[0]
-            if version not in (0, SCHEMA_VERSION):
-                raise ValueError(f'unsupported persistent replay schema: {version}')
-            conn.executescript('''
-                CREATE TABLE IF NOT EXISTS akdc_event (
-                    provider_id TEXT NOT NULL,
-                    runtime_id TEXT NOT NULL,
-                    event_id TEXT NOT NULL,
-                    effect_id TEXT NOT NULL,
-                    envelope_digest TEXT NOT NULL,
-                    PRIMARY KEY (provider_id, runtime_id, event_id)
-                );
-                CREATE TABLE IF NOT EXISTS akdc_effect (
-                    provider_id TEXT NOT NULL,
-                    runtime_id TEXT NOT NULL,
-                    effect_id TEXT NOT NULL,
-                    envelope_digest TEXT NOT NULL,
-                    PRIMARY KEY (provider_id, runtime_id, effect_id)
-                );
-                CREATE TABLE IF NOT EXISTS akdc_a2a_task (
-                    provider_id TEXT NOT NULL,
-                    runtime_id TEXT NOT NULL,
-                    source_id TEXT NOT NULL,
-                    task_id TEXT NOT NULL,
-                    context_id TEXT NOT NULL,
-                    last_sequence INTEGER NOT NULL,
-                    last_state TEXT NOT NULL,
-                    PRIMARY KEY (provider_id, runtime_id, source_id, task_id)
-                );
-            ''')
-            if version == 0:
-                conn.execute(f'PRAGMA user_version={SCHEMA_VERSION}')
+            # Re-check version *inside* the writer lock. Partial initialization
+            # and concurrent first-open attempts must not reset identity state.
+            try:
+                conn.execute('BEGIN IMMEDIATE')
+                version = conn.execute('PRAGMA user_version').fetchone()[0]
+                if version == 0:
+                    existing = conn.execute(
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+                    ).fetchall()
+                    if existing:
+                        raise ValueError('unversioned replay schema: refusing existing tables')
+                    for create_sql in self._TABLE_SQL:
+                        conn.execute(create_sql)
+                    conn.execute(f'PRAGMA user_version={SCHEMA_VERSION}')
+                elif version != SCHEMA_VERSION:
+                    raise ValueError(f'unsupported persistent replay schema: {version}')
+                self._validate_table_shapes(conn)
+                conn.execute('COMMIT')
+            except BaseException:
+                if conn.in_transaction:
+                    conn.execute('ROLLBACK')
+                raise
 
     def _connect(self):
         conn = sqlite3.connect(self.path, timeout=15.0, isolation_level=None)
