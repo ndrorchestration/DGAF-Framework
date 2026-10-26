@@ -45,7 +45,8 @@ class SQLiteMRTRReceiptResearch:
                 conn.execute("BEGIN IMMEDIATE")
                 version = conn.execute("PRAGMA user_version").fetchone()[0]
                 tables = {
-                    row[0] for row in conn.execute(
+                    row[0]
+                    for row in conn.execute(
                         "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
                     )
                 }
@@ -71,22 +72,21 @@ class SQLiteMRTRReceiptResearch:
     @staticmethod
     def _assert_shape(conn: sqlite3.Connection) -> None:
         actual = {
-            row[0] for row in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
-            )
+            row[0]
+            for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
         }
         if actual != {"mrtr_receipt"}:
             raise MRTRReceiptRefusal("unexpected receipt schema tables")
         info = conn.execute("PRAGMA table_info(mrtr_receipt)").fetchall()
         shape = [(r[1], r[2].upper(), r[3], r[5]) for r in info]
         if shape != [
-            ("token_tag", "TEXT", 1, 1), ("bound_claim", "TEXT", 1, 0),
-            ("status", "TEXT", 1, 0), ("outcome", "TEXT", 1, 0)
+            ("token_tag", "TEXT", 1, 1),
+            ("bound_claim", "TEXT", 1, 0),
+            ("status", "TEXT", 1, 0),
+            ("outcome", "TEXT", 1, 0),
         ]:
             raise MRTRReceiptRefusal("weakened receipt table columns or primary key")
-        sql = conn.execute(
-            "SELECT sql FROM sqlite_master WHERE type='table' AND name='mrtr_receipt'"
-        ).fetchone()[0]
+        sql = conn.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='mrtr_receipt'").fetchone()[0]
         norm = " ".join(sql.upper().split())
         if "CHECK (STATUS = 'RECORD_ONLY')" not in norm or "CHECK (OUTCOME = 'SYNTHETIC_COMPLETE')" not in norm:
             raise MRTRReceiptRefusal("missing fixed-outcome CHECK constraints")
