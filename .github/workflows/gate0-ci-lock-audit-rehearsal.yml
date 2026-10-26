@@ -1,0 +1,51 @@
+name: Gate 0 Cross-Interpreter Lock Audit Rehearsal
+
+# Non-admitting proof: known vulnerabilities intentionally keep this job red.
+# Does not replace release-required security-scan or modify the four locks.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/ci_lock_audit_rehearsal.py'
+      - 'tests/test_ci_lock_audit_rehearsal.py'
+      - '.github/workflows/gate0-ci-lock-audit-rehearsal.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nonadmitting-lock-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - name: Set up standalone Python 3.11 scanner
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: '3.11'
+      - name: Bootstrap exact pinned pip
+        run: bash scripts/bootstrap_ci_pip.sh
+      - name: Install existing hash-locked audit rehearsal dependencies
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --require-hashes \
+            --only-binary=:all: \
+            -r requirements-ci-py311-ubuntu2404-x64.lock
+      - name: Run non-empirical negative controls
+        run: python -m pytest tests/test_ci_lock_audit_rehearsal.py -q
+      - name: Audit scanner environment and four canonical locks (blocking)
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python scripts/ci_lock_audit_rehearsal.py \
+            --output test-artifacts/gate0-lock-audit-rehearsal.json
+      - name: Preserve source-bound audit receipt even on vulnerable result
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gate0-lock-audit-rehearsal
+          path: test-artifacts/gate0-lock-audit-rehearsal.json
+          if-no-files-found: warn
