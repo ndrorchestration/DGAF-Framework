@@ -1,4 +1,5 @@
 """Non-empirical regression contracts for the CI Python-metadata compatibility preflight."""
+
 from __future__ import annotations
 
 from pathlib import Path
