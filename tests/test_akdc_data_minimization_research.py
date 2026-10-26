@@ -5,7 +5,7 @@ import unittest
 
 from experiments.akdc.raw_wire_research import normalize_mcp_tools_call
 from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-from tests.test_akdc_raw_wire_research import NOW, mcp_req, mcp_resp, witness
+from test_akdc_raw_wire_research import NOW, mcp_req, mcp_resp, witness
 
 
 class TestAKDCCaptureMinimization(unittest.TestCase):
