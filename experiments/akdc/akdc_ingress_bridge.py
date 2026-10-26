@@ -3,13 +3,14 @@
 Not a transport, authentication mechanism, policy engine, or production adapter.
 No network I/O, execution, authorization, scientific state, or custody access.
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timezone
 import hashlib
 import json
 import re
+from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any
 
 BRIDGE_VERSION = "0.3.0-research"
@@ -17,20 +18,31 @@ A2A_VERSION = "1.0.1"
 MCP_VERSION = "2026-07-28"
 OPAQUE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*$")
 
-A2A_STATES = frozenset({
-    "TASK_STATE_SUBMITTED", "TASK_STATE_WORKING", "TASK_STATE_COMPLETED",
-    "TASK_STATE_FAILED", "TASK_STATE_CANCELED", "TASK_STATE_INPUT_REQUIRED",
-    "TASK_STATE_REJECTED", "TASK_STATE_AUTH_REQUIRED", "TASK_STATE_UNSPECIFIED",
-})
-A2A_TERMINAL = frozenset({
-    "TASK_STATE_COMPLETED", "TASK_STATE_FAILED", "TASK_STATE_CANCELED",
-    "TASK_STATE_REJECTED",
-})
+A2A_STATES = frozenset(
+    {
+        "TASK_STATE_SUBMITTED",
+        "TASK_STATE_WORKING",
+        "TASK_STATE_COMPLETED",
+        "TASK_STATE_FAILED",
+        "TASK_STATE_CANCELED",
+        "TASK_STATE_INPUT_REQUIRED",
+        "TASK_STATE_REJECTED",
+        "TASK_STATE_AUTH_REQUIRED",
+        "TASK_STATE_UNSPECIFIED",
+    }
+)
+A2A_TERMINAL = frozenset(
+    {
+        "TASK_STATE_COMPLETED",
+        "TASK_STATE_FAILED",
+        "TASK_STATE_CANCELED",
+        "TASK_STATE_REJECTED",
+    }
+)
 
 
 def canonical_bytes(item: Any) -> bytes:
-    return json.dumps(item, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
-                      allow_nan=False).encode("utf-8")
+    return json.dumps(item, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
 
 
 def content_digest(item: Any) -> str:
@@ -89,15 +101,17 @@ def _classify_mcp(payload: dict[str, Any]) -> str:
     response = payload["response"]
     if not isinstance(response, dict) or response.get("jsonrpc") != "2.0":
         raise ValueError("invalid JSON-RPC response")
-    if ("id" not in response or isinstance(response["id"], bool)
-            or not isinstance(response["id"], (int, str))):
+    if "id" not in response or isinstance(response["id"], bool) or not isinstance(response["id"], (int, str)):
         raise ValueError("response correlation id required")
     if ("result" in response) == ("error" in response):
         raise ValueError("exactly one of JSON-RPC result or error required")
     if "error" in response:
         error = response["error"]
-        if (not isinstance(error, dict) or type(error.get("code")) is not int
-                or not isinstance(error.get("message"), str)):
+        if (
+            not isinstance(error, dict)
+            or type(error.get("code")) is not int
+            or not isinstance(error.get("message"), str)
+        ):
             raise ValueError("malformed JSON-RPC error")
         return "MCP_PROTOCOL_ERROR_OBSERVED"
     result = response["result"]
@@ -182,6 +196,7 @@ def make_dgaf_envelope(observation: ProtocolObservation) -> dict[str, Any]:
 
 class OrderingGate:
     """Single-process fixture ONLY; not durable, concurrent or a security gate."""
+
     def __init__(self) -> None:
         self._a2a: dict[tuple[str, str], tuple[int, str]] = {}
         self._effects: set[str] = set()
@@ -220,14 +235,15 @@ class OrderingGate:
         """DGAF validates before toy replay-state mutation. Grants no authority."""
         self._check_ordering(observation)
         envelope = make_dgaf_envelope(observation)
-        result = validator(envelope, seen_effect_ids=set(self._effects),
-                           seen_events=dict(self._events), now=now)
+        result = validator(envelope, seen_effect_ids=set(self._effects), seen_events=dict(self._events), now=now)
         if not isinstance(result, dict):
             raise ValueError("invalid DGAF ingress result")
         if not result.get("admitted", False):
             return result
-        if (result.get("authority_status") != "PRESENTED_NOT_GRANTED"
-                or result.get("dgaf_verification_class") != "UNVERIFIED_EXTERNAL_ASSERTION"):
+        if (
+            result.get("authority_status") != "PRESENTED_NOT_GRANTED"
+            or result.get("dgaf_verification_class") != "UNVERIFIED_EXTERNAL_ASSERTION"
+        ):
             raise ValueError("unexpected authority promotion at ingress boundary")
         self._record(observation, envelope)
         return result
