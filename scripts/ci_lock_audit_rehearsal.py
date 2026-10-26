@@ -54,8 +54,7 @@ def inspect_locks(root: Path) -> list[dict]:
                 "package_count": len(packages),
                 # Internal check only: never report clean if a scanner silently omits a pin.
                 "_expected_pins": {
-                    name.lower().replace("_", "-").replace(".", "-"): version
-                    for name, version in packages
+                    name.lower().replace("_", "-").replace(".", "-"): version for name, version in packages
                 },
             }
         )
@@ -94,8 +93,7 @@ def interpret_result(exit_code: int, output: str, expected_pins: dict | None = N
     for dep in deps:
         findings = dep.get("vulns")
         if not isinstance(findings, list) or any(
-            not isinstance(vuln, dict) or not isinstance(vuln.get("id"), str)
-            for vuln in findings
+            not isinstance(vuln, dict) or not isinstance(vuln.get("id"), str) for vuln in findings
         ):
             return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
         if findings:
@@ -154,9 +152,7 @@ def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
     }
     try:
         inventory = inspect_locks(root)
-        targets = [(None, None)] + [
-            (item, root / str(item["filename"])) for item in inventory
-        ]
+        targets = [(None, None)] + [(item, root / str(item["filename"])) for item in inventory]
         for item, path in targets:
             command = audit_command(path)
             try:
