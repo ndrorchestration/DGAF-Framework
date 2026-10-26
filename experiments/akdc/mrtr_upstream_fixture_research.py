@@ -32,9 +32,7 @@ def observe_mrtr_example(
     The methods are claimed by the local caller; this is NOT verification
     of a remote peer's authenticated capabilities.
     """
-    if type(declared_methods) is not frozenset or not all(
-        isinstance(item, str) for item in declared_methods
-    ):
+    if type(declared_methods) is not frozenset or not all(isinstance(item, str) for item in declared_methods):
         raise ValueError("explicit, well-formed declared_methods frozenset required")
     if not isinstance(response, dict) or not isinstance(response.get("result"), dict):
         raise ValueError("MRTR fixture requires a JSON-RPC result object")
