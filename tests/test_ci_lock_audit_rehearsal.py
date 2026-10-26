@@ -218,9 +218,7 @@ def test_source_binding_distinguishes_merge_sha_from_pr_head(
 
 
 @pytest.mark.parametrize("stage", ["during-scan", "before-next-scan"])
-def test_changed_lock_bytes_invalidate_source_receipt(
-    fixture_root: Path, tmp_path: Path, stage: str
-) -> None:
+def test_changed_lock_bytes_invalidate_source_receipt(fixture_root: Path, tmp_path: Path, stage: str) -> None:
     target = fixture_root / rehearsal.LOCKS[0][0]
     original = target.read_text(encoding="utf-8")
 
