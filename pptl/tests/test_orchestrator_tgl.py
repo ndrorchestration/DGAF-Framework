@@ -141,10 +141,14 @@ def test_justice_domain_auto_wires_premise_fn():
     assert orch.config.premise_check_fn("standard justice feature", None)
 
 
-def test_general_domain_premise_fn_is_passthrough():
+def test_general_domain_requires_explicit_premise_predicate():
     orch = _make_orchestrator(domain="general")
-    assert orch.config.premise_check_fn is not None
-    assert orch.config.premise_check_fn("anything at all", None)
+    assert orch.config.premise_check_fn is None
+    result = orch.orchestrate_turn("synthetic input", "no-p35")
+    assert result.final_status is TurnStatus.ESCALATE
+    assert result.tgl_passed is False
+    assert result.response is None
+    assert any(g.step == 0 and g.result is GateResult.SKIP for g in result.gate_records)
 
 
 # --- Session metadata ---
