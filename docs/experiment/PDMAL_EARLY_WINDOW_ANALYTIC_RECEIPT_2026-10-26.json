@@ -2,7 +2,7 @@
   "status": "AUTHOR_OPERATED_EARLY_TIME_ODE_CHECK",
   "admission": "NON_ADMITTED_NOT_INDEPENDENT_VALIDATION",
   "scope": "Only [0, 0.04] seconds of the frozen four-node directed-delay fixture; no topology comparison",
-  "source_oracle_blob_sha1": "ee19cbe5a19ccbc6d8944d4f521b9099c1afac77",
+  "source_oracle_blob_sha1": "c7cacfc9b18b01926596b57d4d844d8be09b1570",
   "source_archive": "GitHub Actions run 40358127422 artifact 12666278250",
   "source_archive_sha256": "d8aef46d1a715f82af283d3f4a3ae6caaf906526200753153c0fd85354f3bf13",
   "source_run_git_commit": "28ebbb33e5d48bd8bb863e2a10d8e87f539a8215",
