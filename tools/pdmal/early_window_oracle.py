@@ -75,7 +75,7 @@ def initial_window_trajectory(dt: float) -> tuple[tuple[float, ...], ...]:
     if dt > EARLIEST_POSITIVE_DELAY or not math.isclose(n, round(n), abs_tol=1e-10, rel_tol=0):
         raise ValueError("dt must evenly divide the first positive directed delay")
     steps = round(n)
-    states = [INITIAL]
+    states: list[tuple[float, ...]] = [INITIAL]
     for _ in range(steps):
         current = states[-1]
         k1 = initial_window_rhs(current)
