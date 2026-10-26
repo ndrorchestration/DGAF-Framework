@@ -54,6 +54,7 @@ class CapturedObservation:
             "receiver_receipt_number": self.receiver_receipt_number,
             "ordering_basis": self.ordering_basis,
             "capture_attestation": "NOT_ESTABLISHED",
+            "retention_policy": "CLASSIFICATION_ONLY_NO_RAW_CONTENT",
         }
         evidence["content_digest"] = content_digest(evidence["payload"])
         return envelope
@@ -150,6 +151,64 @@ def _request_id(value: Any) -> bool:
     return type(value) in (str, int)
 
 
+def _validate_mcp_content(content: list[Any]) -> None:
+    """Bounded subset of MCP 2026 ContentBlock, not full schema conformance.
+
+    Validate type-specific mandatory fields without storing their values.
+    """
+    requirements = {
+        "text": {"text"},
+        "image": {"data", "mimeType"},
+        "audio": {"data", "mimeType"},
+        "resource_link": {"name", "uri"},
+    }
+    for block in content:
+        if not isinstance(block, dict):
+            raise ValueError("MCP content entries must be objects")
+        kind = block.get("type")
+        if kind == "resource":
+            resource = block.get("resource")
+            if not isinstance(resource, dict) or not isinstance(resource.get("uri"), str):
+                raise ValueError("malformed MCP embedded resource")
+            if not any(isinstance(resource.get(key), str) for key in ("text", "blob")):
+                raise ValueError("unsupported embedded resource representation")
+        elif kind in requirements:
+            if any(not isinstance(block.get(key), str) for key in requirements[kind]):
+                raise ValueError("malformed MCP content block")
+        else:
+            raise ValueError("unsupported MCP content block type")
+
+
+def _metadata_only_response(response: dict[str, Any]) -> dict[str, Any]:
+    """Discard tool content, opaque MRTR state, error data, and raw RPC IDs.
+
+    Canonical-decoded frame-pair digest is recorded separately; hashing is not
+    secrecy, authentication or assured suppression of low-entropy values.
+    """
+    safe = {
+        "jsonrpc": "2.0",
+        "id": "correlation-" + content_digest(["mcp-correlation", response["id"]])[7:],
+    }
+    if "error" in response:
+        safe["error"] = {"code": response["error"]["code"], "message": "REDACTED"}
+    else:
+        result = response["result"]
+        if result["resultType"] == "input_required":
+            safe_result = {"resultType": "input_required"}
+            if "requestState" in result:
+                safe_result["requestState"] = "REDACTED"
+            if "inputRequests" in result:
+                safe_result["inputRequests"] = {}
+        else:
+            safe_result = {
+                "resultType": "complete",
+                "content": [],
+                "isError": result.get("isError", False),
+            }
+        safe["result"] = safe_result
+    return safe
+
+
 def normalize_mcp_tools_call(
     request: dict[str, Any], response: dict[str, Any], witness: ReceiverWitness, *, negotiated_version: str
 ) -> CapturedObservation:
@@ -167,6 +226,10 @@ def normalize_mcp_tools_call(
         raise ValueError("missing MCP tool name")
     if "_meta" not in params or not isinstance(params["_meta"], dict):
         raise ValueError("MCP 2026 wire request requires params._meta")
+    if "arguments" in params and not isinstance(params["arguments"], dict):
+        raise ValueError("MCP arguments must be object")
+    if "requestState" in params and not isinstance(params["requestState"], str):
+        raise ValueError("MCP requestState must be string")
     if resp.get("jsonrpc") != "2.0" or resp.get("id") != req["id"] or type(resp.get("id")) is not type(req["id"]):
         raise ValueError("MCP response does not correlate to captured request")
     if ("result" in resp) == ("error" in resp):
@@ -181,6 +244,7 @@ def normalize_mcp_tools_call(
         if result_type == "complete":
             if not isinstance(result.get("content"), list):
                 raise ValueError("MCP complete requires content")
+            _validate_mcp_content(result["content"])
             if type(result.get("isError", False)) is not bool:
                 raise ValueError("MCP isError must be bool")
         elif result_type == "input_required":
@@ -188,7 +252,7 @@ def normalize_mcp_tools_call(
             validate_mcp_input_required(result)
         else:
             raise ValueError("missing or unsupported MCP 2026 resultType")
-    # Provide only the response shape expected by the preexisting bridge;
-    # the request is linked by the digest of the CAPTURED PAIR below.
-    payload = {"method": "tools/call", "response": resp}
+    # Store only classification, never decoded tool content or opaque state.
+    # Original request/response contributes to the frame-pair digest only.
+    payload = {"method": "tools/call", "response": _metadata_only_response(resp)}
     return _observed(payload, "mcp", MCP_PIN, witness, {"request": req, "response": resp})
