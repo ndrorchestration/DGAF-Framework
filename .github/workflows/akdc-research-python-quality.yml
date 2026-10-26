@@ -4,6 +4,13 @@ permissions:
   contents: read
 
 on:
+  push:
+    branches:
+      - research/akdc-transactional-replay-gate4-20261026
+    paths:
+      - 'experiments/akdc/**'
+      - 'tests/test_akdc_*.py'
+      - '.github/workflows/akdc-research-python-quality.yml'
   pull_request:
     branches:
       - research/akdc-functor-ingress-gate3-20261026
