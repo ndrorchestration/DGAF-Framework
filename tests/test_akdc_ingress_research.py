@@ -97,7 +97,7 @@ class AKDCResearchIngress(unittest.TestCase):
             classify(mcp({"resultType": "complete", "content": [], "isError": True})), "MCP_TOOL_ERROR_OBSERVED"
         )
         self.assertEqual(classify(mcp(error={"code": -32602, "message": "bad request"})), "MCP_PROTOCOL_ERROR_OBSERVED")
-        self.assertEqual(classify(mcp({"resultType": "input_required"})), "MCP_INPUT_REQUIRED_OBSERVED")
+        self.assertEqual(classify(mcp({"resultType": "input_required", "requestState": "opaque"})), "MCP_INPUT_REQUIRED_OBSERVED")
 
     def test_protocol_completion_never_grants_execution(self):
         for obs in (a2a(state="TASK_STATE_COMPLETED"), mcp()):
