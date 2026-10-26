@@ -107,7 +107,6 @@ def derive_seed(master_seed: int, domain: str, index: int) -> int:
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big")
 
 
-
 def label_permutation(master_seed: int, arm: str, replicate: int) -> tuple[int, ...]:
     """Generate a reproducible old-to-new vertex map per arm and replicate.
 
@@ -128,9 +127,7 @@ def label_permutation(master_seed: int, arm: str, replicate: int) -> tuple[int, 
     return tuple(mapping)
 
 
-def relabel_cubic_graph(
-    edges: Sequence[tuple[int, int]], old_to_new: Sequence[int]
-) -> tuple[tuple[int, int], ...]:
+def relabel_cubic_graph(edges: Sequence[tuple[int, int]], old_to_new: Sequence[int]) -> tuple[tuple[int, int], ...]:
     """Apply a bijective old-to-new map and revalidate the labeled graph.
 
     The output can be mapped back exactly; this never changes graph
@@ -141,9 +138,7 @@ def relabel_cubic_graph(
         raise ValueError("old_to_new must contain twenty integer vertex identifiers")
     if set(old_to_new) != set(range(N_NODES)):
         raise ValueError("old_to_new must be a permutation of range(20)")
-    return validate_cubic_graph(
-        tuple((old_to_new[u], old_to_new[v]) for u, v in canonical)
-    )
+    return validate_cubic_graph(tuple((old_to_new[u], old_to_new[v]) for u, v in canonical))
 
 
 def relabel_vertex_values(values: Sequence[float], old_to_new: Sequence[int]) -> tuple[float, ...]:
@@ -158,9 +153,7 @@ def relabel_vertex_values(values: Sequence[float], old_to_new: Sequence[int]) ->
     return tuple(remapped)
 
 
-def relabel_directed_delays(
-    lags: dict[tuple[int, int], int], old_to_new: Sequence[int]
-) -> dict[tuple[int, int], int]:
+def relabel_directed_delays(lags: dict[tuple[int, int], int], old_to_new: Sequence[int]) -> dict[tuple[int, int], int]:
     """Carry directed receiver/sender delay orientation through relabeling."""
     if len(old_to_new) != N_NODES or any(type(v) is not int for v in old_to_new):
         raise ValueError("old_to_new must contain twenty integer vertex identifiers")
@@ -178,6 +171,7 @@ def relabel_directed_delays(
             raise ValueError("delay values must be nonnegative integer step counts")
         remapped[(old_to_new[receiver], old_to_new[sender])] = delay
     return remapped
+
 
 def named_comparator_edges(seed: int) -> dict[str, tuple[tuple[int, int], ...]]:
     """Topology-only fixtures. This function runs no oscillator or experiment."""
