@@ -236,4 +236,3 @@ def test_changed_lock_bytes_invalidate_source_receipt(
     assert report["result"] == "AUDIT_ERROR"
     assert report["locks"][1]["status"] == "AUDIT_ERROR"
     assert report["locks"][1]["error_type"] == "ValueError"
-
