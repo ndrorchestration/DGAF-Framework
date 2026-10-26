@@ -39,7 +39,7 @@ def mcp(seq=1, **fields):
              event_id=f'akdc-mcp-event-{seq}', effect_id=f'akdc-mcp-effect-{seq}',
              observed_at='2026-10-26T12:00:00Z',
              payload={'method': 'tools/call', 'response': {'jsonrpc': '2.0', 'id': seq,
-                                                        'result': {'resultType': 'complete',
+                                                          'result': {'resultType': 'complete',
                                                                    'content': [], 'isError': False}}})
     d.update(fields)
     return ProtocolObservation(**d)
@@ -183,6 +183,7 @@ class DurableResearchGate(unittest.TestCase):
 
     def test_thread_race_only_one_commit(self):
         obs = a2a()
+
         def worker(_):
             try:
                 r = SQLiteResearchAdmissionStore(self.db).admit(obs, validate_external_runtime_envelope, now=NOW)
@@ -205,7 +206,8 @@ class DurableResearchGate(unittest.TestCase):
             p.join(12)
         if any(p.is_alive() for p in processes):
             for p in processes:
-                if p.is_alive(): p.terminate()
+                if p.is_alive():
+                    p.terminate()
             self.fail('spawn worker exceeded test timeout')
         outcomes = [queue.get(timeout=5) for _ in processes]
         self.assertEqual(outcomes.count('accepted'), 1, outcomes)
@@ -300,7 +302,7 @@ class DurableResearchGate(unittest.TestCase):
     def test_record_is_only_receipt_not_execution(self):
         self.admit(a2a())
         with closing(sqlite3.connect(self.db)) as conn:
-            names={row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            names = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             self.assertEqual(names, {'akdc_event', 'akdc_effect', 'akdc_a2a_task'})
 
 
