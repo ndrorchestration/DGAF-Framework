@@ -17,8 +17,7 @@ class ResolutionFeasibilityTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.source = self.root / "requirements-ci.txt"
         self.source.write_text(
-            "# pinned CI tools\npytest==9.1.1\nblack==26.5.1\n"
-            "setuptools==83.0.0\npip-audit==2.10.1\n",
+            "# pinned CI tools\npytest==9.1.1\nblack==26.5.1\n" "setuptools==83.0.0\npip-audit==2.10.1\n",
             encoding="utf-8",
         )
         self.out = self.root / "evidence"
@@ -88,9 +87,7 @@ class ResolutionFeasibilityTests(unittest.TestCase):
             proof.evaluate(self.out, self.make_report())
 
     def test_unapproved_baseline_pin_rejected(self) -> None:
-        self.source.write_text(
-            "pytest==9.1.1\nblack==26.10.1\nsetuptools==83.0.0\npip-audit==2.10.1\n"
-        )
+        self.source.write_text("pytest==9.1.1\nblack==26.10.1\nsetuptools==83.0.0\npip-audit==2.10.1\n")
         with self.assertRaisesRegex(ValueError, "baseline pins drifted"):
             proof.prepare(self.source, self.root / "other")
 
