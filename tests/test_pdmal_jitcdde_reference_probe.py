@@ -84,6 +84,7 @@ def test_invalid_bootstrap_spacing_fail_closed(monkeypatch):
     with pytest.raises(ValueError):
         probe.validate_fixture()
 
+
 def test_runtime_fixture_digest_must_match_frozen_identity(monkeypatch):
     assert probe.fixture_sha256() == probe.EXPECTED_FIXTURE_SHA256
     monkeypatch.setattr(probe, "COUPLING", 1.2)
