@@ -1,11 +1,11 @@
 """Contract tests only: neither empirical PDMAL data nor efficacy evidence."""
+
 import math
 
 import pytest
 
 from tools.pdmal.delay_sandbox import circular_order_parameter, simulate_delayed_kuramoto
 from tools.pdmal.lattice_harness import DODECAHEDRAL_EDGES
-
 
 EDGES = ((0, 1), (1, 2), (2, 0))
 INITIAL = (0.0, 0.8, -0.6)
@@ -35,8 +35,11 @@ def test_zero_coupling_has_exact_uncoupled_analytic_reference():
 
 def test_uniform_equilibrium_is_stationary_even_with_delay():
     states = simulate_delayed_kuramoto(
-        EDGES, (0.5,) * 3, (0.0,) * 3,
-        delays={(0, 1): 3, (2, 1): 7}, steps=40,
+        EDGES,
+        (0.5,) * 3,
+        (0.0,) * 3,
+        delays={(0, 1): 3, (2, 1): 7},
+        steps=40,
     )
     assert all(x == pytest.approx(0.5) for state in states for x in state)
     assert circular_order_parameter(states[-1]) == pytest.approx(1.0)
@@ -53,8 +56,12 @@ def test_constant_global_phase_shift_is_invariant():
     lag = {(0, 1): 2, (1, 2): 1, (2, 0): 4}
     base = run(delays=lag)
     shifted = simulate_delayed_kuramoto(
-        EDGES, tuple(x + 1.7 for x in INITIAL),
-        OMEGA, delays=lag, dt=0.04, steps=25,
+        EDGES,
+        tuple(x + 1.7 for x in INITIAL),
+        OMEGA,
+        delays=lag,
+        dt=0.04,
+        steps=25,
     )
     for state_a, state_b in zip(base, shifted):
         for a, b in zip(state_a, state_b):
@@ -68,24 +75,31 @@ def test_zero_lag_explicit_map_equals_default():
 def test_dodecahedral_proxy_can_run_without_extra_dependencies():
     theta = tuple(0.1 * i for i in range(20))
     traces = simulate_delayed_kuramoto(
-        DODECAHEDRAL_EDGES, theta, (0.0,) * 20,
-        delays={(0, 1): 2, (10, 0): 1}, dt=0.05, steps=2,
+        DODECAHEDRAL_EDGES,
+        theta,
+        (0.0,) * 20,
+        delays={(0, 1): 2, (10, 0): 1},
+        dt=0.05,
+        steps=2,
     )
     assert len(traces[-1]) == 20
     assert len(traces) == 3
 
 
-@pytest.mark.parametrize("changes", [
-    {"delays": {(0, 2): -1}},
-    {"delays": {(0, 5): 1}},
-    {"delays": {(0, 1): 1.5}},
-    {"delays": {(0, 1): True}},
-    {"dt": 0.0},
-    {"dt": math.inf},
-    {"coupling": math.nan},
-    {"steps": -1},
-    {"steps": 3.0},
-])
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"delays": {(0, 2): -1}},
+        {"delays": {(0, 5): 1}},
+        {"delays": {(0, 1): 1.5}},
+        {"delays": {(0, 1): True}},
+        {"dt": 0.0},
+        {"dt": math.inf},
+        {"coupling": math.nan},
+        {"steps": -1},
+        {"steps": 3.0},
+    ],
+)
 def test_invalid_inputs_fail_closed(changes):
     with pytest.raises(ValueError):
         run(**changes)
@@ -110,8 +124,12 @@ def test_step_refinement_reduces_error_against_finer_reference():
     # Heuristic numerical consistency check, not a convergence-order proof.
     def endpoint(dt):
         return simulate_delayed_kuramoto(
-            EDGES, INITIAL, OMEGA, delays={(0, 1): round(0.12 / dt)},
-            dt=dt, steps=round(1.2 / dt),
+            EDGES,
+            INITIAL,
+            OMEGA,
+            delays={(0, 1): round(0.12 / dt)},
+            dt=dt,
+            steps=round(1.2 / dt),
         )[-1]
 
     ref = endpoint(0.005)
