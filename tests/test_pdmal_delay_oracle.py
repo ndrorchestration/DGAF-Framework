@@ -63,8 +63,7 @@ def _independent_euler_method_of_steps(step_size):
 def _rk4_terminal_state(time_step=0.02):
     integer_lags = {edge: round(delay / time_step) for edge, delay in PHYSICAL_DELAYS.items()}
     assert all(
-        math.isclose(integer_lags[edge] * time_step, delay, abs_tol=1e-12)
-        for edge, delay in PHYSICAL_DELAYS.items()
+        math.isclose(integer_lags[edge] * time_step, delay, abs_tol=1e-12) for edge, delay in PHYSICAL_DELAYS.items()
     )
     return simulate_delayed_kuramoto(
         GRAPH,
