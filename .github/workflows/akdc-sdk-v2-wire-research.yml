@@ -8,6 +8,7 @@ on:
     branches:
       - research/akdc-sdk-v2-wire-capture-gate11-20261026
       - research/akdc-sdk-mrtr-retry-gate12-20261026
+      - research/akdc-mrtr-ledger-gate13-20261026
     paths:
       - 'experiments/akdc/sdk_v2_probe/**'
       - '.github/workflows/akdc-sdk-v2-wire-research.yml'
@@ -15,6 +16,7 @@ on:
     branches:
       - research/akdc-official-mrtr-fixtures-gate10-20261026
       - research/akdc-sdk-v2-wire-capture-gate11-20261026
+      - research/akdc-sdk-mrtr-retry-gate12-20261026
     paths:
       - 'experiments/akdc/sdk_v2_probe/**'
       - '.github/workflows/akdc-sdk-v2-wire-research.yml'
@@ -66,6 +68,22 @@ jobs:
           test -s evidence/mrtr_retry_manifest.json
           PYTHONPATH="$GITHUB_WORKSPACE" python verify_mrtr_retry.py
           sha256sum evidence/sdk_mrtr_retry_synthetic.json evidence/mrtr_retry_manifest.json
+      - name: Atomic SQLite receipt races and crash recovery (nonrelease)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          python -W error::ResourceWarning -m unittest discover -s "$GITHUB_WORKSPACE/tests" -p test_akdc_mrtr_receipt_research.py -v
+      - name: Official SDK retries through shared atomic receipt ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          node mrtr_ledger_probe.mjs
+          test -s evidence/sdk_mrtr_ledger_synthetic.json
+          test -s evidence/mrtr_ledger_manifest.json
+          python -W error::ResourceWarning verify_mrtr_ledger.py
+          sha256sum evidence/sdk_mrtr_ledger_synthetic.json evidence/mrtr_ledger_manifest.json
       - name: Upload synthetic wire and provisional lock proof
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -76,6 +94,8 @@ jobs:
             experiments/akdc/sdk_v2_probe/evidence/trace_manifest.json
             experiments/akdc/sdk_v2_probe/evidence/sdk_mrtr_retry_synthetic.json
             experiments/akdc/sdk_v2_probe/evidence/mrtr_retry_manifest.json
+            experiments/akdc/sdk_v2_probe/evidence/sdk_mrtr_ledger_synthetic.json
+            experiments/akdc/sdk_v2_probe/evidence/mrtr_ledger_manifest.json
             experiments/akdc/sdk_v2_probe/package-lock.json
           if-no-files-found: warn
           retention-days: 14
