@@ -9,14 +9,23 @@ from experiments.akdc.raw_wire_research import ReceiverWitness, normalize_mcp_to
 def _fixture(result):
     response = {"jsonrpc": "2.0", "id": 1, "result": result}
     observation = ProtocolObservation(
-        protocol="mcp", version="2026-07-28", provider_id="external-test",
-        runtime_id="runtime-test", source_id="source-test", event_id="event-one",
-        effect_id="effect-one", observed_at="2026-10-26T12:00:00Z",
+        protocol="mcp",
+        version="2026-07-28",
+        provider_id="external-test",
+        runtime_id="runtime-test",
+        source_id="source-test",
+        event_id="event-one",
+        effect_id="effect-one",
+        observed_at="2026-10-26T12:00:00Z",
         payload={"method": "tools/call", "response": response},
     )
     witness = ReceiverWitness(
-        provider_id="external-test", runtime_id="runtime-test", source_id="source-test",
-        stream_id="receiver-stream", receipt_number=1, observed_at="2026-10-26T12:00:00Z",
+        provider_id="external-test",
+        runtime_id="runtime-test",
+        source_id="source-test",
+        stream_id="receiver-stream",
+        receipt_number=1,
+        observed_at="2026-10-26T12:00:00Z",
     )
     request = {
         "jsonrpc": "2.0", "id": 1, "method": "tools/call",
