@@ -34,7 +34,7 @@ Source protocol basis:
 
 The research toy `OrderingGate` is *single-process, volatile and non-transactional*. Its state cannot be used for replay protection, distributed consensus, principal binding, permissions, or durable exactly-once effects. It cannot be attached to the real DGAF local operator bridge without a separate authorized contract.
 
-No production transport, authentication, signed provenance, SDK transcript, revocation, race testing, real agent experiment, field trial, TRL advancement, or safety/efficacy measurement occurred. The underlying user-supplied dossier is not added to this PR; its `ORCON-NOFORN` legend has not been authenticated and redistribution requires provenance review.
+No production transport, authentication, signed provenance, SDK transcript, revocation, race testing, real agent experiment, field trial, TRL advancement, or safety/efficacy measurement occurred. The underlying user-supplied dossier is not added to this PR; the handling legend on that document has not been independently authenticated and redistribution requires provenance review.
 
 ## Explicit guards
 
