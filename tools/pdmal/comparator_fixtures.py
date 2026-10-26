@@ -101,11 +101,83 @@ def derive_seed(master_seed: int, domain: str, index: int) -> int:
     """Domain-separated deterministic seed schedule; NOT cryptographic sampling."""
     if type(master_seed) is not int or type(index) is not int or index < 0:
         raise ValueError("master_seed and nonnegative index must be integers")
-    if domain not in ("graph", "perturbation"):
-        raise ValueError("domain must be 'graph' or 'perturbation'")
+    if domain not in ("graph", "perturbation", "label"):
+        raise ValueError("domain must be 'graph', 'perturbation' or 'label'")
     payload = f"pdmal-gr-seed-v1|{master_seed}|{domain}|{index}".encode("ascii")
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big")
 
+
+
+def label_permutation(master_seed: int, arm: str, replicate: int) -> tuple[int, ...]:
+    """Generate a reproducible old-to-new vertex map per arm and replicate.
+
+    Independent pseudorandom stream per arm and index prevents accidental
+    reuse of one chosen source vertex across non-isomorphic comparator arms.
+    A new vertex label is not a guarantee of matching structural position.
+    No oscillator simulation, perturbation or experimental result is created.
+    """
+    valid_arms = ("dodecahedral_proxy", "circular_ladder", "random_connected_cubic")
+    if type(master_seed) is not int or type(replicate) is not int or replicate < 0:
+        raise ValueError("master_seed and nonnegative replicate must be integers")
+    if arm not in valid_arms:
+        raise ValueError("arm must be a known structural comparator")
+    arm_id = valid_arms.index(arm)
+    rng = random.Random(derive_seed(master_seed, "label", replicate * len(valid_arms) + arm_id))
+    mapping = list(range(N_NODES))
+    rng.shuffle(mapping)
+    return tuple(mapping)
+
+
+def relabel_cubic_graph(
+    edges: Sequence[tuple[int, int]], old_to_new: Sequence[int]
+) -> tuple[tuple[int, int], ...]:
+    """Apply a bijective old-to-new map and revalidate the labeled graph.
+
+    The output can be mapped back exactly; this never changes graph
+    isomorphism class, structural costs, or the original edge fixture.
+    """
+    canonical = validate_cubic_graph(edges)
+    if len(old_to_new) != N_NODES or any(type(v) is not int for v in old_to_new):
+        raise ValueError("old_to_new must contain twenty integer vertex identifiers")
+    if set(old_to_new) != set(range(N_NODES)):
+        raise ValueError("old_to_new must be a permutation of range(20)")
+    return validate_cubic_graph(
+        tuple((old_to_new[u], old_to_new[v]) for u, v in canonical)
+    )
+
+
+def relabel_vertex_values(values: Sequence[float], old_to_new: Sequence[int]) -> tuple[float, ...]:
+    """Keep node-attached attributes consistent with an old-to-new vertex map."""
+    if len(values) != N_NODES or len(old_to_new) != N_NODES:
+        raise ValueError("expected twenty vertex values and twenty mapped identifiers")
+    if any(type(v) is not int for v in old_to_new) or set(old_to_new) != set(range(N_NODES)):
+        raise ValueError("old_to_new must be a permutation of range(20)")
+    remapped = [0.0] * N_NODES
+    for old, new in enumerate(old_to_new):
+        remapped[new] = float(values[old])
+    return tuple(remapped)
+
+
+def relabel_directed_delays(
+    lags: dict[tuple[int, int], int], old_to_new: Sequence[int]
+) -> dict[tuple[int, int], int]:
+    """Carry directed receiver/sender delay orientation through relabeling."""
+    if len(old_to_new) != N_NODES or any(type(v) is not int for v in old_to_new):
+        raise ValueError("old_to_new must contain twenty integer vertex identifiers")
+    if set(old_to_new) != set(range(N_NODES)):
+        raise ValueError("old_to_new must be a permutation of range(20)")
+    remapped: dict[tuple[int, int], int] = {}
+    for (receiver, sender), delay in lags.items():
+        if (
+            type(receiver) is not int
+            or type(sender) is not int
+            or not (0 <= receiver < N_NODES and 0 <= sender < N_NODES)
+        ):
+            raise ValueError("delay key must use two valid directed vertex indices")
+        if type(delay) is not int or delay < 0:
+            raise ValueError("delay values must be nonnegative integer step counts")
+        remapped[(old_to_new[receiver], old_to_new[sender])] = delay
+    return remapped
 
 def named_comparator_edges(seed: int) -> dict[str, tuple[tuple[int, int], ...]]:
     """Topology-only fixtures. This function runs no oscillator or experiment."""
