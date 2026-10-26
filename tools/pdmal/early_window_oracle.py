@@ -11,7 +11,13 @@ from __future__ import annotations
 import math
 from collections.abc import Sequence
 
-from tools.pdmal.scipy_reference_probe import COUPLING, DELAYS, FREQUENCIES, GRAPH, INITIAL
+from tools.pdmal.scipy_reference_probe import (
+    COUPLING,
+    DELAYS,
+    FREQUENCIES,
+    GRAPH,
+    INITIAL,
+)
 
 EARLIEST_POSITIVE_DELAY = min(DELAYS.values())
 
