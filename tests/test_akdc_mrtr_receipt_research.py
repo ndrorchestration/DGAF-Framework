@@ -11,7 +11,10 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from experiments.akdc.mrtr_receipt_ledger_research import MRTRReceiptRefusal, SQLiteMRTRReceiptResearch
+from experiments.akdc.mrtr_receipt_ledger_research import (
+    MRTRReceiptRefusal,
+    SQLiteMRTRReceiptResearch,
+)
 
 KEY = b"AKDC-TEST-RECEIPT-KEY-NOT-SECRET-0000001"
 NONCE = "a" * 32
