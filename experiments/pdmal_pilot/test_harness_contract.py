@@ -68,9 +68,7 @@ def test_topology_fingerprints_are_reproducible() -> None:
 
 
 def test_contract_results_include_topology_fingerprints() -> None:
-    results = deterministic_contract_run(
-        20260817, b"contract-only-test-key-000000000000000000"
-    )
+    results = deterministic_contract_run(20260817, b"contract-only-test-key-000000000000000000")
     assert all(len(result.topology_fingerprint) == 64 for result in results)
     assert all(int(result.topology_fingerprint, 16) >= 0 for result in results)
 
