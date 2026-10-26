@@ -423,8 +423,8 @@ def test_dataset_lock_paths_cover_single_lock_only_pr() -> None:
         encoding="utf-8"
     )
     for event in ("pull_request",):
-        event_body = workflow.split(f"  {event}:\\n", 1)[1].split("\\n  ", 1)[0]
-        paths_body = event_body.split("    paths:\\n", 1)[1]
+        event_body = workflow.split(f"  {event}:\n", 1)[1].split("\n  ", 1)[0]
+        paths_body = event_body.split("    paths:\n", 1)[1]
         patterns = tuple(
             line.strip().removeprefix("- ").strip("'\\\"")
             for line in paths_body.splitlines()
