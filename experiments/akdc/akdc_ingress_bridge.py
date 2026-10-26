@@ -94,6 +94,22 @@ def _classify_a2a(payload: dict[str, Any]) -> str:
     return "A2A_OBSERVED_" + state
 
 
+def validate_mcp_input_required(result: dict[str, Any]) -> None:
+    """Check bounded MRTR fields without fulfilling input requests.
+
+    InputRequiredResult MUST have inputRequests or requestState under MCP
+    2026-07-28. Opaque state is not an authentication assertion.
+    """
+    if "content" in result or "isError" in result:
+        raise ValueError("unsupported hybrid MCP input_required")
+    if "inputRequests" not in result and "requestState" not in result:
+        raise ValueError("MCP input_required needs inputRequests or requestState")
+    if "inputRequests" in result and not isinstance(result["inputRequests"], dict):
+        raise ValueError("MCP inputRequests must be object")
+    if "requestState" in result and not isinstance(result["requestState"], str):
+        raise ValueError("MCP requestState must be string")
+
+
 def _classify_mcp(payload: dict[str, Any]) -> str:
     # Strict research fixture for a raw tools/call JSON-RPC response.
     if set(payload) != {"method", "response"} or payload["method"] != "tools/call":
@@ -123,6 +139,7 @@ def _classify_mcp(payload: dict[str, Any]) -> str:
     if result_type is None:
         raise ValueError("MCP 2026-07-28 requires resultType")
     if result_type == "input_required":
+        validate_mcp_input_required(result)
         return "MCP_INPUT_REQUIRED_OBSERVED"
     if result_type != "complete":
         raise ValueError("MCP task/future result not supported by this bridge")
