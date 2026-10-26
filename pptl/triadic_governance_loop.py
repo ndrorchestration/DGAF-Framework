@@ -265,8 +265,13 @@ class TriadicGovernanceLoop:
                 if 1 <= step <= 8
             )
             audit = TurnAuditRecord(
-                self.session_id, self._turn_counter, self.agent_id,
-                input_hash, gates, TurnStatus.ESCALATE, timestamp,
+                self.session_id,
+                self._turn_counter,
+                self.agent_id,
+                input_hash,
+                gates,
+                TurnStatus.ESCALATE,
+                timestamp,
             )
             return self._emit_herald_and_seal(audit, context)
 
@@ -274,7 +279,10 @@ class TriadicGovernanceLoop:
             self._premise_gate.evaluate(input_text, check_fn=self.hooks.premise_check_fn)
             gates.append(
                 GateRecord(
-                    0, "P-35", "ProcludingPremiseGate", GateResult.PASS,
+                    0,
+                    "P-35",
+                    "ProcludingPremiseGate",
+                    GateResult.PASS,
                     "configured predicate returned True; verifier provenance NOT_ESTABLISHED",
                 )
             )
@@ -294,12 +302,15 @@ class TriadicGovernanceLoop:
         except Exception:
             # An invalid return, exception or miswired predicate is not a
             # constitutional violation; nonetheless it cannot authorize work.
-            gates.append(
-                GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, "predicate evaluation failed")
-            )
+            gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, "predicate evaluation failed"))
             audit = TurnAuditRecord(
-                self.session_id, self._turn_counter, self.agent_id,
-                input_hash, gates, TurnStatus.KILL, timestamp,
+                self.session_id,
+                self._turn_counter,
+                self.agent_id,
+                input_hash,
+                gates,
+                TurnStatus.KILL,
+                timestamp,
             )
             return self._emit_herald_and_seal(audit, context)
 
