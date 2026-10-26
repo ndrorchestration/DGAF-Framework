@@ -1,0 +1,163 @@
+"""Rehearse security audits of four immutable DGAF CI locks from a supported auditor.
+
+A non-admitting evidence collector: status 0 is NOT release/security authorization.
+An audit failure, missing lock, unexpected exit, or malformed output fails closed.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+LOCKS = (
+    ("requirements-ci-py310-ubuntu2404-x64.lock", "3.10"),
+    ("requirements-ci-py311-ubuntu2404-x64.lock", "3.11"),
+    ("requirements-ci-py312-ubuntu2404-x64.lock", "3.12"),
+    ("requirements-ci-control-plane-py312-ubuntu2404-x64.lock", "3.12"),
+)
+VERSION_LINE = re.compile(r"^# python_minor: (\d+\.\d+)$", re.MULTILINE)
+PACKAGE_LINE = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)==([^\s]+)\s*\\", re.MULTILINE)
+
+
+def inspect_locks(root: Path) -> list[dict]:
+    """Validate inventory before network auditing, retaining raw source fingerprints."""
+    rows = []
+    for name, expected_minor in LOCKS:
+        path = root / name
+        if not path.is_file():
+            raise ValueError(f"missing canonical lock: {name}")
+        raw = path.read_bytes()
+        source = raw.decode("utf-8")
+        minors = VERSION_LINE.findall(source)
+        if minors != [expected_minor]:
+            raise ValueError(f"invalid interpreter binding in {name}")
+        packages = PACKAGE_LINE.findall(source)
+        names = [p.lower().replace("_", "-").replace(".", "-") for p, _ in packages]
+        if not names or len(names) != len(set(names)):
+            raise ValueError(f"missing or duplicate package pins in {name}")
+        if not all("--hash=sha256:" in source for _ in [None]):
+            raise ValueError(f"unhashed canonical lock: {name}")
+        rows.append(
+            {
+                "filename": name,
+                "python_minor": expected_minor,
+                "sha256": hashlib.sha256(raw).hexdigest(),
+                "package_count": len(packages),
+            }
+        )
+    return rows
+
+
+def interpret_result(exit_code: int, output: str) -> dict:
+    """Distinguish vulnerability findings from a scanner execution failure."""
+    try:
+        payload = json.loads(output)
+    except (json.JSONDecodeError, ValueError):
+        return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
+    deps = payload.get("dependencies") if isinstance(payload, dict) else None
+    if not isinstance(deps, list) or any(not isinstance(dep, dict) for dep in deps):
+        return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
+    count = 0
+    for dep in deps:
+        findings = dep.get("vulns")
+        if not isinstance(findings, list):
+            return {"status": "AUDIT_ERROR", "exit_code": exit_code, "vulnerability_count": None}
+        count += len(findings)
+    if exit_code == 0 and count == 0:
+        status = "NO_REPORTED_VULNERABILITIES"
+    elif exit_code == 1 and count > 0:
+        status = "VULNERABILITIES_FOUND"
+    else:
+        status = "AUDIT_ERROR"
+    return {
+        "status": status,
+        "exit_code": exit_code,
+        "vulnerability_count": count,
+        "dependency_count": len(deps),
+    }
+
+
+def audit_command(lock: Path | None) -> list[str]:
+    """Use an installed scanner; no pip resolution or version rewriting on target locks."""
+    command = [sys.executable, "-m", "pip_audit"]
+    if lock is None:
+        return command + ["--local", "--format=json", "--progress-spinner=off"]
+    return command + [
+        "--require-hashes",
+        "--disable-pip",
+        "-r",
+        str(lock),
+        "--format=json",
+        "--progress-spinner=off",
+    ]
+
+
+def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
+    """Always save a report for admissibility review; no advisory waivers."""
+    report = {
+        "evidence_class": "SAME_SYSTEM_SECURITY_REHEARSAL",
+        "admission": "NOT_AUTHORIZED",
+        "security_clearance": "NOT_ESTABLISHED",
+        "scientific_n_increment": 0,
+        "github_sha": os.environ.get("GITHUB_SHA", "UNSET"),
+        "github_run_id": os.environ.get("GITHUB_RUN_ID", "UNSET"),
+        "scanner_environment": "PYTHON_3_11_EXPECTED_NOT_ATTESTED",
+        "locks": [],
+    }
+    try:
+        inventory = inspect_locks(root)
+        targets = [(None, None)] + [
+            (item, root / str(item["filename"])) for item in inventory
+        ]
+        for item, path in targets:
+            command = audit_command(path)
+            try:
+                process = runner(command, text=True, capture_output=True, timeout=180)
+                result = interpret_result(process.returncode, process.stdout)
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                result = {
+                    "status": "AUDIT_ERROR",
+                    "exit_code": None,
+                    "vulnerability_count": None,
+                    "error_type": type(exc).__name__,
+                }
+            record = {"target": "auditor_environment" if item is None else "canonical_lock"}
+            if item is not None:
+                record.update(item)
+            record["command_flags"] = command[3:]
+            record.update(result)
+            report["locks"].append(record)
+        statuses = [record["status"] for record in report["locks"]]
+        if any(status == "AUDIT_ERROR" for status in statuses):
+            report["result"] = "AUDIT_ERROR"
+        elif any(status == "VULNERABILITIES_FOUND" for status in statuses):
+            report["result"] = "BLOCKED_VULNERABILITIES"
+        else:
+            report["result"] = "NO_REPORTED_VULNERABILITIES_ONLY"
+    except (OSError, UnicodeError, ValueError) as exc:
+        report["result"] = "AUDIT_ERROR"
+        report["error_type"] = type(exc).__name__
+        report["error"] = str(exc)[:200]
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return report
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--output", type=Path, default=Path("test-artifacts/gate0-lock-audit-rehearsal.json"))
+    options = parser.parse_args()
+    report = rehearse(options.root, options.output)
+    print(json.dumps({"result": report["result"], "output": str(options.output)}))
+    return 0 if report["result"] == "NO_REPORTED_VULNERABILITIES_ONLY" else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
