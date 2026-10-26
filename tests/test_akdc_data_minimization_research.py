@@ -35,27 +35,31 @@ class TestAKDCCaptureMinimization(unittest.TestCase):
             }
         )
         captured = self.capture(request=req, response=resp)
-        self.assert_not_retained(captured, "sensitive_request_0719", "sensitive_tool_output_3A12",
-                                 "secret_structured_1ABF")
+        self.assert_not_retained(
+            captured, "sensitive_request_0719", "sensitive_tool_output_3A12", "secret_structured_1ABF"
+        )
         self.assertEqual(captured.observation.payload["response"]["result"]["content"], [])
         evidence = captured.record_only_envelope()["evidence"]["payload"]
         self.assertEqual(evidence["capture_reference"]["retention_policy"], "CLASSIFICATION_ONLY_NO_RAW_CONTENT")
         self.assertTrue(validate_external_runtime_envelope(captured.record_only_envelope(), now=NOW)["admitted"])
 
     def test_protocol_error_text_and_data_not_retained(self):
-        resp = mcp_resp(error={"code": -32602, "message": "error_secret_1ABC",
-                               "data": {"auth": "error_data_secret_5F21"}})
+        resp = mcp_resp(
+            error={"code": -32602, "message": "error_secret_1ABC", "data": {"auth": "error_data_secret_5F21"}}
+        )
         captured = self.capture(response=resp)
         self.assert_not_retained(captured, "error_secret_1ABC", "error_data_secret_5F21")
         self.assertEqual(captured.observation.payload["response"]["error"]["code"], -32602)
         self.assertTrue(validate_external_runtime_envelope(captured.record_only_envelope(), now=NOW)["admitted"])
 
     def test_mrtr_state_and_input_request_names_not_retained(self):
-        resp = mcp_resp(result={
-            "resultType": "input_required",
-            "requestState": "mrtr_secret_6621",
-            "inputRequests": {"user_private_id": {"method": "sampling/createMessage"}},
-        })
+        resp = mcp_resp(
+            result={
+                "resultType": "input_required",
+                "requestState": "mrtr_secret_6621",
+                "inputRequests": {"user_private_id": {"method": "sampling/createMessage"}},
+            }
+        )
         captured = self.capture(response=resp)
         self.assert_not_retained(captured, "mrtr_secret_6621", "user_private_id", "sampling/createMessage")
         self.assertTrue(validate_external_runtime_envelope(captured.record_only_envelope(), now=NOW)["admitted"])
@@ -82,8 +86,7 @@ class TestAKDCCaptureMinimization(unittest.TestCase):
             self.capture(request=req)
 
     def test_malformed_content_blocks_rejected(self):
-        for bad in (7, {"type": "text"}, {"type": "image", "data": "abc"},
-                    {"type": "unknown", "text": "raw"}):
+        for bad in (7, {"type": "text"}, {"type": "image", "data": "abc"}, {"type": "unknown", "text": "raw"}):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 self.capture(response=mcp_resp(result={"resultType": "complete", "content": [bad]}))
 
