@@ -206,6 +206,7 @@ def test_p35_missing_predicate_records_unverified_skip():
     assert audit.final_status is TurnStatus.ESCALATE
     assert audit.verify_seal()
 
+
 @pytest.mark.governance
 def test_phi_closure_pass_with_unwired_hpg_escalates():
     audit = make_tgl(fully_wired_hooks(hpg_fn=None)).run_turn("unwired HPG")
