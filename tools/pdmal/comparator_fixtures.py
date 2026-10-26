@@ -55,9 +55,7 @@ def circular_ladder_edges() -> tuple[tuple[int, int], ...]:
     return validate_cubic_graph(edges)
 
 
-def random_connected_cubic_edges(
-    *, seed: int, max_attempts: int = 10000
-) -> tuple[tuple[int, int], ...]:
+def random_connected_cubic_edges(*, seed: int, max_attempts: int = 10000) -> tuple[tuple[int, int], ...]:
     """Uniform labeled connected simple cubic graph by rejection of stub pairings.
 
     Every simple labeled cubic graph corresponds to (3!)**20 equally likely
