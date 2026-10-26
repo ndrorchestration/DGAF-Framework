@@ -8,9 +8,10 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from test_akdc_raw_wire_research import NOW, TEST_CAPTURE_KEY, TEST_KEY_ID, mcp_req, witness
+
 from experiments.akdc.mrtr_upstream_fixture_research import observe_mrtr_example
 from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-from test_akdc_raw_wire_research import NOW, TEST_CAPTURE_KEY, TEST_KEY_ID, mcp_req, witness
 
 FIXTURE_DIR = Path(__file__).resolve().parents[1] / "experiments/akdc/fixtures/mcp-2026-07-28"
 UPSTREAM_SHA = {
@@ -77,9 +78,7 @@ class TestUpstreamMRTROnly(unittest.TestCase):
         self.assertTrue(validate_external_runtime_envelope(x.record_only_envelope(), now=NOW)["admitted"])
 
     def test_unknown_method_is_refused_even_when_declared(self):
-        result = {"resultType": "input_required", "inputRequests": {
-            "x": {"method": "private/unsafe", "params": {}}
-        }}
+        result = {"resultType": "input_required", "inputRequests": {"x": {"method": "private/unsafe", "params": {}}}}
         with self.assertRaisesRegex(ValueError, "unsupported"):
             captured(result, frozenset({"private/unsafe"}))
 
