@@ -215,3 +215,25 @@ def test_source_binding_distinguishes_merge_sha_from_pr_head(
     assert result["pr_head_sha"] == "authored-head-sha"
     assert result["pr_base_sha"] == "base-sha"
     assert result["github_event_sha"] != result["pr_head_sha"]
+
+
+@pytest.mark.parametrize("stage", ["during-scan", "before-next-scan"])
+def test_changed_lock_bytes_invalidate_source_receipt(
+    fixture_root: Path, tmp_path: Path, stage: str
+) -> None:
+    target = fixture_root / rehearsal.LOCKS[0][0]
+    original = target.read_text(encoding="utf-8")
+
+    def modifying_runner(command, **kwargs):
+        _ = kwargs
+        if stage == "during-scan" and str(target) in command:
+            target.write_text(original + "# edited during scan\n", encoding="utf-8")
+        if stage == "before-next-scan" and "--local" in command:
+            target.write_text(original + "# edited before scan\n", encoding="utf-8")
+        return SimpleNamespace(returncode=0, stdout=scanner_json())
+
+    report = rehearsal.rehearse(fixture_root, tmp_path / "mutation.json", runner=modifying_runner)
+    assert report["result"] == "AUDIT_ERROR"
+    assert report["locks"][1]["status"] == "AUDIT_ERROR"
+    assert report["locks"][1]["error_type"] == "ValueError"
+
