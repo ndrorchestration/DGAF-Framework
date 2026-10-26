@@ -73,10 +73,8 @@ def simulate_delayed_kuramoto(
             return (1.0 - stage_fraction) * a + stage_fraction * b
 
         return tuple(
-            omega[i] + coupling / len(neighbors) * sum(
-                math.sin(history(j, lag.get((i, j), 0)) - stage[i])
-                for j in neighbors
-            )
+            omega[i]
+            + coupling / len(neighbors) * sum(math.sin(history(j, lag.get((i, j), 0)) - stage[i]) for j in neighbors)
             for i, neighbors in enumerate(adjacency)
         )
 
@@ -89,10 +87,7 @@ def simulate_delayed_kuramoto(
         k2 = derivative(add(current, k1, dt / 2.0), index, 0.5)
         k3 = derivative(add(current, k2, dt / 2.0), index, 0.5)
         k4 = derivative(add(current, k3, dt), index, 1.0)
-        next_state = tuple(
-            current[i] + dt * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]) / 6.0
-            for i in range(n_nodes)
-        )
+        next_state = tuple(current[i] + dt * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]) / 6.0 for i in range(n_nodes))
         if any(not math.isfinite(value) for value in next_state):
             raise ArithmeticError("non-finite numerical state")
         traces.append(next_state)
