@@ -7,12 +7,14 @@ on:
   push:
     branches:
       - research/akdc-sdk-v2-wire-capture-gate11-20261026
+      - research/akdc-sdk-mrtr-retry-gate12-20261026
     paths:
       - 'experiments/akdc/sdk_v2_probe/**'
       - '.github/workflows/akdc-sdk-v2-wire-research.yml'
   pull_request:
     branches:
       - research/akdc-official-mrtr-fixtures-gate10-20261026
+      - research/akdc-sdk-v2-wire-capture-gate11-20261026
     paths:
       - 'experiments/akdc/sdk_v2_probe/**'
       - '.github/workflows/akdc-sdk-v2-wire-research.yml'
@@ -55,6 +57,15 @@ jobs:
         run: |
           set -euo pipefail
           PYTHONPATH="$GITHUB_WORKSPACE" python verify_trace.py
+      - name: Exercise signed-state MRTR retry and tampering negative controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          node mrtr_retry_probe.mjs
+          test -s evidence/sdk_mrtr_retry_synthetic.json
+          test -s evidence/mrtr_retry_manifest.json
+          PYTHONPATH="$GITHUB_WORKSPACE" python verify_mrtr_retry.py
+          sha256sum evidence/sdk_mrtr_retry_synthetic.json evidence/mrtr_retry_manifest.json
       - name: Upload synthetic wire and provisional lock proof
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -63,6 +74,8 @@ jobs:
           path: |
             experiments/akdc/sdk_v2_probe/evidence/sdk_wire_synthetic.json
             experiments/akdc/sdk_v2_probe/evidence/trace_manifest.json
+            experiments/akdc/sdk_v2_probe/evidence/sdk_mrtr_retry_synthetic.json
+            experiments/akdc/sdk_v2_probe/evidence/mrtr_retry_manifest.json
             experiments/akdc/sdk_v2_probe/package-lock.json
           if-no-files-found: warn
           retention-days: 14
