@@ -267,6 +267,36 @@ class DurableResearchGate(unittest.TestCase):
             self.admit(a2a(seq=2))
         self.assertEqual(self.store.count_admitted(), 1)
 
+    def test_restart_refuses_missing_table_on_existing_version(self):
+        self.admit(a2a())
+        with closing(sqlite3.connect(self.db)) as conn:
+            conn.execute('DROP TABLE akdc_effect')
+        with self.assertRaisesRegex(ValueError, 'invalid replay schema'):
+            SQLiteResearchAdmissionStore(self.db)
+
+    def test_restart_refuses_weakened_effect_primary_key(self):
+        self.admit(a2a())
+        with closing(sqlite3.connect(self.db)) as conn:
+            conn.execute('DROP TABLE akdc_effect')
+            conn.execute('CREATE TABLE akdc_effect ('
+                         'provider_id TEXT NOT NULL, runtime_id TEXT NOT NULL, '
+                         'effect_id TEXT NOT NULL, envelope_digest TEXT NOT NULL)')
+        with self.assertRaisesRegex(ValueError, 'invalid replay schema'):
+            SQLiteResearchAdmissionStore(self.db)
+
+    def test_unversioned_partial_store_refused(self):
+        with closing(sqlite3.connect(self.db)) as conn:
+            conn.execute('PRAGMA user_version=0')
+        with self.assertRaisesRegex(ValueError, 'unversioned replay schema'):
+            SQLiteResearchAdmissionStore(self.db)
+
+    def test_runtime_rotation_is_not_bound_to_principal_negative_control(self):
+        self.assertTrue(self.admit(a2a())['admitted'])
+        # Same event+effect under a different unverified runtime id is accepted.
+        # This intentionally proves the need for authenticated identity policy.
+        self.assertTrue(self.admit(a2a(runtime_id='rotated-runtime-untrusted'))['admitted'])
+        self.assertEqual(self.store.count_admitted(), 2)
+
     def test_record_is_only_receipt_not_execution(self):
         self.admit(a2a())
         with closing(sqlite3.connect(self.db)) as conn:
