@@ -33,12 +33,12 @@ def _independent_euler_method_of_steps(step_size):
     constant initial history. This checks an independently coded integrator
     rather than an independent scientist's reproduction.
     """
-    graph_neighbors = {i: [] for i in range(len(INITIAL))}
+    graph_neighbors: dict[int, list[int]] = {i: [] for i in range(len(INITIAL))}
     for u, v in GRAPH:
         graph_neighbors[u].append(v)
         graph_neighbors[v].append(u)
 
-    lags = {}
+    lags: dict[tuple[int, int], int] = {}
     for edge, delay in PHYSICAL_DELAYS.items():
         count = round(delay / step_size)
         assert math.isclose(count * step_size, delay, abs_tol=1e-12)
@@ -98,11 +98,7 @@ def test_euler_reference_refinement_converges_toward_sandbox_solution():
 
 def test_delay_direction_affects_solution_without_changing_initial_state():
     """Directed lag (receiver,sender) must not silently become undirected."""
-    left = simulate_delayed_kuramoto(
-        GRAPH, INITIAL, FREQUENCIES, delays={(0, 1): 6}, dt=0.02, steps=40
-    )
-    right = simulate_delayed_kuramoto(
-        GRAPH, INITIAL, FREQUENCIES, delays={(1, 0): 6}, dt=0.02, steps=40
-    )
+    left = simulate_delayed_kuramoto(GRAPH, INITIAL, FREQUENCIES, delays={(0, 1): 6}, dt=0.02, steps=40)
+    right = simulate_delayed_kuramoto(GRAPH, INITIAL, FREQUENCIES, delays={(1, 0): 6}, dt=0.02, steps=40)
     assert left[0] == right[0] == INITIAL
     assert _maximum_phase_difference(left[-1], right[-1]) > 0.001
