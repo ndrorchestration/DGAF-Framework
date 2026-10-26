@@ -128,9 +128,8 @@ def label_permutation(master_seed: int, arm: str, replicate: int) -> tuple[int, 
     return tuple(mapping)
 
 
-
 def prospective_perturbation_vertex(master_seed: int, arm: str, replicate: int) -> int:
-    """Return a distinct, prospectively sampled *source-label* disturbance site.
+    """Return a deterministic prospective *source-label* disturbance site.
 
     This selection uses a separate 'placement' PRNG seed stream, NOT the
     vertex label-permutation stream. The site is uniform over twenty labeled
@@ -191,6 +190,33 @@ def relabel_directed_delays(lags: dict[tuple[int, int], int], old_to_new: Sequen
             raise ValueError("delay values must be nonnegative integer step counts")
         remapped[(old_to_new[receiver], old_to_new[sender])] = delay
     return remapped
+
+
+
+def structural_distance_profile(edges: Sequence[tuple[int, int]], source_vertex: int) -> tuple[int, ...]:
+    """Sorted shortest-path distances from one vertex; topology-only metadata.
+
+    A source site's distance multiset is invariant under coordinated vertex
+    relabeling, but matching this profile does NOT equalize all dynamical or
+    transport properties. This routine runs no oscillator or efficacy test.
+    """
+    graph = validate_cubic_graph(edges)
+    if type(source_vertex) is not int or not 0 <= source_vertex < N_NODES:
+        raise ValueError("source_vertex must be an integer in range(20)")
+    neighbors: list[set[int]] = [set() for _ in range(N_NODES)]
+    for u, v in graph:
+        neighbors[u].add(v)
+        neighbors[v].add(u)
+    distances = [-1] * N_NODES
+    distances[source_vertex] = 0
+    frontier = deque([source_vertex])
+    while frontier:
+        current = frontier.popleft()
+        for neighbor in neighbors[current]:
+            if distances[neighbor] < 0:
+                distances[neighbor] = distances[current] + 1
+                frontier.append(neighbor)
+    return tuple(sorted(distances))
 
 
 def named_comparator_edges(seed: int) -> dict[str, tuple[tuple[int, int], ...]]:
