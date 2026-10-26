@@ -28,7 +28,11 @@ def test_four_node_fixture_contract_and_grid_are_exact():
 def test_fixture_fingerprint_is_canonical_json_stable():
     fixture = probe.fixture_manifest()
     canonical = json.dumps(fixture, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    assert hashlib.sha256(canonical).hexdigest() == hashlib.sha256(canonical).hexdigest()
+    # Frozen fixture identity catches accidental changes in any canonical field.
+    assert hashlib.sha256(canonical).hexdigest() == "9c54d2a437593ff226e19f8e6a655bf692af37fdcb0c77f12740598734bd1d15"
+    modified = {**fixture, "coupling": 1.2}
+    changed_bytes = json.dumps(modified, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(changed_bytes).hexdigest() != hashlib.sha256(canonical).hexdigest()
     assert fixture["directed_physical_delays"] == [
         [0, 1, 0.12],
         [0, 3, 0.1],
