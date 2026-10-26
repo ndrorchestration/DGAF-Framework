@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check --only-binary=:all: 'jitcdde==1.8.3' 'symengine==0.14.1'
+          python -m pip install --disable-pip-version-check --only-binary=:all: 'jitcdde==1.8.3' 'symengine==0.14.1' 'sympy==1.14.0'
           python -m pip freeze --all > artifacts/pdmal-gr-jitcdde/environment-freeze.txt
 
       - name: Execute exactly one fixed-graph reference probe
