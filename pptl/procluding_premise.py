@@ -31,6 +31,7 @@ class PremiseViolationPolicy(str, Enum):
     KILL is the only valid policy for constitutional invariants.
     SNAP (correction) is never valid here — violations are architecturally excluded.
     """
+
     KILL = "KILL"
     WARN = "WARN"  # advisory only — not valid for T0 invariants
 
@@ -48,6 +49,7 @@ class ConstitutionalInvariant:
         tier:        SCPE tier — must be T0 for constitutional invariants
         policy:      KILL (default and required for T0)
     """
+
     id: str
     name: str
     description: str
@@ -70,6 +72,7 @@ class ConstitutionalInvariant:
 @dataclass
 class PremiseViolationEvent:
     """Audit record emitted on any invariant violation."""
+
     invariant_id: str
     invariant_name: str
     agent_id: str
