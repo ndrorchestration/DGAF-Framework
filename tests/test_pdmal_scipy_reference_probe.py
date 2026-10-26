@@ -8,7 +8,10 @@ import math
 
 import pytest
 
-from tools.pdmal.scipy_reference_probe import _max_phase_difference, validate_reference_grid
+from tools.pdmal.scipy_reference_probe import (
+    _max_phase_difference,
+    validate_reference_grid,
+)
 
 
 @pytest.mark.parametrize("segment, expected", [(0.02, 40), (0.01, 80), (0.005, 160), (0.0025, 320)])
