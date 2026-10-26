@@ -8,6 +8,7 @@ on:
     branches:
       - research/akdc-transactional-replay-gate4-20261026
       - research/akdc-raw-frame-contract-gate6-20261026
+      - research/akdc-minimal-evidence-gate8-20261026
     paths:
       - 'experiments/akdc/**'
       - 'tests/test_akdc_*.py'
@@ -16,6 +17,7 @@ on:
     branches:
       - research/akdc-functor-ingress-gate3-20261026
       - research/akdc-transactional-replay-gate4-20261026
+      - research/akdc-raw-frame-contract-gate6-20261026
     paths:
       - 'experiments/akdc/**'
       - 'tests/test_akdc_*.py'
@@ -58,6 +60,7 @@ jobs:
             tests/test_akdc_ingress_research.py
             tests/test_akdc_replay_store.py
             tests/test_akdc_raw_wire_research.py
+            tests/test_akdc_data_minimization_research.py
             tests/test_akdc_mrtr_schema_research.py
           )
           export PYTHONPATH="$GITHUB_WORKSPACE"
@@ -74,7 +77,8 @@ jobs:
           export PYTHONPATH="$GITHUB_WORKSPACE"
           python -W error::ResourceWarning -m pytest \
             tests/test_akdc_ingress_research.py tests/test_akdc_replay_store.py \
-            tests/test_akdc_raw_wire_research.py tests/test_akdc_mrtr_schema_research.py -q
+            tests/test_akdc_raw_wire_research.py tests/test_akdc_mrtr_schema_research.py \
+            tests/test_akdc_data_minimization_research.py -q
 
   advisory-security:
     name: AKDC inherited toolchain security audit (blocking evidence)

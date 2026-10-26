@@ -7,12 +7,12 @@ import unittest
 from dataclasses import replace
 from datetime import datetime, timezone
 
-from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 from experiments.akdc.raw_wire_research import (
     ReceiverWitness,
     normalize_a2a_status_update,
     normalize_mcp_tools_call,
 )
+from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
 NOW = datetime(2026, 10, 26, 12, tzinfo=timezone.utc)
 

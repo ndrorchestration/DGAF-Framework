@@ -9,10 +9,10 @@ authenticated. One persistent store instance is required for all participants.
 
 from __future__ import annotations
 
+import sqlite3
 from contextlib import closing
 from datetime import datetime
 from pathlib import Path
-import sqlite3
 from typing import Any, Callable
 
 from experiments.akdc.akdc_ingress_bridge import (
