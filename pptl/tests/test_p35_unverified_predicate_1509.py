@@ -94,12 +94,8 @@ def test_direct_gate_requires_an_explicit_predicate():
     reason="#1509: general-domain pass-through can synthesize after other hooks PASS",
 )
 def test_general_domain_no_predicate_never_synthesizes_with_full_hooks():
-    orchestrator = IntegratedOrchestrator(
-        OrchestratorConfig(session_id="p35-1509-orch", domain="general")
-    )
-    orchestrator.tgl.hooks = _all_downstream_pass(
-        premise_check_fn=orchestrator.config.premise_check_fn
-    )
+    orchestrator = IntegratedOrchestrator(OrchestratorConfig(session_id="p35-1509-orch", domain="general"))
+    orchestrator.tgl.hooks = _all_downstream_pass(premise_check_fn=orchestrator.config.premise_check_fn)
     result = orchestrator.orchestrate_turn("synthetic input", "p35-1509-turn")
     assert result.tgl_passed is False
     assert result.response is None
@@ -109,9 +105,7 @@ def test_general_domain_no_predicate_never_synthesizes_with_full_hooks():
 @pytest.mark.governance
 def test_supplied_true_predicate_only_proves_callable_returned_true():
     """Positive control, not evidence of an admitted or substantive verifier."""
-    audit = _tgl(
-        _all_downstream_pass(premise_check_fn=lambda _text, _invariant: True)
-    ).run_turn("synthetic input")
+    audit = _tgl(_all_downstream_pass(premise_check_fn=lambda _text, _invariant: True)).run_turn("synthetic input")
     assert audit.final_status is TurnStatus.PASS
     assert audit.verify_seal()
     # This is an instrumented test fixture; its PASS must not be called
@@ -126,9 +120,7 @@ def test_explicit_invariant_denial_stops_before_downstream_hooks():
         calls.append(True)
         return GateResult.PASS
 
-    hooks = _all_downstream_pass(
-        premise_check_fn=lambda _text, _invariant: False
-    )
+    hooks = _all_downstream_pass(premise_check_fn=lambda _text, _invariant: False)
     hooks.scpe_fn = should_not_run
     with pytest.raises(PremiseViolationError):
         _tgl(hooks).run_turn("synthetic denial")
