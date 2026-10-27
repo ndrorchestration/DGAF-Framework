@@ -46,9 +46,15 @@ class Gate15SyntheticConsumerTests(unittest.TestCase):
 
     def die(self, crash):
         command = [
-            sys.executable, "-m", "experiments.akdc.idempotent_consumer_research",
-            "--producer", self.producer_path, "--consumer", self.consumer_path,
-            "--crash", crash,
+            sys.executable,
+            "-m",
+            "experiments.akdc.idempotent_consumer_research",
+            "--producer",
+            self.producer_path,
+            "--consumer",
+            self.consumer_path,
+            "--crash",
+            crash,
         ]
         env = dict(os.environ, AKDC_RESEARCH_OUTBOX_KEY_HEX=KEY.hex())
         return subprocess.run(command, env=env, capture_output=True, text=True, check=False)
@@ -114,7 +120,9 @@ class Gate15SyntheticConsumerTests(unittest.TestCase):
         )
         result = subprocess.run(
             [sys.executable, "-c", code, self.consumer_path, tag, payload],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         self.assertEqual(result.returncode, 71)
         self.assertEqual(self.consumer.counts(), (0, 0))
@@ -129,7 +137,9 @@ class Gate15SyntheticConsumerTests(unittest.TestCase):
         )
         result = subprocess.run(
             [sys.executable, "-c", code, self.consumer_path, tag, payload],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         self.assertEqual(result.returncode, 72)
         self.assertEqual(self.consumer.counts(), (1, 1))
@@ -146,9 +156,7 @@ class Gate15SyntheticConsumerTests(unittest.TestCase):
     def test_sender_key_epoch_rotation_creates_second_consumer_identity(self):
         self.submit()
         self.assertEqual(deliver_one(self.producer, self.consumer), "FIRST_RECEIVER_MARKER")
-        rotated_sender = SQLiteOutboxResearch(
-            self.producer_path, b"DIFFERENT-KEY-WITH-NO-PRODUCTION-CUSTODY-01"
-        )
+        rotated_sender = SQLiteOutboxResearch(self.producer_path, b"DIFFERENT-KEY-WITH-NO-PRODUCTION-CUSTODY-01")
         self.assertEqual(self.submit(rotated_sender), "ENQUEUED")
         self.assertEqual(deliver_one(rotated_sender, self.consumer), "FIRST_RECEIVER_MARKER")
         self.assertEqual(self.consumer.counts(), (2, 2))  # negative control
