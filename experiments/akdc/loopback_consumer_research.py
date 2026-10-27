@@ -18,7 +18,10 @@ from contextlib import closing
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 
-from experiments.akdc.idempotent_consumer_research import ConsumerRefusal, SQLiteIdempotentConsumerResearch
+from experiments.akdc.idempotent_consumer_research import (
+    ConsumerRefusal,
+    SQLiteIdempotentConsumerResearch,
+)
 from experiments.akdc.mrtr_outbox_research import SQLiteOutboxResearch
 
 PATH = "/v1/research/idempotent-receipt"
