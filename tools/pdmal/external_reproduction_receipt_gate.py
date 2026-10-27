@@ -12,6 +12,7 @@ import math
 import sys
 from collections.abc import Mapping
 from pathlib import Path
+from typing import cast
 
 EXPECTED_HASH = "9c54d2a437593ff226e19f8e6a655bf692af37fdcb0c77f12740598734bd1d15"
 CLOSED = {
@@ -31,7 +32,7 @@ CONCLUSIONS = {
 
 
 def _real_number(value: object) -> bool:
-    return type(value) in (int, float) and math.isfinite(value)
+    return type(value) in (int, float) and math.isfinite(cast(float, value))
 
 
 def _text(value: object) -> bool:
@@ -98,7 +99,8 @@ def assess_submission(submission: Mapping[str, object], fixture: Mapping[str, ob
     valid_missing = isinstance(missing, list) and all(_real_number(t) for t in missing)
     if not valid_times or not valid_missing:
         errors.append("TIMESTAMP_LEDGER_MISSING_OR_INVALID")
-        times, missing = [], []
+    times = cast(list[float], times) if valid_times else []
+    missing = cast(list[float], missing) if valid_missing else []
     if len(times) != len(set(times)) or len(missing) != len(set(missing)):
         errors.append("DUPLICATE_TIMESTAMPS")
     if any(t not in grid for t in times + missing):
@@ -117,7 +119,7 @@ def assess_submission(submission: Mapping[str, object], fixture: Mapping[str, ob
                 break
         if times and times[0] == 0 and traces and isinstance(traces[0], list):
             if len(traces[0]) == 4 and all(_real_number(x) for x in traces[0]):
-                if max(abs(a - b) for a, b in zip(traces[0], fixture["initial_phases"])) > 1e-12:
+                if max(abs(a - b) for a, b in zip(traces[0], cast(list[float], fixture["initial_phases"]))) > 1e-12:
                     errors.append("INITIAL_PHASE_MISMATCH")
     if missing and (not isinstance(reasons, dict) or any(not _text(reasons.get(str(t))) for t in missing)):
         errors.append("MISSING_SAMPLE_REASONS")
