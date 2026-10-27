@@ -136,6 +136,12 @@ def audit_command(lock: Path | None) -> list[str]:
     ]
 
 
+def validate_auditor_runtime(version: tuple[int, int]) -> None:
+    """Keep the scanner out of the incompatible Python 3.10 test interpreter."""
+    if version[0] != 3 or version[1] < 11:
+        raise ValueError("AUDITOR_REQUIRES_PYTHON_3_11_OR_NEWER")
+
+
 def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
     """Always save a report for admissibility review; no advisory waivers."""
     report: dict[str, Any] = {
@@ -148,10 +154,12 @@ def rehearse(root: Path, output: Path, *, runner=subprocess.run) -> dict:
         "pr_head_sha": os.environ.get("PR_HEAD_SHA", "UNSET"),
         "pr_base_sha": os.environ.get("PR_BASE_SHA", "UNSET"),
         "github_run_id": os.environ.get("GITHUB_RUN_ID", "UNSET"),
-        "scanner_environment": "PYTHON_3_11_EXPECTED_NOT_ATTESTED",
+        "scanner_environment": "PYTHON_3_11_PLUS_REQUIRED_NOT_SECURITY_ATTESTED",
+        "auditor_python": f"{sys.version_info.major}.{sys.version_info.minor}",
         "locks": [],
     }
     try:
+        validate_auditor_runtime((sys.version_info.major, sys.version_info.minor))
         inventory = inspect_locks(root)
         targets = [(None, None)] + [(item, root / str(item["filename"])) for item in inventory]
         for item, path in targets:
