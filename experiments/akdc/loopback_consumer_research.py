@@ -40,8 +40,13 @@ def mac(data: bytes, secret: bytes) -> str:
 
 
 def post_fixture(
-    port: int, key: str, payload: str, *, epoch: str = "fixture-epoch-a",
-    secret: bytes | None = None, drop_reply: bool = False,
+    port: int,
+    key: str,
+    payload: str,
+    *,
+    epoch: str = "fixture-epoch-a",
+    secret: bytes | None = None,
+    drop_reply: bool = False,
     tamper_after_sign: bool = False,
 ) -> tuple[int, dict[str, Any]]:
     if type(port) is not int or not 0 < port < 65536:
@@ -54,7 +59,9 @@ def post_fixture(
     conn = http.client.HTTPConnection("127.0.0.1", port, timeout=6)
     try:
         conn.request(
-            "POST", PATH, body=body,
+            "POST",
+            PATH,
+            body=body,
             headers={
                 "Content-Type": "application/json",
                 "X-AKDC-Fixture-Epoch": epoch,
@@ -78,9 +85,7 @@ class FixtureHTTPHandler(BaseHTTPRequestHandler):
         return
 
     def _respond(self, status: int, result: str) -> None:
-        body = json.dumps(
-            {"status": result, "authority": "NOT_GRANTED"}, separators=(",", ":")
-        ).encode("ascii")
+        body = json.dumps({"status": result, "authority": "NOT_GRANTED"}, separators=(",", ":")).encode("ascii")
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
@@ -150,7 +155,10 @@ def run_server(db: str) -> None:
 
 
 def deliver_over_loopback(
-    sender: SQLiteOutboxResearch, port: int, *, epoch: str = "fixture-epoch-a",
+    sender: SQLiteOutboxResearch,
+    port: int,
+    *,
+    epoch: str = "fixture-epoch-a",
     drop_reply: bool = False,
 ) -> str:
     """Sender ACK intentionally separate from receiver COMMIT, for crash testing."""
