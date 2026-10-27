@@ -12,7 +12,10 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from pathlib import Path
 
-from experiments.akdc.mrtr_outbox_research import OutboxRefusal, SQLiteOutboxResearch
+from experiments.akdc.mrtr_outbox_research import (
+    OutboxRefusal,
+    SQLiteOutboxResearch,
+)
 
 KEY = b"AKDC-TEST-OUTBOX-KEY-NOT-SECRET-00000001"
 NONCE = "a" * 32
