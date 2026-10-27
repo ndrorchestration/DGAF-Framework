@@ -1,4 +1,5 @@
 """Gate 14 synthetic outbox, crash boundaries, replay and nonauthority."""
+
 from __future__ import annotations
 
 import os
@@ -34,8 +35,21 @@ class OutboxResearchTests(unittest.TestCase):
         return (store or self.store).submit(**d)
 
     def cli(self, mode, crash="", *, sink=False, nonce=NONCE):
-        command = [sys.executable, "-m", "experiments.akdc.mrtr_outbox_research", "--db", self.path,
-                   "--mode", mode, "--nonce", nonce, "--principal", "asserted-only", "--operation-digest", DIGEST]
+        command = [
+            sys.executable,
+            "-m",
+            "experiments.akdc.mrtr_outbox_research",
+            "--db",
+            self.path,
+            "--mode",
+            mode,
+            "--nonce",
+            nonce,
+            "--principal",
+            "asserted-only",
+            "--operation-digest",
+            DIGEST,
+        ]
         if crash:
             command.extend(("--crash", crash))
         if sink:
@@ -133,8 +147,13 @@ class OutboxResearchTests(unittest.TestCase):
         self.assertNotIn(KEY.decode(), d)
 
     def test_invalid_inputs_fail_closed(self):
-        bads = [dict(nonce="bad"), dict(principal="with spaces"), dict(operation_digest="wrong"),
-                dict(action="some-payment"), dict(crash="invalid")]
+        bads = [
+            dict(nonce="bad"),
+            dict(principal="with spaces"),
+            dict(operation_digest="wrong"),
+            dict(action="some-payment"),
+            dict(crash="invalid"),
+        ]
         for bad in bads:
             with self.subTest(bad=bad), self.assertRaises(OutboxRefusal):
                 self.submit(**bad)
