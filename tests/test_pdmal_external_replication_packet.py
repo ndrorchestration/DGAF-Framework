@@ -19,10 +19,7 @@ from tools.pdmal.jitcdde_reference_probe import (
 )
 
 _INPUT_FILE = (
-    Path(__file__).resolve().parents[1]
-    / "docs"
-    / "experiment"
-    / "PDMAL_DDE_EXTERNAL_REPLICATION_FIXTURE_V1.json"
+    Path(__file__).resolve().parents[1] / "docs" / "experiment" / "PDMAL_DDE_EXTERNAL_REPLICATION_FIXTURE_V1.json"
 )
 
 
