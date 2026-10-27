@@ -15,6 +15,7 @@ import math
 import sys
 from collections.abc import Mapping
 from pathlib import Path
+from typing import cast
 
 from tools.pdmal.early_window_oracle import initial_window_trajectory
 from tools.pdmal.jitcdde_reference_probe import (
@@ -90,8 +91,8 @@ def audit_receipts(nominal: Mapping[str, object], sensitivity: Mapping[str, obje
     )
     if cross_receipt_error > 1e-10:
         raise ValueError("nominal and first sensitivity trajectories disagree")
-    t02 = [float(r["t_0.02_max_abs_phase_residual_rad"]) for r in records]
-    t04 = [float(r["t_0.04_max_abs_phase_residual_rad"]) for r in records]
+    t02 = [cast(float, r["t_0.02_max_abs_phase_residual_rad"]) for r in records]
+    t04 = [cast(float, r["t_0.04_max_abs_phase_residual_rad"]) for r in records]
     return {
         "status": "EXECUTION_RECEIPT_AUDITED_NUMERICAL_ACCURACY_NOT_CERTIFIED",
         "disposition": "OBSERVED_EARLY_STARTUP_DISCREPANCY_REQUIRES_INDEPENDENT_REVIEW",
