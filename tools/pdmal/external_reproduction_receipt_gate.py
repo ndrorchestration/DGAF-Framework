@@ -44,9 +44,7 @@ def fixture_digest(fixture: Mapping[str, object]) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def assess_submission(
-    submission: Mapping[str, object], fixture: Mapping[str, object]
-) -> dict[str, object]:
+def assess_submission(submission: Mapping[str, object], fixture: Mapping[str, object]) -> dict[str, object]:
     """Fail closed on missing/contradictory custody; report gaps without certifying."""
     errors: list[str] = []
     if fixture_digest(fixture) != EXPECTED_HASH:
