@@ -14,7 +14,9 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from pathlib import Path
 
-from experiments.akdc.idempotent_consumer_research import SQLiteIdempotentConsumerResearch
+from experiments.akdc.idempotent_consumer_research import (
+    SQLiteIdempotentConsumerResearch,
+)
 from experiments.akdc.loopback_consumer_research import (
     PATH,
     canonical_body,
