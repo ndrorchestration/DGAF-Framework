@@ -33,6 +33,8 @@ Required challenge cases, clearly labeled **numerical software QA—not addition
 
 ## 3. Reviewer return receipt
 
+Start from the explicitly **unsubmitted** [reviewer return template](PDMAL_DDE_NONAUTHOR_RETURN_TEMPLATE_V1.json) if useful. Fill it only with the reviewer's actual independent evidence; `null` placeholders are **not** observations or validation.
+
 Submit a PR or comment to [issue #1521](https://github.com/ndrorchestration/DGAF-Framework/issues/1521) with:
 
 1. **Reviewer provenance:** reviewer identifier and declaration of non-authorship/no implementation assistance, solver package and methods, code repository/commit/hash, execution date, exact environment and dependency manifest.
