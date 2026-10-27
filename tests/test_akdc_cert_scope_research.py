@@ -22,7 +22,9 @@ from experiments.akdc.cert_bound_receiver_research import (
     read_fixture_policy,
     stable_operation_key,
 )
-from experiments.akdc.idempotent_consumer_research import SQLiteIdempotentConsumerResearch
+from experiments.akdc.idempotent_consumer_research import (
+    SQLiteIdempotentConsumerResearch,
+)
 from experiments.akdc.mrtr_outbox_research import SQLiteOutboxResearch
 
 OP = "a" * 32
