@@ -15,6 +15,7 @@ on:
       - research/akdc-mrtr-outbox-gate14-20261026
       - research/akdc-idempotent-consumer-gate15-20261027
       - research/akdc-loopback-idempotency-gate16-20261027
+      - research/akdc-loopback-mtls-gate17-20261027
     paths:
       - 'experiments/akdc/**'
       - 'tests/test_akdc_*.py'
@@ -30,6 +31,7 @@ on:
       - research/akdc-mrtr-ledger-gate13-20261026
       - research/akdc-mrtr-outbox-gate14-20261026
       - research/akdc-idempotent-consumer-gate15-20261027
+      - research/akdc-loopback-idempotency-gate16-20261027
     paths:
       - 'experiments/akdc/**'
       - 'tests/test_akdc_*.py'
@@ -74,6 +76,7 @@ jobs:
             experiments/akdc/mrtr_outbox_research.py
             experiments/akdc/idempotent_consumer_research.py
             experiments/akdc/loopback_consumer_research.py
+            experiments/akdc/mtls_loopback_research.py
             tests/test_akdc_ingress_research.py
             tests/test_akdc_replay_store.py
             tests/test_akdc_raw_wire_research.py
@@ -85,6 +88,7 @@ jobs:
             tests/test_akdc_mrtr_outbox_research.py
             tests/test_akdc_idempotent_consumer_research.py
             tests/test_akdc_loopback_consumer_research.py
+            tests/test_akdc_mtls_loopback_research.py
           )
           export PYTHONPATH="$GITHUB_WORKSPACE"
           python -m compileall -q "${targets[@]}"
@@ -107,7 +111,8 @@ jobs:
             tests/test_akdc_mrtr_receipt_research.py \
             tests/test_akdc_mrtr_outbox_research.py \
             tests/test_akdc_idempotent_consumer_research.py \
-            tests/test_akdc_loopback_consumer_research.py -q
+            tests/test_akdc_loopback_consumer_research.py \
+            tests/test_akdc_mtls_loopback_research.py -q
 
   advisory-security:
     name: AKDC inherited toolchain security audit (blocking evidence)
