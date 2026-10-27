@@ -63,8 +63,9 @@ def make_source() -> None:
     print(json.dumps({
         "stage": "SOURCE_PREPARED", "source_sha256": sha(SOURCE),
         "workload_source_sha256": sha(WORKLOAD_SOURCE),
-        "original_direct_pins": len(original), "diagnostic_direct_pins": len(other),
-        "scanner_removed_only": True, "test_dependency_added": "requests==2.34.2",\n        "authority": "NOT_GRANTED"
+        "original_direct_pins": len(original), "diagnostic_direct_pins": len(other) + 1,
+        "scanner_removed": True, "test_dependency_added": "requests==2.34.2",
+        "authority": "NOT_GRANTED"
     }, sort_keys=True))
 
 
