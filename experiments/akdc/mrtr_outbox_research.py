@@ -87,9 +87,7 @@ class SQLiteOutboxResearch:
     @classmethod
     def _check_schema(cls, conn: sqlite3.Connection) -> None:
         tables = {
-            r[0] for r in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
-            )
+            r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
         }
         if tables != set(cls.SHAPES):
             raise OutboxRefusal("missing or unexpected outbox table")
@@ -216,8 +214,13 @@ def main() -> None:
     key = bytes.fromhex(os.environ.get("AKDC_RESEARCH_OUTBOX_KEY_HEX", ""))
     store = SQLiteOutboxResearch(args.db, key)
     if args.mode == "submit":
-        answer = store.submit(nonce=args.nonce, principal=args.principal, action="akdc-confirm-fixture",
-                              operation_digest=args.operation_digest, crash=args.crash)
+        answer = store.submit(
+            nonce=args.nonce,
+            principal=args.principal,
+            action="akdc-confirm-fixture",
+            operation_digest=args.operation_digest,
+            crash=args.crash,
+        )
     elif args.mode == "dispatch":
         answer = store.dispatch_one(sink=args.sink or None, crash=args.crash)
     else:
