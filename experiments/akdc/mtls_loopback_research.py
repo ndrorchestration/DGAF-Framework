@@ -17,7 +17,10 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-from experiments.akdc.idempotent_consumer_research import ConsumerRefusal, SQLiteIdempotentConsumerResearch
+from experiments.akdc.idempotent_consumer_research import (
+    ConsumerRefusal,
+    SQLiteIdempotentConsumerResearch,
+)
 from experiments.akdc.loopback_consumer_research import (
     FIXTURE_KEYS,
     PATH,
