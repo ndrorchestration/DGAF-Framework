@@ -275,6 +275,22 @@ jobs:
             -r py310-isolated-workload-hash.lock --format=json \
             --output py310-isolated-audit.json --progress-spinner=off
           python scripts/proof_py310_audit_isolation.py verify
+      - name: Run original Python 3.10 repository regression suite against isolated workload
+        shell: bash
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          test "$( .py310-workload/bin/python -c 'import sys;print(sys.version_info.minor)' )" = "10"
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          set +e
+          .py310-workload/bin/python -m pytest tests/ \
+            --cov=components --cov-report=term-missing \
+            --cov-fail-under=0 --timeout=30 --tb=short -q \
+            2>&1 | tee py310-isolated-repository-pytest.log
+          status=${PIPESTATUS[0]}
+          set -e
+          printf 'pytest_exit_code=%s\n' "$status" > py310-isolated-repository-pytest.status
+          exit "$status"
       - name: Preserve diagnostic exact evidence regardless of outcome
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -289,3 +305,5 @@ jobs:
             py310-isolated-manifest.json
             py310-isolated-workload-freeze.txt
             py310-isolated-audit.json
+            py310-isolated-repository-pytest.log
+            py310-isolated-repository-pytest.status
