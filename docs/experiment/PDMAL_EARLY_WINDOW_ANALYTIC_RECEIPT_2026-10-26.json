@@ -1,0 +1,58 @@
+{
+  "status": "AUTHOR_OPERATED_EARLY_TIME_ODE_CHECK",
+  "admission": "NON_ADMITTED_NOT_INDEPENDENT_VALIDATION",
+  "scope": "Only [0, 0.04] seconds of the frozen four-node directed-delay fixture; no topology comparison",
+  "source_oracle_blob_sha1": "c7cacfc9b18b01926596b57d4d844d8be09b1570",
+  "source_archive": "GitHub Actions run 40358127422 artifact 12666278250",
+  "source_archive_sha256": "d8aef46d1a715f82af283d3f4a3ae6caaf906526200753153c0fd85354f3bf13",
+  "source_run_git_commit": "28ebbb33e5d48bd8bb863e2a10d8e87f539a8215",
+  "input_fixture_sha256": "9c54d2a437593ff226e19f8e6a655bf692af37fdcb0c77f12740598734bd1d15",
+  "earliest_positive_directed_lag_s": 0.04,
+  "analytic_right_derivative_rad_s": [
+    -0.04382726981975876,
+    0.7374820637451177,
+    -0.6852738109105043,
+    0.926169557350277
+  ],
+  "analytic_right_acceleration_rad_s2": [
+    -0.06327968042603098,
+    0.2413565892312074,
+    -0.19689068074438454,
+    -0.32457989538802645
+  ],
+  "early_ode_rk4_microstep_s": 0.000625,
+  "phase_unwrapped_t_0p02_rad": [
+    0.1991106323785867,
+    -0.7852035448694009,
+    1.3862567400879844,
+    -0.3815424149178949
+  ],
+  "phase_unwrapped_t_0p04_rad": [
+    0.1981949660338344,
+    -0.7703194101467735,
+    1.3724443172456253,
+    -0.36321993736068886
+  ],
+  "comparison": [
+    {
+      "blind_step_s": 0.001,
+      "max_phase_difference_rad_at_t_0p02": 0.0002043616516481661,
+      "max_phase_difference_rad_at_t_0p04": 0.00020283204588122938
+    },
+    {
+      "blind_step_s": 0.0005,
+      "max_phase_difference_rad_at_t_0p02": 0.00010217623266156606,
+      "max_phase_difference_rad_at_t_0p04": 0.00010141136424468566
+    },
+    {
+      "blind_step_s": 0.00025,
+      "max_phase_difference_rad_at_t_0p02": 0.00005108697001870999,
+      "max_phase_difference_rad_at_t_0p04": 0.000050704519419686456
+    }
+  ],
+  "numeric_scope": "Same-author short-window RK4 ODE check, not maintained independent DDE method",
+  "scientific_n_increment": 0,
+  "pilot_authorization": "NOT_GRANTED",
+  "independent_validation": "NOT_ESTABLISHED",
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED"
+}

@@ -1,0 +1,359 @@
+name: PDMAL-GR Optional JiTCDDE Probe (Non-Admitted)
+
+# EXPLORATORY only. Deliberately outside the canonical PDMAL pilot and
+# outside the security-controlled, hash-locked production/test environments.
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+    paths:
+      - '.github/workflows/pdmal-gr-jitcdde-optional.yml'
+      - 'tools/pdmal/jitcdde_reference_probe.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pdmal-gr-jitcdde-optional-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  optional-maintained-dde-library-smoke:
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/research/pdmal-delay-sandbox-20261026') ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.head.repo.full_name == 'ndrorchestration/DGAF-Framework' &&
+       github.event.pull_request.head.ref == 'research/pdmal-delay-sandbox-20261026') ||
+      (github.event_name == 'workflow_dispatch' &&
+       github.ref == 'refs/heads/research/pdmal-delay-sandbox-20261026')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      PDMAL_MODE: non-admitted-reference-only
+    steps:
+      - name: Checkout exact exploratory commit without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Guard optional numerical execution by exact HEAD diff
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed_files="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+          if [[ -z "$changed_files" ]]; then
+            echo "::error::Exact-commit diff unavailable or empty; cannot safely decide numerical execution."
+            exit 1
+          fi
+          echo "Exact checked-out HEAD: $(git rev-parse HEAD)"
+          echo "Files in this single commit:"
+          printf '%s\n' "$changed_files"
+          run_numeric=false
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            run_numeric=true
+          else
+            while IFS= read -r changed; do
+              case "$changed" in
+                ".github/workflows/pdmal-gr-jitcdde-optional.yml"|"tools/pdmal/jitcdde_reference_probe.py")
+                  run_numeric=true
+                  ;;
+              esac
+            done <<< "$changed_files"
+          fi
+          echo "run_numeric=$run_numeric" >> "$GITHUB_OUTPUT"
+          if [[ "$run_numeric" == "true" ]]; then
+            echo 'Numerical workflow/probe changed; execute bounded diagnostic.'
+          else
+            echo 'Documentation-only or unrelated commit; skip DDE package install and integration.'
+          fi
+
+      - name: Set up isolated Python 3.11
+        if: steps.scope.outputs.run_numeric == 'true'
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: '3.11'
+
+      - name: Record exact source/runner identities
+        if: steps.scope.outputs.run_numeric == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/pdmal-gr-jitcdde
+          git rev-parse HEAD > artifacts/pdmal-gr-jitcdde/commit.txt
+          python --version > artifacts/pdmal-gr-jitcdde/python-version.txt
+          sha256sum tools/pdmal/jitcdde_reference_probe.py tools/pdmal/delay_sandbox.py tools/pdmal/scipy_reference_probe.py > artifacts/pdmal-gr-jitcdde/source-sha256.txt
+
+      - name: Install optional binary packages in ephemeral runner only
+        if: steps.scope.outputs.run_numeric == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --only-binary=:all: 'jitcdde==1.8.3' 'symengine==0.14.1' 'sympy==1.14.0'
+          python -m pip freeze --all > artifacts/pdmal-gr-jitcdde/environment-freeze.txt
+
+      - name: Execute exactly one fixed-graph reference probe
+        if: steps.scope.outputs.run_numeric == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m tools.pdmal.jitcdde_reference_probe | tee artifacts/pdmal-gr-jitcdde/receipt.json
+          python -m json.tool artifacts/pdmal-gr-jitcdde/receipt.json > /dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('artifacts/pdmal-gr-jitcdde/receipt.json')
+          receipt = json.loads(path.read_text(encoding='utf-8'))
+          assert receipt['scientific_n_increment'] == 0
+          assert receipt['pilot_authorization'] == 'NOT_GRANTED'
+          assert receipt['independent_validation'] == 'NOT_ESTABLISHED'
+          assert len(receipt['dde_trajectory_unwrapped_rad']) == 41
+          assert len(receipt['comparison_grid_errors_rad']) == 41
+          print('NON_ADMITTED_REFERENCE_RECEIPT_SCHEMA_PASS')
+          PY
+
+      - name: Diagnose blind-bootstrap step sensitivity on the same physical fixture
+        if: steps.scope.outputs.run_numeric == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import math
+          from pathlib import Path
+
+          from jitcdde import jitcdde, t, y
+          from symengine import sin
+
+          from tools.pdmal import jitcdde_reference_probe as fixture
+          from tools.pdmal.delay_sandbox import simulate_delayed_kuramoto
+
+          n_samples = fixture.validate_fixture()
+          steps = (0.001, 0.0005, 0.00025)
+          delays = {edge: round(lag / fixture.GRID) for edge, lag in fixture.DELAYS.items()}
+          sandbox = simulate_delayed_kuramoto(
+              fixture.GRAPH, fixture.INITIAL, fixture.FREQUENCIES,
+              delays=delays, coupling=fixture.COUPLING,
+              dt=fixture.GRID, steps=n_samples,
+          )
+          variants = []
+          for bootstrap_step in steps:
+              model = jitcdde(
+                  fixture.build_symbolic_rhs(y, t, sin),
+                  n=len(fixture.INITIAL),
+                  verbose=False,
+              )
+              model.set_integration_parameters(
+                  atol=1e-12, rtol=1e-10,
+                  first_step=bootstrap_step, max_step=fixture.ADAPTIVE_MAX_STEP,
+              )
+              model.constant_past(fixture.INITIAL, time=0.0)
+              trajectory = [list(fixture.INITIAL)]
+              for index in range(1, n_samples + 1):
+                  requested = round(index * fixture.GRID, 12)
+                  if requested <= max(fixture.DELAYS.values()) + 1e-12:
+                      state = model.integrate_blindly(requested, step=bootstrap_step)
+                  else:
+                      state = model.integrate(requested)
+                  values = [float(v) for v in state]
+                  if len(values) != 4 or not all(math.isfinite(v) for v in values):
+                      raise ArithmeticError("invalid JiTCDDE numerical sensitivity state")
+                  trajectory.append(values)
+              deviation = [
+                  max(abs(u - v) for u, v in zip(state, sandbox[i]))
+                  for i, state in enumerate(trajectory)
+              ]
+              manifest = {
+                  **fixture.fixture_manifest(),
+                  "schema": "pdmal-gr-jitcdde-bootstrap-numerical-sensitivity-v1",
+                  "bootstrap_step_s": bootstrap_step,
+              }
+              canon = json.dumps(manifest, separators=(",", ":"), sort_keys=True).encode()
+              variants.append({
+                  "bootstrap_step_s": bootstrap_step,
+                  "variant_manifest_sha256": hashlib.sha256(canon).hexdigest(),
+                  "max_difference_to_rk4_rad": max(deviation),
+                  "first_difference_to_rk4_rad": deviation[1],
+                  "terminal_difference_to_rk4_rad": deviation[-1],
+                  "complete_trajectory": trajectory,
+              })
+
+          differences = []
+          for a, b in ((0, 1), (1, 2), (0, 2)):
+              delta = max(
+                  abs(x - y)
+                  for one, two in zip(variants[a]["complete_trajectory"], variants[b]["complete_trajectory"])
+                  for x, y in zip(one, two)
+              )
+              differences.append({
+                  "steps_s": [steps[a], steps[b]],
+                  "full_trace_max_intervariant_difference_rad": delta,
+              })
+
+          receipt = {
+              "status": "AUTHOR_OPERATED_NUMERICAL_SENSITIVITY_ONLY",
+              "admission": "NON_ADMITTED_NOT_INDEPENDENT_REVIEW",
+              "nominal_fixture_sha256": fixture.EXPECTED_FIXTURE_SHA256,
+              "numerical_step_variants": list(steps),
+              "variants": variants,
+              "pairwise_differences": differences,
+              "scientific_n_increment": 0,
+              "pilot_authorization": "NOT_GRANTED",
+              "independent_validation": "NOT_ESTABLISHED",
+          }
+          path = Path("artifacts/pdmal-gr-jitcdde/bootstrap-sensitivity.json")
+          path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "status": receipt["status"],
+              "errors": [{
+                  "step": v["bootstrap_step_s"],
+                  "first": v["first_difference_to_rk4_rad"],
+                  "max": v["max_difference_to_rk4_rad"],
+                  "terminal": v["terminal_difference_to_rk4_rad"],
+              } for v in variants],
+              "pairwise_differences": differences,
+          }, indent=2))
+          PY
+
+      - name: Compare discontinuity-aligned integration on late common times
+        if: steps.scope.outputs.run_numeric == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import math
+          import platform
+          from importlib.metadata import version
+          from pathlib import Path
+
+          from jitcdde import jitcdde, t, y
+          from symengine import sin
+
+          from tools.pdmal import jitcdde_reference_probe as fixture
+          from tools.pdmal.delay_sandbox import simulate_delayed_kuramoto
+
+          n_samples = fixture.validate_fixture()
+          source_path = Path("artifacts/pdmal-gr-jitcdde/bootstrap-sensitivity.json")
+          sensitivity = json.loads(source_path.read_text(encoding="utf-8"))
+          variants = sensitivity["variants"]
+          assert [v["bootstrap_step_s"] for v in variants] == [0.001, 0.0005, 0.00025]
+          fine_reference = variants[-1]["complete_trajectory"]
+          assert len(fine_reference) == n_samples + 1
+
+          solver = jitcdde(
+              fixture.build_symbolic_rhs(y, t, sin),
+              n=len(fixture.INITIAL),
+              verbose=False,
+          )
+          solver.set_integration_parameters(
+              atol=1e-12,
+              rtol=1e-10,
+              first_step=0.00025,
+              max_step=fixture.ADAPTIVE_MAX_STEP,
+          )
+          solver.constant_past(fixture.INITIAL, time=0.0)
+          solver.step_on_discontinuities(propagations=1)
+          start_time = float(solver.t)
+          if not math.isfinite(start_time):
+              raise ArithmeticError("nonfinite discontinuity-aligned startup time")
+
+          lags = {key: round(delay / fixture.GRID) for key, delay in fixture.DELAYS.items()}
+          rk4 = simulate_delayed_kuramoto(
+              fixture.GRAPH,
+              fixture.INITIAL,
+              fixture.FREQUENCIES,
+              delays=lags,
+              coupling=fixture.COUPLING,
+              dt=fixture.GRID,
+              steps=n_samples,
+          )
+
+          samples = []
+          for index in range(1, n_samples + 1):
+              requested = round(index * fixture.GRID, 12)
+              if requested <= start_time + 1e-9:
+                  continue
+              state = [float(value) for value in solver.integrate(requested)]
+              if len(state) != len(fixture.INITIAL) or not all(math.isfinite(v) for v in state):
+                  raise ArithmeticError("invalid discontinuity-aligned late trajectory")
+              samples.append({
+                  "sample_index": index,
+                  "time_s": requested,
+                  "phase_unwrapped_rad": state,
+                  "max_error_to_fine_blind_rad": max(
+                      abs(a - b) for a, b in zip(state, fine_reference[index])
+                  ),
+                  "max_error_to_rk4_rad": max(
+                      abs(a - b) for a, b in zip(state, rk4[index])
+                  ),
+              })
+
+          receipt = {
+              "status": "AUTHOR_OPERATED_ALTERNATE_DISCONTINUITY_POLICY_NUMERICAL_DIAGNOSTIC",
+              "admission": "NON_ADMITTED_NOT_NON_AUTHOR_REPRODUCTION",
+              "policy": "step_on_discontinuities(propagations=1); sample only after returned solver.t",
+              "solver_time_after_discontinuity_alignment_s": start_time,
+              "early_grid_states_not_evaluated": n_samples - len(samples),
+              "first_comparable_time_s": samples[0]["time_s"] if samples else None,
+              "last_comparable_time_s": samples[-1]["time_s"] if samples else None,
+              "max_late_error_to_fine_blind_rad": max(
+                  (p["max_error_to_fine_blind_rad"] for p in samples), default=None
+              ),
+              "max_late_error_to_rk4_rad": max(
+                  (p["max_error_to_rk4_rad"] for p in samples), default=None
+              ),
+              "late_common_grid_samples": samples,
+              "reference_fine_blind_step_s": 0.00025,
+              "fixture_sha256": fixture.EXPECTED_FIXTURE_SHA256,
+              "python_version": platform.python_version(),
+              "jitcdde_version": version("jitcdde"),
+              "symengine_version": version("symengine"),
+              "scientific_n_increment": 0,
+              "pilot_authorization": "NOT_GRANTED",
+              "independent_validation": "NOT_ESTABLISHED",
+              "limitations": [
+                  "early grid states before solver startup time are missing, not zero-error observations",
+                  "comparison shares an author-coded equation and library; no independent verification",
+                  "one fixture and one discontinuity-propagation setting provide no accuracy proof",
+              ],
+          }
+          output = Path("artifacts/pdmal-gr-jitcdde/discontinuity-alignment.json")
+          output.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "status": receipt["status"],
+              "start_time_s": start_time,
+              "omitted_early_samples": receipt["early_grid_states_not_evaluated"],
+              "compared_late_samples": len(samples),
+              "max_late_error_to_fine_blind_rad": receipt["max_late_error_to_fine_blind_rad"],
+              "max_late_error_to_rk4_rad": receipt["max_late_error_to_rk4_rad"],
+          }, indent=2))
+          if not samples:
+              raise RuntimeError("discontinuity-aligned solver has no later comparable grid points")
+          PY
+
+      - name: Audit early-history numerical discrepancy without certifying accuracy
+        if: steps.scope.outputs.run_numeric == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m tools.pdmal.early_window_receipt_audit \
+            artifacts/pdmal-gr-jitcdde/receipt.json \
+            artifacts/pdmal-gr-jitcdde/bootstrap-sensitivity.json \
+            | tee artifacts/pdmal-gr-jitcdde/early-window-audit.json
+          python -m json.tool artifacts/pdmal-gr-jitcdde/early-window-audit.json > /dev/null
+
+      - name: Upload diagnostic evidence even on failed execution
+        if: always() && steps.scope.outputs.run_numeric == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pdmal-gr-jitcdde-isolated-non-admitted
+          path: artifacts/pdmal-gr-jitcdde/
+          if-no-files-found: warn
+          retention-days: 30

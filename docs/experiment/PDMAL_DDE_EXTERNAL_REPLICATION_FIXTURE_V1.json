@@ -1,0 +1,70 @@
+{
+  "schema": "pdmal-gr-jitcdde-fixture-v1",
+  "graph": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      0,
+      2
+    ]
+  ],
+  "initial_phases": [
+    0.2,
+    -0.8,
+    1.4,
+    -0.4
+  ],
+  "frequencies": [
+    0.13,
+    -0.17,
+    0.31,
+    0.08
+  ],
+  "directed_physical_delays": [
+    [
+      0,
+      1,
+      0.12
+    ],
+    [
+      0,
+      3,
+      0.1
+    ],
+    [
+      1,
+      0,
+      0.06
+    ],
+    [
+      2,
+      1,
+      0.04
+    ],
+    [
+      3,
+      2,
+      0.08
+    ]
+  ],
+  "coupling": 1.1,
+  "horizon_s": 0.8,
+  "sample_grid_s": 0.02,
+  "bootstrap_step_s": 0.001,
+  "adaptive_max_step_s": 0.01,
+  "history": "constant phase vector for all t <= 0"
+}
