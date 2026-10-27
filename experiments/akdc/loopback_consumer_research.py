@@ -14,7 +14,6 @@ import http.client
 import json
 import re
 import socket
-import sqlite3
 from contextlib import closing
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
