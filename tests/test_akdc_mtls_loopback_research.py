@@ -19,9 +19,11 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from pathlib import Path
 
-from experiments.akdc.idempotent_consumer_research import SQLiteIdempotentConsumerResearch
-from experiments.akdc.mtls_loopback_research import deliver_mtls, post_mtls
+from experiments.akdc.idempotent_consumer_research import (
+    SQLiteIdempotentConsumerResearch,
+)
 from experiments.akdc.mrtr_outbox_research import SQLiteOutboxResearch
+from experiments.akdc.mtls_loopback_research import deliver_mtls, post_mtls
 
 KEY = b"AKDC-TEST-OUTBOX-KEY-NOT-SECRET-00000001"
 NONCE = "a" * 32
