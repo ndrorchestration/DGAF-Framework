@@ -213,6 +213,7 @@ def main() -> None:
     args = parser.parse_args()
     key = bytes.fromhex(os.environ.get("AKDC_RESEARCH_OUTBOX_KEY_HEX", ""))
     store = SQLiteOutboxResearch(args.db, key)
+    answer: str | tuple[int, int, int]
     if args.mode == "submit":
         answer = store.submit(
             nonce=args.nonce,
