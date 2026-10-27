@@ -103,6 +103,8 @@ def assess_submission(submission: Mapping[str, object], fixture: Mapping[str, ob
     missing = cast(list[float], missing) if valid_missing else []
     if len(times) != len(set(times)) or len(missing) != len(set(missing)):
         errors.append("DUPLICATE_TIMESTAMPS")
+    if times != sorted(times) or missing != sorted(missing):
+        errors.append("TIMESTAMP_ORDER_INVALID")
     if any(t not in grid for t in times + missing):
         errors.append("TIMESTAMP_OUTSIDE_GRID")
     if set(times) & set(missing) or set(times) | set(missing) != set(grid):
