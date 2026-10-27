@@ -39,34 +39,64 @@ class MutualTLSReceiverTests(unittest.TestCase):
 
         def make_ca(name: str) -> None:
             run(
-                "req", "-x509", "-newkey", "rsa:2048", "-nodes",
-                "-sha256", "-days", "2", "-subj", "/CN=AKDC-TEST-ONLY-"+name,
-                "-keyout", str(cls.certs / (name+".key")),
-                "-out", str(cls.certs / (name+".pem")),
-                "-addext", "basicConstraints=critical,CA:TRUE",
-                "-addext", "keyUsage=critical,keyCertSign,cRLSign",
+                "req",
+                "-x509",
+                "-newkey",
+                "rsa:2048",
+                "-nodes",
+                "-sha256",
+                "-days",
+                "2",
+                "-subj",
+                "/CN=AKDC-TEST-ONLY-" + name,
+                "-keyout",
+                str(cls.certs / (name + ".key")),
+                "-out",
+                str(cls.certs / (name + ".pem")),
+                "-addext",
+                "basicConstraints=critical,CA:TRUE",
+                "-addext",
+                "keyUsage=critical,keyCertSign,cRLSign",
             )
 
         def make_leaf(name: str, ca_name: str, eku: str, san: str = "") -> None:
             run(
-                "req", "-newkey", "rsa:2048", "-nodes", "-sha256",
-                "-subj", "/CN=AKDC-TEST-ONLY-"+name,
-                "-keyout", str(cls.certs / (name+".key")),
-                "-out", str(cls.certs / (name+".csr")),
+                "req",
+                "-newkey",
+                "rsa:2048",
+                "-nodes",
+                "-sha256",
+                "-subj",
+                "/CN=AKDC-TEST-ONLY-" + name,
+                "-keyout",
+                str(cls.certs / (name + ".key")),
+                "-out",
+                str(cls.certs / (name + ".csr")),
             )
-            ext = cls.certs / (name+".ext")
+            ext = cls.certs / (name + ".ext")
             ext.write_text(
                 "basicConstraints=critical,CA:FALSE\n"
                 "keyUsage=digitalSignature,keyEncipherment\n"
-                "extendedKeyUsage="+eku+"\n"+san,
-                encoding="ascii"
+                "extendedKeyUsage=" + eku + "\n" + san,
+                encoding="ascii",
             )
             run(
-                "x509", "-req", "-in", str(cls.certs / (name+".csr")),
-                "-CA", str(cls.certs / (ca_name+".pem")),
-                "-CAkey", str(cls.certs / (ca_name+".key")),
-                "-CAcreateserial", "-out", str(cls.certs / (name+".pem")),
-                "-days", "2", "-sha256", "-extfile", str(ext),
+                "x509",
+                "-req",
+                "-in",
+                str(cls.certs / (name + ".csr")),
+                "-CA",
+                str(cls.certs / (ca_name + ".pem")),
+                "-CAkey",
+                str(cls.certs / (ca_name + ".key")),
+                "-CAcreateserial",
+                "-out",
+                str(cls.certs / (name + ".pem")),
+                "-days",
+                "2",
+                "-sha256",
+                "-extfile",
+                str(ext),
             )
 
         make_ca("trusted-ca")
@@ -100,11 +130,23 @@ class MutualTLSReceiverTests(unittest.TestCase):
     def start_server(self) -> None:
         self.proc = subprocess.Popen(
             [
-                sys.executable, "-m", "experiments.akdc.mtls_loopback_research",
-                "--receiver-db", self.receiver_file, "--ca", self.cert("trusted-ca"),
-                "--cert", self.cert("server"), "--key", self.cert("server", ".key")
+                sys.executable,
+                "-m",
+                "experiments.akdc.mtls_loopback_research",
+                "--receiver-db",
+                self.receiver_file,
+                "--ca",
+                self.cert("trusted-ca"),
+                "--cert",
+                self.cert("server"),
+                "--key",
+                self.cert("server", ".key"),
             ],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=dict(os.environ), bufsize=1,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=dict(os.environ),
+            bufsize=1,
         )
         stdout = self.proc.stdout
         if stdout is None:
@@ -137,8 +179,7 @@ class MutualTLSReceiverTests(unittest.TestCase):
 
     def enqueue(self, sender: SQLiteOutboxResearch | None = None) -> None:
         result = (sender or self.sender).submit(
-            nonce=NONCE, principal="asserted-only",
-            action="akdc-confirm-fixture", operation_digest=DIGEST
+            nonce=NONCE, principal="asserted-only", action="akdc-confirm-fixture", operation_digest=DIGEST
         )
         self.assertEqual(result, "ENQUEUED")
 
@@ -150,14 +191,23 @@ class MutualTLSReceiverTests(unittest.TestCase):
 
     def request(self, key: str, payload: str, client: str = "client-a", **options):
         return post_mtls(
-            self.port, key, payload, ca=self.cert("trusted-ca"),
-            cert=self.cert(client), private_key=self.cert(client, ".key"), **options
+            self.port,
+            key,
+            payload,
+            ca=self.cert("trusted-ca"),
+            cert=self.cert(client),
+            private_key=self.cert(client, ".key"),
+            **options,
         )
 
     def deliver(self, sender: SQLiteOutboxResearch | None = None, client: str = "client-a", **opts):
         return deliver_mtls(
-            sender or self.sender, self.port, ca=self.cert("trusted-ca"),
-            cert=self.cert(client), private_key=self.cert(client, ".key"), **opts
+            sender or self.sender,
+            self.port,
+            ca=self.cert("trusted-ca"),
+            cert=self.cert(client),
+            private_key=self.cert(client, ".key"),
+            **opts,
         )
 
     def test_real_mtls_first_and_duplicate_receiver_marker(self):
@@ -172,9 +222,7 @@ class MutualTLSReceiverTests(unittest.TestCase):
         self.assertEqual(self.deliver(drop_reply=True), "ACK_UNKNOWN_PENDING")
         self.assertEqual(self.sender.counts(), (1, 1, 0))
         self.assertEqual(self.receiver.counts(), (1, 1))
-        self.assertEqual(
-            self.deliver(epoch="fixture-epoch-b", client="client-b"), "DUPLICATE_RECEIVER_MARKER"
-        )
+        self.assertEqual(self.deliver(epoch="fixture-epoch-b", client="client-b"), "DUPLICATE_RECEIVER_MARKER")
         self.assertEqual(self.sender.counts(), (1, 0, 1))
         self.assertEqual(self.receiver.counts(), (1, 1))
 
@@ -202,10 +250,7 @@ class MutualTLSReceiverTests(unittest.TestCase):
         self.enqueue()
         tag, payload = self.identifiers()
         with self.assertRaises((ssl.SSLError, OSError)):
-            post_mtls(
-                self.port, tag, payload, ca=self.cert("trusted-ca"),
-                cert=None, private_key=None
-            )
+            post_mtls(self.port, tag, payload, ca=self.cert("trusted-ca"), cert=None, private_key=None)
         self.assertEqual(self.receiver.counts(), (0, 0))
 
     def test_rogue_client_ca_denied_at_tls(self):
@@ -220,8 +265,12 @@ class MutualTLSReceiverTests(unittest.TestCase):
         tag, payload = self.identifiers()
         with self.assertRaises((ssl.SSLError, OSError)):
             post_mtls(
-                self.port, tag, payload, ca=self.cert("rogue-ca"),
-                cert=self.cert("client-a"), private_key=self.cert("client-a", ".key"),
+                self.port,
+                tag,
+                payload,
+                ca=self.cert("rogue-ca"),
+                cert=self.cert("client-a"),
+                private_key=self.cert("client-a", ".key"),
             )
         self.assertEqual(self.receiver.counts(), (0, 0))
 
@@ -244,9 +293,7 @@ class MutualTLSReceiverTests(unittest.TestCase):
         self.enqueue()
         tag, payload = self.identifiers()
         self.assertEqual(self.request(tag, payload, client="client-a")[0], 200)
-        self.assertEqual(
-            self.request(tag, payload, client="client-b")[1]["status"], "DUPLICATE_RECEIVER_MARKER"
-        )
+        self.assertEqual(self.request(tag, payload, client="client-b")[1]["status"], "DUPLICATE_RECEIVER_MARKER")
         # Both unrelated test identities are admitted: no per-cert authorization.
         self.assertEqual(self.receiver.counts(), (1, 1))
 
