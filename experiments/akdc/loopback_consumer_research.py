@@ -16,7 +16,6 @@ import re
 import socket
 from contextlib import closing
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
 from typing import Any
 
 from experiments.akdc.idempotent_consumer_research import ConsumerRefusal, SQLiteIdempotentConsumerResearch
