@@ -122,6 +122,7 @@ def test_invalid_trace_type_rejected():
     with pytest.raises(ValueError, match="41 sampled states"):
         audit_receipts(nominal, sensitivity)
 
+
 def test_zero_error_variants_have_undefined_ratios_not_infinite_values():
     nominal, sensitivity = _fixtures()
     early = initial_window_trajectory(0.000625)
@@ -133,4 +134,3 @@ def test_zero_error_variants_have_undefined_ratios_not_infinite_values():
     assert audited["t_0p02_residual_halving_ratios"] == [None, None]
     assert audited["t_0p04_residual_halving_ratios"] == [None, None]
     assert audited["independent_validation"] == "NOT_ESTABLISHED"
-
