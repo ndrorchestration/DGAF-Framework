@@ -234,3 +234,27 @@ def test_changed_lock_bytes_invalidate_source_receipt(fixture_root: Path, tmp_pa
     assert report["result"] == "AUDIT_ERROR"
     assert report["locks"][1]["status"] == "AUDIT_ERROR"
     assert report["locks"][1]["error_type"] == "ValueError"
+
+@pytest.mark.parametrize("version", [(3, 10), (3, 9), (2, 7), (4, 0)])
+def test_incompatible_auditor_interpreters_rejected(version: tuple[int, int]) -> None:
+    with pytest.raises(ValueError, match="AUDITOR_REQUIRES_PYTHON_3_11_OR_NEWER"):
+        rehearsal.validate_auditor_runtime(version)
+
+
+@pytest.mark.parametrize("version", [(3, 11), (3, 12), (3, 13)])
+def test_supported_auditor_interpreters_only_pass_runtime_preflight(version: tuple[int, int]) -> None:
+    assert rehearsal.validate_auditor_runtime(version) is None
+    # A compatible interpreter is not itself an audited or authorized environment.
+
+
+def test_py310_auditor_fails_before_scanner(fixture_root: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(rehearsal.sys, "version_info", SimpleNamespace(major=3, minor=10))
+
+    def forbidden_runner(command, **kwargs):
+        raise AssertionError(f"scanner must not run on Python 3.10: {command} {kwargs}")
+
+    report = rehearsal.rehearse(fixture_root, tmp_path / "py310-denied.json", runner=forbidden_runner)
+    assert report["result"] == "AUDIT_ERROR"
+    assert report["error"] == "AUDITOR_REQUIRES_PYTHON_3_11_OR_NEWER"
+    assert report["locks"] == []
+    assert report["security_clearance"] == "NOT_ESTABLISHED"
