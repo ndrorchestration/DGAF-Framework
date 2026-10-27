@@ -114,8 +114,7 @@ def deliver_mtls(
             tag, payload = row
             try:
                 status, response = post_mtls(
-                    port, tag, payload, ca=ca, cert=cert, private_key=private_key,
-                    epoch=epoch, drop_reply=drop_reply
+                    port, tag, payload, ca=ca, cert=cert, private_key=private_key, epoch=epoch, drop_reply=drop_reply
                 )
             except (OSError, ssl.SSLError, http.client.HTTPException):
                 conn.execute("ROLLBACK")
