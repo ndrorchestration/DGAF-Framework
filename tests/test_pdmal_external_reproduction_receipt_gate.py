@@ -22,31 +22,35 @@ TEMPLATE = json.loads(
 def submission():
     """Synthetic complete-shaped receipt, explicitly NOT a real reviewer result."""
     result = copy.deepcopy(TEMPLATE)
-    result.update({
-        "submission_state": "SUBMITTED_FOR_EXTERNAL_REVIEW",
-        "reviewer_id": "synthetic-test-only",
-        "non_author_declaration": "fixture test, not an external person",
-        "reviewer_source_repository_or_archive": "synthetic-fixture-only",
-        "reviewer_source_commit_or_sha256": "synthetic-no-source",
-        "implementation_authored_independently_of_dgaf_solver": True,
-        "physical_input_parity_confirmed": True,
-        "runtime_and_os": "synthetic-test-only",
-        "external_dde_package_and_version": "synthetic-test-only",
-        "dependency_manifest_and_hash": "synthetic-test-only",
-        "numerical_solver_parameters": "synthetic-test-only",
-        "history_and_discontinuity_method": "synthetic-test-only",
-        "author_comparison_performed_after_independent_run_freeze": True,
-        "early_derivative_and_junction_checks": {},
-        "timestep_tolerance_refinement": {},
-        "raw_errors_and_negative_cases": {},
-        "conclusion": "INDETERMINATE",
-    })
-    result["observations"].update({
-        "timestamps_s": [round(i * .02, 10) for i in range(41)],
-        "unwrapped_phases_rad": [list(FIXTURE["initial_phases"]) for _ in range(41)],
-        "missing_timepoints_s": [],
-        "missing_timepoint_reasons": {},
-    })
+    result.update(
+        {
+            "submission_state": "SUBMITTED_FOR_EXTERNAL_REVIEW",
+            "reviewer_id": "synthetic-test-only",
+            "non_author_declaration": "fixture test, not an external person",
+            "reviewer_source_repository_or_archive": "synthetic-fixture-only",
+            "reviewer_source_commit_or_sha256": "synthetic-no-source",
+            "implementation_authored_independently_of_dgaf_solver": True,
+            "physical_input_parity_confirmed": True,
+            "runtime_and_os": "synthetic-test-only",
+            "external_dde_package_and_version": "synthetic-test-only",
+            "dependency_manifest_and_hash": "synthetic-test-only",
+            "numerical_solver_parameters": "synthetic-test-only",
+            "history_and_discontinuity_method": "synthetic-test-only",
+            "author_comparison_performed_after_independent_run_freeze": True,
+            "early_derivative_and_junction_checks": {},
+            "timestep_tolerance_refinement": {},
+            "raw_errors_and_negative_cases": {},
+            "conclusion": "INDETERMINATE",
+        }
+    )
+    result["observations"].update(
+        {
+            "timestamps_s": [round(i * 0.02, 10) for i in range(41)],
+            "unwrapped_phases_rad": [list(FIXTURE["initial_phases"]) for _ in range(41)],
+            "missing_timepoints_s": [],
+            "missing_timepoint_reasons": {},
+        }
+    )
     result["per_time_signed_phase_residuals_rad"] = [[0.0] * 4 for _ in range(41)]
     result["per_time_max_abs_phase_residuals_rad"] = [0.0] * 41
     return result
@@ -117,7 +121,7 @@ def test_nan_phase_rejected():
 
 def test_wrong_initial_state_rejected():
     data = submission()
-    data["observations"]["unwrapped_phases_rad"][0][0] += .1
+    data["observations"]["unwrapped_phases_rad"][0][0] += 0.1
     assert "INITIAL_PHASE_MISMATCH" in assess(data)["errors"]
 
 
