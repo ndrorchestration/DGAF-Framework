@@ -89,6 +89,7 @@ def test_reversing_one_delay_orientation_fails_input_parity():
     packet["directed_physical_delays"][0] = [1, 0, 0.12]
     assert _digest(packet) != EXPECTED_FIXTURE_SHA256
 
+
 def test_review_return_template_is_explicitly_unsubmitted_and_has_no_fabricated_results():
     path = _INPUT_FILE.with_name("PDMAL_DDE_NONAUTHOR_RETURN_TEMPLATE_V1.json")
     template = json.loads(path.read_text(encoding="utf-8"))
@@ -105,4 +106,3 @@ def test_review_return_template_is_explicitly_unsubmitted_and_has_no_fabricated_
     assert template["pilot_authorization"] == "NOT_GRANTED"
     assert template["scientific_n_increment"] == 0
     assert template["dgaf_v1_release"] == "HOLD"
-
