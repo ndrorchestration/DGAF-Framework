@@ -31,6 +31,9 @@ DIGEST = "b" * 64
 
 
 class MutualTLSReceiverTests(unittest.TestCase):
+    cert_tmp: tempfile.TemporaryDirectory
+    certs: Path
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.cert_tmp = tempfile.TemporaryDirectory(prefix="akdc-ephemeral-certs-")
