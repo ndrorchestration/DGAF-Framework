@@ -11,12 +11,8 @@ from tools.pdmal.external_reproduction_receipt_gate import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = json.loads(
-    (ROOT / "docs/experiment/PDMAL_DDE_EXTERNAL_REPLICATION_FIXTURE_V1.json").read_text()
-)
-TEMPLATE = json.loads(
-    (ROOT / "docs/experiment/PDMAL_DDE_NONAUTHOR_RETURN_TEMPLATE_V1.json").read_text()
-)
+FIXTURE = json.loads((ROOT / "docs/experiment/PDMAL_DDE_EXTERNAL_REPLICATION_FIXTURE_V1.json").read_text())
+TEMPLATE = json.loads((ROOT / "docs/experiment/PDMAL_DDE_NONAUTHOR_RETURN_TEMPLATE_V1.json").read_text())
 
 
 def submission():
