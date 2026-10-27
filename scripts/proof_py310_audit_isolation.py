@@ -51,15 +51,20 @@ def make_source() -> None:
     ]
     assert len(original) == len(other) + 1
     assert other == [x for x in original if x != "pip-audit==2.10.1"]
+    assert not any(x.split("==", 1)[0] == "requests" for x in original)
+    # The original test suite imports requests directly; the old scanner had
+    # supplied it transitively. Do not let that accidental edge hide a test
+    # requirement. Pin the version observed in the previous complete proof.
+    candidate += "requests==2.34.2\n"
     WORKLOAD_SOURCE.write_text(
-        "# DIAGNOSTIC workload, NOT canonical. Auditor removed for an isolated scanner.\n"
+        "# DIAGNOSTIC ONLY: replace auditor pin with test dependency requests.\n"
         + candidate, encoding="utf-8"
     )
     print(json.dumps({
         "stage": "SOURCE_PREPARED", "source_sha256": sha(SOURCE),
         "workload_source_sha256": sha(WORKLOAD_SOURCE),
         "original_direct_pins": len(original), "diagnostic_direct_pins": len(other),
-        "scanner_removed_only": True, "authority": "NOT_GRANTED"
+        "scanner_removed_only": True, "test_dependency_added": "requests==2.34.2",\n        "authority": "NOT_GRANTED"
     }, sort_keys=True))
 
 
