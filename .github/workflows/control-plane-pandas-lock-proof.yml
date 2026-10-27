@@ -187,3 +187,10 @@ jobs:
             control-plane-lock-report.json
             control-plane-lock-manifest.json
             control-plane-lock-freeze.txt
+
+      - name: Non-waived resolved dependency audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          .control-plane-lock-verify/bin/python -m pip show filelock || true
+          .control-plane-lock-verify/bin/python -m pip_audit --local

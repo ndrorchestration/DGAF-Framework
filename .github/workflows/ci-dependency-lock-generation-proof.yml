@@ -185,3 +185,10 @@ jobs:
             ci-lock-report.json
             ci-lock-manifest.json
             ci-lock-freeze.txt
+
+      - name: Non-waived resolved dependency audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          .ci-lock-verify/bin/python -m pip show filelock || true
+          .ci-lock-verify/bin/python -m pip_audit --local
