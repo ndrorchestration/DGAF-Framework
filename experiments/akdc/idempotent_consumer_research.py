@@ -74,9 +74,7 @@ class SQLiteIdempotentConsumerResearch:
     def _check(conn: sqlite3.Connection) -> None:
         names = {
             row[0]
-            for row in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
-            )
+            for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
         }
         if names != {"inbox", "receiver_effect"}:
             raise ConsumerRefusal("inbox table set differs from contract")
@@ -86,9 +84,7 @@ class SQLiteIdempotentConsumerResearch:
             raise ConsumerRefusal("inbox key or binding shape weakened")
         if effects != [("idempotency_key", "TEXT", 1, 1), ("outcome", "TEXT", 1, 0)]:
             raise ConsumerRefusal("receiver effect key shape weakened")
-        sql = conn.execute(
-            "SELECT sql FROM sqlite_master WHERE type='table' AND name='receiver_effect'"
-        ).fetchone()[0]
+        sql = conn.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='receiver_effect'").fetchone()[0]
         if "CHECK(OUTCOME='SYNTHETIC_RECEIVER_MARKER')" not in "".join(sql.upper().split()):
             raise ConsumerRefusal("receiver effect outcome restriction missing")
         fk = conn.execute("PRAGMA foreign_key_list(receiver_effect)").fetchall()
