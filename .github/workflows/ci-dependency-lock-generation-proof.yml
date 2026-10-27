@@ -192,3 +192,124 @@ jobs:
           set -euo pipefail
           .ci-lock-verify/bin/python -m pip show filelock || true
           .ci-lock-verify/bin/python -m pip_audit --local
+
+  isolate-py310-auditor-diagnostic:
+    name: Proof-only Python 3.10 workload audited by pinned Python 3.11 scanner
+    if: github.head_ref == 'proof/ci-py310-isolated-auditor-1530-20261027'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout exact diagnostic head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Select Python 3.10 workload resolver
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.10'
+      - name: Prepare Python 3.10 workload-only exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/bootstrap_ci_pip.sh
+          python scripts/proof_py310_audit_isolation.py source
+          python -m pip install --disable-pip-version-check --dry-run --ignore-installed \
+            --only-binary=:all: --report py310-isolated-resolver-report.json \
+            -r py310-isolated-workload-requirements.txt
+          python scripts/proof_py310_audit_isolation.py lock
+      - name: Verify complete workload in fresh Python 3.10 environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv .py310-workload
+          source .py310-workload/bin/activate
+          bash scripts/bootstrap_ci_pip.sh
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: \
+            -r py310-isolated-workload-hash.lock
+          python -m pip check
+          python -m pip freeze --all | sort > py310-isolated-workload-freeze.txt
+          python - <<'PY'
+          import importlib.metadata as m
+          for package in ('pip-audit', 'filelock'):
+              try:
+                  m.version(package)
+              except m.PackageNotFoundError:
+                  continue
+              raise AssertionError('scanner-only package leaked into 3.10 workload: ' + package)
+          import black, pytest, pydantic, mypy, isort
+          print('PY310_WORKLOAD_DIAGNOSTIC_IMPORTS_PASS')
+          PY
+      - name: Download already verified Python 3.11 scanner-lock evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ci-hash-lock-proof-py3.11-b128442435a3dd05606c9a3e1a844e4acd55b2a2
+          run-id: 40466036612
+          github-token: ${{ github.token }}
+          path: .py311-auditor-proof
+      - name: Confirm pinned scanner proof identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s .py311-auditor-proof/requirements-ci-py311-ubuntu2404-x64.lock
+          test "$(sha256sum .py311-auditor-proof/requirements-ci-py311-ubuntu2404-x64.lock | awk '{print $1}')" = \
+            'c29bde77a4fdd192eb3285991e5752c749bb0ec5ad11450a65b28d4b459d104e'
+      - name: Select Python 3.11 independent auditor
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.11'
+      - name: Fresh signed-evidence auditor and non-waived complete workload audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv .py311-auditor
+          source .py311-auditor/bin/activate
+          bash scripts/bootstrap_ci_pip.sh
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: \
+            -r .py311-auditor-proof/requirements-ci-py311-ubuntu2404-x64.lock
+          python -m pip check
+          python -m pip_audit --local
+          python -m pip_audit --require-hashes --disable-pip \
+            -r py310-isolated-workload-hash.lock --format=json \
+            --output py310-isolated-audit.json --progress-spinner=off
+          python scripts/proof_py310_audit_isolation.py verify
+      - name: Run original Python 3.10 repository regression suite against isolated workload
+        shell: bash
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          test "$( .py310-workload/bin/python -c 'import sys;print(sys.version_info.minor)' )" = "10"
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          set +e
+          .py310-workload/bin/python -m pytest tests/ \
+            --cov=components --cov-report=term-missing \
+            --cov-fail-under=0 --timeout=30 --tb=short -q \
+            --junitxml=py310-isolated-repository-pytest.junit.xml \
+            2>&1 | tee py310-isolated-repository-pytest.log
+          status=${PIPESTATUS[0]}
+          set -e
+          printf 'pytest_exit_code=%s\n' "$status" > py310-isolated-repository-pytest.status
+          .py310-workload/bin/python scripts/proof_py310_regression_classifier.py
+          # Preserve the original failed canonical lock contract admission.
+          exit "$status"
+      - name: Preserve diagnostic exact evidence regardless of outcome
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: py310-isolated-auditor-proof-${{ github.event.pull_request.head.sha }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            py310-isolated-workload-requirements.txt
+            py310-isolated-resolver-report.json
+            py310-isolated-workload-hash.lock
+            py310-isolated-manifest.json
+            py310-isolated-workload-freeze.txt
+            py310-isolated-audit.json
+            py310-isolated-repository-pytest.log
+            py310-isolated-repository-pytest.status
+            py310-isolated-repository-pytest.junit.xml
+            py310-isolated-regression-classification.json
