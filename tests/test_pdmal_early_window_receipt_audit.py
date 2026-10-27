@@ -121,3 +121,16 @@ def test_invalid_trace_type_rejected():
     nominal["dde_trajectory_unwrapped_rad"] = "redacted"
     with pytest.raises(ValueError, match="41 sampled states"):
         audit_receipts(nominal, sensitivity)
+
+def test_zero_error_variants_have_undefined_ratios_not_infinite_values():
+    nominal, sensitivity = _fixtures()
+    early = initial_window_trajectory(0.000625)
+    for variant in sensitivity["variants"]:
+        variant["complete_trajectory"][1] = list(early[32])
+        variant["complete_trajectory"][2] = list(early[64])
+    nominal["dde_trajectory_unwrapped_rad"] = copy.deepcopy(sensitivity["variants"][0]["complete_trajectory"])
+    audited = audit_receipts(nominal, sensitivity)
+    assert audited["t_0p02_residual_halving_ratios"] == [None, None]
+    assert audited["t_0p04_residual_halving_ratios"] == [None, None]
+    assert audited["independent_validation"] == "NOT_ESTABLISHED"
+
