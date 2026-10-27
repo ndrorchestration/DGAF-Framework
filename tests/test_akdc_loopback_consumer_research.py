@@ -46,10 +46,12 @@ class LoopbackReceiverTests(unittest.TestCase):
 
     def start_server(self):
         p = subprocess.Popen(
-            [sys.executable, "-m", "experiments.akdc.loopback_consumer_research",
-             "--receiver-db", self.receiver_file],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-            env=dict(os.environ), bufsize=1,
+            [sys.executable, "-m", "experiments.akdc.loopback_consumer_research", "--receiver-db", self.receiver_file],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=dict(os.environ),
+            bufsize=1,
         )
         self.process = p
         stream = p.stdout
@@ -82,8 +84,10 @@ class LoopbackReceiverTests(unittest.TestCase):
 
     def enqueue(self, sender=None):
         return (sender or self.sender).submit(
-            nonce=NONCE, principal="asserted-only",
-            action="akdc-confirm-fixture", operation_digest=DIGEST,
+            nonce=NONCE,
+            principal="asserted-only",
+            action="akdc-confirm-fixture",
+            operation_digest=DIGEST,
         )
 
     def identifiers(self):
@@ -98,22 +102,19 @@ class LoopbackReceiverTests(unittest.TestCase):
     def test_real_tcp_loopback_first_and_duplicate(self):
         self.enqueue()
         key, payload = self.identifiers()
-        self.assertEqual(self.request(key, payload), (200, {
-            "status": "FIRST_RECEIVER_MARKER", "authority": "NOT_GRANTED"
-        }))
+        self.assertEqual(
+            self.request(key, payload), (200, {"status": "FIRST_RECEIVER_MARKER", "authority": "NOT_GRANTED"})
+        )
         self.assertEqual(self.request(key, payload)[1]["status"], "DUPLICATE_RECEIVER_MARKER")
         self.assertEqual(self.receiver.counts(), (1, 1))
 
     def test_lost_http_ack_after_receiver_commit_then_sender_redrive(self):
         self.enqueue()
-        self.assertEqual(
-            deliver_over_loopback(self.sender, self.port, drop_reply=True), "ACK_UNKNOWN_PENDING"
-        )
+        self.assertEqual(deliver_over_loopback(self.sender, self.port, drop_reply=True), "ACK_UNKNOWN_PENDING")
         self.assertEqual(self.receiver.counts(), (1, 1))
         self.assertEqual(self.sender.counts(), (1, 1, 0))
         self.assertEqual(
-            deliver_over_loopback(self.sender, self.port, epoch="fixture-epoch-b"),
-            "DUPLICATE_RECEIVER_MARKER"
+            deliver_over_loopback(self.sender, self.port, epoch="fixture-epoch-b"), "DUPLICATE_RECEIVER_MARKER"
         )
         self.assertEqual(self.sender.counts(), (1, 0, 1))
         self.assertEqual(self.receiver.counts(), (1, 1))
@@ -142,9 +143,7 @@ class LoopbackReceiverTests(unittest.TestCase):
         self.enqueue()
         key, payload = self.identifiers()
         self.assertEqual(self.request(key, payload, epoch="fixture-epoch-a")[0], 200)
-        self.assertEqual(
-            self.request(key, payload, epoch="fixture-epoch-b")[1]["status"], "DUPLICATE_RECEIVER_MARKER"
-        )
+        self.assertEqual(self.request(key, payload, epoch="fixture-epoch-b")[1]["status"], "DUPLICATE_RECEIVER_MARKER")
         self.assertEqual(self.receiver.counts(), (1, 1))
 
     def test_unknown_fixture_epoch_refused(self):
@@ -171,10 +170,7 @@ class LoopbackReceiverTests(unittest.TestCase):
         key, payload = self.identifiers()
         connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=6)
         try:
-            connection.request(
-                "POST", PATH, canonical_body(key, payload),
-                headers={"Content-Type": "application/json"}
-            )
+            connection.request("POST", PATH, canonical_body(key, payload), headers={"Content-Type": "application/json"})
             result = connection.getresponse()
             self.assertEqual(result.status, 401)
             result.read()
@@ -231,12 +227,14 @@ class LoopbackReceiverTests(unittest.TestCase):
         connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=6)
         try:
             connection.request(
-                "POST", "/unrecognized", data,
+                "POST",
+                "/unrecognized",
+                data,
                 headers={
                     "Content-Type": "application/json",
                     "X-AKDC-Fixture-Epoch": "fixture-epoch-a",
-                    "X-AKDC-Fixture-MAC": mac(data, b"PUBLIC-FIXTURE-KEY-A-NOT-A-REAL-SECRET-2026")
-                }
+                    "X-AKDC-Fixture-MAC": mac(data, b"PUBLIC-FIXTURE-KEY-A-NOT-A-REAL-SECRET-2026"),
+                },
             )
             response = connection.getresponse()
             self.assertEqual(response.status, 404)
