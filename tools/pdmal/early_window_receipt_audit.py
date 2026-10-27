@@ -17,7 +17,11 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from tools.pdmal.early_window_oracle import initial_window_trajectory
-from tools.pdmal.jitcdde_reference_probe import EXPECTED_FIXTURE_SHA256, GRID, INITIAL
+from tools.pdmal.jitcdde_reference_probe import (
+    EXPECTED_FIXTURE_SHA256,
+    GRID,
+    INITIAL,
+)
 
 
 def _phase_trace(data: object, name: str) -> tuple[tuple[float, ...], ...]:
@@ -48,6 +52,11 @@ def _require_custody(payload: Mapping[str, object], name: str, *, nominal: bool)
         raise ValueError(f"{name} independent validation must not be asserted")
 
 
+def _refinement_ratios(errors: list[float]) -> list[float | None]:
+    """A zero finer-grid residual has no defined ratio, not infinite convergence."""
+    return [errors[i] / errors[i + 1] if errors[i + 1] else None for i in range(len(errors) - 1)]
+
+
 def audit_receipts(nominal: Mapping[str, object], sensitivity: Mapping[str, object]) -> dict[str, object]:
     """Audit numerical custody, full traces, and two first-window grid samples.
 
@@ -75,7 +84,11 @@ def audit_receipts(nominal: Mapping[str, object], sensitivity: Mapping[str, obje
             discrepancy = max(abs(a - b) for a, b in zip(trace[grid_index], oracle[oracle_index]))
             observed[f"t_{grid_index * GRID:.2f}_max_abs_phase_residual_rad"] = discrepancy
         records.append({"bootstrap_step_s": expected_step, **observed})
-    if max(abs(x - y) for left, right in zip(nominal_trace, _phase_trace(variants[0]["complete_trajectory"], "first variant")) for x, y in zip(left, right)) > 1e-10:
+    first_trace = _phase_trace(variants[0]["complete_trajectory"], "first variant")
+    cross_receipt_error = max(
+        abs(x - y) for left, right in zip(nominal_trace, first_trace) for x, y in zip(left, right)
+    )
+    if cross_receipt_error > 1e-10:
         raise ValueError("nominal and first sensitivity trajectories disagree")
     t02 = [float(r["t_0.02_max_abs_phase_residual_rad"]) for r in records]
     t04 = [float(r["t_0.04_max_abs_phase_residual_rad"]) for r in records]
@@ -86,8 +99,8 @@ def audit_receipts(nominal: Mapping[str, object], sensitivity: Mapping[str, obje
         "early_interval_end_s": 0.04,
         "model": "same-author analytic constant-history first-window ODE; not independent DDE solver",
         "first_window_residuals": records,
-        "t_0p02_residual_halving_ratios": [t02[i] / t02[i + 1] for i in range(2)],
-        "t_0p04_residual_halving_ratios": [t04[i] / t04[i + 1] for i in range(2)],
+        "t_0p02_residual_halving_ratios": _refinement_ratios(t02),
+        "t_0p04_residual_halving_ratios": _refinement_ratios(t04),
         "limitations": [
             "no preregistered or independently validated solver-accuracy tolerance",
             "early-window ODE only valid for t<=0.04 seconds",
