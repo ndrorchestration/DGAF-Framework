@@ -333,6 +333,17 @@ jobs:
               raise RuntimeError("discontinuity-aligned solver has no later comparable grid points")
           PY
 
+      - name: Audit early-history numerical discrepancy without certifying accuracy
+        if: steps.scope.outputs.run_numeric == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m tools.pdmal.early_window_receipt_audit \
+            artifacts/pdmal-gr-jitcdde/receipt.json \
+            artifacts/pdmal-gr-jitcdde/bootstrap-sensitivity.json \
+            | tee artifacts/pdmal-gr-jitcdde/early-window-audit.json
+          python -m json.tool artifacts/pdmal-gr-jitcdde/early-window-audit.json > /dev/null
+
       - name: Upload diagnostic evidence even on failed execution
         if: always() && steps.scope.outputs.run_numeric == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
