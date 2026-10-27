@@ -42,7 +42,8 @@ def stable_operation_key(principal: str, action: str, operation_id: str) -> str:
         raise ValueError("bad fixture action or operation ID")
     encoded = json.dumps(
         ["AKDC-STABLE-OPERATION-ID-V1", principal, action, operation_id],
-        ensure_ascii=True, separators=(",", ":"),
+        ensure_ascii=True,
+        separators=(",", ":"),
     ).encode("ascii")
     return hashlib.sha256(encoded).hexdigest()
 
@@ -107,7 +108,11 @@ class BoundCertificateHandler(FixtureHTTPHandler):
             body = self.rfile.read(int(length))
             data = json.loads(body)
             if type(data) is not dict or set(data) != {
-                "principal", "action", "operation_id", "payload_tag", "drop_reply"
+                "principal",
+                "action",
+                "operation_id",
+                "payload_tag",
+                "drop_reply",
             }:
                 raise ValueError("bad test object")
             if type(data["drop_reply"]) is not bool:
@@ -151,17 +156,29 @@ def run_bound_server(receiver_db: str, ca: str, certificate: str, key: str, poli
 
 
 def post_bound_fixture(
-    port: int, ca: str, certificate: str | None, key: str | None, *,
-    principal: str, action: str = ACTION, operation_id: str, payload_tag: str,
+    port: int,
+    ca: str,
+    certificate: str | None,
+    key: str | None,
+    *,
+    principal: str,
+    action: str = ACTION,
+    operation_id: str,
+    payload_tag: str,
     drop_reply: bool = False,
 ) -> tuple[int, dict[str, Any]]:
     """TLS client sends a synthetic scoped operation; no real dispatch."""
     payload = json.dumps(
         {
-            "principal": principal, "action": action, "operation_id": operation_id,
-            "payload_tag": payload_tag, "drop_reply": drop_reply,
+            "principal": principal,
+            "action": action,
+            "operation_id": operation_id,
+            "payload_tag": payload_tag,
+            "drop_reply": drop_reply,
         },
-        ensure_ascii=True, sort_keys=True, separators=(",", ":"),
+        ensure_ascii=True,
+        sort_keys=True,
+        separators=(",", ":"),
     ).encode("ascii")
     ctx = client_context(ca, certificate, key)
     conn = http.client.HTTPSConnection("127.0.0.1", port, context=ctx, timeout=6)
