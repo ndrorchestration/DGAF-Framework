@@ -121,10 +121,7 @@ def assess_submission(
             if len(traces[0]) == 4 and all(_real_number(x) for x in traces[0]):
                 if max(abs(a - b) for a, b in zip(traces[0], fixture["initial_phases"])) > 1e-12:
                     errors.append("INITIAL_PHASE_MISMATCH")
-    if missing and (
-        not isinstance(reasons, dict)
-        or any(not _text(reasons.get(str(t))) for t in missing)
-    ):
+    if missing and (not isinstance(reasons, dict) or any(not _text(reasons.get(str(t))) for t in missing)):
         errors.append("MISSING_SAMPLE_REASONS")
     if submission.get("conclusion") not in CONCLUSIONS:
         errors.append("CONCLUSION_UNSPECIFIED")
@@ -139,21 +136,18 @@ def assess_submission(
     absolute = submission.get("per_time_max_abs_phase_residuals_rad")
     if not isinstance(signed, list) or len(signed) != len(times):
         errors.append("SIGNED_RESIDUAL_LEDGER_MISSING")
-    elif any(
-        not isinstance(row, list) or len(row) != 4 or not all(_real_number(x) for x in row)
-        for row in signed
-    ):
+    elif any(not isinstance(row, list) or len(row) != 4 or not all(_real_number(x) for x in row) for row in signed):
         errors.append("SIGNED_RESIDUAL_VALUES_INVALID")
     if not isinstance(absolute, list) or len(absolute) != len(times):
         errors.append("ABS_RESIDUAL_LEDGER_MISSING")
     elif any(not _real_number(v) or v < 0 for v in absolute):
         errors.append("ABS_RESIDUAL_VALUES_INVALID")
-    elif isinstance(signed, list) and len(signed) == len(times) and all(
-        isinstance(row, list) and len(row) == 4 and all(_real_number(x) for x in row)
-        for row in signed
+    elif (
+        isinstance(signed, list)
+        and len(signed) == len(times)
+        and all(isinstance(row, list) and len(row) == 4 and all(_real_number(x) for x in row) for row in signed)
     ):
-        if any(abs(max(abs(x) for x in row) - value) > 1e-9
-               for row, value in zip(signed, absolute)):
+        if any(abs(max(abs(x) for x in row) - value) > 1e-9 for row, value in zip(signed, absolute)):
             errors.append("RESIDUAL_INTERNAL_INCONSISTENCY")
     return {
         "status": "STRUCTURAL_REVIEW_READY" if not errors else "REJECTED_OR_INCOMPLETE",
@@ -171,8 +165,9 @@ def assess_submission(
 
 def main() -> None:
     if len(sys.argv) != 3:
-        raise SystemExit("usage: python -m tools.pdmal.external_reproduction_receipt_gate "
-                         "FIXTURE.json REVIEWER_SUBMISSION.json")
+        raise SystemExit(
+            "usage: python -m tools.pdmal.external_reproduction_receipt_gate " "FIXTURE.json REVIEWER_SUBMISSION.json"
+        )
     fixture = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     submission = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
     result = assess_submission(submission, fixture)
