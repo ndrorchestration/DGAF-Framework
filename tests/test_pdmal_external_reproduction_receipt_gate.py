@@ -137,3 +137,24 @@ def test_truthy_int_is_not_boolean_authorization():
     data = submission()
     data["scientific_n_increment"] = False
     assert "GOVERNANCE_BOUNDARY_SCIENTIFIC_N_INCREMENT" in assess(data)["errors"]
+
+
+def test_shuffled_full_grid_rejected():
+    data = submission()
+    times = data["observations"]["timestamps_s"]
+    traces = data["observations"]["unwrapped_phases_rad"]
+    times[1], times[2] = times[2], times[1]
+    traces[1], traces[2] = traces[2], traces[1]
+    assert "TIMESTAMP_ORDER_INVALID" in assess(data)["errors"]
+
+
+def test_shuffled_missing_ledger_rejected():
+    data = submission()
+    for index in (1, 2):
+        data["observations"]["timestamps_s"].pop(1)
+        data["observations"]["unwrapped_phases_rad"].pop(1)
+        data["per_time_signed_phase_residuals_rad"].pop(1)
+        data["per_time_max_abs_phase_residuals_rad"].pop(1)
+    data["observations"]["missing_timepoints_s"] = [0.04, 0.02]
+    data["observations"]["missing_timepoint_reasons"] = {"0.02": "missing", "0.04": "missing"}
+    assert "TIMESTAMP_ORDER_INVALID" in assess(data)["errors"]
