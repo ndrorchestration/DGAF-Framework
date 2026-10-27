@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 import math
 import sys
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 from pathlib import Path
 
 from tools.pdmal.early_window_oracle import initial_window_trajectory
