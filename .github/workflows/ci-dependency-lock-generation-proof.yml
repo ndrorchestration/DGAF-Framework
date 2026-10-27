@@ -287,10 +287,13 @@ jobs:
           .py310-workload/bin/python -m pytest tests/ \
             --cov=components --cov-report=term-missing \
             --cov-fail-under=0 --timeout=30 --tb=short -q \
+            --junitxml=py310-isolated-repository-pytest.junit.xml \
             2>&1 | tee py310-isolated-repository-pytest.log
           status=${PIPESTATUS[0]}
           set -e
           printf 'pytest_exit_code=%s\n' "$status" > py310-isolated-repository-pytest.status
+          .py310-workload/bin/python scripts/proof_py310_regression_classifier.py
+          # Preserve the original failed canonical lock contract admission.
           exit "$status"
       - name: Preserve diagnostic exact evidence regardless of outcome
         if: always()
@@ -308,3 +311,5 @@ jobs:
             py310-isolated-audit.json
             py310-isolated-repository-pytest.log
             py310-isolated-repository-pytest.status
+            py310-isolated-repository-pytest.junit.xml
+            py310-isolated-regression-classification.json
