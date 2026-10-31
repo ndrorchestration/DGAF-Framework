@@ -104,6 +104,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // POST /api/triad?action=form
   if (action === 'form') {
     const { triad_id, agents } = req.body ?? {}
+    if (typeof triad_id !== 'string' || !Object.prototype.hasOwnProperty.call(VALID_TRIADS, triad_id) ||
+        !Array.isArray(agents) || !agents.every((agent: unknown) => typeof agent === 'string')) {
+      return res.status(400).json({ error: 'Invalid triad_id or agents' })
+    }
     const canonical = VALID_TRIADS[triad_id]
     if (!canonical) {
       return res.status(400).json({
