@@ -20,6 +20,11 @@ export default function PhiTrajectory({ turns }) {
   return (
     <div style={styles.card}>
       <div style={styles.header}>Effective Confidence Trajectory</div>
+      {observed.length === 0 && (
+        <div role="status" aria-live="polite" style={{ color: '#9ca3af', fontSize: 12, marginBottom: 8 }}>
+          No observed confidence values are available. No trajectory can be inferred.
+        </div>
+      )}
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img" aria-label="Observed confidence across turns; missing samples are not connected" style={{ display: 'block', maxWidth: W }}>
         <title>Observed effective confidence, with gaps preserved</title>
         {/* φ* reference line */}
