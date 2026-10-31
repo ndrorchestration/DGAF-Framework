@@ -5,6 +5,7 @@ on:
     paths:
       - 'app/**'
       - 'pages/api/**'
+      - 'tests/phi_lattice_routes.test.cjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/ui-command-center-validation.yml'
@@ -29,5 +30,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Run UI semantic and contract tests
         run: npm run test:ui
+      - name: Characterize Phi-lattice route discrepancy (non-authorizing)
+        run: node --test tests/phi_lattice_routes.test.cjs
       - name: Build production application
         run: npm run build
