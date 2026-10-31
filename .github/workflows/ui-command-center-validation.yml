@@ -6,6 +6,7 @@ on:
       - 'app/**'
       - 'pages/api/**'
       - 'tests/triad_api.test.cjs'
+      - 'tests/phi_lattice_legacy_compat.test.cjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/ui-command-center-validation.yml'
@@ -32,5 +33,7 @@ jobs:
         run: npm run test:ui
       - name: Run legacy API fail-closed regressions
         run: node --test tests/triad_api.test.cjs
+      - name: Characterize legacy and orchestration confidence compatibility
+        run: node --test tests/phi_lattice_legacy_compat.test.cjs
       - name: Build production application
         run: npm run build
