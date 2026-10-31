@@ -20,7 +20,8 @@ export default function PhiTrajectory({ turns }) {
   return (
     <div style={styles.card}>
       <div style={styles.header}>Effective Confidence Trajectory</div>
-      <svg width={W} height={H} style={{ display: 'block' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img" aria-label="Observed confidence across turns; missing samples are not connected" style={{ display: 'block', maxWidth: W }}>
+        <title>Observed effective confidence, with gaps preserved</title>
         {/* φ* reference line */}
         <line x1={PAD} y1={phiY} x2={W - PAD} y2={phiY}
               stroke="#7c3aed" strokeWidth={1} strokeDasharray="4 3" opacity={0.6} />
