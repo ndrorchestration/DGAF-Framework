@@ -9,6 +9,13 @@ Status: PROPOSED / NOT EXECUTED. This is a test plan, not a verification report.
 - Local unit/build checks do **not** establish browser rendering or accessibility.
 - Existing root `package.json` lists Next.js build and Node UI contract tests, but no browser automation runner. Do not infer that the legacy `dashboard/components` files are wired into the production Next.js page.
 
+## Observed route boundary (2026-10-31)
+
+- Verified Next.js overview route `app/(command-center)/page.tsx` imports `OverviewView` from `app/components/overview-view.tsx`.
+- The current candidate modifies `dashboard/components/PhiTrajectory.jsx`, `OrchestratePanel.jsx`, and `TurnTable.jsx`. The verified overview route does **not** directly import these legacy components.
+- Do not infer that the dashboard chart is rendered from the Next.js build; confirm a real route and import chain or create a separately authorized, explicitly labeled preview surface.
+- Do not present an unmounted legacy UI as an integrated command-center feature.
+
 ## Prerequisites
 
 1. Confirm the real dashboard route/entry point and how it imports `OrchestratePanel`, `TurnTable`, and `PhiTrajectory`. If it is not deployed, record **NOT EXECUTED** and avoid claiming browser QA.
