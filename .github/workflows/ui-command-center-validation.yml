@@ -5,6 +5,7 @@ on:
     paths:
       - 'app/**'
       - 'pages/api/**'
+      - 'tests/orchestrate-input-validation.test.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/ui-command-center-validation.yml'
@@ -29,5 +30,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Run UI semantic and contract tests
         run: npm run test:ui
+      - name: Verify strict supplied input validation
+        run: node --test tests/orchestrate-input-validation.test.mjs
       - name: Build production application
         run: npm run build
