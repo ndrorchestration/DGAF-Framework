@@ -63,3 +63,12 @@ test('triad formation remains a structural check, not a turn authorization', () 
   assert.equal(res.body.formed, true)
   assert.equal('decision' in res.body, false)
 })
+
+test('malformed triad formation inputs fail with 400 rather than crashing', () => {
+  for (const agents of [null, {}, 12, 'amethyst', [null, 'apogee'], ['amethyst', 1]]) {
+    assert.equal(call('form', { triad_id: 'governance', agents }).statusCode, 400)
+  }
+  for (const triad_id of ['__proto__', 'constructor', null, 123]) {
+    assert.equal(call('form', { triad_id, agents: [] }).statusCode, 400)
+  }
+})
