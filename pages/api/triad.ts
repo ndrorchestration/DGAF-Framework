@@ -1,6 +1,6 @@
 // pages/api/triad.ts — triad formation + 9-gate turn execution
-// POST /api/triad/form   → validate and form a triad
-// POST /api/triad/turn   → run orchestrate_turn() through all 9 gates
+// POST /api/triad?action=form → validate a prototype triad (not authorization)
+// POST /api/triad?action=turn → diagnostic-only prototype; never authorizes
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 const PHI      = (1 + Math.sqrt(5)) / 2
@@ -81,17 +81,16 @@ function runGates(payload: string, confidence: number, claim: string, turn: numb
   const psi_cubic = Math.abs(PSI ** 3 - (PSI ** 2 + 1)) < 1e-9
   gates.g8_apogee = { fired: true, psi_cubic_valid: psi_cubic, phi_star_valid: Math.abs(PHI_STAR - 0.6180339887) < 1e-9 }
 
-  // Gate 9 — AMETHYST seal
-  const seal_hash = Buffer.from(`${turn}:${claim}:${eff_confidence}`).toString('base64').slice(0, 16)
-  gates.g9_amethyst = { fired: true, seal: seal_hash }
+  // No cryptographic seal or real approval exists for these proxy gates.
+  // This endpoint must never return an authority-bearing PASS.
+  gates.g9_amethyst = { fired: false, status: 'NOT_IMPLEMENTED' }
 
   return {
-    decision:             'PASS',
+    decision:             'NOT_IMPLEMENTED',
     turn,
     effective_confidence: eff_confidence,
     phi_gate,
     pdmal_status,
-    seal:                 seal_hash,
     gate_reached:         9,
     gates,
   }
@@ -105,6 +104,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // POST /api/triad?action=form
   if (action === 'form') {
     const { triad_id, agents } = req.body ?? {}
+    if (typeof triad_id !== 'string' || !Object.prototype.hasOwnProperty.call(VALID_TRIADS, triad_id) ||
+        !Array.isArray(agents) || !agents.every((agent: unknown) => typeof agent === 'string')) {
+      return res.status(400).json({ error: 'Invalid triad_id or agents' })
+    }
     const canonical = VALID_TRIADS[triad_id]
     if (!canonical) {
       return res.status(400).json({
@@ -125,8 +128,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     })
   }
 
-  // POST /api/triad?action=turn  (default)
+  // POST /api/triad?action=turn  (legacy diagnostic only)
+  if (action !== 'turn') return res.status(400).json({ error: 'Unknown action; use form or turn' })
   const { payload = '', confidence = PHI_STAR, claim = '', turn = 1 } = req.body ?? {}
-  const result = runGates(String(payload), Number(confidence), String(claim), Number(turn))
-  return res.status(result.decision === 'PASS' ? 200 : 400).json(result)
+  if (typeof confidence !== 'number' || !Number.isFinite(confidence) || confidence < 0 || confidence > 1 ||
+      !Number.isInteger(turn) || turn < 1) {
+    return res.status(400).json({ decision: 'REJECT', reason: 'Invalid confidence or turn' })
+  }
+  const result = runGates(String(payload), confidence, String(claim), turn)
+  // Even diagnostic KILL checks do not establish governance authority.
+  return res.status(result.decision === 'NOT_IMPLEMENTED' ? 503 : 400).json({
+    ...result,
+    authority: 'NONE',
+    mode: 'PROTOTYPE_DIAGNOSTIC_ONLY',
+  })
 }
