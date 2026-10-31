@@ -72,3 +72,10 @@ test('confidence chart exposes accessible semantics and a responsive viewBox', (
   assert.match(rendered, /width="100%"/);
   assert.match(rendered, /<title>Observed effective confidence/);
 });
+
+
+test('empty evidence state is explicit and accessible instead of suggesting a trajectory', () => {
+  assert.match(rendered, /observed\.length === 0/);
+  assert.match(rendered, /role="status" aria-live="polite"/);
+  assert.match(rendered, /No observed confidence values are available/);
+});
