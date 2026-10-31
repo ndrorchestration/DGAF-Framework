@@ -63,3 +63,12 @@ test('presentation is wired to split polylines and keeps individual observed dot
   assert.match(rendered, /observed\.map\(\(\{ t, i \}\)/);
   assert.doesNotMatch(rendered, /<polyline points=\{points\}/);
 });
+
+
+test('confidence chart exposes accessible semantics and a responsive viewBox', () => {
+  assert.match(rendered, /role="img"/);
+  assert.match(rendered, /aria-label="Observed confidence across turns/);
+  assert.match(rendered, /viewBox=\{\x60/);
+  assert.match(rendered, /width="100%"/);
+  assert.match(rendered, /<title>Observed effective confidence/);
+});
