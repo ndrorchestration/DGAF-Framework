@@ -33,3 +33,13 @@ test('forced colors and reduced motion preserve accessibility affordances', () =
   assert.match(globals, /@media \(forced-colors: active\)[\s\S]*\.skip-link/)
   assert.match(globals, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.skip-link/)
 })
+
+
+test('stale runtime telemetry never advertises current health or PSI PASS', () => {
+  const control = readFileSync('app/components/control-room-view.tsx', 'utf8')
+  assert.match(control, /const stale = phase === 'stale' \|\| phase === 'error'/)
+  assert.match(control, /state=\{stale \? 'unknown' : health \? normalizeRuntimeStatus/)
+  assert.match(control, /label=\{stale \? 'STALE \/ UNVERIFIED' : health\?\.status/)
+  assert.match(control, /state=\{stale \? 'unknown' : health \? \(health\.psi_cubic/)
+  assert.match(control, /label=\{stale \? 'STALE \/ UNVERIFIED' : health \? \(health\.psi_cubic/)
+})
