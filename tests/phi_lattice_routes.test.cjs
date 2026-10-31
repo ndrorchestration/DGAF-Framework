@@ -19,7 +19,7 @@ function loadRoute(filename) {
     }
     throw new Error('Unexpected runtime import: ' + name)
   }
-  vm.runInNewContext(js, { module: moduleObject, exports: moduleObject.exports, require: requireStub }, {
+  vm.runInNewContext(js, { module: moduleObject, exports: moduleObject.exports, require: requireStub, Buffer }, {
     filename,
   })
   return moduleObject.exports.default
