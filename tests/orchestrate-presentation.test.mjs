@@ -21,8 +21,8 @@ test('real PASS with PARTIAL evidence stays visibly qualified, not green', () =>
   assert.equal(row.gold_star, undefined);
 });
 
-test('explicit gate PASS with PASS evidence is the only green case', () => {
-  assert.equal(decisionColor({ decision: 'PASS', evidence: { status: 'PASS' } }), '#047857');
+test('even local PASS with PASS evidence remains non-admitting', () => {
+  assert.equal(decisionColor({ decision: 'PASS', evidence: { status: 'PASS' } }), '#b45309');
 });
 
 for (const decision of ['KILL', 'BLOCKED']) {

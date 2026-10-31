@@ -1,6 +1,6 @@
 // dashboard/components/PhiTrajectory.jsx
 // SVG sparkline of only observed effective confidence; missing values are never fabricated.
-import { normalizeOrchestrateResponse } from '../lib/orchestrate-presentation.mjs';
+import { normalizeOrchestrateResponse, confidenceSegments } from '../lib/orchestrate-presentation.mjs';
 export default function PhiTrajectory({ turns }) {
   const W = 560, H = 200, PAD = 32;
   const data = (Array.isArray(turns) ? turns : []).map(normalizeOrchestrateResponse).reverse();
@@ -12,25 +12,32 @@ export default function PhiTrajectory({ turns }) {
 
   const observed = data.map((t, i) => ({ t, i }))
     .filter(({ t }) => t.effective_confidence !== null);
-  const points = observed.map(({ t, i }) =>
-    `${xScale(i)},${yScale(t.effective_confidence)}`
-  ).join(' ');
+  // Missing observations split the line; do not visually bridge evidence gaps.
+  const segments = confidenceSegments(data);
   const blocked = data.map((t, i) => ({ t, i }))
     .filter(({ t }) => ['KILL', 'REJECT', 'BLOCKED'].includes(t.decision));
 
   return (
     <div style={styles.card}>
       <div style={styles.header}>Effective Confidence Trajectory</div>
-      <svg width={W} height={H} style={{ display: 'block' }}>
+      {observed.length === 0 && (
+        <div role="status" aria-live="polite" style={{ color: '#9ca3af', fontSize: 12, marginBottom: 8 }}>
+          No observed confidence values are available. No trajectory can be inferred.
+        </div>
+      )}
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img" aria-label="Observed confidence across turns; missing samples are not connected" style={{ display: 'block', maxWidth: W }}>
+        <title>Observed effective confidence, with gaps preserved</title>
         {/* φ* reference line */}
         <line x1={PAD} y1={phiY} x2={W - PAD} y2={phiY}
               stroke="#7c3aed" strokeWidth={1} strokeDasharray="4 3" opacity={0.6} />
         <text x={W - PAD + 4} y={phiY + 4} fill="#7c3aed" fontSize={10}>φ*</text>
 
         {/* Confidence sparkline */}
-        {observed.length > 1 && (
-          <polyline points={points} fill="none" stroke="#2563eb" strokeWidth={2} />
-        )}
+        {segments.filter(segment => segment.length > 1).map((segment, i) => (
+          <polyline key={i}
+            points={segment.map(({ index, confidence }) => `${xScale(index)},${yScale(confidence)}`).join(' ')}
+            fill="none" stroke="#2563eb" strokeWidth={2} />
+        ))}
         {/* Data points */}
         {observed.map(({ t, i }) => (
           <circle key={i} cx={xScale(i)} cy={yScale(t.effective_confidence)}
