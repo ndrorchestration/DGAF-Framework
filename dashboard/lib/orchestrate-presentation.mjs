@@ -34,8 +34,8 @@ export function decisionColor(value) {
   if (row.decision === 'KILL' || row.decision === 'BLOCKED') return '#b91c1c';
   if (row.decision === 'REJECT') return '#b45309';
   if (row.evidence_status === 'BLOCKED') return '#b91c1c';
-  // A gate PASS with incomplete evidence is NOT a full governance admission.
-  if (row.decision === 'PASS' && row.evidence_status === 'PASS') return '#047857';
+  // This diagnostic endpoint never grants governance admission, even when
+  // both its local decision and evidence status happen to say PASS.
   if (row.decision === 'PASS') return '#b45309';
   return '#6b7280'; // Unknown/missing values must never turn green.
 }
