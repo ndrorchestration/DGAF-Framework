@@ -1,18 +1,47 @@
 # Reson — QA Rubric
 
 **Agent:** Reson · **Role:** Augmenter 1 / Harmonic Integrity Monitor
-**Rubric version:** v1.0 · **Seeded:** S073 · 2026-06-29
+**Rubric version:** v1.1-DRAFT (construct clarification; non-authorizing) · **Original:** v1.0, S073, 2026-06-29
 **Classification:** T1 PUBLIC
 
 ---
 
-## Harmonic Scoring Rubric
+## Composite Process Integrity Score (legacy alias: Harmonic Scoring Rubric)
 
-The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.0. Composite = weighted average.
+The composite score is computed from four sub-dimensions. Each is scored 0.0–1.0. Composite = weighted average. The legacy `harmonic_score` field name is preserved for compatibility.
+
+**Evidence boundary:** These names describe proposed constructs, not established psychometric validity. The historical v1.0 scoring anchors below are retained for traceability and still contain metaphoric phi-lattice and musical-mode language. They must not be interpreted as experimentally calibrated metrics. The weights, thresholds, and actions are unchanged pending independent review and owner ratification. The 0.80–0.84 'proceed' / 0.85 seal-floor ambiguity remains open in issue #1559; this draft does not resolve it.
 
 ---
 
-### H1 — Phi-Alignment (weight: 0.30)
+## Expert-lens line-by-line QA findings (provisional, not independent attestation)
+
+| Scope | Finding | Disposition |
+|---|---|---|
+| Header/version | Version and provenance must distinguish a draft from an adopted instrument | Keep v1.0 on main; v1.1-DRAFT is non-authorizing |
+| Construct labels | New names describe candidate observable properties more directly | Adopt names in draft only; legacy aliases retained |
+| H1 anchors | “φ-lattice”, “density”, “phase”, and “overload” lack operational units, denominator, and justified target distribution | Historical anchors only; do not infer numerical precision |
+| H2 anchors | Musical modes label states but do not specify observable transition events or allowable states | Require versioned state-transition inventory and violation evidence |
+| H3 anchors | Contradiction severity and canonical/noncanonical source authority are not defined; consistency is not factual correctness | Require authority-bound contradiction annotation and adjudication |
+| H4 anchors | Opened/closed/anchored counts do not define issue severity, owner, deadline, or observation window | Require issue ledger, provenance, severity, and regression criteria |
+| Composite | Weighted average permits compensating a critical failure with unrelated high scores | Test noncompensatory vetoes separately before any decision use |
+| Numerical weights | Weights are specified but lack calibration or sensitivity analysis | Retain for compatibility; label unvalidated |
+| Threshold/action map | Dorian “proceed” at 0.80–0.84 conflicts with 0.85 seal floor under seal interpretation | Preserve issue #1559; no implicit seal authorization |
+| Missing data | No production scorer or provenance/freshness contract established here | Treat missing/invalid evidence as unscored, not passing |
+
+### Proposed operationalization protocol (not yet an adopted scoring algorithm)
+
+- **Observation unit:** One explicitly identified session or run with immutable start/end timestamps and source revisions.
+- **H1:** Record the set of expected output categories, each observed count or quantity, and a task-justified target distribution. Without a justified target and denominator, return **NOT_SCORED** rather than assume evenness or a golden-ratio target.
+- **H2:** Record expected and observed workflow states, transition events, permitted transition table version, and unresolved violations. Without a versioned transition contract, return **NOT_SCORED**.
+- **H3:** Compare claims against each other and against a versioned authoritative reference set; record contradiction IDs, severity, reviewer disagreements, and corrections. Do not conflate consistency with truth.
+- **H4:** Record issue IDs, creation/disposition events, owners, deadlines, regression indicators, and observation window. A documented carry-forward is not automatically equivalent to resolution.
+- **Scoring:** Anchor descriptions below are historical **ordinal exemplars**, not a validated interval scale. Do not calculate or use a decision-bearing composite until scoring units, missing-data handling, noncompensatory failures, and calibration are ratified.
+- **Review evidence:** Require at least two independent blinded raters, disagreement adjudication, inter-rater reliability, and a held-out comparator against a simpler checklist before claiming validation.
+
+---
+
+### H1 — Structural Distribution Balance (legacy: Phi-Alignment; weight: 0.30)
 
 | Score | Criteria |
 |-------|----------|
@@ -24,7 +53,7 @@ The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.
 
 ---
 
-### H2 — Modal Alignment (weight: 0.25)
+### H2 — Workflow State Consistency (legacy: Modal Alignment; weight: 0.25)
 
 | Score | Criteria |
 |-------|----------|
@@ -36,7 +65,7 @@ The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.
 
 ---
 
-### H3 — Semantic Coherence (weight: 0.25)
+### H3 — Semantic Consistency and Contradiction Control (legacy: Semantic Coherence; weight: 0.25)
 
 | Score | Criteria |
 |-------|----------|
@@ -48,7 +77,7 @@ The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.
 
 ---
 
-### H4 — Resolution Cadence (weight: 0.20)
+### H4 — Issue Resolution and State Integrity (legacy: Resolution Cadence; weight: 0.20)
 
 | Score | Criteria |
 |-------|----------|
@@ -82,4 +111,4 @@ harmonic_score = (H1 × 0.30) + (H2 × 0.25) + (H3 × 0.25) + (H4 × 0.20)
 
 ---
 
-*QA_RUBRIC.md · Reson · v1.0 · S073 · 2026-06-29*
+*QA_RUBRIC.md · Reson · v1.1-DRAFT construct-clarity proposal; original v1.0 preserved on main.*
