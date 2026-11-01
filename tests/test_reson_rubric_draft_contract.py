@@ -4,7 +4,6 @@ These tests validate the documentation contract, not production seal enforcement
 construct validity, or independent expert review.
 """
 from pathlib import Path
-import re
 import unittest
 
 RUBRIC = Path(__file__).resolve().parents[1] / "docs/agents/reson/QA_RUBRIC.md"
@@ -71,6 +70,11 @@ class ResonDraftContractTests(unittest.TestCase):
             with self.subTest(scores=scores):
                 with self.assertRaises(ValueError):
                     composite(scores)
+
+    def test_operationalization_protocol_and_known_gaps(self):
+        for phrase in ("NOT_SCORED", "Observation unit", "H1 anchors", "H2 anchors", "H3 anchors", "H4 anchors", "noncompensatory", "held-out comparator", "independent blinded raters"):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, self.text)
 
     def test_draft_is_explicitly_non_authorizing(self):
         self.assertIn("v1.1-DRAFT", self.text)
