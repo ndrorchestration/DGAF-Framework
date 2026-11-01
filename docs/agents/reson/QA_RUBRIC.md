@@ -1,18 +1,20 @@
 # Reson — QA Rubric
 
 **Agent:** Reson · **Role:** Augmenter 1 / Harmonic Integrity Monitor
-**Rubric version:** v1.0 · **Seeded:** S073 · 2026-06-29
+**Rubric version:** v1.1-DRAFT (terminology review only) · **Original:** v1.0, S073, 2026-06-29
 **Classification:** T1 PUBLIC
 
 ---
 
-## Harmonic Scoring Rubric
+## Composite Process Integrity Score (legacy alias: Harmonic Scoring Rubric)
 
-The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.0. Composite = weighted average.
+The composite score is computed from four sub-dimensions. Each is scored 0.0–1.0. Composite = weighted average. The legacy `harmonic_score` field name is preserved for compatibility.
+
+**Evidence boundary:** These names describe proposed constructs, not established psychometric validity. The original scoring anchors below are retained for traceability and still contain metaphoric phi-lattice and musical-mode language. They must not be interpreted as experimentally calibrated metrics. The weights, thresholds, and actions are unchanged pending independent review and owner ratification. The 0.80–0.84 'proceed' / 0.85 seal-floor ambiguity remains open in issue #1559; this draft does not resolve it.
 
 ---
 
-### H1 — Phi-Alignment (weight: 0.30)
+### H1 — Structural Distribution Balance (legacy: Phi-Alignment; weight: 0.30)
 
 | Score | Criteria |
 |-------|----------|
@@ -24,7 +26,7 @@ The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.
 
 ---
 
-### H2 — Modal Alignment (weight: 0.25)
+### H2 — Workflow State Consistency (legacy: Modal Alignment; weight: 0.25)
 
 | Score | Criteria |
 |-------|----------|
@@ -36,7 +38,7 @@ The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.
 
 ---
 
-### H3 — Semantic Coherence (weight: 0.25)
+### H3 — Semantic Consistency and Contradiction Control (legacy: Semantic Coherence; weight: 0.25)
 
 | Score | Criteria |
 |-------|----------|
@@ -48,7 +50,7 @@ The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.
 
 ---
 
-### H4 — Resolution Cadence (weight: 0.20)
+### H4 — Issue Resolution and State Integrity (legacy: Resolution Cadence; weight: 0.20)
 
 | Score | Criteria |
 |-------|----------|
@@ -82,4 +84,4 @@ harmonic_score = (H1 × 0.30) + (H2 × 0.25) + (H3 × 0.25) + (H4 × 0.20)
 
 ---
 
-*QA_RUBRIC.md · Reson · v1.0 · S073 · 2026-06-29*
+*QA_RUBRIC.md · Reson · v1.1-DRAFT terminology-only proposal; original v1.0 preserved on main.*
