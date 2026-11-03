@@ -51,3 +51,22 @@ GitHub repository code search on protected main `1a95b94332dffb404c5a3ce026d7078
 Direct source inspection confirms `app/(command-center)/layout.tsx` composes `DashboardRuntimeProvider` and `AppShell`. `app/lib/navigation.ts` defines eight current destinations: `/`, `/demo`, `/control`, `/evidence`, `/governance`, `/state-space`, `/agents`, and `/tools`. Existing `app/lib/routing.test.ts` asserts route presence/shared-provider ownership; `app/lib/accessibility-responsive.test.ts` asserts keyboard, touch and reduced-motion source invariants. The active overview is `app/(command-center)/page.tsx` → `app/components/overview-view.tsx`.
 
 **Disposition:** do not wire or replace this current architecture with the legacy `dashboard/components` chart merely to make draft tests run. Treat #1411/#1420/#1556 as isolated *legacy-presentation* candidates until a reviewer accepts a specific real user-facing entry point and confirms a need absent from existing current-lineage screens. The existing UI regression/build runs exercise candidate code/tests but do not establish user-visible mounting of these legacy components. A live browser probe should target the current routes separately, with the correct source and exact deployment bound; if a legacy preview is authorized later, give it a deliberately explicit, non-authorizing preview route and synthetic fixtures. No implied promotion of the PR to production.
+
+## 2026-11-03 — Exact-head sibling deduplication disposition
+
+This is an exact-head source comparison plus a documentation-only reviewer handoff—not browser, independent, or protected-main verification.
+
+| PR | Reviewed head | Distinct responsibility |
+| --- | --- | --- |
+| [#1411](https://github.com/ndrorchestration/DGAF-Framework/pull/1411) | `86968c57f95f7c9d7351a9611cb0a9429407fd46` | Unmerged shared normalizer baseline |
+| [#1420](https://github.com/ndrorchestration/DGAF-Framework/pull/1420) | `bb5e23c0f9d73b346bbfcdd8c35f20355057a442` | Isolated gap segmentation and dedicated branch-bound QA workflow |
+| [#1556](https://github.com/ndrorchestration/DGAF-Framework/pull/1556) | `3828501bf7e8addecde3797a7d4415adf47fa1dd` | Preferred review integration of gap tests, non-admitting PASS, accessibility and UI CI |
+| [#1557](https://github.com/ndrorchestration/DGAF-Framework/pull/1557) | `e202f4dedd3e318b427fb0557e5b4b10c93d327e` | Separate active control-room stale-telemetry work |
+
+Direct exact-file comparison of #1420 versus #1556 confirms that #1556 retains `confidenceSegments()` and all seven original #1420 gap regression tests. #1556 adds explicit no-observation messaging and responsive/accessibility assertions. It intentionally prevents local API `PASS` plus `evidence.status=PASS` from appearing as green admission; #1420 would render that combination green. **Do not regress this non-admitting color boundary.**
+
+**Workflow disposition:** #1420's `.github/workflows/qa-dashboard-confidence-gaps.yml` is a narrow branch-specific Node 22 check. #1556 already extends `.github/workflows/ui-command-center-validation.yml` to execute both presentation and gap suites in existing UI CI. No unique application behavior or regression case was found missing from #1556 in the compared files. Retain #1420 workflow history for provenance, but do **not** copy the additional workflow into #1556 merely to duplicate CI.
+
+**Evidence scope:** GitHub showed nine completed successful PR-triggered workflow runs at #1420's reviewed SHA and ten at #1556's reviewed SHA. These are workflow-run snapshots, not required-context totals or proof of browser mounting. A documentation edit creates a new #1556 head whose checks must be read separately.
+
+**Reviewer decision required:** keep #1420 OPEN/DRAFT as historical provenance pending authorized disposition. Keep #1556 OPEN/DRAFT stacked on unmerged #1411. The live App Router overview does not prove the legacy `dashboard/components` surfaces are mounted; defer browser-visual acceptance and production integration until a real route/import chain and explicit user-facing purpose are verified. #1557 remains independent. No merge, release authorization, scientific N increase, or High Assurance promotion.
