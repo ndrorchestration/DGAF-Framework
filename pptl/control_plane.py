@@ -12,7 +12,12 @@ from .branch_registry import BranchRecord, BranchRegistry
 from .budget_ledger import BudgetExceeded, BudgetLedger, Consumption
 from .governance_envelope import GovernanceEnvelope, ResourceBudget
 from .state_identity import StateRegistry
-from .triadic_governance_loop import GateRecord, GateResult, TriadicGovernanceLoop, TurnAuditRecord
+from .triadic_governance_loop import (
+    GateRecord,
+    GateResult,
+    TriadicGovernanceLoop,
+    TurnAuditRecord,
+)
 
 
 class TaskState(str, Enum):
