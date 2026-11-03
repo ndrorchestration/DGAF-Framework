@@ -5,6 +5,9 @@ on:
     paths:
       - 'app/**'
       - 'pages/api/**'
+      - 'dashboard/**'
+      - 'tests/orchestrate-presentation.test.mjs'
+      - 'tests/orchestrate-confidence-segments.test.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/ui-command-center-validation.yml'
@@ -29,5 +32,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Run UI semantic and contract tests
         run: npm run test:ui
+      - name: Verify dashboard presentation and evidence-gap semantics
+        run: node --test tests/orchestrate-presentation.test.mjs tests/orchestrate-confidence-segments.test.mjs
       - name: Build production application
         run: npm run build
