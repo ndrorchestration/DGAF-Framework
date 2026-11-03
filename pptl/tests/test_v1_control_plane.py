@@ -40,6 +40,7 @@ def tgl_result(status: str, input_text: str = "input") -> TurnAuditRecord:
     audit.seal()
     return audit
 
+
 def budget(**overrides):
     values = dict(
         max_input_tokens=100,
