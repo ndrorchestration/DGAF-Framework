@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from enum import Enum
 from types import MappingProxyType
@@ -11,7 +12,7 @@ from .branch_registry import BranchRecord, BranchRegistry
 from .budget_ledger import BudgetExceeded, BudgetLedger, Consumption
 from .governance_envelope import GovernanceEnvelope, ResourceBudget
 from .state_identity import StateRegistry
-from .triadic_governance_loop import TurnAuditRecord
+from .triadic_governance_loop import GateRecord, GateResult, TriadicGovernanceLoop, TurnAuditRecord
 
 
 class TaskState(str, Enum):
@@ -277,6 +278,28 @@ class ControlPlane:
         self._transition(task, TaskState.EVALUATING)
         self._set_runtime(task, reset_tgl=True)
 
+    @staticmethod
+    def _valid_tgl_pass_evidence(audit: TurnAuditRecord, input_text: str) -> bool:
+        """A seal alone proves byte consistency, not that a PASS ran the canonical gates."""
+        if audit.input_hash != hashlib.sha256(input_text.encode("utf-8")).hexdigest():
+            return False
+        if not isinstance(audit.gate_records, list):
+            return False
+        manifest = TriadicGovernanceLoop.GATE_MANIFEST
+        if len(audit.gate_records) != len(manifest):
+            return False
+        for record, (step, pattern, name) in zip(audit.gate_records, manifest):
+            if not isinstance(record, GateRecord):
+                return False
+            if (record.step, record.pattern, record.gate_name) != (step, pattern, name):
+                return False
+            if record.result not in (GateResult.PASS, GateResult.SKIP):
+                return False
+            if step == 0 or step in TriadicGovernanceLoop.REQUIRED_STEPS:
+                if record.result is not GateResult.PASS:
+                    return False
+        return True
+
     def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
         if self._tgl_runner is None:
             raise ControlPlaneViolation("no TGL runner configured")
@@ -295,6 +318,10 @@ class ControlPlane:
             self._set_runtime(task, reset_tgl=True)
             self._escalate(task, "TGL result lacks a valid cryptographic seal")
             raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
+        if status == "PASS" and not self._valid_tgl_pass_evidence(result, input_text):
+            self._set_runtime(task, reset_tgl=True)
+            self._escalate(task, "TGL PASS evidence does not match input and canonical gate manifest")
+            raise ControlPlaneViolation("TGL PASS evidence is incomplete or inconsistent")
         seal = result.seal_hash
         self._set_runtime(task, tgl_status=status, tgl_seal=seal)
         self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
