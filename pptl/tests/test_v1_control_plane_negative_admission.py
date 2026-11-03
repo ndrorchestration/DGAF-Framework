@@ -1,8 +1,8 @@
 """Characterization-only negative tests for control-plane TGL evidence admission.
 
-These tests intentionally describe the desired fail-closed boundary. They are
-expected to FAIL against the 2026-11-03 main baseline. No production behavior,
-candidate, custody, or scientific artifact is modified by this test file.
+The three original negative tests establish the fail-closed boundary and are
+expected RED on the 2026-11-03 main baseline. Additional scenarios exercise
+the remediation candidate. This file does not modify production behavior.
 """
 
 from __future__ import annotations
@@ -66,16 +66,20 @@ def _must_not_advance(audit: TurnAuditRecord, input_text: str = "expected input"
 
 def test_sealed_pass_with_missing_required_gates_cannot_advance() -> None:
     """A valid SHA-256 seal is not evidence that required gates ran."""
-    _must_not_advance(_audit("expected input", [
-        GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS),
-    ]))
+    _must_not_advance(
+        _audit(
+            "expected input",
+            [
+                GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS),
+            ],
+        )
+    )
 
 
 def test_sealed_pass_with_mismatched_input_hash_cannot_advance() -> None:
     """A valid seal for another input must not authorize this evaluation."""
     gates = [
-        GateRecord(step, pattern, name, GateResult.PASS)
-        for step, pattern, name in TriadicGovernanceLoop.GATE_MANIFEST
+        GateRecord(step, pattern, name, GateResult.PASS) for step, pattern, name in TriadicGovernanceLoop.GATE_MANIFEST
     ]
     _must_not_advance(_audit("different input", gates), "expected input")
 
@@ -83,8 +87,7 @@ def test_sealed_pass_with_mismatched_input_hash_cannot_advance() -> None:
 def test_sealed_pass_with_duplicate_required_gate_cannot_advance() -> None:
     """Duplicated gate records must not substitute for a valid unique manifest."""
     gates = [
-        GateRecord(step, pattern, name, GateResult.PASS)
-        for step, pattern, name in TriadicGovernanceLoop.GATE_MANIFEST
+        GateRecord(step, pattern, name, GateResult.PASS) for step, pattern, name in TriadicGovernanceLoop.GATE_MANIFEST
     ]
     gates.append(GateRecord(1, "P-31", "SCPE_Prune", GateResult.PASS))
     _must_not_advance(_audit("expected input", gates))
@@ -93,8 +96,7 @@ def test_sealed_pass_with_duplicate_required_gate_cannot_advance() -> None:
 def test_out_of_order_gate_manifest_cannot_advance() -> None:
     """A valid seal must not permit reordered gate identities."""
     gates = [
-        GateRecord(step, pattern, name, GateResult.PASS)
-        for step, pattern, name in TriadicGovernanceLoop.GATE_MANIFEST
+        GateRecord(step, pattern, name, GateResult.PASS) for step, pattern, name in TriadicGovernanceLoop.GATE_MANIFEST
     ]
     gates[2], gates[3] = gates[3], gates[2]
     _must_not_advance(_audit("expected input", gates))
