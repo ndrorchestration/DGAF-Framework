@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from types import SimpleNamespace
 
 import pytest
@@ -14,6 +15,7 @@ from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.triadic_governance_loop import (
     GateRecord,
     GateResult,
+    TriadicGovernanceLoop,
     TurnAuditRecord,
     TurnStatus,
 )
@@ -49,8 +51,11 @@ def _sealed_audit(status: TurnStatus = TurnStatus.PASS) -> TurnAuditRecord:
         session_id="session-1",
         turn_index=1,
         agent_id="agent-1",
-        input_hash="a" * 64,
-        gate_records=[GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS)],
+        input_hash=hashlib.sha256(b"input").hexdigest(),
+        gate_records=[
+            GateRecord(step, pattern, name, GateResult.PASS)
+            for step, pattern, name in TriadicGovernanceLoop.GATE_MANIFEST
+        ],
         final_status=status,
         timestamp="2026-09-17T00:00:00+00:00",
     )
