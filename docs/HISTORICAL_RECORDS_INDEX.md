@@ -76,7 +76,7 @@ The migrated chronology below is preserved for **event-time provenance**. Descri
 
 ### Selected historical engineering milestones
 
-The following bullets are selected historical engineering milestones, not a complete list of current work. For the live gate and evidence state, use [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md); exact current protected-main identity is a Git fact and must be read at use time:
+The following bullets are selected historical engineering milestones, not a complete list of current work. For the live gate and evidence state, use [`docs/CURRENT_STATE.md`](CURRENT_STATE.md); exact current protected-main identity is a Git fact and must be read at use time:
 
 - **Decision Frontier — PR #776** is merged as a presentation-only Semantic Control Field component derived from canonical governance state.
 - **Governance Map — PR #779** is merged and renders ordered escalation, explicitly named lateral relationships, and global field constraints without creating a second state engine.
