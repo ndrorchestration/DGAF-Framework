@@ -9,7 +9,7 @@
 | Level | Meaning | Reasonable claim | Claim not justified by the level alone |
 | --- | --- | --- | --- |
 | **Concept / proposal** | Specified model, diagram, contract, or unmerged draft | A proposed design exists | The design works in deployed software |
-| **Source / reference implementation** | Real implementation code available for inspection | The code implements described paths | All paths are secure or production-ready |
+| **Source / reference implementation** | Real implementation code available for inspection | The code implements described paths | That every path is secure across deployments |
 | **Bounded same-system test** | Tests or demonstrations run under project/owner control | Covered behavior was observed in an exact scope | Independent verification or general efficacy |
 | **Replay / simulated projection** | Retained fixture or model illustrates a flow | The modeled or historical relationship can be inspected | Live cross-system execution |
 | **Locally executed experiment** | Real experiment or locked analysis performed in controlled scope | That exact event occurred under recorded custody | Independent replication, canonical efficacy, or High-Assurance N increment |
