@@ -95,6 +95,8 @@ See [comparative controller #1061](https://github.com/ndrorchestration/DGAF-Fram
 
 The successor **Track A Epoch 002** completed a governed prospective collection and local locked primary analysis. Its interpretation and post-interpretation disposition are accepted **only for the exact preregistered, same-system/nonindependent scope**. This does not establish independent validation or canonical DGAF efficacy. An earlier Epoch 001 collected blinded data but could not complete its primary analysis because its protected treatment mapping became cryptographically unrecoverable. The successor made recoverable custody an explicit prerequisite.
 
+The accepted AOSS Stage-A **historical independent-review handoff [#928](https://github.com/ndrorchestration/DGAF-Framework/pull/928)** and **current evaluated-implementation identity addendum [#1354](https://github.com/ndrorchestration/DGAF-Framework/pull/1354)** are review-preparation artifacts, **not executed independent review**. Issue [#929](https://github.com/ndrorchestration/DGAF-Framework/issues/929) still controls an actual external evidence return.
+
 Detailed experimental units, the custody failure, the successor lifecycle, other tracks, and DGAF-on-DGAF self-testing are explained in the [research program explainer](docs/RESEARCH_PROGRAM_EXPLAINER.md). The **50 paired seeds** and **2,250 observations** in Track A are not a promotion of the separately governed canonical High-Assurance **empirical N**.
 
 ## Current research, validation, and release boundaries
