@@ -1,0 +1,183 @@
+name: Gate 0 MessagePack Python 3.10 Split-Auditor Research
+
+# Research PR stacked on the patched-MessagePack dependency proof, never main.
+on:
+  pull_request:
+    branches:
+      - proof/msgpack-1-2-3-security-delta-20261107
+    paths:
+      - '.github/workflows/gate0-msgpack-py310-split-auditor.yml'
+      - 'scripts/proof_py310_audit_isolation.py'
+      - 'scripts/proof_py310_msgpack_regression_classifier.py'
+      - 'tests/test_py310_msgpack_isolation_guard.py'
+
+permissions:
+  contents: read
+
+jobs:
+  split-auditor-diagnostic:
+    name: Non-waived split scanner and original Python 3.10 regression (research only)
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact research head and full provenance
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Prove exact head and unpromoted scientific boundary
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          test "$(git rev-parse HEAD)" != '1a95b94332dffb404c5a3ce026d70781a8c10b90'
+          test -e requirements-ci.txt
+          test -e scripts/proof_py310_audit_isolation.py
+
+      - name: Select original Python 3.10 workload target
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.10'
+
+      - name: Bootstrap exact pip for original 3.10 resolver
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/bootstrap_ci_pip.sh
+
+      - name: Resolve complete Python 3.10 scanner-free workload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/proof_py310_audit_isolation.py source
+          python -m pip install --disable-pip-version-check --dry-run --ignore-installed \
+            --only-binary=:all: --report py310-isolated-resolver-report.json \
+            -r py310-isolated-workload-requirements.txt
+          python scripts/proof_py310_audit_isolation.py lock
+
+      - name: Verify complete hashed workload and scanner separation in fresh Python 3.10 venv
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv .py310-workload
+          source .py310-workload/bin/activate
+          bash scripts/bootstrap_ci_pip.sh
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: \
+            -r py310-isolated-workload-hash.lock
+          python -m pip check
+          python -m pip freeze --all | sort > py310-isolated-workload-freeze.txt
+          python - <<'PY'
+          import importlib.metadata as m
+          for package in ('pip-audit', 'filelock'):
+              try:
+                  m.version(package)
+              except m.PackageNotFoundError:
+                  continue
+              raise AssertionError('unexpected scanner-only dependency in Python 3.10: ' + package)
+          assert m.version('msgpack') == '1.2.3'
+          import black, pytest, pydantic, mypy, isort
+          print('PY310_PATCHED_MSGPACK_SCANNER_FREE_WORKLOAD_PASS')
+          PY
+          python -m pytest tests/test_py310_msgpack_isolation_guard.py -q
+
+      - name: Download fresh exact-source Python 3.11 auditor artifact from proof PR 1565
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ci-hash-lock-proof-py3.11-039f022baeb45ac37160d72300a24694415debaf
+          run-id: 42426189396
+          github-token: ${{ github.token }}
+          path: .py311-auditor-proof
+
+      - name: Verify current resolved auditor lock and source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s .py311-auditor-proof/requirements-ci-py311-ubuntu2404-x64.lock
+          test -s .py311-auditor-proof/ci-lock-manifest.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path('.py311-auditor-proof')
+          lock = root / 'requirements-ci-py311-ubuntu2404-x64.lock'
+          manifest = json.loads((root / 'ci-lock-manifest.json').read_text())
+          expected_source = '1b578f3560c3f2465ffb9c535ffcd8d99183127574ffc857b2735e4bd0b99801'
+          expected_lock = 'b2c5e3eae4c139106e018ed8a77a70b51cc3d3f5bb3867ddf90e18a33e15d20e'
+          digest = lambda x: hashlib.sha256(x.read_bytes()).hexdigest()
+          assert digest(Path('requirements-ci.txt')) == expected_source
+          assert manifest['source_sha256'] == expected_source
+          assert manifest['lock_sha256'] == expected_lock
+          assert manifest['python_minor'] == '3.11'
+          assert manifest['resolved_package_count'] > 0
+          assert digest(lock) == expected_lock
+          assert 'msgpack==1.2.3' in lock.read_text()
+          print('PINNED_20261107_AUDITOR_ARTIFACT_SHA256_PASS', expected_lock)
+          PY
+
+      - name: Select separate Python 3.11 auditor environment
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.11'
+
+      - name: Non-waived auditor self-scan and complete hashed Python 3.10 workload scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv .py311-auditor
+          source .py311-auditor/bin/activate
+          bash scripts/bootstrap_ci_pip.sh
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: \
+            -r .py311-auditor-proof/requirements-ci-py311-ubuntu2404-x64.lock
+          python -m pip check
+          python -m pip_audit --local
+          python -m pip_audit --require-hashes --disable-pip \
+            -r py310-isolated-workload-hash.lock --format=json \
+            --output py310-isolated-audit.json --progress-spinner=off
+          python scripts/proof_py310_audit_isolation.py verify
+
+      - name: Run full original Python 3.10 tests without suppressing canonical lock failures
+        shell: bash
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          test "$(.py310-workload/bin/python -c 'import sys;print(sys.version_info.minor)')" = '10'
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          set +e
+          .py310-workload/bin/python -m pytest tests/ \
+            --cov=components --cov-report=term-missing --cov-fail-under=0 \
+            --timeout=30 --tb=short -q \
+            --junitxml=py310-isolated-repository-pytest.junit.xml \
+            2>&1 | tee py310-isolated-repository-pytest.log
+          status=${PIPESTATUS[0]}
+          set -e
+          printf 'pytest_exit_code=%s\n' "$status" > py310-isolated-repository-pytest.status
+          .py310-workload/bin/python scripts/proof_py310_msgpack_regression_classifier.py
+          # The canonical main-bound hash-lock contract is expected to remain red.
+          # This job MUST retain the original pytest exit code.
+          exit "$status"
+
+      - name: Preserve exact bounded proof data even on failing security or canonical tests
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gate0-msgpack-py310-split-auditor-${{ github.event.pull_request.head.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            py310-isolated-workload-requirements.txt
+            py310-isolated-resolver-report.json
+            py310-isolated-workload-hash.lock
+            py310-isolated-manifest.json
+            py310-isolated-workload-freeze.txt
+            py310-isolated-audit.json
+            py310-isolated-repository-pytest.log
+            py310-isolated-repository-pytest.status
+            py310-isolated-repository-pytest.junit.xml
+            py310-isolated-regression-classification.json
