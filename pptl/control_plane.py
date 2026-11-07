@@ -256,20 +256,31 @@ class ControlPlane:
         if task.depth >= task.envelope.budget.max_depth:
             self._escalate(task, "maximum recursion depth reached")
             return
-        if self._lineage_active.get(lineage, 0) >= self._lineage_limits[lineage]:
+        # A task retains its one slot while evaluating. Re-expansion consumes
+        # another round/node but must not claim a second task or lineage slot.
+        already_acquired = task.concurrency_acquired
+        if not already_acquired and self._lineage_active.get(lineage, 0) >= self._lineage_limits[lineage]:
             self._escalate(task, "active concurrency limit reached")
             return
         try:
-            self._ledgers[task_id].acquire_concurrency()
+            if not already_acquired:
+                self._ledgers[task_id].acquire_concurrency()
             self._ledgers[task_id].consume(Consumption(rounds=1, nodes=1))
         except BudgetExceeded as exc:
-            if self._ledgers[task_id].active_concurrency:
+            if not already_acquired and self._ledgers[task_id].active_concurrency:
                 self._ledgers[task_id].release_concurrency()
             self._events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
             self._escalate(task, str(exc))
             return
-        self._lineage_active[lineage] = self._lineage_active.get(lineage, 0) + 1
-        self._set_runtime(task, concurrency=True)
+        except Exception as exc:
+            if not already_acquired and self._ledgers[task_id].active_concurrency:
+                self._ledgers[task_id].release_concurrency()
+            self._events.append({"event": "EXPANSION_FAILURE", "task_id": task_id, "reason": str(exc)})
+            self._escalate(task, "unexpected expansion accounting failure")
+            raise ControlPlaneViolation("expansion accounting failed; task escalated") from exc
+        if not already_acquired:
+            self._lineage_active[lineage] = self._lineage_active.get(lineage, 0) + 1
+            self._set_runtime(task, concurrency=True)
         self._transition(task, TaskState.EXPANDING)
 
     def begin_evaluation(self, task_id: str) -> None:
