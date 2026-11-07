@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/gate0-msgpack-py310-split-auditor.yml'
       - 'scripts/proof_py310_audit_isolation.py'
+      - 'scripts/proof_py310_msgpack_regression_classifier.py'
       - 'tests/test_py310_msgpack_isolation_guard.py'
 
 permissions:
@@ -157,6 +158,7 @@ jobs:
           status=${PIPESTATUS[0]}
           set -e
           printf 'pytest_exit_code=%s\n' "$status" > py310-isolated-repository-pytest.status
+          .py310-workload/bin/python scripts/proof_py310_msgpack_regression_classifier.py
           # The canonical main-bound hash-lock contract is expected to remain red.
           # This job MUST retain the original pytest exit code.
           exit "$status"
@@ -178,3 +180,4 @@ jobs:
             py310-isolated-repository-pytest.log
             py310-isolated-repository-pytest.status
             py310-isolated-repository-pytest.junit.xml
+            py310-isolated-regression-classification.json
