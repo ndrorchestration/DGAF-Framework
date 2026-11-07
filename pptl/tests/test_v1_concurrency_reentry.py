@@ -6,9 +6,16 @@ candidate is affected. A task owns at most one concurrency slot across cycles.
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
-from pptl.control_plane import ControlPlane, ControlPlaneViolation, ControlTask, TaskState
+from pptl.control_plane import (
+    ControlPlane,
+    ControlPlaneViolation,
+    ControlTask,
+    TaskState,
+)
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 
 
@@ -126,10 +133,49 @@ def test_reentry_does_not_bypass_shared_lineage_limit_for_other_task() -> None:
     plane.terminate("second")
 
 
-def test_unexpected_ledger_exception_fails_closed_without_slot_leak(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_narrow_child_budget_reentry_does_not_double_release_on_escalation() -> None:
+    """A child may have a one-slot ledger under a two-slot parent lineage."""
+    plane = ControlPlane()
+    parent = _task(max_concurrency=2)
+    _admit(plane, parent)
+    child = plane.create_child(
+        "root",
+        task_id="child",
+        trace_id="child-trace",
+        authority_scope={"research"},
+        permitted_tools={"read"},
+        data_classes={"public"},
+        envelope_budget=replace(parent.envelope.budget, max_concurrency=1),
+    )
+    plane.admit("child")
+    plane.start_expansion("child")
+    plane.begin_evaluation("child")
+    plane.start_expansion("child")
+
+    assert child.state is TaskState.EXPANDING
+    assert plane.ledgers["child"].active_concurrency == 1
+    assert plane._lineage_active["synthetic-lineage"] == 1
+    assert plane.ledgers["child"].consumed.rounds == 2
+
+    plane.veto("child", "synthetic child veto")
+    assert child.state is TaskState.ESCALATED
+    assert plane.ledgers["child"].active_concurrency == 0
+    assert plane._lineage_active["synthetic-lineage"] == 0
+    plane.terminate("child")
+    plane.terminate("root")
+    assert plane._lineage_active["synthetic-lineage"] == 0
+
+
+@pytest.mark.parametrize("already_active", (False, True))
+def test_unexpected_ledger_exception_fails_closed_without_slot_leak(
+    monkeypatch: pytest.MonkeyPatch, already_active: bool
+) -> None:
     plane = ControlPlane()
     task = _task()
     _admit(plane, task)
+    if already_active:
+        plane.start_expansion("root")
+        plane.begin_evaluation("root")
 
     def fail_consume(_amount: object) -> None:
         raise RuntimeError("synthetic ledger exception")
