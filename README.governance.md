@@ -8,6 +8,12 @@
 
 ---
 
+## Orientation: governance controls versus established assurance
+
+The [public README](README.md) introduces evidence-versus-permission in one concrete action. For a maturity-based inventory of what is implemented, locally tested, replay-only, or unverified, see the [prototype maturity map](docs/PROTOTYPE_MATURITY_MAP.md). For the meaning of 50 paired seeds, 2,250 observations, canonical scientific N=0, and same-system interpretation, use the [research explainer](docs/RESEARCH_PROGRAM_EXPLAINER.md).
+
+**Release and validation are separate:** DGAF v1 is on [Gate 0 HOLD (#1421)](https://github.com/ndrorchestration/DGAF-Framework/issues/1421), while [#929](https://github.com/ndrorchestration/DGAF-Framework/issues/929), [#1067](https://github.com/ndrorchestration/DGAF-Framework/issues/1067), and [#1210](https://github.com/ndrorchestration/DGAF-Framework/issues/1210) control distinct external-review, comparator-reproduction, and outside-operator gates. A conceptual standards mapping does **not** establish certification or regulatory compliance.
+
 ## Scope and Evidence Boundary
 
 The **Dynamic Governance Agentic Formation (DGAF)** is a structured multi-agent governance research and implementation framework. The repository contains governance specifications, selected executable controls, CI gates, role/authority contracts, audit records, evidence/provenance mechanisms, presentation-layer governance projections, and a bounded machine-readable recurring-assurance catalog.
