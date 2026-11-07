@@ -1,6 +1,6 @@
 # DGAF — Dynamic Governance Agentic Formation
 
-**Evidence-bound governance and assurance for agentic AI systems**
+Evidence-bound governance and assurance for agentic AI systems.
 
 DGAF is an **experimental research and engineering framework** for controlling what AI agents may do, what evidence supports their decisions, and which conclusions that evidence can legitimately support.
 
@@ -81,7 +81,7 @@ The accompanying **DGAF-to-ACP cross-system trace is replay-only**. It explains 
 
 The repository contains governance and orchestration components, provenance and source-binding machinery, deterministic validation and negative controls, CI, experimental and blinded-data infrastructure, bounded capability-governance reference implementations, an operator-facing Governance Command Center, and a partial assurance catalog.
 
-These artifacts have **different maturity and evidence classes**. A passing source test, a runnable demonstration, a simulated or replayed trace, an executed local experiment, and independent verification are not interchangeable. Consult the [prototype maturity map](docs/PROTOTYPE_MATURITY_MAP.md) before interpreting a capability as production-ready.
+These artifacts have **different maturity and evidence classes**. A passing source test, a runnable demonstration, a simulated or replayed trace, an executed local experiment, and independent verification are not interchangeable. Consult the [prototype maturity map](docs/PROTOTYPE_MATURITY_MAP.md) before interpreting a capability as suitable for operational deployment.
 
 ### The conventional-policy comparison
 
