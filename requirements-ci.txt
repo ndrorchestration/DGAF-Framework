@@ -15,5 +15,6 @@ jsonschema==4.26.0
 setuptools==84.2.1
 bandit==1.9.4
 pip-audit==2.10.1
+msgpack==1.2.3
 pip==26.2.1
 certifi==2026.10.23
