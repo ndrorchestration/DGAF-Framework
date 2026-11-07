@@ -45,13 +45,11 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Validate source and fail-closed guard tests
+      - name: Bootstrap exact pip for original 3.10 resolver
         shell: bash
         run: |
           set -euo pipefail
           bash scripts/bootstrap_ci_pip.sh
-          python -m pip install --disable-pip-version-check 'pytest==9.1.1'
-          python -m pytest tests/test_py310_msgpack_isolation_guard.py -q
 
       - name: Resolve complete Python 3.10 scanner-free workload
         shell: bash
@@ -86,6 +84,7 @@ jobs:
           import black, pytest, pydantic, mypy, isort
           print('PY310_PATCHED_MSGPACK_SCANNER_FREE_WORKLOAD_PASS')
           PY
+          python -m pytest tests/test_py310_msgpack_isolation_guard.py -q
 
       - name: Download fresh exact-source Python 3.11 auditor artifact from proof PR 1565
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
