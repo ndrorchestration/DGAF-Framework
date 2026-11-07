@@ -190,6 +190,18 @@ Issue #1210 has satisfied its trial-launch preconditions: the public packet is a
 
 No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt and creation-only interpretation note establish bounded, same-system/nonindependent interpretation; they do not establish canonical DGAF efficacy, independent validation, or High-Assurance authorization. The #1022 self-application chain through #1049 is internal same-system engineering evidence only; independent replay and external validation remain outstanding under #929.
 
+## Scoped release-readiness and prototype-limit visibility — 2026-11-06
+
+**Documentation-only reconciliation, not canonical state admission.** The `last_verified: 2026-10-15` frontmatter above is intentionally **not** advanced: the review checked the following controlling GitHub records, not every assertion, evidence hash, deployment or scientific identity in this 500+ line current-state summary. For an exact release or authorization decision, retrieve live issue status and current protected-main source identity again.
+
+- **DGAF v1 release:** [Gate 0 controller #1421](https://github.com/ndrorchestration/DGAF-Framework/issues/1421) remains open; independent acceptance and protected-main release admission are outstanding; `DGAF_V1_RELEASE=HOLD`. Engineering test successes do not substitute for the frozen release gates.
+- **Independent assessment:** [AOSS external review #929](https://github.com/ndrorchestration/DGAF-Framework/issues/929), [comparative benchmark reproduction #1067](https://github.com/ndrorchestration/DGAF-Framework/issues/1067), and [uninvolved Governed Repo operator trial #1210](https://github.com/ndrorchestration/DGAF-Framework/issues/1210) remain open. Each measures a **different** claim boundary; none silently satisfies another.
+- **Repeated-expansion accounting:** [#1548](https://github.com/ndrorchestration/DGAF-Framework/issues/1548) describes a reproduced concurrency/resource-ledger leak; [PR #1563](https://github.com/ndrorchestration/DGAF-Framework/pull/1563) proposes remediation. No claimed unauthorized effect or independent verification follows from that finding alone.
+- **Sealed PASS semantics:** [PR #1561](https://github.com/ndrorchestration/DGAF-Framework/pull/1561) characterizes insufficient negative admission checks; [PR #1562](https://github.com/ndrorchestration/DGAF-Framework/pull/1562) proposes rejection hardening. Unmerged corrections must not be treated as protected-main guarantees.
+- **Legacy API prototype:** [#1551](https://github.com/ndrorchestration/DGAF-Framework/issues/1551) records misleading approval-like `PASS` and a non-cryptographic purported seal in a legacy route; production reachability was not established. [PR #1553](https://github.com/ndrorchestration/DGAF-Framework/pull/1553) proposes fail-closed labeling/behavior.
+
+These are current-facing **issue-discovery and documentation boundaries**, not a change to frozen Track A evidence, High-Assurance status, canonical efficacy, scientific N, independent-validation predicates, Gate 0 admission, or actual deployment assurance. See the reader-focused [README](../README.md), [prototype maturity map](PROTOTYPE_MATURITY_MAP.md), and [research explainer](RESEARCH_PROGRAM_EXPLAINER.md).
+
 ## AOSS v0.6 Stage A — current execution-admission frontier
 
 Issue #901 controls the current AOSS v0.6 Stage-A execution-readiness lane. Bounded outcome collection authorization exists, but authorization and execution readiness remain separate. The accepted apparatus now covers the non-collecting engineering chain through local trust-result intake without converting evidence into execution authority.

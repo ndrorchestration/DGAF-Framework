@@ -2,6 +2,8 @@
 
 This page is the shortest path for evaluating the public DGAF proof-of-operation without first reading the full research and governance history.
 
+**Two different surfaces:** the public allowed/denied audit-counter action is an executed bounded same-system demonstration; the DGAF → ACP trace below is a **static replay fixture**, not live cross-system execution. Neither is independent validation, general production security assurance, or continuing authority. A verified receipt does not approve the next consequential action; **fresh adjudication is mandatory**.
+
 ## Open the demo
 
 **Public demo:** [Open the DGAF proof-of-operation demo](https://project-7ybao.vercel.app/demo)
