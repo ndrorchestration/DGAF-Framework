@@ -30,26 +30,26 @@ TRACK_A_EPOCH_002_MATERIALIZATION_WORKFLOW = ROOT / ".github" / "workflows" / "t
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
-EXPECTED_SOURCE_SHA256 = "9c6a5d1115cf1236c983e6f81bb51530199e22dc8da28a6574e83381c18f4054"
+EXPECTED_SOURCE_SHA256 = "71c54083bbfe492fc720a1d10269227926d1cd4ec7cfc5c0f46ce98ea53cd31b"
 EXPECTED_LOCKS = {
     "3.10": (
         ROOT / "requirements-ci-py310-ubuntu2404-x64.lock",
-        "96fa27d045c129a0b8913f078ee3c98b54f502e08321d76781334c85c2725d84",
-        "b419fa88b0eb8c367971e4955d88d0251804a69a4df98a0b46a2037192121a85",
+        "94c433176ed0b10d6b34ea349ac04f56fc6ebf6dbc237afc7c12d86214e720ca",
+        "8e755aeea828f521856320292a5494679e551f5ea48017ae943dbf8498fef952",
     ),
     "3.11": (
         ROOT / "requirements-ci-py311-ubuntu2404-x64.lock",
-        "7bb3d22e0a3f178eab0ba83746135b6b997aecfa67dd8f2a2969ed01e7f0f803",
-        "afd6f0f0940f02240a9c37210c7dc4deca4f128f11dc73c8c72b7f8f3848750d",
+        "f26dd40766f8b792b8fdfe8db4fd9e02ea3103d849e83c768758dca53bf31065",
+        "b88eb9fedae08705492fcdb052d10317db079f0f8945d202874cea1bde742482",
     ),
     "3.12": (
         ROOT / "requirements-ci-py312-ubuntu2404-x64.lock",
-        "a718c6c6c1f58937829038867492323a756e3f38d5f567b9de0b46771ef98e17",
-        "3d1a223f0f15c4aacfe0799a1789e1ed9ef2596b5ff6b44efb17fc9a3139ed68",
+        "7d518736493f261966c5b39b7ecce0fe6bf3c81b797dc667d3fce4c265c28f05",
+        "229bd468723ad5d6d001f0b1109ebc68e8916e9b476016f70163b9736e7920d9",
     ),
 }
-CONTROL_PLANE_LOCK_SHA256 = "923abb7986896653e85cbe3cb52af2f5ae6e5690fe029d57fb872b290687a2be"
-CONTROL_PLANE_RESOLVED_SET_SHA256 = "06b4d7fd3ccfcac2be8bc6fe0ff8b54da9cd2e60c45736d2aa99de362972577f"
+CONTROL_PLANE_LOCK_SHA256 = "f3ab0b096d3c6cec1cabe69664c01fc2c3d05795f9c2dead1ef0e28fd0e19065"
+CONTROL_PLANE_RESOLVED_SET_SHA256 = "f1e5f7d5c1f67c016915ed9a9307f7a8fe10233fc1aea6151f8ecfceb66e94e8"
 CONTROL_PLANE_OVERLAY_SHA256 = "0f7011f8e062802ab40c0bcfa852c079b99f0097f1a3ea085d2eacfef42263f9"
 PIP_WHEEL_SHA256 = "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"
 PIN_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([^\s\\]+)(?:\s+\\)?$")
@@ -69,9 +69,16 @@ def direct_pins() -> dict[str, str]:
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
+        # This exact PEP 508 marker means the scanner remains mandatory for
+        # Python 3.11/3.12 but is absent from the Python 3.10 workload lock.
+        if line.startswith("pip-audit=="):
+            assert line == 'pip-audit==2.10.1 ; python_version >= "3.11"', line
+            line = "pip-audit==2.10.1"
         match = PIN_RE.fullmatch(line)
         assert match, line
-        pins[canonical(match.group(1))] = match.group(2)
+        name = canonical(match.group(1))
+        assert name not in pins, "duplicate direct CI requirement"
+        pins[name] = match.group(2)
     return pins
 
 
@@ -112,12 +119,37 @@ def test_source_and_canonical_lock_identities_are_bound() -> None:
 
 def test_every_direct_ci_pin_is_exactly_represented_in_every_lock() -> None:
     direct = direct_pins()
-    assert len(direct) == 16
-    for path, _, _ in EXPECTED_LOCKS.values():
+    assert len(direct) == 18
+    assert direct["pip-audit"] == "2.10.1"
+    assert direct["msgpack"] == "1.2.3"
+    assert direct["requests"] == "2.34.2"
+    for minor, (path, _, _) in EXPECTED_LOCKS.items():
         locked = lock_pins(path)
         for name, version in direct.items():
-            assert name in locked
-            assert locked[name][0] == version
+            if minor == "3.10" and name == "pip-audit":
+                assert "pip-audit" not in locked
+                assert "filelock" not in locked
+                continue
+            assert name in locked, (minor, name)
+            assert locked[name][0] == version, (minor, name, version)
+        if minor in ("3.11", "3.12"):
+            assert locked["filelock"][0] == "4.2.9"
+    assert direct["pip-audit"] == "2.10.1"
+
+
+def test_scanner_python_marker_is_exact_and_required_security_job_is_unchanged() -> None:
+    source = SOURCE.read_text(encoding="utf-8")
+    marker = 'pip-audit==2.10.1 ; python_version >= "3.11"'
+    assert source.splitlines().count(marker) == 1
+    assert "pip-audit==2.10.1\n" not in source
+    assert "requests==2.34.2\n" in source
+    assert "msgpack==1.2.3\n" in source
+
+    security = WORKFLOW.read_text(encoding="utf-8").split("  security-scan:", 1)[1]
+    assert "python-version: '3.11'" in security
+    assert "requirements-ci-py311-ubuntu2404-x64.lock" in security
+    assert "python -m pip_audit --local --format=json --output pip-audit-report.json" in security
+    assert "continue-on-error: true" not in security
 
 
 def test_every_lock_requirement_is_hash_bound() -> None:
