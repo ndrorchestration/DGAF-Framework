@@ -1,6 +1,6 @@
 """Non-admitting classifier of the whole Python 3.10 source-locked test result.
 
-Only the two expected *unmodified* canonical source/hash-lock contract failures
+Only the two expected *unmodified* inherited research-branch source/hash-lock contract failures
 may appear. This classification NEVER changes the original failing pytest
 exit status. All evidence remains research-only.
 """
@@ -13,9 +13,9 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 SOURCE_SHA256 = "71c54083bbfe492fc720a1d10269227926d1cd4ec7cfc5c0f46ce98ea53cd31b"
-KNOWN_CONTRACT_SHA256 = "1abada5e8dabbcb6706e33c5b5dfa30c45b784e8b9a9b18166a52562b5c3dfa9"
+KNOWN_CONTRACT_SHA256 = "be5239699db277731960d7336a8fbdb9c72bb31a39a97252e50e553bb83b161a"
 EXPECTED = {
-    "test_source_and_canonical_lock_identities_are_bound": ("71c54083bbfe", "1abada5e8dabb"),
+    "test_source_and_canonical_lock_identities_are_bound": ("71c54083bbfe", "be5239699db2"),
     "test_every_direct_ci_pin_is_exactly_represented_in_every_lock": ('pip-audit==2.10.1', 'python_version'),
 }
 
