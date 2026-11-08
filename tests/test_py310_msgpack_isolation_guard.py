@@ -68,7 +68,7 @@ def test_unpatched_messagepack_is_rejected_before_resolver(tmp_path, monkeypatch
 def test_duplicate_scanner_pin_is_rejected_before_resolver(tmp_path, monkeypatch) -> None:
     source, _ = _source_workspace(tmp_path, monkeypatch)
     source.write_text(source.read_text() + "pip-audit==2.10.1\n")
-    with pytest.raises(AssertionError, match="conditional scanner pin required"):
+    with pytest.raises(AssertionError, match="unconditional scanner forbidden"):
         proof.make_source()
 
 
