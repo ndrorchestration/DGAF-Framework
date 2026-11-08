@@ -41,7 +41,7 @@ def _source_workspace(tmp_path, monkeypatch, *, msgpack: str = "1.2.3"):
         "pip==26.2.1",
         "certifi==2026.10.23",
     ]
-    source.write_text("\\n".join(lines) + "\\n", encoding="utf-8")
+    source.write_text("\n".join(lines) + "\n", encoding="utf-8")
     monkeypatch.setattr(proof, "SOURCE", source)
     monkeypatch.setattr(proof, "WORKLOAD_SOURCE", workload)
     return source, workload
@@ -53,7 +53,7 @@ def test_patched_marker_source_is_mirrored_without_rewriting_pins(tmp_path, monk
     src, candidate = source.read_text(encoding="utf-8"), workload.read_text(encoding="utf-8")
     assert src in candidate
     assert 'pip-audit==2.10.1 ; python_version >= "3.11"' in candidate
-    assert "\\npip-audit==2.10.1\\n" not in candidate
+    assert "\npip-audit==2.10.1\n" not in candidate
     assert "requests==2.34.2" in candidate
     assert "msgpack==1.2.3" in candidate
     assert "black==26.10.1" in candidate
@@ -154,7 +154,7 @@ def test_source_and_lock_tampering_is_rejected(tmp_path, monkeypatch, target: st
 
 def _classifier_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path, Path, Path, Path]:
     source = tmp_path / "requirements-ci.txt"
-    source.write_text("synthetic source for classifier only\\n", encoding="utf-8")
+    source.write_text("synthetic source for classifier only\n", encoding="utf-8")
     monkeypatch.setattr(classifier, "SOURCE_SHA256", _sha(source))
     xml = tmp_path / "full-pytest.xml"
     root = ET.Element("testsuite")
