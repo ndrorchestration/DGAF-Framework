@@ -52,7 +52,7 @@ def make_source() -> None:
     assert len(original) == 18, ("unexpected marker-source direct pin inventory", len(original))
     # Only add a comment. The Python 3.10 resolver itself enforces the marker.
     WORKLOAD_SOURCE.write_text(
-        "# RESEARCH MIRROR ONLY: marker-aware source unchanged; no skipped auditor override.\\n"
+        "# RESEARCH MIRROR ONLY: marker-aware source unchanged; no skipped auditor override.\n"
         + source, encoding="utf-8"
     )
     print(json.dumps({
