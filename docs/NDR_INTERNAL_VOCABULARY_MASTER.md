@@ -200,7 +200,7 @@ The following examples remain `UNSUPPORTED`, `HISTORICAL`, or `ATTESTED` unless 
 ### Mathematical correction boundary
 
 - The historical wording `55/89 ≈ 1.61818` is incorrect as written. `89/55` is the Fibonacci ratio above 1 that approximates the golden ratio.
-- The user-defined **Platinum Mean** `pP = 1/(2 sin(π/11)) ≈ 1.774732842` is distinct from the **plastic constant** `ρ ≈ 1.3247179572447454`.
+- The user-defined **Platinum Mean** `pP = 1/(2 sin(π/11)) ≈ 1.7747327664` is distinct from the **plastic constant** `ρ ≈ 1.3247179572447454`.
 - PDMAL's accepted formalization uses the plastic constant within its own scope and must not inherit historical 1.7747/plastic-constant conflation.
 
 ## 2026-09-09 brainstorm-corpus reconciliation — Batch 2 delta
