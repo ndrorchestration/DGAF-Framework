@@ -1,0 +1,60 @@
+name: Dependency impact read-only source verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/dependency-impact-readonly.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify source identities and emit bounded report
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, re, subprocess
+          root=pathlib.Path('.')
+          expected={
+            'registry/agent_ontology_adjudication.v1.json':'dc33e6cf670092be9ceb4ca80082ed2ba585088c',
+            'docs/agents/AGENT_ROSTER.md':'39e10ab78bda04a59e85b4a52e8d01b9a1dccf70',
+            'docs/agents/FORMATION_TOPOLOGY.md':'707a75b6dbf042346c4dcc95b02775cc9c63e10d',
+            'docs/agents/reson/RESON_KB_AMENDMENT.md':'4c76a38fa497824ae065f14bc3eb64ba90c5b5b2',
+            'docs/agents/lyra/LYRA_KB_AMENDMENT.md':'fb0670c225736c86ccd715552bb332796da479dc',
+            'docs/agents/echolette/ECHOLETTE_KB_AMENDMENT.md':'a9bb4023aae93f2e5e2d6421e7d3ff3702ac6116',
+            'pptl/topology.py':'234e9ca3de5c411ca054253f08bf25693e48c391'
+          }
+          findings=[]
+          for path,sha in sorted(expected.items()):
+            if not (root/path).is_file(): raise SystemExit('MISSING_SOURCE: '+path)
+            actual=subprocess.check_output(['git','hash-object','--',path],text=True).strip()
+            if actual!=sha: raise SystemExit('PIN_MISMATCH: '+path+' expected='+sha+' actual='+actual)
+          ontology=json.loads((root/'registry/agent_ontology_adjudication.v1.json').read_text())
+          seats=ontology['canonical_seats']
+          roster=(root/'docs/agents/AGENT_ROSTER.md').read_text()
+          topology=(root/'docs/agents/FORMATION_TOPOLOGY.md').read_text()
+          for name in ('reson','lyra','echolette'):
+            seat=seats['agent.'+name]
+            if not re.search(r'\|\s*\*\*Agent '+name+r'\*\*\s*\|\s*'+re.escape(seat)+r'\s*\|',roster,re.I):
+              raise SystemExit('SOVEREIGN_SOURCE_DISAGREEMENT: '+name)
+            kbpath='docs/agents/'+name+'/'+name.upper()+'_KB_AMENDMENT.md'
+            kb=(root/kbpath).read_text()
+            ids=re.findall(r'^\*\*Agent ID:\*\*\s*(A-[\w-]+)',kb,re.M)
+            status='UNKNOWN' if len(ids)!=1 else ('MATCH' if ids[0]==seat else 'HEADER_DIFFERS_FROM_SOVEREIGN')
+            local=ontology['formation_local_designations'].get('agent.'+name,[])
+            local_status='LOCAL_DESIGNATION_PRESENT' if any(('local:'+x) in topology for x in local) else 'UNKNOWN'
+            findings.append({'agent':name,'kb_path':kbpath,'header_ids':ids,'sovereign_seat':seat,'header_status':status,'topology_status':local_status,'requires_human_review':True})
+          report={'schema':'dgaf-dependency-impact-readonly-v0','source_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'expected_blobs':expected,'findings':findings,'authority_effect':'NONE','scientific_state_effect':'NONE','independent_validation':'NOT_ESTABLISHED'}
+          pathlib.Path('dependency-impact-report.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+          print(json.dumps({'status':'REPORT_CREATED','findings':len(findings),'report_sha256':hashlib.sha256(pathlib.Path('dependency-impact-report.json').read_bytes()).hexdigest()},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-impact-readonly-report
+          path: dependency-impact-report.json
+          if-no-files-found: ignore
