@@ -52,7 +52,7 @@ These terms are governed here because they have repeatedly appeared near acronym
 | **ontic** | External established term | Concerns what exists or is actually the case. Optional analytical lens; not a substitute for explicit operational predicates. |
 | **epistemic** | Canonical DGAF evidence term | Use for justification, support, uncertainty, provenance, and claim status. |
 | **neontic** | External specialist term / rejected DGAF coinage | Existing specialist usage includes modern/extant meanings. Do not coin it as a DGAF emergence label; use explicit terms such as `emergent behavior`, `adaptive behavior`, or a defined transition predicate. |
-| **pP / Platinum Mean** | Project-defined mathematical notation/name | `pP = 1/(2 sin(pi/11)) ≈ 1.774732842`, the unit-side regular-hendecagon circumradius ratio. This project label does not establish any governance or efficacy property. |
+| **pP / Platinum Mean** | Project-defined mathematical notation/name | `pP = 1/(2 sin(pi/11)) ≈ 1.7747327664`, the unit-side regular-hendecagon circumradius ratio. This project label does not establish any governance or efficacy property. |
 | **ρ / plastic constant** | External standard mathematical constant | Distinct from pP: the real root of `x^3 = x + 1`, approximately `1.3247179572447454`. Never conflate it with Platinum Mean. |
 
 A memorable label, numeric coincidence, project-defined notation, or product tagline does not establish implementation, optimality, causal stability, governance efficacy, or scientific authority.
