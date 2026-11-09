@@ -8,7 +8,7 @@
 **Attestation:** Pending — Apogee P-11 review required before CANONICAL  
 **Source:** Hensel Generative Formalism · Amethyst v4.2-hensel
 
-> **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.774732842`; `ρ` is the plastic number `≈1.3247179572447454`; `ρP` is not canonical mathematical notation.
+> **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.7747327664`; `ρ` is the plastic number `≈1.3247179572447454`; `ρP` is not canonical mathematical notation.
 
 > **Epistemic boundary:** PRS is an interface/registry specification. It does not by itself establish that any tier is scientifically valid, production-ready, secure, or empirically effective.
 
@@ -71,7 +71,7 @@ def get_tier(tier_id: str) -> TierRecord:
 
 `Standard_Platinum` uses **`pP` / Platinum Mean** only as project-defined notation:
 
-`pP = 1/(2sin(π/11)) ≈ 1.774732842`
+`pP = 1/(2sin(π/11)) ≈ 1.7747327664`
 
 It is the unit-side regular-hendecagon circumradius. It is not the plastic number and is not a member of the quadratic Spinadel metallic-means family. Any historical `ρ_P` label for this value is superseded.
 
