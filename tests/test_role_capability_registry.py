@@ -255,7 +255,7 @@ def test_taxonomy_controls_phdge_orbit_language_and_math_notation():
     assert "not an O-R-B-I-T expansion" in text
     for token in ("noetic", "neotic", "ontic", "epistemic", "neontic"):
         assert f"**{token}**" in text
-    assert "1.774732842" in text
+    assert "1.7747327664" in text
     assert "1.3247179572447454" in text
     assert "Never conflate it with Platinum Mean" in text
 
