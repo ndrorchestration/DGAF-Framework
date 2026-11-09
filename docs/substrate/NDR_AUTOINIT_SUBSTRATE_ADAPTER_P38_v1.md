@@ -10,7 +10,7 @@
 
 > **Firewall rule:** Substrate plane uses AutoInit analytic gain per activation. Registry tier ratios (`pP`, `ρ`, `h`, etc.) MUST NOT enter gain computation.
 
-> **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.774732842`. `ρ` is the plastic number `≈1.3247179572447454`. `ρP` is not canonical mathematical notation.
+> **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.7747327664`. `ρ` is the plastic number `≈1.3247179572447454`. `ρP` is not canonical mathematical notation.
 
 ---
 
@@ -64,7 +64,7 @@ Historical P-38 material associated **1.7747** with a "Standard Platinum" quanti
 
 The current DGAF notation is:
 
-- **`pP` / Platinum Mean:** `1/(2sin(π/11)) ≈ 1.774732842`, a DGAF-specific geometric quantity (unit-side regular-hendecagon circumradius).
+- **`pP` / Platinum Mean:** `1/(2sin(π/11)) ≈ 1.7747327664`, a DGAF-specific geometric quantity (unit-side regular-hendecagon circumradius).
 - **`ρ` / plastic number:** `≈1.3247179572447454`, the real root of `x³ - x - 1 = 0`.
 
 A benchmark RMSE value near `1.7747`, where present in historical source material, is an empirical benchmark figure and must not be represented as the mathematical definition of `pP`, as a plastic constant, or as an analytically discovered universal initialization constant without independent evidence.
