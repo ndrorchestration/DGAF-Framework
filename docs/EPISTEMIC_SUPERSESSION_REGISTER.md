@@ -78,7 +78,7 @@ GitHub repository descriptions are a separate documentation layer from README fi
 The current mathematical-notation policy distinguishes two different quantities that must not be conflated:
 
 - **pP / Platinum Mean** — a project-defined notation for the regular-hendecagon unit-side circumradius,
-  \(pP = 1/(2\sin(\pi/11)) \approx 1.774732842\). This is intentionally retained as the project's **Platinum Mean** notation; it is not the standard plastic constant.
+  \(pP = 1/(2\sin(\pi/11)) \approx 1.7747327664\). This is intentionally retained as the project's **Platinum Mean** notation; it is not the standard plastic constant.
 - **ρP / plastic constant** — the standard mathematical constant \(\rho_P \approx 1.3247179572447454\), the real root of \(x^3=x+1\).
 
 Earlier repository material uses **1.7747 / 1.77473** under labels such as "Platinum Ratio" and, in some artifacts, assigns that value a verified mathematical role. Those references must now be classified according to the definition actually intended. Where they refer to the hendecagon circumradius, they are historical uses of the project-defined **pP / Platinum Mean**; where they incorrectly identify that value as the plastic constant or another standard mathematical constant, that claim is superseded and must not be propagated.
