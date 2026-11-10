@@ -1,4 +1,5 @@
 """AIRP B-FIXED Phase 2: bounded synthetic positive/negative tests, not agent trials."""
+
 from __future__ import annotations
 
 import base64
@@ -15,15 +16,21 @@ COUNTER = "EVID-REFERENCE-COUNTER"
 
 def cmd(op: str, args: dict, version: int = 0, branch: str = "base", request: str = "REQ-01") -> dict:
     return {
-        "op": op, "branch": branch, "expected_version": version,
-        "request_id": request, "args": args,
+        "op": op,
+        "branch": branch,
+        "expected_version": version,
+        "request_id": request,
+        "args": args,
     }
 
 
 def add(version: int = 0, branch: str = "base", request: str = "REQ-ADD") -> dict:
     return cmd(
-        "add_claim", {"claim_id": CLAIM, "proposition": "Synthetic scoped proposition."},
-        version, branch, request,
+        "add_claim",
+        {"claim_id": CLAIM, "proposition": "Synthetic scoped proposition."},
+        version,
+        branch,
+        request,
     )
 
 
@@ -54,7 +61,8 @@ def attach(version: int = 1, digest: str | None = None) -> dict:
             },
             "evidence_bytes_b64": base64.b64encode(raw).decode("ascii"),
         },
-        version, request="REQ-EVID",
+        version,
+        request="REQ-EVID",
     )
 
 
@@ -93,8 +101,10 @@ def test_preplanned_six_operation_sequence_and_non_authority() -> None:
             cmd("challenge", {"claim_id": CLAIM, "counterevidence_id": COUNTER}, 2, request="REQ-CH"),
             cmd("fork", {"new_branch": "candidate"}, 3, request="REQ-F"),
             cmd(
-                "compare", {"other_branch": "candidate", "other_version": 0},
-                3, request="REQ-CO",
+                "compare",
+                {"other_branch": "candidate", "other_version": 0},
+                3,
+                request="REQ-CO",
             ),
         ],
     }
@@ -162,9 +172,7 @@ def test_duplicate_evidence_rejected_without_partial_append() -> None:
 def test_challenge_requires_known_counterevidence() -> None:
     workflow = b.FixedWorkflow()
     workflow.execute(add())
-    result = workflow.execute(
-        cmd("challenge", {"claim_id": CLAIM, "counterevidence_id": "EVID-MISSING"}, 1)
-    )
+    result = workflow.execute(cmd("challenge", {"claim_id": CLAIM, "counterevidence_id": "EVID-MISSING"}, 1))
     assert result["status"] == "REJECTED"
     assert workflow.snapshot()["claims"][-1]["applicability_state"] == "CURRENT"
 
@@ -172,9 +180,7 @@ def test_challenge_requires_known_counterevidence() -> None:
 def test_stale_compare_and_mutation_rejected() -> None:
     workflow = b.FixedWorkflow()
     workflow.execute(add())
-    stale = workflow.execute(
-        cmd("inspect", {"attribution_observation": None}, 0, request="REQ-STALE")
-    )
+    stale = workflow.execute(cmd("inspect", {"attribution_observation": None}, 0, request="REQ-STALE"))
     assert stale["status"] == "REJECTED"
     assert "STALE" in stale["reason"]
     assert len(workflow.snapshot()["claims"]) == 2
@@ -242,17 +248,19 @@ def test_attribution_observation_is_non_verifying() -> None:
     obs = {
         "record_class": "CLAIMGRAPH_ATTRIBUTION_OBSERVATION_V0",
         "graph_id": "EGRAPH-REFERENCE-001",
-        "records": [{
-            "evidence_id": "EVID-REFERENCE-SUPPORT",
-            "attribution_source_ref": "synthetic://producer-claim",
-            "producer_class": "INTERNAL_SAME_SYSTEM",
-            "producer_identity_ref": "synthetic-internal-fixture",
-            "attribution_state": "CLAIMED_UNVERIFIED",
-            "independence_claimed": False,
-            "independence_basis_refs": [],
-            "independence_adjudication_state": "NOT_EXECUTED",
-            "adjudication_ref": None,
-        }],
+        "records": [
+            {
+                "evidence_id": "EVID-REFERENCE-SUPPORT",
+                "attribution_source_ref": "synthetic://producer-claim",
+                "producer_class": "INTERNAL_SAME_SYSTEM",
+                "producer_identity_ref": "synthetic-internal-fixture",
+                "attribution_state": "CLAIMED_UNVERIFIED",
+                "independence_claimed": False,
+                "independence_basis_refs": [],
+                "independence_adjudication_state": "NOT_EXECUTED",
+                "adjudication_ref": None,
+            }
+        ],
     }
     result = workflow.execute(cmd("inspect", {"attribution_observation": obs}))
     assert result["status"] == "ACCEPTED_SYNTHETIC_ONLY"
@@ -269,16 +277,18 @@ def test_bad_observation_does_not_change_state() -> None:
 
 def test_plan_stops_on_first_rejected_step() -> None:
     workflow = b.FixedWorkflow()
-    result = workflow.run_plan({
-        "record_type": "AIRP_B_FIXED_PLAN",
-        "schema_version": 1,
-        "source_commit": b.PROTECTED_MAIN,
-        "steps": [
-            add(),
-            cmd("challenge", {"claim_id": CLAIM, "counterevidence_id": "EVID-MISSING"}, 1, request="REQ-BAD"),
-            attach(version=1),
-        ],
-    })
+    result = workflow.run_plan(
+        {
+            "record_type": "AIRP_B_FIXED_PLAN",
+            "schema_version": 1,
+            "source_commit": b.PROTECTED_MAIN,
+            "steps": [
+                add(),
+                cmd("challenge", {"claim_id": CLAIM, "counterevidence_id": "EVID-MISSING"}, 1, request="REQ-BAD"),
+                attach(version=1),
+            ],
+        }
+    )
     assert result["outcome"] == "STOPPED_ON_REJECTION"
     assert len(result["step_results"]) == 2
     assert len(workflow.snapshot()["claims"]) == 2
@@ -288,10 +298,14 @@ def test_plan_stops_on_first_rejected_step() -> None:
 def test_source_commit_mismatch_blocks_plan() -> None:
     workflow = b.FixedWorkflow()
     with pytest.raises(ValueError, match="INVALID_PLAN_IDENTITY"):
-        workflow.run_plan({
-            "record_type": "AIRP_B_FIXED_PLAN", "schema_version": 1,
-            "source_commit": "0" * 40, "steps": [add()],
-        })
+        workflow.run_plan(
+            {
+                "record_type": "AIRP_B_FIXED_PLAN",
+                "schema_version": 1,
+                "source_commit": "0" * 40,
+                "steps": [add()],
+            }
+        )
 
 
 def test_replay_existing_revision_never_promotes_scientific_state() -> None:
