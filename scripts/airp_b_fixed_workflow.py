@@ -18,22 +18,17 @@ import sys
 import threading
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-if __package__ in {None, ""} and str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
-# isort: off  # imports must follow repository-path initialization for direct CLI use
-from components.evidence_gate import (  # noqa: E402
+from components.evidence_gate import (
     ClaimScope,
     EvidenceObject,
     EvidenceTarget,
     ProvenanceBinding,
     admit_evidence,
 )
-from scripts.claimgraph_attribution_query import query_attribution  # noqa: E402
-from scripts.validate_structural_epistemics_claim_graph import validate_claim_graph  # noqa: E402
+from scripts.claimgraph_attribution_query import query_attribution
+from scripts.validate_structural_epistemics_claim_graph import validate_claim_graph
 
-# isort: on
+ROOT = Path(__file__).resolve().parents[1]
 
 PROTECTED_MAIN = "1a95b94332dffb404c5a3ce026d70781a8c10b90"
 LOCKED_GIT_BLOBS = {
@@ -445,7 +440,7 @@ class FixedWorkflow:
 
 def main() -> int:
     if len(sys.argv) != 2:
-        print("Usage: python scripts/airp_b_fixed_workflow.py <disposable-plan.json>", file=sys.stderr)
+        print("Usage: python -m scripts.airp_b_fixed_workflow <disposable-plan.json>", file=sys.stderr)
         return 2
     try:
         plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
