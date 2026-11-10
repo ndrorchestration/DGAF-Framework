@@ -62,19 +62,35 @@ class SyntheticController:
 
     def commit(self, proposal: Proposal, now: int) -> Receipt:
         with self._lock:
+
             def deny(reason):
                 return Receipt("HOLD", reason, self._version, self._epoch)
 
             if type(proposal) is not Proposal:
                 return deny("MALFORMED")
-            if any(type(x) is not str or not x for x in (
-                proposal.operation, proposal.candidate,
-                proposal.evidence, proposal.policy,
-            )):
+            if any(
+                type(x) is not str or not x
+                for x in (
+                    proposal.operation,
+                    proposal.candidate,
+                    proposal.evidence,
+                    proposal.policy,
+                )
+            ):
                 return deny("MALFORMED")
-            if any(type(x) is not int or x < 0 for x in (
-                proposal.predecessor, proposal.epoch, proposal.deadline, now,
-            )) or type(proposal.checks_pass) is not bool or type(proposal.objection) is not bool:
+            if (
+                any(
+                    type(x) is not int or x < 0
+                    for x in (
+                        proposal.predecessor,
+                        proposal.epoch,
+                        proposal.deadline,
+                        now,
+                    )
+                )
+                or type(proposal.checks_pass) is not bool
+                or type(proposal.objection) is not bool
+            ):
                 return deny("MALFORMED")
             previous = self._receipts.get(proposal.operation)
             if previous is not None:
