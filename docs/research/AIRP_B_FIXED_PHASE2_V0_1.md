@@ -40,7 +40,7 @@ Run the tests in an isolated checkout with dependencies installed:
 
 Execute a disposable plan:
 
-    python scripts/airp_b_fixed_workflow.py path/to/disposable-plan.json
+    python -m scripts.airp_b_fixed_workflow path/to/disposable-plan.json
 
 The CLI only reads the plan and writes JSON to stdout. Snapshot mutations are single-process-serialized and staged until the existing validator succeeds. This is not multi-process transactional durability. No external side effect or protected state modification is supported.
 
