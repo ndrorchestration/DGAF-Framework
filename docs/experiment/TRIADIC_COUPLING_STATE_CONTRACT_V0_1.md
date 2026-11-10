@@ -352,3 +352,78 @@ DRAFT / NON-ADMITTING / UNMERGED. SCIENTIFIC_N_INCREMENT=0.
 INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
 CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
 HIGH_ASSURANCE=NOT_AUTHORIZED.
+
+## Durable synthetic receipt recovery — 2026-11-10
+
+Research implementation:
+`scripts/triadic_durable_receipts.py` and
+`tests/test_triadic_durable_receipts.py`.
+
+Local command (POSIX filesystem only):
+
+```bash
+python -m unittest discover -s tests -p test_triadic_durable_receipts.py -v
+```
+
+**Scope:** a separate, deliberately limited commit-state/receipt research
+model that mirrors the in-memory controller's bounded eligibility checks.
+It owns only a disposable journal in a test-created temporary directory,
+not DGAF governance, the authenticated-message module, deployment,
+filesystem actions on behalf of users, or external-effect authority.
+It does not retrofit persistence into the existing controller or prove an
+atomic transaction with the separately developed HMAC message boundary.
+
+The initial fixture creates a new, exclusive journal on POSIX only. For
+each synthetic operation it serializes the next state and corresponding
+receipt into a single HMAC-sealed JSON snapshot, fsyncs a sibling
+temporary file, atomically replaces the journal path and fsyncs its parent
+directory **before returning the receipt**. Both committed and denied
+operation IDs are retained. An exact replay returns the historical receipt;
+reuse of the same identifier with different proposal bytes yields HOLD.
+A terminal write exception poisons the writer, preventing subsequent new
+transitions within that process.
+
+Reopening an existing journal checks manifest binding, seal, schema,
+receipt sequencing, state consistency, missing/truncated records and
+duplicate operation IDs. It enters **RECOVERY_ONLY** mode: historical
+receipts can be replayed; new operations, revocation changes and epoch
+changes cannot be admitted by the recovered object. The original in-process
+writer is a fixture-only authority assumption; restart never creates a
+replacement writer or new authority. Revocation and simulated epoch
+invalidation persist as state changes, without implementing real governance.
+
+**Bounded crash injection:** interruption before atomic replacement leaves
+the prior journal state; interruption after directory fsync but before
+the receipt ACK recovers the new state and original receipt without a
+duplicate synthetic transition. This tests simulated interruption points,
+not actual power-failure, storage-hardware durability or cross-process
+linearizability.
+
+**Important falsification:** saving a previously valid journal snapshot,
+recording a later accepted transition, and restoring the earlier
+HMAC-authenticated snapshot **passes current verification**. The model
+therefore cannot detect valid-prefix rollback. External monotonic custody,
+hardware-backed anchors or independently retained receipts would need
+separate research and authorization. Likewise, one-writer ownership is an
+assumption; the code does not establish cross-process exclusive leasing,
+distributed transactions, secure key lifecycle, real authenticated agent
+identity or an authenticated monotonic clock.
+
+A false answer can still be durably committed when trusted synthetic
+eligibility checks say yes. Durable recovery preserves such an error;
+the controller-external oracle can identify false promotion but does not
+turn it into legitimate epistemic acceptance. The journal is not an
+external-effect executor and does not establish scientific correctness.
+
+Local Python 3.13.5: **22 bounded tests passed** before GitHub upload.
+Hosted source-quality and test evidence must be bound to the resulting
+exact PR head. The existing C14 full-case acceptance (real process crash
+and end-to-end authenticated/durable effect recovery) remains
+NOT_ESTABLISHED. C13 switch-crash recovery likewise remains unimplemented;
+these disk fault points are not a governed topology switch.
+
+DRAFT / NON-ADMITTING / UNMERGED.
+SCIENTIFIC_N_INCREMENT=0.
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
+HIGH_ASSURANCE=NOT_AUTHORIZED.
