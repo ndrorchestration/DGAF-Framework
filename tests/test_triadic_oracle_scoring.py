@@ -3,8 +3,8 @@
 import unittest
 from dataclasses import replace
 
-from scripts.triadic_commit_model import Proposal, SyntheticController
 from scripts import triadic_oracle_scoring as oracle
+from scripts.triadic_commit_model import Proposal, SyntheticController
 
 
 class OracleScoringTests(unittest.TestCase):
