@@ -219,7 +219,6 @@ reviewable specification, not an implementation-ready production system.
 - [Redis Streams documentation](https://redis.io/docs/latest/develop/data-types/streams/):
   delivery/acknowledgment/recovery semantics do not provide epistemic acceptance.
 
-
 ## Partial synthetic model checkpoint — 2026-11-10
 
 Implementation: `scripts/triadic_commit_model.py`.
