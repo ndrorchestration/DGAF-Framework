@@ -55,9 +55,20 @@ def digest_text(content: str) -> str:
 def signed_bytes(message: SignedMessage) -> bytes:
     """Exact signed fields in deterministic JSON; MAC is deliberately excluded."""
     fields = (
-        "version", "run_id", "message_id", "sender_id", "sender_role",
-        "recipient_id", "kind", "epoch", "predecessor", "deadline",
-        "candidate_digest", "evidence_digest", "policy_digest", "content",
+        "version",
+        "run_id",
+        "message_id",
+        "sender_id",
+        "sender_role",
+        "recipient_id",
+        "kind",
+        "epoch",
+        "predecessor",
+        "deadline",
+        "candidate_digest",
+        "evidence_digest",
+        "policy_digest",
+        "content",
         "content_digest",
     )
     return dumps(
@@ -130,12 +141,21 @@ class SyntheticMessageBoundary:
     @classmethod
     def _well_formed(cls, message: SignedMessage, now: int) -> bool:
         strings = (
-            message.version, message.run_id, message.message_id, message.sender_id,
-            message.sender_role, message.recipient_id, message.kind, message.content,
+            message.version,
+            message.run_id,
+            message.message_id,
+            message.sender_id,
+            message.sender_role,
+            message.recipient_id,
+            message.kind,
+            message.content,
         )
         digests = (
-            message.candidate_digest, message.evidence_digest, message.policy_digest,
-            message.content_digest, message.mac,
+            message.candidate_digest,
+            message.evidence_digest,
+            message.policy_digest,
+            message.content_digest,
+            message.mac,
         )
         return (
             all(type(value) is str and bool(value) for value in strings)
@@ -164,6 +184,7 @@ class SyntheticMessageBoundary:
 
     def admit(self, message: SignedMessage, now: int) -> MessageReceipt:
         with self._lock:
+
             def hold(reason: str) -> MessageReceipt:
                 return MessageReceipt("HOLD", reason, len(self._admitted_ids))
 
