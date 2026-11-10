@@ -172,10 +172,11 @@ class WitnessedSyntheticController:
             if self._poisoned:
                 raise CustodyMismatch("WRITER_QUARANTINED")
             previous = _verified_snapshot(self._path, self._run_id, self._witness)
-            underlying_fault = {
-                "BEFORE_REPLACE": "BEFORE_REPLACE",
-                "AFTER_JOURNAL_BEFORE_WITNESS": "AFTER_DURABLE_BEFORE_ACK",
-            }.get(fault)
+            underlying_fault: str | None = None
+            if fault == "BEFORE_REPLACE":
+                underlying_fault = "BEFORE_REPLACE"
+            elif fault == "AFTER_JOURNAL_BEFORE_WITNESS":
+                underlying_fault = "AFTER_DURABLE_BEFORE_ACK"
             try:
                 result = operation(underlying_fault)
                 latest = _journal_digest(self._path)
