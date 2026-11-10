@@ -12,7 +12,7 @@ This document concerns the architecture-internal value `Platinum_Constant_11Q �
 
 The relevant constants are:
 
-- `pP = 1/(2 sin(π/11)) ≈ 1.774732842` — DGAF-specific Platinum Mean, the unit-side regular-hendecagon circumradius.
+- `pP = 1/(2 sin(π/11)) ≈ 1.7747327664` — DGAF-specific Platinum Mean, the unit-side regular-hendecagon circumradius.
 - `ρ ≈ 1.324717957244746` — mathematical plastic number, the real root of `x³ - x - 1 = 0`.
 - `Platinum_Constant_11Q ≈ 0.541196` — architecture-internal 11Q target whose exact derivation remains OPEN.
 

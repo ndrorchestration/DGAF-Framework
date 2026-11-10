@@ -2,6 +2,7 @@
 
 **Date:** 2026-08-28  
 **Status:** CANONICAL TERMINOLOGY POLICY  
+**Numerical reconciliation:** 2026-11-09 — corrected pP decimal approximation; exact trigonometric definition and scope unchanged.  
 **Scope:** DGAF mathematical references, PDMAL research documentation, public-facing notation
 
 ## Purpose
@@ -74,7 +75,7 @@ The plastic number is not a member of Spinadel's ordinary quadratic metallic-mea
 DGAF intentionally defines
 
 \[
-pP=\frac{1}{2\sin(\pi/11)}\approx1.774732842\ldots
+pP=\frac{1}{2\sin(\pi/11)}\approx1.7747327664\ldots
 \]
 
 as **Platinum Mean**, the circumradius-to-side ratio of a regular hendecagon with unit side length.
@@ -90,7 +91,7 @@ The following substitutions are prohibited in current mathematical authority:
 - `ρP` → plastic number as though `ρP` were the standard symbol.
 - `pP` → plastic number.
 - `pP` → a member of the Spinadel metallic-means family.
-- `1.774732842` → `ρ`.
+- `1.7747327664` → `ρ`.
 - `ρ` → `1/(2 sin(π/11))`.
 - `σ` → silver mean without family context.
 - "platinum ratio" → `1/(2 sin(π/11))` as an unqualified standard mathematical identity.

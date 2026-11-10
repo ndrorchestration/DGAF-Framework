@@ -8,7 +8,7 @@
 
 Project artifacts must distinguish among:
 
-**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
+Evidence-state sequence: `DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`.
 
 These labels describe evidence state, not prestige. A project-local definition is not an external standard. A computed result is not automatically independently verified. A CI pass is evidence of the checks that ran, not certification. A historical artifact remains historical unless its underlying claim is re-established.
 
@@ -78,7 +78,7 @@ GitHub repository descriptions are a separate documentation layer from README fi
 The current mathematical-notation policy distinguishes two different quantities that must not be conflated:
 
 - **pP / Platinum Mean** — a project-defined notation for the regular-hendecagon unit-side circumradius,
-  \(pP = 1/(2\sin(\pi/11)) \approx 1.774732842\). This is intentionally retained as the project's **Platinum Mean** notation; it is not the standard plastic constant.
+  \(pP = 1/(2\sin(\pi/11)) \approx 1.7747327664\). This is intentionally retained as the project's **Platinum Mean** notation; it is not the standard plastic constant.
 - **ρP / plastic constant** — the standard mathematical constant \(\rho_P \approx 1.3247179572447454\), the real root of \(x^3=x+1\).
 
 Earlier repository material uses **1.7747 / 1.77473** under labels such as "Platinum Ratio" and, in some artifacts, assigns that value a verified mathematical role. Those references must now be classified according to the definition actually intended. Where they refer to the hendecagon circumradius, they are historical uses of the project-defined **pP / Platinum Mean**; where they incorrectly identify that value as the plastic constant or another standard mathematical constant, that claim is superseded and must not be propagated.
@@ -93,7 +93,7 @@ Known affected historical/current-surface artifacts include:
 
 Treatment:
 
-**RETAIN PROVENANCE → CLASSIFY SEMANTICS → SUPERSEDE INCORRECT IDENTIFICATION → PREVENT DOWNSTREAM MISUSE**
+Required treatment sequence: `RETAIN PROVENANCE → CLASSIFY SEMANTICS → SUPERSEDE INCORRECT IDENTIFICATION → PREVENT DOWNSTREAM MISUSE`.
 
 Do not silently delete historical evidence. Any artifact that presents `1.7747`/`1.77473` as the plastic constant, or assigns it an unsupported current mathematical authority, must be revised or explicitly marked historical/superseded. Artifacts using the value for the defined hendecagon circumradius may retain it when explicitly labeled **pP / Platinum Mean** and given its defining equation. Until that semantic remediation is complete, affected material remains a documentation-consistency finding and must not be used to support unrelated current mathematical claims.
 

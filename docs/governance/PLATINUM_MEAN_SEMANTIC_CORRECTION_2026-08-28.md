@@ -2,13 +2,14 @@
 
 **Date:** 2026-08-28  
 **Status:** Active semantic-control record  
+**Numerical reconciliation:** 2026-11-09 — pP decimal approximation corrected without changing the original semantic decision.  
 **Scope:** DGAF terminology and PDMAL mathematical references
 
 ## Canonical notation correction
 
 DGAF intentionally uses **pP / Platinum Mean** for the regular-hendecagon unit-side circumradius:
 
-`pP = 1 / (2 sin(π/11)) ≈ 1.774732842`
+`pP = 1 / (2 sin(π/11)) ≈ 1.7747327664`
 
 The mathematical **plastic number / plastic constant** is instead conventionally denoted:
 
@@ -30,7 +31,7 @@ for the positive root of `x² - px - q = 0`. For the ordinary sequence, `σ_n = 
 
 The PDMAL plastic-constant convergence mathematics uses `ρ`, not `pP`. Historical documents that call `1.7747` or `1.77473` `ρP`, `ρ`, or "Platinum Ratio" are semantic predecessors and must be treated as historical/superseded terminology unless independently re-derived under current governance.
 
-The correction does **not** invalidate the geometric quantity `1.774732842`; it changes its semantic classification to the DGAF-defined `pP / Platinum Mean` where that notation is intended.
+The correction does **not** invalidate the geometric quantity `1.7747327664`; it changes its semantic classification to the DGAF-defined `pP / Platinum Mean` where that notation is intended.
 
 ## Platinum terminology boundary
 

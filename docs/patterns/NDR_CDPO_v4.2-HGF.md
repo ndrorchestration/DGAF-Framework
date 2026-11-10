@@ -1,6 +1,6 @@
 # NDR Pattern: CDPO-v4.2-HGF
 
-**Constraint-Dense Prompt Optimization v4.2 with Hensel Generative Firewall**
+## Constraint-Dense Prompt Optimization v4.2 with Hensel Generative Firewall
 
 **DGAF-Framework · NDR Pattern Registry**  
 **Registered:** S070 · 2026-06-13  
@@ -9,7 +9,7 @@
 **Layer:** 7.0 — Meta-Agent Prompt Architecture  
 **P-36 classification:** ADVISORY
 
-> **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.774732842`; `ρ` is the plastic number; `ρP` is not canonical mathematical notation.
+> **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.7747327664`; `ρ` is the plastic number; `ρP` is not canonical mathematical notation.
 >
 > **Epistemic boundary:** This pattern is a design specification. Its presence does not establish experimental efficacy, security, production readiness, or empirical validation.
 
@@ -34,7 +34,7 @@
 - **Literal trigger stems:** `architect|system|framework|orchestrat|topolog|multi-agent` → Taxonomy REQUIRED. `registry|closure|platinum|hyperplatinum|rho_P|hensel|a_n|delta_n` → Registry Advisory block REQUIRED. The `rho_P` stem is retained only for detection of legacy terminology; it does not define a current constant.
 - **Three-plane firewall as MUST rules:** Governance plane uses φ = 1.618… and φ* ≈ 0.618 only. Registry plane supplies tier records via P-39 PRS with schema `{tier, dimension, duration_class, policy_ratio, descriptor, residual, valid_flag, hash}`. Substrate plane uses AutoInit analytic gain per activation.
 - **Hyperplatinum h ≈ 11.0007511609:** Real root of `x^4 - 11x^3 - 1 = 0`, a Pisot-Vijayaraghavan number. Recurrence `a_{n+4} = 11*a_{n+3} + a_n`, seeds 0,0,0,1. Bound claims require their stated proof/source memo and reproduction.
-- **Standard Platinum `pP`:** `1/(2sin(π/11)) ≈ 1.774732842`, the regular-hendecagon unit-side circumradius. It is DGAF-specific notation and is not the plastic number or a quadratic metallic mean.
+- **Standard Platinum `pP`:** `1/(2sin(π/11)) ≈ 1.7747327664`, the regular-hendecagon unit-side circumradius. It is DGAF-specific notation and is not the plastic number or a quadratic metallic mean.
 - **Identity anchoring:** `intent_hash = SHA256(canonical_author_id || domain_salt || version)`. Never embed a literal personal name as a runtime invariant.
 - **Micro budgets:** Direct Answer ≤40 tokens, Breakdown ≤120 tokens. Degradation order: drop 7, 6, 5, Tradeoffs details; keep 1–4 inviolate.
 
