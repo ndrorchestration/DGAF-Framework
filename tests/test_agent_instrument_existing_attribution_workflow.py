@@ -148,9 +148,7 @@ def test_existing_fixed_attribution_workflow_matches_direct_controls(
         assert payload["authorization_effect"] == "NONE"
         assert payload["independence_effect"] == "NONE"
         assert payload["observation_authority"] == "CALLER_SUPPLIED_NOT_REVERIFIED"
-        assert payload["completeness"] == (
-            "PARTIAL" if expected_exit == 2 else "COMPLETE_FOR_SUPPORTING_EVIDENCE"
-        )
+        assert payload["completeness"] == ("PARTIAL" if expected_exit == 2 else "COMPLETE_FOR_SUPPORTING_EVIDENCE")
         if case_id == "ATTR-04":
             assert payload["claims_with_reported_independently_adjudicated_support"] == [
                 "CLAIM-REFERENCE-001"
