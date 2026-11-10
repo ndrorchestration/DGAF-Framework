@@ -1,6 +1,6 @@
 # Triadic coupling-state contract v0.1 — proposed research specification
 
-Status: PROPOSED / NOT IMPLEMENTED / NOT EXPERIMENTALLY VALIDATED.
+Status: PROPOSED CONTRACT / PARTIAL SYNTHETIC MODEL / NOT EXPERIMENTALLY VALIDATED.
 Date: 2026-11-10.
 Baseline inspected: DGAF main `1a95b94332dffb404c5a3ce026d70781a8c10b90`.
 Authority effect: NONE. SCIENTIFIC_N_INCREMENT=0.
@@ -147,7 +147,8 @@ no such executor is specified here.
 
 ## Falsification and acceptance matrix
 
-All cases below are PLANNED / NOT EXECUTED.
+The full cases below remain planned at system scope. The partial synthetic model
+coverage described at the end does not establish full-case acceptance.
 
 | ID | Intervention | Required observation |
 |---|---|---|
@@ -217,3 +218,43 @@ reviewable specification, not an implementation-ready production system.
   protocol and discussion effects differ by task; measure more than agreement.
 - [Redis Streams documentation](https://redis.io/docs/latest/develop/data-types/streams/):
   delivery/acknowledgment/recovery semantics do not provide epistemic acceptance.
+
+
+## Partial synthetic model checkpoint — 2026-11-10
+
+Implementation: `scripts/triadic_commit_model.py`.
+Tests: `tests/test_triadic_commit_model.py`.
+Run: `python -m unittest discover -s tests -p test_triadic_commit_model.py -v`.
+Local Python 3.12.14: **9 tests passed**. No LLM calls or scientific samples.
+Local Black/flake8 are unavailable; hosted quality and full-repository checks
+must be assessed at the resulting PR head before claiming wider verification.
+
+The model uses trusted fixture inputs, a single in-process lock, frozen proposal
+and receipt objects, and in-memory operation deduplication. It supports no real
+authority issuer, authenticated peer messages, external effects, persistence,
+LLM reasoning or adaptive mode. Epoch invalidation is fault injection only.
+Caller-provided time models a trusted clock; clock authentication is absent.
+
+| Cases | Narrow modeled coverage | Remaining gap |
+|---|---|---|
+| C01, C03, C04, C05 | Synthetic commit, objection block, replay, conflicting operation identity | Full role/message/evidence protocol |
+| C06, C07 | Revocation before commit; two concurrent candidates yield one transition | Distributed authority races |
+| C08 | Old proposal rejected after injected epoch increment | Actual governed topology switch |
+| C09, C11 | Incomplete check/deadline rejection; malformed fields and wrong identities | Peer timeout handling, authenticated digests |
+| C14 | Replay after simulated ACK loss and revocation returns original receipt | Process crash and durable recovery |
+| C02 | Oracle-false candidate accepted when supplied check flag is true | Semantic verifier and real-agent comparison |
+| C10, C12, C13, C15, C16 | NOT IMPLEMENTED | Propagation, adaptive policy, recovery and role mapping |
+
+C02 is a deliberate negative scientific finding for this toy mechanism: passing
+control tests does not make its accepted answer correct. It must not be reported
+as a successful correctness or multi-agent efficacy trial. Denied operation IDs
+are retained; revisions require a new operation ID. Replayed receipts report the
+original result and do not imply renewed authority or another state change.
+
+Prior documentation-only head `30f52b542670eeebf5ae340d95b7599ba9d87932`
+had passing documentation, governance and Python 3.10/3.11/3.12 test jobs.
+Required security-scan failed at pip-audit (run 42827378914); three PDMAL
+workflows failed at Python setup (runs 42827378794, 42827378466, 42827378670).
+These failures are retained, not waived, and those results do not verify the
+new model source. DRAFT / UNMERGED; all scientific and authorization ceilings
+remain unchanged.
