@@ -133,7 +133,7 @@ class WitnessedSyntheticController:
         key: bytes,
         witness: FixtureMonotonicWitness,
     ) -> "WitnessedSyntheticController":
-        if type(witness) is not FixtureMonotonicWitness:
+        if not isinstance(witness, FixtureMonotonicWitness):
             raise ValueError("BAD_WITNESS")
         if witness.snapshot() is not None:
             raise CustodyMismatch("ALREADY_INITIALIZED")
@@ -152,7 +152,7 @@ class WitnessedSyntheticController:
         key: bytes,
         witness: FixtureMonotonicWitness,
     ) -> DurableSyntheticController:
-        if type(witness) is not FixtureMonotonicWitness:
+        if not isinstance(witness, FixtureMonotonicWitness):
             raise ValueError("BAD_WITNESS")
         old = _verified_snapshot(path, run_id, witness)
         reader = DurableSyntheticController(path, run_id, evidence, policy, key)
