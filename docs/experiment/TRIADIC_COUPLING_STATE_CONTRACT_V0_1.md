@@ -494,3 +494,64 @@ SCIENTIFIC_N_INCREMENT=0.
 INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
 CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
 HIGH_ASSURANCE=NOT_AUTHORIZED.
+
+## POSIX file-backed monotonic witness fixture — 2026-11-10
+
+Implementation: `scripts/triadic_posix_witness.py`.
+Tests: `tests/test_triadic_posix_witness.py`.
+Run: `python -m unittest discover -s tests -p test_triadic_posix_witness.py -v`.
+
+This **separate research fixture** replaces the earlier in-memory witness
+object with an HMAC-sealed, append-only, fsynced record file in a separate
+test directory. The file and lock path are independent of the journal path,
+but remain on the **same untrusted host and filesystem failure domain**.
+The witness retains a run ID, sequence, current journal digest and
+prior-record digest for a bounded chain. It refuses missing, duplicate,
+truncated, non-sequential, wrong-run, tampered, or incomplete records.
+A distinct fixture HMAC key protects these entries. A POSIX `flock`
+guard on a sidecar file serializes compare-and-swap witness updates
+between cooperating processes. A stale expected state cannot append
+a second transition at the same sequence.
+
+The existing synthetic `WitnessedSyntheticController` now accepts
+a subtype of its fixture witness, so the adapter can create an exclusive
+journal and witness, persist the journal first, then append and fsync
+the witness before acknowledging a synthetic operation. Reopen reads
+the persistent witness rather than reconstructing it from the journal.
+Recovered durable-journal readers remain **RECOVERY_ONLY** and cannot
+mint new commit authority. The prior in-memory witness and baseline
+durable-journal models remain available, unchanged in their documented
+research status.
+
+Positive and negative scenarios include restart with a new witness
+object, a signed older-journal rollback detected by a surviving witness,
+competing independent Python processes attempting the same witness
+sequence, tampered/truncated witness rejection, and crash-injection
+windows both before and after witness advancement. The design **blocks**
+when the journal is durable but the witness update is missing; it does
+not silently reconcile or automatically advance the witness.
+
+**Critical negative control:** restoring the older journal **and**
+its earlier valid signed witness file succeeds in this toy model,
+including after process restart. This is evidence that local append-only
+files, HMAC chaining and filesystem locks do **not** establish secure
+monotonic anchoring. Any actor able to replace or roll back both files,
+reuse a fixture key, remove/recreate the lock path, or compromise the host
+can defeat the intended custody property. No independent operator,
+remote trusted witness service, trusted hardware counter, anti-rollback
+platform, cross-host attestation, secure key lifecycle or Byzantine
+failure model has been exercised. An OS `flock` is advisory, not a
+permission issuer or comprehensive production cross-process lease.
+
+The module has **22 bounded test cases** defined; exact-head hosted
+format/type/execution results must be observed before claiming PASS.
+This is a software design exercise, not live multi-agent experimental
+data, independent validation, production reliability, scientific
+superiority or a full C14 acceptance result. A wrong semantic answer
+can still be accepted and signed, because custody does not check truth.
+
+DRAFT / NON-ADMITTING / UNMERGED.
+SCIENTIFIC_N_INCREMENT=0.
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
+HIGH_ASSURANCE=NOT_AUTHORIZED.
