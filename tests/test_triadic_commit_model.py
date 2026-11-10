@@ -46,9 +46,11 @@ class CommitBoundaryTests(unittest.TestCase):
 
     def test_concurrent_candidates_have_one_winner(self):
         barrier = Barrier(2)
+
         def attempt(operation):
             barrier.wait()
             return self.controller.commit(replace(self.proposal, operation=operation), 1)
+
         with ThreadPoolExecutor(max_workers=2) as pool:
             results = list(pool.map(attempt, ["first", "second"]))
         self.assertEqual(sorted(r.reason for r in results), ["ELIGIBLE", "STALE_PREDECESSOR"])
