@@ -18,7 +18,9 @@ class OracleScoringTests(unittest.TestCase):
         candidate = proposal if proposal is not None else self.proposal
         controller = SyntheticController("evidence-v1", "policy-v1")
         receipt = controller.commit(candidate, 1)
-        return oracle.Observation(case_id, candidate.candidate, receipt.outcome, controller.snapshot()[2], trace, claimed)
+        return oracle.Observation(
+            case_id, candidate.candidate, receipt.outcome, controller.snapshot()[2], trace, claimed
+        )
 
     def trace(self):
         return (
