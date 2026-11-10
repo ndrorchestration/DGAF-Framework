@@ -61,7 +61,7 @@ def _digest(value: object) -> str:
 def _git_blob(path: Path) -> str:
     data = path.read_bytes()
     # Git blob identity, not proof of independent custody.
-    return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()  # noqa: S324
+    return hashlib.sha1(f"blob {len(data)}\0".encode() + data, usedforsecurity=False).hexdigest()
 
 
 def verify_source_locks() -> None:
