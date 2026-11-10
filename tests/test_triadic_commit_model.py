@@ -64,8 +64,14 @@ class CommitBoundaryTests(unittest.TestCase):
                 self.assertEqual(controller.snapshot(), (0, 0, None))
 
     def test_malformed_or_wrong_identity_is_rejected(self):
-        for change in ({"evidence": "wrong"}, {"policy": "wrong"}, {"candidate": ""},
-                       {"epoch": True}, {"checks_pass": 1}, {"deadline": float("nan")}):
+        for change in (
+            {"evidence": "wrong"},
+            {"policy": "wrong"},
+            {"candidate": ""},
+            {"epoch": True},
+            {"checks_pass": 1},
+            {"deadline": float("nan")},
+        ):
             with self.subTest(change=change):
                 controller = MODEL.SyntheticController("evidence-v1", "policy-v1")
                 self.assertEqual(controller.commit(replace(self.proposal, **change), 1).outcome, "HOLD")
