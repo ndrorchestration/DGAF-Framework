@@ -12,6 +12,7 @@ from dataclasses import asdict
 from hmac import compare_digest, new
 from pathlib import Path
 from threading import Lock
+from typing import Any
 
 from scripts.triadic_commit_model import Proposal, Receipt
 
@@ -73,7 +74,7 @@ class DurableSyntheticController:
         self._recovery_only = not create
         self._poisoned = False
         if create:
-            self._state = {
+            self._state: dict[str, Any] = {
                 "format": FORMAT,
                 "run_id": run_id,
                 "evidence": evidence,
