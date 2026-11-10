@@ -157,7 +157,6 @@ def test_existing_fixed_attribution_workflow_matches_direct_controls(
     assert observation == observation_before
 
 
-
 @pytest.mark.parametrize(
     "case_id",
     [
