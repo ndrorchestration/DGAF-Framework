@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if __package__ in {None, ""} and str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+# isort: off  # imports must follow repository-path initialization for direct CLI use
 from components.evidence_gate import (  # noqa: E402
     ClaimScope,
     EvidenceObject,
@@ -31,6 +32,7 @@ from components.evidence_gate import (  # noqa: E402
 )
 from scripts.claimgraph_attribution_query import query_attribution  # noqa: E402
 from scripts.validate_structural_epistemics_claim_graph import validate_claim_graph  # noqa: E402
+# isort: on
 
 PROTECTED_MAIN = "1a95b94332dffb404c5a3ce026d70781a8c10b90"
 LOCKED_GIT_BLOBS = {
