@@ -178,9 +178,7 @@ class MonotonicCustodyTests(unittest.TestCase):
     def test_valid_manifest_cannot_create_duplicate_journal(self):
         second = FixtureMonotonicWitness(self.run_id)
         with self.assertRaises(FileExistsError):
-            WitnessedSyntheticController.create(
-                self.path, self.run_id, "evidence-v1", "policy-v1", self.key, second
-            )
+            WitnessedSyntheticController.create(self.path, self.run_id, "evidence-v1", "policy-v1", self.key, second)
         self.assertIsNone(second.snapshot())
 
     def test_unsupported_fault_does_not_change_journal_or_witness(self):
