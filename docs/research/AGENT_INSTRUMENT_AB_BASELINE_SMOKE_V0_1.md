@@ -110,3 +110,25 @@ This extension uses **only existing schema-v1 ClaimGraph and its validator**. It
 **Read-only vs write boundary:** the earlier `claimgraph_attribution_query.py` workflow is a read-only bounded B for `inspect`, **not** an interchangeable B for graph mutation. In this manual simulation, candidate graph mutation occurs in ordinary Python memory, not through any DGAF-controlled repository write path. Never equate structural `PASS` to Evidence Gate `admitted=true`, ClaimGraph truth, independent validation, or Action Admission authorization.
 
 **Decision after a successful smoke:** the minimum coherent graph transformations can already be composed manually. Any future stateful Agent Instrument layer must separately demonstrate a *needed* governed interaction affordance, source/revision identity, error recovery and measurable value against an equally capable simple workflow. If the simple workflow suffices, reject the extra abstraction. No claim of architectural novelty or superior agent proficiency is earned here.
+
+
+## Pilot 0 diagnostic semantic-boundary regressions — source-only proposal (2026-11-10)
+
+> **Status:** `DRAFT / INTERNAL SYNTHETIC REGRESSION / NO AGENT TRIAL`. The new checks are proposed test source on this draft branch; do not claim execution until **the final exact-head CI and test logs** confirm it. This is not a pilot with agent subjects, held-out oracle isolation, blinded review, a preregistered effect size, or an instrument implementation.
+
+**Specific new failure mode:** the **existing read-only** `claimgraph_attribution_query.py` emits `COMPLETE_FOR_SUPPORTING_EVIDENCE` if every listed supporting evidence ID has a caller-supplied attribution row. That status **does not attest that the claim is true, unchallenged, current, independent or authorized**. Likewise, fixed CLI exit `0` means metadata completeness, while exit `2` means partial metadata and exit `1` means invalid input. This is a *semantically misleading-to-operators risk*, **not** a finding that the existing query erroneously grants permissions.
+
+Four focused regression cases were added to the **existing** `tests/test_agent_instrument_existing_attribution_workflow.py` rather than creating a parallel validation engine or second source of truth:
+
+| Diagnostic case | Existing substrate | Expected source-level observation and rejection of overclaim |
+| --- | --- | --- |
+| `CHALLENGED_WITH_COUNTEREVIDENCE` | Source-locked reference graph already contains counterevidence and `CHALLENGED` applicability | Attribution completeness can be `COMPLETE_FOR_SUPPORTING_EVIDENCE`; no promotion from challenge to truth or permission |
+| `STALE_SUPPORT_PROPOSED` | Disposable graph with `PROPOSED` claim, stale support, validated with existing ClaimGraph validator | Caller attribution rows can be complete even though supporting evidence is stale and claim remains proposed |
+| `CORRELATED_SUPPORT_ROOTS` | Disposable extra support node with same `source_roots` and an explicit `SHARES_SOURCE_ROOT` dependency edge | Two recorded support IDs can be fully mapped without becoming two independently attested sources |
+| `CLI_COMPLETE_STALE_EXIT_ZERO` | Existing fixed attribution CLI invoked on temporary JSON files for stale proposed claim | Exit `0` and `COMPLETE_FOR_SUPPORTING_EVIDENCE` are *not* truth/independence/effect admission; all three `*_effect` values remain `NONE` |
+
+**Source locks and effect boundary:** the test asserts the existing attribution query's Git blob identity `e3ed75a9e3a0eb6b4a01754894df32bf10985b2a` at protected main `1a95b94332dffb404c5a3ce026d70781a8c10b90`. It uses in-memory or pytest-temporary candidate files; validates structure before query; tests all non-authorizing effect ceilings; asserts caller observation and graph objects are not mutated in the parameterized cases. No Evidence Gate receipt, authenticated identity, external execution, approved claim, independent custody, or new instrument is created.
+
+**Candidate research utility:** These cases specify *precise false-conclusion patterns* an eventual agent diagnostic task must avoid. A future correctly controlled Pilot 0 would test **behavioral understanding** of such outputs under A direct incumbent, B existing fixed CLI, and only if needed C compositional presentation. Before that, preserve separate answer-key/oracle custody, fresh held-out examples, matched tool and observation access, randomization, blinded adjudication where independently available, predeclared budget and stopping criteria. The new regression fixtures and exact error strings are **development-visible and must not be reused as blind evaluation cases**.
+
+**Acceptance/stop rule:** exact-head Python test execution must pass on the reported environments, then CI failures and signatures remain independent blockers. If tests fail, diagnose test-versus-code assumptions without weakening ClaimGraph policy. If the existing CLI plus clearly documented semantics provides an adequate operator interface, disposition is **NO NEW AGENT INSTRUMENT API**. No scientific-N, canonical efficacy, independent validation, High-Assurance, or protected-main admission change.
