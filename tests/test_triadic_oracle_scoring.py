@@ -4,28 +4,28 @@ import unittest
 from dataclasses import replace
 
 from scripts.triadic_commit_model import Proposal, SyntheticController
-from scripts.triadic_oracle_scoring import FrozenOracle, Observation, OracleCase, TraceEvent
+from scripts import triadic_oracle_scoring as oracle
 
 
 class OracleScoringTests(unittest.TestCase):
     def setUp(self):
-        self.known = OracleCase("C02", "2+2=4")
-        self.injected = OracleCase("C10", "2+2=4", frozenset({"bad-arithmetic"}), frozenset({"injected"}))
-        self.oracle = FrozenOracle((self.known, self.injected))
+        self.known = oracle.OracleCase("C02", "2+2=4")
+        self.injected = oracle.OracleCase("C10", "2+2=4", frozenset({"bad-arithmetic"}), frozenset({"injected"}))
+        self.oracle = oracle.FrozenOracle((self.known, self.injected))
         self.proposal = Proposal("op1", "2+2=4", "evidence-v1", "policy-v1", 0, 0, True, False, 10)
 
     def observe(self, case_id, proposal=None, trace=(), claimed=None):
         candidate = proposal if proposal is not None else self.proposal
         controller = SyntheticController("evidence-v1", "policy-v1")
         receipt = controller.commit(candidate, 1)
-        return Observation(case_id, candidate.candidate, receipt.outcome, controller.snapshot()[2], trace, claimed)
+        return oracle.Observation(case_id, candidate.candidate, receipt.outcome, controller.snapshot()[2], trace, claimed)
 
     def trace(self):
         return (
-            TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
-            TraceEvent("critic", "Critic", ("bad-arithmetic",), "CHALLENGE", ("injected",)),
-            TraceEvent("relay", "Generator", ("bad-arithmetic",), "ASSERT", ("injected",)),
-            TraceEvent("repeat", "Governor", ("bad-arithmetic",), "ASSERT", ("relay",)),
+            oracle.TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
+            oracle.TraceEvent("critic", "Critic", ("bad-arithmetic",), "CHALLENGE", ("injected",)),
+            oracle.TraceEvent("relay", "Generator", ("bad-arithmetic",), "ASSERT", ("injected",)),
+            oracle.TraceEvent("repeat", "Governor", ("bad-arithmetic",), "ASSERT", ("relay",)),
         )
 
     def test_correct_committed_answer_is_true_under_external_key(self):
@@ -43,9 +43,9 @@ class OracleScoringTests(unittest.TestCase):
 
     def test_three_roles_agree_on_false_answer_but_oracle_rejects_truth_claim(self):
         trace = (
-            TraceEvent("g", "Generator", ("claim-false",), "ASSERT"),
-            TraceEvent("c", "Critic", ("claim-false",), "ASSERT"),
-            TraceEvent("v", "Governor", ("claim-false",), "ASSERT"),
+            oracle.TraceEvent("g", "Generator", ("claim-false",), "ASSERT"),
+            oracle.TraceEvent("c", "Critic", ("claim-false",), "ASSERT"),
+            oracle.TraceEvent("v", "Governor", ("claim-false",), "ASSERT"),
         )
         proposal = replace(self.proposal, candidate="2+2=5")
         score = self.oracle.score(self.observe("C02", proposal, trace, claimed=True))
@@ -73,7 +73,7 @@ class OracleScoringTests(unittest.TestCase):
         self.assertEqual(score.tainted_lineage_ids, ("injected", "critic", "relay", "repeat"))
 
     def test_unverified_assertion_without_known_parent_is_not_proven_propagation(self):
-        trace = self.trace() + (TraceEvent("unknown-source", "Governor", ("bad-arithmetic",), "ASSERT"),)
+        trace = self.trace() + (oracle.TraceEvent("unknown-source", "Governor", ("bad-arithmetic",), "ASSERT"),)
         score = self.oracle.score(self.observe("C10", trace=trace))
         self.assertEqual(score.unattributed_assertion_ids, ("unknown-source",))
         self.assertNotIn("unknown-source", score.propagated_assertion_ids)
@@ -96,14 +96,14 @@ class OracleScoringTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "UNKNOWN_CASE"):
             self.oracle.score(self.observe("wrong"))
         with self.assertRaisesRegex(ValueError, "DUPLICATE_CASE"):
-            FrozenOracle((self.known, self.known))
+            oracle.FrozenOracle((self.known, self.known))
         with self.assertRaisesRegex(ValueError, "EMPTY_ORACLE"):
-            FrozenOracle(())
+            oracle.FrozenOracle(())
 
     def test_missing_injection_and_spoofed_injection_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "MISSING_INJECTION_ROOT"):
             self.oracle.score(self.observe("C10"))
-        forged = (TraceEvent("injected", "Governor", ("bad-arithmetic",), "ASSERT"),)
+        forged = (oracle.TraceEvent("injected", "Governor", ("bad-arithmetic",), "ASSERT"),)
         with self.assertRaisesRegex(ValueError, "INVALID_INJECTION_ROOT"):
             self.oracle.score(self.observe("C10", trace=forged))
 
@@ -111,20 +111,20 @@ class OracleScoringTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "DUPLICATE_EVENT"):
             self.oracle.score(self.observe("C10", trace=self.trace() + (self.trace()[2],)))
         bad = (
-            TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
-            TraceEvent("relay", "Governor", ("bad-arithmetic",), "ASSERT", ("future",)),
+            oracle.TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
+            oracle.TraceEvent("relay", "Governor", ("bad-arithmetic",), "ASSERT", ("future",)),
         )
         with self.assertRaisesRegex(ValueError, "UNKNOWN_OR_FORWARD_PARENT"):
             self.oracle.score(self.observe("C10", trace=bad))
 
     def test_unknown_stance_and_bad_claim_data_are_rejected(self):
         bad = (
-            TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
-            TraceEvent("relay", "Governor", ("bad-arithmetic",), "ENDORSE", ("injected",)),
+            oracle.TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
+            oracle.TraceEvent("relay", "Governor", ("bad-arithmetic",), "ENDORSE", ("injected",)),
         )
         with self.assertRaisesRegex(ValueError, "MALFORMED_TRACE"):
             self.oracle.score(self.observe("C10", trace=bad))
-        duplicate_claim = (TraceEvent("injected", "fixture", ("bad-arithmetic", "bad-arithmetic"), "ASSERT"),)
+        duplicate_claim = (oracle.TraceEvent("injected", "fixture", ("bad-arithmetic", "bad-arithmetic"), "ASSERT"),)
         with self.assertRaisesRegex(ValueError, "DUPLICATE_TRACE_REFERENCE"):
             self.oracle.score(self.observe("C10", trace=duplicate_claim))
 
@@ -137,7 +137,7 @@ class OracleScoringTests(unittest.TestCase):
 
     def test_malformed_oracle_case_is_not_silently_used(self):
         with self.assertRaisesRegex(ValueError, "MALFORMED_ORACLE"):
-            FrozenOracle((OracleCase("C10", "2+2=4", frozenset(), frozenset({"injected"})),))
+            oracle.FrozenOracle((oracle.OracleCase("C10", "2+2=4", frozenset(), frozenset({"injected"})),))
         with self.assertRaisesRegex(ValueError, "MALFORMED_OBSERVATION"):
             self.oracle.score(replace(self.observe("C02"), agent_claimed_correct="yes"))
 
