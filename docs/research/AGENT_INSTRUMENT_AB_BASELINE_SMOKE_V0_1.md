@@ -68,3 +68,27 @@ These are a selected subset of existing validator semantics, designed to test en
 **Current expected claim ceiling:** internal engineering source-lock and validator-entry-point parity only, if and when tests run and report PASS for the exact commit. Before that, **TESTS NOT VERIFIED**. `SCIENTIFIC_N_INCREMENT=0`; `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`; `CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`; `HIGH_ASSURANCE=NOT_AUTHORIZED`; `AUTHORIZATION_EFFECT=NONE`.
 
 **Admission:** DRAFT / NON-ADMITTING until signed commits, exact-head checks, protected-main policy and required reviews are satisfied. CI failures must stay visible.
+
+## Existing fixed attribution-query pipeline — reuse-first expansion (2026-11-09)
+
+**Discovery:** `scripts/claimgraph_attribution_query.py` already implements a bounded deterministic sequence: validate the ClaimGraph → validate caller-supplied attribution observations → classify supporting evidence attribution → emit an explicitly non-truth, non-authorizing result. It also has a CLI with three meaningful outcomes: `0=complete`, `2=partial`, and `1=invalid/error`. This is **not an independently implemented policy engine or a new Agent Instrument**.
+
+Rather than build a second runtime, `tests/test_agent_instrument_existing_attribution_workflow.py` compares:
+
+- **A direct:** existing `validate_claim_graph` then `query_attribution` called through Python (the query validates again).
+- **B incumbent fixed query:** existing `claimgraph_attribution_query.py` CLI called on copied graph/observation fixtures using a temporary directory.
+- **C instrument:** NOT IMPLEMENTED.
+
+All tests pin the unmodified `claimgraph_attribution_query.py` Git blob `e3ed75a9e3a0eb6b4a01754894df32bf10985b2a` from protected main `1a95b94332dffb404c5a3ce026d70781a8c10b90`, and use the existing synthetic reference graph and its current validator contracts. This protects against silent query drift but is **not** an independently signed artifact or proof of source trust.
+
+Nine new deterministic cases (`ATTR-01`–`ATTR-09`) cover: internally classified complete support; missing attribution with **partial exit 2, not PASS/admission**; external claimed/unverified evidence; externally *reported* independent evidence that remains `independence_effect=NONE`; forged internal independence; unknown evidence ID; graph lacking a support relation; duplicate attribution; and reported independent status without a required adjudication reference. Direct and fixed CLI outputs must agree byte-semantically as JSON, including error text and `truth_effect=authorization_effect=independence_effect=NONE` on accepted observations. Neither may mutate source inputs.
+
+**Scope ceiling:** This is a *useful existing fixed-workflow baseline for read-only ClaimGraph attribution*, not a complete workflow for `add_claim`, `attach_evidence`, `challenge`, `fork` or `compare`. It does not match the proposed C arm on those unimplemented capabilities, and repeats the validator on A so **cost/latency parity is not established**. No model, agent, usability, transfer, or independent-performance trial has occurred. Prefer this existing workflow rather than cloning its logic.
+
+**Focused command when dependencies are available:**
+
+```bash
+python -m pytest -q tests/test_agent_instrument_ab_baseline_smoke.py tests/test_agent_instrument_existing_attribution_workflow.py
+```
+
+**Verification gate:** the new source requires exact-head hosted lint/type and pytest readback before any claim of `TESTED`. A fixed-workflow behavioral parity PASS is a bounded deterministic engineering observation, not a justification for creating the C Agent Instrument interface. The unchanged root CI/security/signature/review blockers still apply.
