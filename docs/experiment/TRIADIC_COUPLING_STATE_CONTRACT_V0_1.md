@@ -427,3 +427,70 @@ SCIENTIFIC_N_INCREMENT=0.
 INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
 CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
 HIGH_ASSURANCE=NOT_AUTHORIZED.
+
+## Monotonic custody witness fixture — 2026-11-10
+
+Research modules: `scripts/triadic_monotonic_custody.py` and
+`tests/test_triadic_monotonic_custody.py`. The separate fixture holds
+a (run ID, monotonic sequence, journal SHA-256 digest) witness in a
+thread-safe in-memory object **outside the journal file**, not in an
+external durable service. Each recorded journal change, including denial,
+revocation or epoch fault injection, requires a compare-and-swap advance
+of the witness from the preceding sequence and digest.
+
+Prospective state-machine behavior:
+
+- Genesis may initialize an **empty** witness only when creating a new
+  exclusive disposable journal. Reopening an existing journal without
+  an independently retained witness fails closed; no authority is
+  reconstructed from journal data.
+- The synthetic journal is fsynced and atomically replaced **before**
+  the fixture witness advances. Once the witness advances, the
+  synthetic method may return its receipt.
+- If a crash is injected before journal replacement, the old journal
+  and witness still match; an opened recovery reader remains replay-only.
+- If a crash or injected witness refusal occurs after journal
+  replacement but **before** witness advancement, recovery detects a
+  journal/witness mismatch and enters a blocking state. It cannot
+  silently infer a missing witness receipt or automatically adopt the
+  new journal state.
+- If a crash occurs **after** witness advancement but before ACK, a
+  reopened reader can return the original stored synthetic receipt
+  without a second transition. The writer that experienced an
+  uncertain completion is quarantined.
+- Restoring an older valid HMAC-sealed journal while the same
+  trusted witness survives produces JOURNAL_WITNESS_DIVERGENCE.
+  An older valid journal alone is not sufficient to recover.
+
+**Known negative and trust boundary:** restoring an old signed journal
+**and replacing or resetting the witness** can make this toy checker
+accept the older state. The fixture witness is an ordinary in-memory
+Python object; it is neither durable across process restart nor an
+independent, authenticated monotonic authority. It has no secure
+bootstrap provenance, hardware-backed counter, external write quorum,
+key custody, cross-process lease, authenticated transport, independently
+verified timestamp or production failure isolation. A malicious actor
+with control over both witnesses and journal can defeat this model.
+The journal and witness are not committed in one transaction; a
+between-store failure is detected and blocks recovery, rather than
+recovering automatically. This is a deliberate fail-closed choice.
+
+The test module defines **23 synthetic research tests** (full hosted
+quality and execution status must be checked at the final PR head).
+No real power-loss or adversarial storage tests have been performed.
+The previous standalone durable-journal model continues to lack
+rollback detection; this optional wrapper does not change that
+baseline's API or production-readiness classification.
+
+These tests inform a **narrow, partial C14 research mechanism** only.
+C13 crash-during-switch, C15 real authorization mapping, the
+end-to-end C01-C16 acceptance matrix, scientific validity and
+independent external validation all remain NOT_ESTABLISHED.
+A false answer remains eligible for synthetic commit when caller
+check flags say yes: custody is not correctness.
+
+DRAFT / NON-ADMITTING / UNMERGED.
+SCIENTIFIC_N_INCREMENT=0.
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
+HIGH_ASSURANCE=NOT_AUTHORIZED.
