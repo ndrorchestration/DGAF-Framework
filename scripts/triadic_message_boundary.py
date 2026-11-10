@@ -88,8 +88,16 @@ class SyntheticMessageBoundary:
         candidate_digest: str,
         evidence_digest: str,
         policy_digest: str,
+        max_messages: int = 64,
     ):
-        if type(run_id) is not str or not run_id or type(identities) is not dict or type(fixture_keys) is not dict:
+        if (
+            type(run_id) is not str
+            or not run_id
+            or type(identities) is not dict
+            or type(fixture_keys) is not dict
+            or type(max_messages) is not int
+            or not (1 <= max_messages <= 4096)
+        ):
             raise ValueError("BAD_MANIFEST")
         if (
             len(identities) != 3
@@ -102,6 +110,7 @@ class SyntheticMessageBoundary:
         if any(not self._is_digest(value) for value in (candidate_digest, evidence_digest, policy_digest)):
             raise ValueError("BAD_MANIFEST")
         self._run_id = run_id
+        self._max_messages = max_messages
         self._identities = dict(identities)
         self._keys = dict(fixture_keys)
         self._candidate_digest = candidate_digest
@@ -130,7 +139,10 @@ class SyntheticMessageBoundary:
         )
         return (
             all(type(value) is str and bool(value) for value in strings)
-            and all(type(value) is int and value >= 0 for value in (message.epoch, message.predecessor, message.deadline, now))
+            and all(
+                type(value) is int and value >= 0
+                for value in (message.epoch, message.predecessor, message.deadline, now)
+            )
             and all(cls._is_digest(value) for value in digests)
         )
 
@@ -165,8 +177,16 @@ class SyntheticMessageBoundary:
                 return hold("INVALID_MAC")
             if message.sender_role != self._identities[message.sender_id]:
                 return hold("ROLE_SPOOF")
-            if message.content_digest != digest_text(message.content):
+            try:
+                content_bytes = message.content.encode("utf-8")
+            except UnicodeEncodeError:
+                return hold("MALFORMED")
+            if len(content_bytes) > 4096:
+                return hold("OVERSIZED_CONTENT")
+            if message.content_digest != sha256(content_bytes).hexdigest():
                 return hold("CONTENT_DIGEST_MISMATCH")
+            if message.version != VERSION or message.run_id != self._run_id:
+                return hold("WRONG_RUN_OR_VERSION")
 
             previous = self._receipts.get(message.message_id)
             if previous is not None:
@@ -175,8 +195,6 @@ class SyntheticMessageBoundary:
 
             if message.sender_id in self._revoked:
                 reason = "REVOKED"
-            elif message.version != VERSION or message.run_id != self._run_id:
-                reason = "WRONG_RUN_OR_VERSION"
             elif message.recipient_id != "controller":
                 reason = "UNAUTHORIZED_EDGE"
             elif message.kind not in ROLE_KINDS[message.sender_role]:
@@ -195,6 +213,9 @@ class SyntheticMessageBoundary:
                 reason = "EXPIRED"
             else:
                 reason = None
+
+            if len(self._receipts) >= self._max_messages:
+                return hold("LEDGER_FULL")
 
             if reason is None:
                 self._admitted_ids.append(message.message_id)
