@@ -9,7 +9,7 @@
 **Source:** Hensel Generative Formalism · Amethyst v4.2-hensel
 
 > **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.7747327664`; `ρ` is the plastic number `≈1.3247179572447454`; `ρP` is not canonical mathematical notation.
-
+>
 > **Epistemic boundary:** PRS is an interface/registry specification. It does not by itself establish that any tier is scientifically valid, production-ready, secure, or empirically effective.
 
 ---
