@@ -33,7 +33,9 @@ from scripts.validate_structural_epistemics_claim_graph import validate_claim_gr
 
 PROTECTED_MAIN = "1a95b94332dffb404c5a3ce026d70781a8c10b90"
 LOCKED_GIT_BLOBS = {
-    "docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json": "ebea3130335c50716352e7aa6c749069bbd8b832",
+    "docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json": (
+        "ebea3130335c50716352e7aa6c749069bbd8b832"
+    ),
     "docs/research/STRUCTURAL_EPISTEMICS_CLAIM_RECORD_SCHEMA.json": "bed1d9a57ef25a94a70379b9af99d2d0fcbb54a6",
     "docs/research/STRUCTURAL_EPISTEMICS_EVIDENCE_GRAPH_SCHEMA.json": "77f097d261289d9f595e8c4ae465b97d5b3ce64a",
     "scripts/validate_structural_epistemics_claim_graph.py": "d24e2798e305f76beca5b9ecfcb91ba8fa6ba847",
@@ -407,7 +409,11 @@ class FixedWorkflow:
             "record_type": "AIRP_B_FIXED_RESULT",
             "schema_version": 1,
             "source_commit": PROTECTED_MAIN,
-            "outcome": "STOPPED_ON_REJECTION" if len(results) < len(steps) or results[-1]["status"] == "REJECTED" else "COMPLETED_SYNTHETIC_ONLY",
+            "outcome": (
+                "STOPPED_ON_REJECTION"
+                if len(results) < len(steps) or results[-1]["status"] == "REJECTED"
+                else "COMPLETED_SYNTHETIC_ONLY"
+            ),
             "step_results": results,
             "lineage": self.lineage,
             "scientific_n_increment": 0,
