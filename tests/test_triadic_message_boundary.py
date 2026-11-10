@@ -4,6 +4,7 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from threading import Barrier
+from typing import cast
 
 from scripts import triadic_message_boundary as auth
 
@@ -159,7 +160,7 @@ class SignedMessageBoundaryTests(unittest.TestCase):
             with self.subTest(change=change):
                 original = replace(self.message(), **change)
                 self.assertEqual(self.new_boundary().admit(original, 1).reason, "MALFORMED")
-        self.assertEqual(self.boundary.admit(None, 1).reason, "MALFORMED")
+        self.assertEqual(self.boundary.admit(cast(auth.SignedMessage, None), 1).reason, "MALFORMED")
         self.assertEqual(self.boundary.admit(self.message(), True).reason, "MALFORMED")
 
     def test_denied_authenticated_message_id_cannot_be_overwritten(self):
