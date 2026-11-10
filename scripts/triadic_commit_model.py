@@ -44,8 +44,8 @@ class SyntheticController:
         self._version = 0
         self._epoch = 0
         self._authorized = True
-        self._accepted = None
-        self._receipts = {}
+        self._accepted: str | None = None
+        self._receipts: dict[str, tuple[Proposal, Receipt]] = {}
 
     def revoke(self):
         with self._lock:
