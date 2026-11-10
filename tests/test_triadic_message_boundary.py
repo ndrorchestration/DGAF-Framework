@@ -62,6 +62,30 @@ class SignedMessageBoundaryTests(unittest.TestCase):
         message = self.message(content="modified")
         self.assertEqual(self.boundary.admit(message, 1).reason, "CONTENT_DIGEST_MISMATCH")
 
+    def test_signed_wrong_run_does_not_reserve_current_run_id(self):
+        self.assertEqual(self.boundary.admit(self.message(run_id="other"), 1).reason, "WRONG_RUN_OR_VERSION")
+        self.assertEqual(self.boundary.admit(self.message(), 1).outcome, "ADMITTED_SYNTHETIC")
+
+    def test_ledger_capacity_fails_closed_without_erasing_prior_receipts(self):
+        boundary = auth.SyntheticMessageBoundary(
+            "run-001", self.roles, self.keys,
+            self.candidate_digest, self.evidence_digest, self.policy_digest,
+            max_messages=1,
+        )
+        first = self.message(message_id="first")
+        receipt = boundary.admit(first, 1)
+        self.assertEqual(receipt.outcome, "ADMITTED_SYNTHETIC")
+        self.assertEqual(boundary.admit(self.message(message_id="second"), 1).reason, "LEDGER_FULL")
+        self.assertEqual(boundary.admit(first, 30), receipt)
+        self.assertEqual(boundary.snapshot()[1], 1)
+
+    def test_oversized_and_non_utf8_content_are_rejected(self):
+        oversized_content = "X" * 4097
+        oversized = self.message(content=oversized_content, content_digest=auth.digest_text(oversized_content))
+        self.assertEqual(self.boundary.admit(oversized, 1).reason, "OVERSIZED_CONTENT")
+        malformed = self.message(content="\\ud800")
+        self.assertEqual(self.boundary.admit(malformed, 1).reason, "MALFORMED")
+
     def test_unknown_identity_cannot_reserve_message_id(self):
         forged = self.message(sender="intruder")
         self.assertEqual(self.boundary.admit(forged, 1).reason, "UNKNOWN_IDENTITY")
