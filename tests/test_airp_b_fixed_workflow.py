@@ -108,7 +108,10 @@ def test_preplanned_six_operation_sequence_and_non_authority() -> None:
         assert step["status"] == "ACCEPTED_SYNTHETIC_ONLY"
         assert_no_authority(step)
     assert result["step_results"][2]["admission_class"] == "EVIDENCE_GATE_ADMITTED_SYNTHETIC_ONLY"
-    assert result["step_results"][-1]["comparison"]["left_digest"] == result["step_results"][-1]["comparison"]["right_digest"]
+    assert (
+        result["step_results"][-1]["comparison"]["left_digest"]
+        == result["step_results"][-1]["comparison"]["right_digest"]
+    )
     assert workflow.snapshot()["claims"][-1]["applicability_state"] == "CHALLENGED"
     assert workflow.snapshot("candidate") == workflow.snapshot()
 
