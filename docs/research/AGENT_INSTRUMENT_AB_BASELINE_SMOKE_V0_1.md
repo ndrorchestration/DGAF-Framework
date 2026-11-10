@@ -1,0 +1,145 @@
+# Agent Instrument A/B baseline smoke v0.1 — source-locked synthetic engineering check
+
+> **Status:** PROPOSED / DRAFT / INTERNAL SYNTHETIC TEST. **Not** preregistered or scientific evidence. No agent was evaluated. No instrument interface was implemented.
+>
+> **Relationship:** separate, non-authorizing follow-up to [terminology/protocol draft PR #1570](https://github.com/ndrorchestration/DGAF-Framework/pull/1570); do **not** use this lane to merge or promote #1570.
+>
+> **Source anchor:** protected `main` `1a95b94332dffb404c5a3ce026d70781a8c10b90`. The reference graph and validator were fetched at their [exact original fixture](https://github.com/ndrorchestration/DGAF-Framework/blob/1a95b94332dffb404c5a3ce026d70781a8c10b90/docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json) and [validator](https://github.com/ndrorchestration/DGAF-Framework/blob/1a95b94332dffb404c5a3ce026d70781a8c10b90/scripts/validate_structural_epistemics_claim_graph.py) identities; their Git blob digests are pinned in the candidate manifest.
+
+## Purpose and limiting distinction
+
+Before considering an instrument-specific API, check whether direct calls and a simple procedural entry point of the **already implemented** ClaimGraph validator produce the same structural judgments on fixed synthetic cases.
+
+- **A-DIRECT:** call `validate_claim_graph(graph)` from Python.
+- **B-FIXED-CLI-PROXY:** write an isolated in-memory-derived JSON candidate into a disposable temporary directory; invoke `python scripts/validate_structural_epistemics_claim_graph.py <temporary-file>` once; capture return code and text.
+- **C-INSTRUMENT:** **NOT IMPLEMENTED AND NOT TESTED**.
+
+This checks matching **entry points to one validator**, not a comparison with a full configurable workflow, human usability, a learned agent, or a fair A/B/C agent trial. If A and B agree it means their structural plumbing agrees on the six synthetic cases; it does **not** establish functional independence or a unique Agent Instrument contribution.
+
+## Source, provenance, and artifacts
+
+| Role | Path | What the checks do |
+| --- | --- | --- |
+| Case definitions and source pin | `docs/research/fixtures/AGENT_INSTRUMENT_AB_SMOKE_MANIFEST_V0_1.json` | Six synthetic mutations and expected fail/pass fragments; pins existing source using Git SHA-1 **blob IDs**, not standalone raw SHA-1 or a security-authenticity signature |
+| Exerciser | `tests/test_agent_instrument_ab_baseline_smoke.py` | One source-lock/safety classification check plus six parametrized A/B parity checks |
+| Existing immutable source reference | `docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json` | Existing synthetic hypothesis with support and counterevidence; *not* blinded or independent |
+| Existing validator | `scripts/validate_structural_epistemics_claim_graph.py` | Schema and epistemic-structure invariants; explicitly **not** claim truth, efficacy, permission or execution |
+| Existing schema files | `docs/research/STRUCTURAL_EPISTEMICS_{CLAIM_RECORD,EVIDENCE_GRAPH}_SCHEMA.json` | Used by both A and B through the same validator |
+
+Only two new files are introduced on this draft: the manifest and the smoke test. They are **not** a second graph, duplicate evaluator, or instrument runtime.
+
+### Reproducible local command (proposal, executable where dependencies installed)
+
+```bash
+python -m pytest -q tests/test_agent_instrument_ab_baseline_smoke.py
+```
+
+Prerequisites: Python compatible with the repository, `pytest`, `jsonschema`, exact source files at the anchored Git blob identities. The test fails closed if either the graph fixture or validator bytes drift. It writes candidate graphs **only** in pytest-provided temporary directories, invokes no network, and does not operate on canonical governance/evidence artifacts. A Git blob SHA-1 identifies a file's Git contents for this bounded experiment; it is not an authenticity proof or a signed custody receipt.
+
+## Synthetic case contract
+
+| Case | Mutation | Expected structural result |
+| --- | --- | --- |
+| `AB-S0` | Unmodified reference fixture | PASS STRUCTURAL ONLY |
+| `AB-S1` | Unsupported identifier references non-existent evidence | REJECT |
+| `AB-S2` | Drop required `SUPPORTS` edge | REJECT |
+| `AB-S3` | Trigger a defeater while leaving applicability `CURRENT` | REJECT |
+| `AB-S4` | Add duplicate-root supporting evidence without a dependency edge | REJECT |
+| `AB-S5` | Same duplicate-root support with explicit `SHARES_SOURCE_ROOT` edge | PASS STRUCTURAL ONLY; **not independent corroboration** |
+
+These are a selected subset of existing validator semantics, designed to test entry-point parity. They do not implement the 11-family Agent Instrument study bank in the terminology candidate and must not be represented as 11 completed experiments, independent observations, or novel security controls. Do not conflate `PASS STRUCTURAL ONLY` with truth, independently verified source attribution, or action authorization.
+
+## Test and audit acceptance boundaries
+
+1. Manifest binds the exact reference graph and validator bytes through the source blob SHA checks.
+2. The two surfaces return identical accept/reject outcomes for all six cases, with expected error substrings for failures.
+3. Cases expecting structural pass preserve their uncertainty and non-authorizing claim class; they establish no real-world truth.
+4. A CLI import/environment failure, missing dependencies, or source drift is a failed or blocked **test setup** and must not be counted as a graph rejection.
+5. The CI report must bind to the *exact branch head* and enumerate passed, failed, skipped, and pending suites. Other workflow failures are not waived even if these seven checks pass.
+6. A full B-FIXED interface and C-INSTRUMENT implementation remain separately scoped and cannot inherit this test's `PASS` as efficacy evidence.
+
+## Unresolved decisions and next experiment design
+
+- Are there other existing query/orchestration interfaces that make even the fixed-workflow proxy redundant? Inventory before any further code.
+- Design fair **A-DIRECT vs B-FIXED full workflow** capability parity with equal feedback/branching and permissions. The CLI proxy does **not** satisfy this requirement.
+- Before any C arm, lock synthetic test oracles, distinct held-out task structures, model/configuration, budget, randomization, history/no-history factors, adjudicator status, predeclared effect threshold and uncertainty/sampling plan. All are **UNSET**.
+- A complete experiment must preserve the stronger prior-art/comparator and scientific claim ceiling in #1570 and the [general DGAF comparative governance benchmark](../qa/COMPARATIVE_GOVERNANCE_BENCHMARK_SPEC.md).
+
+**Current expected claim ceiling:** internal engineering source-lock and validator-entry-point parity only, if and when tests run and report PASS for the exact commit. Before that, **TESTS NOT VERIFIED**. `SCIENTIFIC_N_INCREMENT=0`; `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`; `CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`; `HIGH_ASSURANCE=NOT_AUTHORIZED`; `AUTHORIZATION_EFFECT=NONE`.
+
+**Admission:** DRAFT / NON-ADMITTING until signed commits, exact-head checks, protected-main policy and required reviews are satisfied. CI failures must stay visible.
+
+## Existing fixed attribution-query pipeline — reuse-first expansion (2026-11-09)
+
+**Discovery:** `scripts/claimgraph_attribution_query.py` already implements a bounded deterministic sequence: validate the ClaimGraph → validate caller-supplied attribution observations → classify supporting evidence attribution → emit an explicitly non-truth, non-authorizing result. It also has a CLI with three meaningful outcomes: `0=complete`, `2=partial`, and `1=invalid/error`. This is **not an independently implemented policy engine or a new Agent Instrument**.
+
+Rather than build a second runtime, `tests/test_agent_instrument_existing_attribution_workflow.py` compares:
+
+- **A direct:** existing `validate_claim_graph` then `query_attribution` called through Python (the query validates again).
+- **B incumbent fixed query:** existing `claimgraph_attribution_query.py` CLI called on copied graph/observation fixtures using a temporary directory.
+- **C instrument:** NOT IMPLEMENTED.
+
+All tests pin the unmodified `claimgraph_attribution_query.py` Git blob `e3ed75a9e3a0eb6b4a01754894df32bf10985b2a` from protected main `1a95b94332dffb404c5a3ce026d70781a8c10b90`, and use the existing synthetic reference graph and its current validator contracts. This protects against silent query drift but is **not** an independently signed artifact or proof of source trust.
+
+Nine new deterministic cases (`ATTR-01`–`ATTR-09`) cover: internally classified complete support; missing attribution with **partial exit 2, not PASS/admission**; external claimed/unverified evidence; externally *reported* independent evidence that remains `independence_effect=NONE`; forged internal independence; unknown evidence ID; graph lacking a support relation; duplicate attribution; and reported independent status without a required adjudication reference. Direct and fixed CLI outputs must agree byte-semantically as JSON, including error text and `truth_effect=authorization_effect=independence_effect=NONE` on accepted observations. Neither may mutate source inputs.
+
+**Scope ceiling:** This is a *useful existing fixed-workflow baseline for read-only ClaimGraph attribution*, not a complete workflow for `add_claim`, `attach_evidence`, `challenge`, `fork` or `compare`. It does not match the proposed C arm on those unimplemented capabilities, and repeats the validator on A so **cost/latency parity is not established**. No model, agent, usability, transfer, or independent-performance trial has occurred. Prefer this existing workflow rather than cloning its logic.
+
+**Focused command when dependencies are available:**
+
+```bash
+python -m pytest -q tests/test_agent_instrument_ab_baseline_smoke.py tests/test_agent_instrument_existing_attribution_workflow.py
+```
+
+**Verification gate:** the new source requires exact-head hosted lint/type and pytest readback before any claim of `TESTED`. A fixed-workflow behavioral parity PASS is a bounded deterministic engineering observation, not a justification for creating the C Agent Instrument interface. The unchanged root CI/security/signature/review blockers still apply.
+
+## Five-control manual composition baseline — research-only continuation (2026-11-09)
+
+This extension uses **only existing schema-v1 ClaimGraph and its validator**. It does **not** implement an Agent Instrument control API or assert that any proposed operation exists as a callable, separately governed primitive. Source inspection is bound to protected `main` `1a95b94332dffb404c5a3ce026d70781a8c10b90` and the existing smoke manifest's Git blob pins.
+
+| Proposed user-facing control | Reused source capability | Bounded manual baseline | Missing/unknown before production interpretation |
+| --- | --- | --- | --- |
+| `add_claim` | [ClaimRecord schema](../research/STRUCTURAL_EPISTEMICS_CLAIM_RECORD_SCHEMA.json), [graph validator](../../scripts/validate_structural_epistemics_claim_graph.py) | Duplicate a *synthetic* record into an in-memory candidate with a unique ID and `PROPOSED/NOT_VERIFIED/NONE`; validate the full graph | No checked transactional action endpoint, ACL, accepted state write or revision collision guard established by these files |
+| `attach_evidence` | [EvidenceGraph schema](../research/STRUCTURAL_EPISTEMICS_EVIDENCE_GRAPH_SCHEMA.json), support relation checks, [Evidence Gate](../../components/evidence_gate.py) | Add synthetic evidence and matching `SUPPORTS` relation to a *candidate*; validate | Graph structural validity **does not admit artifact bytes** through Evidence Gate. A real linkage needs an independently evaluated admission/identity receipt and proper governance. |
+| `challenge` | Graph `CONTRADICTS`, defeater and applicability invariants | Add synthetic counterevidence, `CONTRADICTS` relation, and triggered defeater; preserve `CHALLENGED` applicability and verify that `CURRENT` fails | No real-world source truth, adversarial provenance determination, adjudicator or governed transition established |
+| `fork` | JSON-serializable graph snapshots and Python copy semantics, **not** an API | Deep-copy reference graph before any mutation and retain unchanged source digest | No version store, optimistic concurrency (`expected_head`), parent lineage, signed revision or external-effect rollback established |
+| `compare` | Existing graph identity/schema plus deterministic JSON serialization | Verify original and candidate hashes and node/relation count deltas | **Not** a canonical semantic difference engine; would need source-root-aware and epistemic-state-aware diff if a real use case requires it |
+
+**Implementation scope:** `tests/test_agent_instrument_five_control_composition_baseline.py` contains **one planned integrated, disposable-snapshot regression test** (unless exact-head CI later reports it PASS). It composes a proposed unverified claim, a synthetic support node/edge, a counter node/edge, and a triggered defeater, while maintaining an unchanged original snapshot. It asserts that making a triggered-defeater claim `CURRENT` is rejected. No result count should be reported until the test **runs**. This is intentionally a direct-control capability feasibility demonstration, **not a fifth implemented runtime primitive**.
+
+**Read-only vs write boundary:** the earlier `claimgraph_attribution_query.py` workflow is a read-only bounded B for `inspect`, **not** an interchangeable B for graph mutation. In this manual simulation, candidate graph mutation occurs in ordinary Python memory, not through any DGAF-controlled repository write path. Never equate structural `PASS` to Evidence Gate `admitted=true`, ClaimGraph truth, independent validation, or Action Admission authorization.
+
+**Decision after a successful smoke:** the minimum coherent graph transformations can already be composed manually. Any future stateful Agent Instrument layer must separately demonstrate a *needed* governed interaction affordance, source/revision identity, error recovery and measurable value against an equally capable simple workflow. If the simple workflow suffices, reject the extra abstraction. No claim of architectural novelty or superior agent proficiency is earned here.
+
+## Pilot 0 diagnostic semantic-boundary regressions — source-only proposal (2026-11-10)
+
+> **Status:** `DRAFT / INTERNAL SYNTHETIC REGRESSION / NO AGENT TRIAL`. The new checks are proposed test source on this draft branch; do not claim execution until **the final exact-head CI and test logs** confirm it. This is not a pilot with agent subjects, held-out oracle isolation, blinded review, a preregistered effect size, or an instrument implementation.
+
+**Specific new failure mode:** the **existing read-only** `claimgraph_attribution_query.py` emits `COMPLETE_FOR_SUPPORTING_EVIDENCE` if every listed supporting evidence ID has a caller-supplied attribution row. That status **does not attest that the claim is true, unchallenged, current, independent or authorized**. Likewise, fixed CLI exit `0` means metadata completeness, while exit `2` means partial metadata and exit `1` means invalid input. This is a *semantically misleading-to-operators risk*, **not** a finding that the existing query erroneously grants permissions.
+
+Four focused regression cases were added to the **existing** `tests/test_agent_instrument_existing_attribution_workflow.py` rather than creating a parallel validation engine or second source of truth:
+
+| Diagnostic case | Existing substrate | Expected source-level observation and rejection of overclaim |
+| --- | --- | --- |
+| `CHALLENGED_WITH_COUNTEREVIDENCE` | Source-locked reference graph already contains counterevidence and `CHALLENGED` applicability | Attribution completeness can be `COMPLETE_FOR_SUPPORTING_EVIDENCE`; no promotion from challenge to truth or permission |
+| `STALE_SUPPORT_PROPOSED` | Disposable graph with `PROPOSED` claim, stale support, validated with existing ClaimGraph validator | Caller attribution rows can be complete even though supporting evidence is stale and claim remains proposed |
+| `CORRELATED_SUPPORT_ROOTS` | Disposable extra support node with same `source_roots` and an explicit `SHARES_SOURCE_ROOT` dependency edge | Two recorded support IDs can be fully mapped without becoming two independently attested sources |
+| `CLI_COMPLETE_STALE_EXIT_ZERO` | Existing fixed attribution CLI invoked on temporary JSON files for stale proposed claim | Exit `0` and `COMPLETE_FOR_SUPPORTING_EVIDENCE` are *not* truth/independence/effect admission; all three `*_effect` values remain `NONE` |
+
+**Source locks and effect boundary:** the test asserts the existing attribution query's Git blob identity `e3ed75a9e3a0eb6b4a01754894df32bf10985b2a` at protected main `1a95b94332dffb404c5a3ce026d70781a8c10b90`. It uses in-memory or pytest-temporary candidate files; validates structure before query; tests all non-authorizing effect ceilings; asserts caller observation and graph objects are not mutated in the parameterized cases. No Evidence Gate receipt, authenticated identity, external execution, approved claim, independent custody, or new instrument is created.
+
+**Candidate research utility:** These cases specify *precise false-conclusion patterns* an eventual agent diagnostic task must avoid. A future correctly controlled Pilot 0 would test **behavioral understanding** of such outputs under A direct incumbent, B existing fixed CLI, and only if needed C compositional presentation. Before that, preserve separate answer-key/oracle custody, fresh held-out examples, matched tool and observation access, randomization, blinded adjudication where independently available, predeclared budget and stopping criteria. The new regression fixtures and exact error strings are **development-visible and must not be reused as blind evaluation cases**.
+
+**Acceptance/stop rule:** exact-head Python test execution must pass on the reported environments, then CI failures and signatures remain independent blockers. If tests fail, diagnose test-versus-code assumptions without weakening ClaimGraph policy. If the existing CLI plus clearly documented semantics provides an adequate operator interface, disposition is **NO NEW AGENT INSTRUMENT API**. No scientific-N, canonical efficacy, independent validation, High-Assurance, or protected-main admission change.
+
+## 2026-11-10 — Phase 2 B-FIXED lineage (separate implementation; do not reinterpret earlier A/B smoke)
+
+The source-locked synthetic A-DIRECT versus B-FIXED-CLI-PROXY test in this document remains a **validator-entrypoint parity check only**. Its source-locked development-visible cases are not blind held-out evidence, independent scientific samples or proof that a complete conventional workflow existed at the time.
+
+A **separate**, subsequent [Phase 2 research draft PR #1582](https://github.com/ndrorchestration/DGAF-Framework/pull/1582) now includes a minimal predetermined **B-FIXED** runner on disposable in-memory ClaimGraph versions. [Its source-bound spec and evidence ledger](https://github.com/ndrorchestration/DGAF-Framework/blob/research/airp-b-fixed-phase2-20261110/docs/research/AIRP_B_FIXED_PHASE2_V0_1.md) describe all six fixed operations, exact source locks, version checks, replay bounds, branch isolation, Evidence Gate reuse, attribution limits and tests. Source-tested executable commit: [e70ac83f9c58919d9642354c48c4ab0f3edc5ab2](https://github.com/ndrorchestration/DGAF-Framework/commit/e70ac83f9c58919d9642354c48c4ab0f3edc5ab2).
+
+At that commit, **20/20** new AIRP tests passed on each Python 3.10/3.11/3.12; each complete pytest suite reported **2070 passed / 5 skipped / 64 subtests passed** (Python 3.12: 7 warnings). The entire CI was **not green**: 17 associated workflow families succeeded and 3 failed. Python Tests & Quality Checks failed at pip-audit (19 vulnerabilities in five installed CI packages); two PDMAL workflows failed Python 3.12.0 setup before contract execution. Do not claim current-head CI green, external validity, scientific N increment or effect authority.
+
+**Discriminating boundary:** B-FIXED's existence is **not** evidence that C-INSTRUMENT provides added value, or that A and B are already matched in agent-facing capability. The six synthetic test operations are conventional predetermined actions, not a flexible persistent tool surface. All earlier synthetic fixtures and error strings are visible development material and must never be reused as held-out A/B/C performance cases. Design the prospective oracle, matched budgets, source-root-disjoint held-out cases and independent adjudication *before* any evaluation.
+
+**No governance transition:** PR #1575 and PR #1582 are separate research branches, draft and unmerged at this documentation checkpoint. `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED`; `SCIENTIFIC_N_INCREMENT=0`; `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`; `CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`; `HIGH_ASSURANCE=NOT_AUTHORIZED`; `AUTHORIZATION_EFFECT=NONE`.

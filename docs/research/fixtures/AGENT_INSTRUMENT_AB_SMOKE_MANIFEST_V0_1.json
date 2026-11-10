@@ -1,0 +1,66 @@
+{
+  "record_type": "AGENT_INSTRUMENT_AB_SMOKE_MANIFEST_V0_1",
+  "status": "PROPOSED_INTERNAL_SYNTHETIC_SOURCE_LOCKED",
+  "provenance": {
+    "protected_main_commit": "1a95b94332dffb404c5a3ce026d70781a8c10b90",
+    "graph_fixture_path": "docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json",
+    "graph_fixture_git_blob_sha1": "ebea3130335c50716352e7aa6c749069bbd8b832",
+    "validator_path": "scripts/validate_structural_epistemics_claim_graph.py",
+    "validator_git_blob_sha1": "d24e2798e305f76beca5b9ecfcb91ba8fa6ba847",
+    "source_custody": "GitHub protected-main snapshot; experiment fixtures are synthetic and are NOT independent evidence"
+  },
+  "interface_surfaces": {
+    "A_DIRECT": "Direct Python call to validate_claim_graph(graph)",
+    "B_FIXED_PROXY": "Same validator through its deterministic CLI entry point, called once per disposable graph copy",
+    "C_INSTRUMENT": "NOT_IMPLEMENTED",
+    "comparability_limit": "A and B are equivalent entry points to the SAME validator. Parity is a plumbing/feedback smoke test, NOT a test of fixed workflows, agents, proficiency, or DGAF safety superiority."
+  },
+  "cases": [
+    {
+      "id": "AB-S0",
+      "mutation": "NONE",
+      "expected": "PASS",
+      "error_fragment": null
+    },
+    {
+      "id": "AB-S1",
+      "mutation": "UNKNOWN_EVIDENCE",
+      "expected": "REJECT",
+      "error_fragment": "references unknown evidence"
+    },
+    {
+      "id": "AB-S2",
+      "mutation": "DROP_SUPPORT_RELATION",
+      "expected": "REJECT",
+      "error_fragment": "lacks SUPPORTS relation"
+    },
+    {
+      "id": "AB-S3",
+      "mutation": "TRIGGERED_DEFEATER_CURRENT",
+      "expected": "REJECT",
+      "error_fragment": "triggered defeater but remains CURRENT"
+    },
+    {
+      "id": "AB-S4",
+      "mutation": "DUPLICATED_SUPPORT_SHARED_ROOT",
+      "expected": "REJECT",
+      "error_fragment": "share dependency roots without"
+    },
+    {
+      "id": "AB-S5",
+      "mutation": "DUPLICATED_SUPPORT_WITH_RELATION",
+      "expected": "PASS",
+      "error_fragment": null
+    }
+  ],
+  "result_state": {
+    "experiment_trial_count": 0,
+    "agent_trial_count": 0,
+    "independence": "NOT_ESTABLISHED",
+    "scientific_n_increment": 0,
+    "claim_truth_effect": "NONE",
+    "authorization_effect": "NONE",
+    "external_effects": "PROHIBITED",
+    "runtime_state": "NOT_YET_RUN_IN_REPOSITORY_AT_COMMIT_CREATION"
+  }
+}
