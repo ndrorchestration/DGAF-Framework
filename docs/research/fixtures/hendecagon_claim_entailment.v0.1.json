@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.1",
+  "record_type": "SYNTHETIC_CLAIM_ENTAILMENT_RESEARCH_FIXTURE",
+  "issue": "https://github.com/ndrorchestration/DGAF-Framework/issues/1572",
+  "status": "DESIGN_ONLY_UNREVIEWED_NO_MODEL_EVALUATION",
+  "label_authority": "PROPOSED_SAME_SYSTEM_ANALYST_LABELS_NOT_INDEPENDENT_GOLD",
+  "population": "A fixed, synthetic set of ten atomic mathematical and inferential claims; not a sampled population of deployed AI answers.",
+  "scientific_n_increment": 0,
+  "independent_validation": "NOT_ESTABLISHED",
+  "dgaf_efficacy": "NOT_ESTABLISHED",
+  "sources": [
+    {
+      "id": "S1",
+      "kind": "PRIMARY_PUBLISHER_ABSTRACT",
+      "url": "https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/on-the-construction-of-the-regular-hendecagon-by-marked-ruler-and-compass/8B44482138A7709BD9F1093965D7E42B",
+      "scope": "Published existence theorem only; the full proof mechanism was not authenticated for this fixture."
+    },
+    {
+      "id": "S2",
+      "kind": "AUTHOR_CONJECTURE_ON_PUBLIC_FORUM",
+      "url": "https://math.stackexchange.com/questions/4714174/what-are-some-conjectures-of-your-own/4715207",
+      "scope": "Documents a proposed uniqueness conjecture and its argument; not proof of uniqueness."
+    },
+    {
+      "id": "S3",
+      "kind": "SAME_SYSTEM_EXACT_ALGEBRA",
+      "url": null,
+      "scope": "Integer polynomial identity, cubic discriminants, and circumference formula reproducible by the accompanying standard-library test; no independent reviewer."
+    }
+  ],
+  "cases": [
+    {
+      "id": "H11-01",
+      "claim": "A regular 11-gon is constructible by marked ruler and compass.",
+      "proposed_disposition": "RETAIN",
+      "source_ids": [
+        "S1"
+      ],
+      "reason": "The publisher's abstract states the proved existence theorem."
+    },
+    {
+      "id": "H11-02",
+      "claim": "For a unit-side regular 11-gon, R=1/(2 sin(pi/11)) approximately 1.7747327664.",
+      "proposed_disposition": "RETAIN",
+      "source_ids": [
+        "S3"
+      ],
+      "reason": "Elementary regular-polygon geometry; numerical display is deterministically checked."
+    },
+    {
+      "id": "H11-03",
+      "claim": "25r^3-40r^2+21r-2 is congruent to 3(r+1)^2(r+3) modulo 11.",
+      "proposed_disposition": "RETAIN",
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
+      "reason": "Correct polynomial identity in characteristic 11, not over the real numbers."
+    },
+    {
+      "id": "H11-04",
+      "claim": "A repeated root of the cubic modulo 11 proves the cubic has a repeated root over the real numbers.",
+      "proposed_disposition": "REJECT",
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
+      "reason": "Its characteristic-zero discriminant is -44000, not zero; reduction modulo a prime does not preserve this conclusion."
+    },
+    {
+      "id": "H11-05",
+      "claim": "The conjecture's cubic 25r^3-40r^2+21r-2 has the unit-side hendecagon circumradius as a root.",
+      "proposed_disposition": "REJECT",
+      "source_ids": [
+        "S3"
+      ],
+      "reason": "At R=1/(2 sin(pi/11)), the polynomial evaluates to approximately 49.02818, not zero."
+    },
+    {
+      "id": "H11-06",
+      "claim": "Eleven is the only non-Pierpont prime for which a regular polygon is constructible by marked ruler and compass.",
+      "proposed_disposition": "WITHHOLD",
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "reason": "The published result establishes existence for 11, while the later source offers a conjecture, not a universal impossibility theorem."
+    },
+    {
+      "id": "H11-07",
+      "claim": "Failure of one attempted construction method for 31-, 41-, and 61-gons proves that every marked-ruler construction of those polygons is impossible.",
+      "proposed_disposition": "REJECT",
+      "source_ids": [
+        "S2"
+      ],
+      "reason": "Failure of a particular approach is not a proof about every possible method."
+    },
+    {
+      "id": "H11-08",
+      "claim": "The cited constructibility results establish an improvement in cryptographic security.",
+      "proposed_disposition": "WITHHOLD",
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "reason": "No cryptographic threat model, construction, or evidence is supplied."
+    },
+    {
+      "id": "H11-09",
+      "claim": "The polynomial u^3+2u^2+2u+2 and 25r^3-40r^2+21r-2 are literally the same polynomial.",
+      "proposed_disposition": "REJECT",
+      "source_ids": [
+        "S3"
+      ],
+      "reason": "They have different coefficient sequences and discriminants (-44 versus -44000); any other relationship needs separate derivation."
+    },
+    {
+      "id": "H11-10",
+      "claim": "Cubing is a bijection on the finite field F_11.",
+      "proposed_disposition": "RETAIN",
+      "source_ids": [
+        "S3"
+      ],
+      "reason": "The multiplicative group of nonzero residues has order 10 and gcd(3,10)=1; this is not an explanation of cubic root multiplicity."
+    }
+  ]
+}
