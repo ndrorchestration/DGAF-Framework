@@ -9,7 +9,7 @@
 **Source:** AutoInit — Bingham & Miikkulainen (UT Austin / Cognizant AI Labs) · Hensel v4.2 substrate plane spec
 
 > **Firewall rule:** Substrate plane uses AutoInit analytic gain per activation. Registry tier ratios (`pP`, `ρ`, `h`, etc.) MUST NOT enter gain computation.
-
+>
 > **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. `pP` is DGAF-specific Platinum Mean notation for `1/(2sin(π/11)) ≈ 1.7747327664`. `ρ` is the plastic number `≈1.3247179572447454`. `ρP` is not canonical mathematical notation.
 
 ---
