@@ -111,7 +111,6 @@ This extension uses **only existing schema-v1 ClaimGraph and its validator**. It
 
 **Decision after a successful smoke:** the minimum coherent graph transformations can already be composed manually. Any future stateful Agent Instrument layer must separately demonstrate a *needed* governed interaction affordance, source/revision identity, error recovery and measurable value against an equally capable simple workflow. If the simple workflow suffices, reject the extra abstraction. No claim of architectural novelty or superior agent proficiency is earned here.
 
-
 ## Pilot 0 diagnostic semantic-boundary regressions — source-only proposal (2026-11-10)
 
 > **Status:** `DRAFT / INTERNAL SYNTHETIC REGRESSION / NO AGENT TRIAL`. The new checks are proposed test source on this draft branch; do not claim execution until **the final exact-head CI and test logs** confirm it. This is not a pilot with agent subjects, held-out oracle isolation, blinded review, a preregistered effect size, or an instrument implementation.
