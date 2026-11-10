@@ -8,13 +8,7 @@ from math import gcd, pi, sin
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = (
-    ROOT
-    / "docs"
-    / "research"
-    / "fixtures"
-    / "hendecagon_claim_entailment.v0.1.json"
-)
+FIXTURE = ROOT / "docs" / "research" / "fixtures" / "hendecagon_claim_entailment.v0.1.json"
 
 EXPECTED = {
     "H11-01": "RETAIN",
@@ -32,13 +26,7 @@ EXPECTED = {
 
 def _discriminant(a, b, c, d):
     """Discriminant of a*x**3 + b*x**2 + c*x + d."""
-    return (
-        b * b * c * c
-        - 4 * a * c**3
-        - 4 * b**3 * d
-        - 27 * a * a * d * d
-        + 18 * a * b * c * d
-    )
+    return b * b * c * c - 4 * a * c**3 - 4 * b**3 * d - 27 * a * a * d * d + 18 * a * b * c * d
 
 
 def test_fixture_has_provisional_labels_and_resolved_source_ids():
@@ -71,9 +59,7 @@ def test_modular_factorization_does_not_imply_real_repeated_root():
     # Coefficients are ordered from constant term through cubic term.
     cubic_coefficients = (-2, 21, -40, 25)
     factor_coefficients = (9, 21, 15, 3)
-    assert tuple(x % 11 for x in cubic_coefficients) == tuple(
-        x % 11 for x in factor_coefficients
-    )
+    assert tuple(x % 11 for x in cubic_coefficients) == tuple(x % 11 for x in factor_coefficients)
     assert _discriminant(25, -40, 21, -2) == -44000
     assert -44000 % 11 == 0
     assert -44000 != 0
