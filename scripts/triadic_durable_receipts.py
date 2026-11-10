@@ -136,8 +136,15 @@ class DurableSyntheticController:
 
     def _validate_state(self, state):
         fields = {
-            "format", "run_id", "evidence", "policy", "version", "epoch",
-            "authorized", "accepted", "entries",
+            "format",
+            "run_id",
+            "evidence",
+            "policy",
+            "version",
+            "epoch",
+            "authorized",
+            "accepted",
+            "entries",
         }
         if set(state) != fields:
             raise JournalCorrupt("BAD_SCHEMA")
