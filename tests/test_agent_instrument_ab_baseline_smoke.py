@@ -41,9 +41,7 @@ def _candidate(mutation: str) -> dict:
     if mutation == "UNKNOWN_EVIDENCE":
         claim["supporting_evidence_ids"].append("EVID-MISSING-AB")
     elif mutation == "DROP_SUPPORT_RELATION":
-        graph["relations"] = [
-            r for r in graph["relations"] if r["relation_type"] != "SUPPORTS"
-        ]
+        graph["relations"] = [r for r in graph["relations"] if r["relation_type"] != "SUPPORTS"]
     elif mutation == "TRIGGERED_DEFEATER_CURRENT":
         claim["applicability_state"] = "CURRENT"
         claim["defeaters"] = [
@@ -109,8 +107,7 @@ def _fixed_cli(graph: dict, tmp_path: Path) -> tuple[bool, str]:
         timeout=20,
     )
     assert process.returncode in {0, 1}, (
-        f"CLI process/setup error, not a graph verdict: {process.returncode}: "
-        f"{process.stderr[-500:]}"
+        f"CLI process/setup error, not a graph verdict: {process.returncode}: " f"{process.stderr[-500:]}"
     )
     return process.returncode == 0, process.stdout + process.stderr
 
@@ -119,12 +116,8 @@ def test_ab_smoke_manifest_is_source_bound_and_non_authorizing() -> None:
     provenance = MANIFEST["provenance"]
     assert MANIFEST["record_type"] == "AGENT_INSTRUMENT_AB_SMOKE_MANIFEST_V0_1"
     assert provenance["protected_main_commit"] == "1a95b94332dffb404c5a3ce026d70781a8c10b90"
-    assert _git_blob_sha1(ROOT / provenance["graph_fixture_path"]) == provenance[
-        "graph_fixture_git_blob_sha1"
-    ]
-    assert _git_blob_sha1(ROOT / provenance["validator_path"]) == provenance[
-        "validator_git_blob_sha1"
-    ]
+    assert _git_blob_sha1(ROOT / provenance["graph_fixture_path"]) == provenance["graph_fixture_git_blob_sha1"]
+    assert _git_blob_sha1(ROOT / provenance["validator_path"]) == provenance["validator_git_blob_sha1"]
     assert MANIFEST["interface_surfaces"]["C_INSTRUMENT"] == "NOT_IMPLEMENTED"
     state = MANIFEST["result_state"]
     assert state["scientific_n_increment"] == 0
@@ -147,21 +140,15 @@ def test_ab_smoke_manifest_is_source_bound_and_non_authorizing() -> None:
 
 
 @pytest.mark.parametrize("case", CASES, ids=[case["id"] for case in CASES])
-def test_direct_and_fixed_cli_agree_on_synthetic_structure(
-    case: dict, tmp_path: Path
-) -> None:
+def test_direct_and_fixed_cli_agree_on_synthetic_structure(case: dict, tmp_path: Path) -> None:
     graph = _candidate(case["mutation"])
     direct_pass, direct_feedback = _direct(copy.deepcopy(graph))
     cli_pass, cli_feedback = _fixed_cli(copy.deepcopy(graph), tmp_path)
 
     expected_pass = case["expected"] == "PASS"
     assert case["expected"] in {"PASS", "REJECT"}
-    assert direct_pass == expected_pass, (
-        f"unexpected direct validator result for {case['id']}: {direct_feedback}"
-    )
-    assert cli_pass == expected_pass, (
-        f"unexpected CLI validator result for {case['id']}: {cli_feedback[-500:]}"
-    )
+    assert direct_pass == expected_pass, f"unexpected direct validator result for {case['id']}: {direct_feedback}"
+    assert cli_pass == expected_pass, f"unexpected CLI validator result for {case['id']}: {cli_feedback[-500:]}"
     assert direct_pass == cli_pass  # matched validator entry points, not agent parity
     if expected_pass:
         assert case["error_fragment"] is None
