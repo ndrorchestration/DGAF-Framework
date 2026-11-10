@@ -24,9 +24,21 @@ class SignedMessageBoundaryTests(unittest.TestCase):
 
     def message(self, sender="gen", kind="CANDIDATE", **changes):
         msg = auth.SignedMessage(
-            auth.VERSION, "run-001", "m1", sender, self.roles.get(sender, "Generator"),
-            "controller", kind, 0, 0, 10, self.candidate_digest, self.evidence_digest,
-            self.policy_digest, "fixture-message", auth.digest_text("fixture-message"),
+            auth.VERSION,
+            "run-001",
+            "m1",
+            sender,
+            self.roles.get(sender, "Generator"),
+            "controller",
+            kind,
+            0,
+            0,
+            10,
+            self.candidate_digest,
+            self.evidence_digest,
+            self.policy_digest,
+            "fixture-message",
+            auth.digest_text("fixture-message"),
         )
         return auth.sign_fixture(replace(msg, **changes), self.keys.get(sender, b"unknown-" * 4))
 
@@ -68,8 +80,12 @@ class SignedMessageBoundaryTests(unittest.TestCase):
 
     def test_ledger_capacity_fails_closed_without_erasing_prior_receipts(self):
         boundary = auth.SyntheticMessageBoundary(
-            "run-001", self.roles, self.keys,
-            self.candidate_digest, self.evidence_digest, self.policy_digest,
+            "run-001",
+            self.roles,
+            self.keys,
+            self.candidate_digest,
+            self.evidence_digest,
+            self.policy_digest,
             max_messages=1,
         )
         first = self.message(message_id="first")
@@ -134,8 +150,9 @@ class SignedMessageBoundaryTests(unittest.TestCase):
         self.assertEqual(self.boundary.admit(self.message(recipient_id="critic"), 1).reason, "UNAUTHORIZED_EDGE")
 
     def test_switch_requests_are_not_implicitly_authorized(self):
-        self.assertEqual(self.boundary.admit(self.message(sender="gov", kind="SWITCH_REQUEST"), 1).reason,
-                         "UNAUTHORIZED_KIND")
+        self.assertEqual(
+            self.boundary.admit(self.message(sender="gov", kind="SWITCH_REQUEST"), 1).reason, "UNAUTHORIZED_KIND"
+        )
 
     def test_malformed_fields_fail_closed(self):
         for change in ({"epoch": True}, {"predecessor": -1}, {"deadline": "tomorrow"}, {"mac": None}):
@@ -166,13 +183,21 @@ class SignedMessageBoundaryTests(unittest.TestCase):
     def test_invalid_manifest_cannot_create_authentication_boundary(self):
         with self.assertRaisesRegex(ValueError, "BAD_MANIFEST"):
             auth.SyntheticMessageBoundary(
-                "run-001", {"gen": "Generator"}, {"gen": b"g" * 32},
-                self.candidate_digest, self.evidence_digest, self.policy_digest,
+                "run-001",
+                {"gen": "Generator"},
+                {"gen": b"g" * 32},
+                self.candidate_digest,
+                self.evidence_digest,
+                self.policy_digest,
             )
         with self.assertRaisesRegex(ValueError, "BAD_MANIFEST"):
             auth.SyntheticMessageBoundary(
-                "run-001", self.roles, {"gen": b"too-short", "critic": b"c" * 32, "gov": b"v" * 32},
-                self.candidate_digest, self.evidence_digest, self.policy_digest,
+                "run-001",
+                self.roles,
+                {"gen": b"too-short", "critic": b"c" * 32, "gov": b"v" * 32},
+                self.candidate_digest,
+                self.evidence_digest,
+                self.policy_digest,
             )
 
 
