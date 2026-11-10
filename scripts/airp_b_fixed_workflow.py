@@ -5,6 +5,7 @@ Research adapter over DGAF's existing ClaimGraph validator, Evidence Gate and
 read-only attribution query. In-process snapshots ONLY; no persistent store,
 external effects, new policy authority, or scientific evaluation.
 """
+
 from __future__ import annotations
 
 import base64
@@ -115,7 +116,11 @@ class FixedWorkflow:
         """One deterministic step, guarded by in-process CAS and idempotency."""
         with self._lock:
             if not isinstance(command, dict) or set(command) != {
-                "op", "branch", "expected_version", "request_id", "args"
+                "op",
+                "branch",
+                "expected_version",
+                "request_id",
+                "args",
             }:
                 return self._reject("INVALID_COMMAND_ENVELOPE")
             op = command["op"]
@@ -222,8 +227,11 @@ class FixedWorkflow:
             validate_claim_graph(graph)
             self._branches[new_branch] = [graph]
             return self._accept(
-                branch=branch, version=actual, new_branch=new_branch,
-                new_branch_version=0, state_digest=_digest(graph),
+                branch=branch,
+                version=actual,
+                new_branch=new_branch,
+                new_branch_version=0,
+                state_digest=_digest(graph),
                 state_changed=False,
             )
         metadata = {}
@@ -236,22 +244,24 @@ class FixedWorkflow:
             if any(claim["claim_id"] == claim_id for claim in graph["claims"]):
                 raise ValueError("DUPLICATE_CLAIM")
             claim = copy.deepcopy(graph["claims"][0])
-            claim.update({
-                "claim_id": claim_id,
-                "proposition": proposition,
-                "claim_class": "HYPOTHESIS",
-                "epistemic_state": "PROPOSED",
-                "verification_status": "NOT_VERIFIED",
-                "authorization_relevance": "NONE",
-                "applicability_state": "CURRENT",
-                "supporting_evidence_ids": [],
-                "contradicting_evidence_ids": [],
-                "defeaters": [],
-                "supersedes": [],
-                "superseded_by": [],
-                "retraction": {"state": "NOT_RETRACTED", "reason": None},
-                "causal_level": "ASSOCIATION",
-            })
+            claim.update(
+                {
+                    "claim_id": claim_id,
+                    "proposition": proposition,
+                    "claim_class": "HYPOTHESIS",
+                    "epistemic_state": "PROPOSED",
+                    "verification_status": "NOT_VERIFIED",
+                    "authorization_relevance": "NONE",
+                    "applicability_state": "CURRENT",
+                    "supporting_evidence_ids": [],
+                    "contradicting_evidence_ids": [],
+                    "defeaters": [],
+                    "supersedes": [],
+                    "superseded_by": [],
+                    "retraction": {"state": "NOT_RETRACTED", "reason": None},
+                    "causal_level": "ASSOCIATION",
+                }
+            )
             graph["claims"].append(claim)
         elif op == "challenge":
             _closed(args, {"claim_id", "counterevidence_id"})
@@ -268,18 +278,22 @@ class FixedWorkflow:
             claim["contradicting_evidence_ids"].append(evidence_id)
             claim["applicability_state"] = "CHALLENGED"
             suffix = _digest(command)[:16].upper()
-            claim["defeaters"].append({
-                "defeater_id": f"DEF-BFIX-{suffix}",
-                "condition": "synthetic referenced counterevidence",
-                "status": "TRIGGERED",
-            })
-            graph["relations"].append({
-                "relation_id": f"REL-BFIX-C-{suffix}",
-                "relation_type": "CONTRADICTS",
-                "source_id": evidence_id,
-                "target_id": claim["claim_id"],
-                "scope": "AIRP synthetic only",
-            })
+            claim["defeaters"].append(
+                {
+                    "defeater_id": f"DEF-BFIX-{suffix}",
+                    "condition": "synthetic referenced counterevidence",
+                    "status": "TRIGGERED",
+                }
+            )
+            graph["relations"].append(
+                {
+                    "relation_id": f"REL-BFIX-C-{suffix}",
+                    "relation_type": "CONTRADICTS",
+                    "source_id": evidence_id,
+                    "target_id": claim["claim_id"],
+                    "scope": "AIRP synthetic only",
+                }
+            )
         elif op == "attach_evidence":
             _closed(args, {"claim_id", "evidence_node", "evidence_object", "evidence_bytes_b64"})
             claim = self._claim(graph, args["claim_id"])
@@ -300,9 +314,7 @@ class FixedWorkflow:
             data = base64.b64decode(encoded, validate=True)
             if not data or len(data) > MAX_EVIDENCE_BYTES:
                 raise ValueError("EVIDENCE_BYTES_LIMIT")
-            _closed(item, {
-                "evidence_id", "evidence_type", "digest_algorithm", "content_digest", "source_class"
-            })
+            _closed(item, {"evidence_id", "evidence_type", "digest_algorithm", "content_digest", "source_class"})
             if item["source_class"] != "SYNTHETIC_TEST":
                 raise ValueError("SYNTHETIC_SOURCE_ONLY")
             evidence = EvidenceObject(**item)
@@ -312,9 +324,7 @@ class FixedWorkflow:
                 scope_id="AIRP-SYNTHETIC",
                 source_revision=PROTECTED_MAIN,
             )
-            provenance = ProvenanceBinding(
-                producer_class="INTERNAL_SAME_SYSTEM", custody_class="SYNTHETIC_TEST"
-            )
+            provenance = ProvenanceBinding(producer_class="INTERNAL_SAME_SYSTEM", custody_class="SYNTHETIC_TEST")
             scope = ClaimScope(
                 claim_id=claim["claim_id"],
                 claim_class=claim["claim_class"],
@@ -324,21 +334,28 @@ class FixedWorkflow:
                 excluded_claims=("EFFICACY", "INDEPENDENCE", "AUTHORIZATION"),
             )
             admission = admit_evidence(
-                evidence, target, provenance, scope, evidence_bytes=data,
-                expected_target=target, required_producer_class="INTERNAL_SAME_SYSTEM",
+                evidence,
+                target,
+                provenance,
+                scope,
+                evidence_bytes=data,
+                expected_target=target,
+                required_producer_class="INTERNAL_SAME_SYSTEM",
             )
             if not admission.admitted:
                 raise ValueError(f"EVIDENCE_GATE_REJECTED: {admission.reason_code}")
             graph["evidence"].append(copy.deepcopy(node))
             claim["supporting_evidence_ids"].append(evidence_id)
             suffix = _digest(command)[:16].upper()
-            graph["relations"].append({
-                "relation_id": f"REL-BFIX-S-{suffix}",
-                "relation_type": "SUPPORTS",
-                "source_id": evidence_id,
-                "target_id": claim["claim_id"],
-                "scope": "AIRP synthetic only",
-            })
+            graph["relations"].append(
+                {
+                    "relation_id": f"REL-BFIX-S-{suffix}",
+                    "relation_type": "SUPPORTS",
+                    "source_id": evidence_id,
+                    "target_id": claim["claim_id"],
+                    "scope": "AIRP synthetic only",
+                }
+            )
             metadata = {
                 "admission_class": "EVIDENCE_GATE_ADMITTED_SYNTHETIC_ONLY",
                 "evidence_digest": admission.verified_digest,
@@ -370,9 +387,7 @@ class FixedWorkflow:
             return {item[identifier]: item for item in graph[key]}
 
         changes = {}
-        for key, identifier in (
-            ("claims", "claim_id"), ("evidence", "evidence_id"), ("relations", "relation_id")
-        ):
+        for key, identifier in (("claims", "claim_id"), ("evidence", "evidence_id"), ("relations", "relation_id")):
             a, b = indexed(left, key, identifier), indexed(right, key, identifier)
             changes[key] = {
                 "only_left": sorted(a.keys() - b.keys()),
@@ -388,12 +403,12 @@ class FixedWorkflow:
 
     def run_plan(self, plan: dict) -> dict:
         """B-FIXED runs a predeclared sequence; no agent feedback-loop branching."""
-        if not isinstance(plan, dict) or set(plan) != {
-            "record_type", "schema_version", "source_commit", "steps"
-        }:
+        if not isinstance(plan, dict) or set(plan) != {"record_type", "schema_version", "source_commit", "steps"}:
             raise ValueError("INVALID_FIXED_PLAN")
         if (plan["record_type"], plan["schema_version"], plan["source_commit"]) != (
-            "AIRP_B_FIXED_PLAN", 1, PROTECTED_MAIN
+            "AIRP_B_FIXED_PLAN",
+            1,
+            PROTECTED_MAIN,
         ):
             raise ValueError("INVALID_PLAN_IDENTITY")
         steps = plan["steps"]
