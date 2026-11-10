@@ -241,8 +241,9 @@ Caller-provided time models a trusted clock; clock authentication is absent.
 | C08 | Old proposal rejected after injected epoch increment | Actual governed topology switch |
 | C09, C11 | Incomplete check/deadline rejection; malformed fields and wrong identities | Peer timeout handling, authenticated digests |
 | C14 | Replay after simulated ACK loss and revocation returns original receipt | Process crash and durable recovery |
-| C02 | Oracle-false candidate accepted when supplied check flag is true | Semantic verifier and real-agent comparison |
-| C10, C12, C13, C15, C16 | NOT IMPLEMENTED | Propagation, adaptive policy, recovery and role mapping |
+| C02 | Frozen fixture oracle scores accepted false assertions independently of controller eligibility | Real semantic verifier, blinded external adjudication, real-agent comparison |
+| C10 | Synthetic, pre-annotated message lineage tracks unsupported claim assertion, copying and challenge | Authenticated messages, observed rather than asserted provenance, live contamination experiments |
+| C12, C13, C15, C16 | NOT IMPLEMENTED | Adaptive policy, durable recovery and role mapping |
 
 C02 is a deliberate negative scientific finding for this toy mechanism: passing
 control tests does not make its accepted answer correct. It must not be reported
@@ -257,3 +258,47 @@ workflows failed at Python setup (runs 42827378794, 42827378466, 42827378670).
 These failures are retained, not waived, and those results do not verify the
 new model source. DRAFT / UNMERGED; all scientific and authorization ceilings
 remain unchanged.
+
+## Bounded oracle-scoring extension — 2026-11-10
+
+Modules: `scripts/triadic_oracle_scoring.py` and
+`tests/test_triadic_oracle_scoring.py`. Run:
+
+```bash
+python -m unittest discover -s tests -p test_triadic_oracle_scoring.py -v
+```
+
+The offline fixture oracle holds predeclared exact-answer labels **outside the
+commit controller's inputs**. After a synthetic commit or HOLD, it independently
+scores whether the committed candidate matches that finite answer key; a
+Governor's claimed correctness cannot change this score. An oracle-false
+candidate may still be committed by the model. **C02 detects and records false
+promotion; the scoring layer is not a semantic admission gate.**
+
+C10 uses fixture-annotated claim IDs, stance (ASSERT, CHALLENGE, QUOTE),
+message IDs and parent references. Ordered parent links identify attributable
+transitive propagation from a declared injection root. An unsupported assertion
+without known ancestry is reported separately as **unattributed**, not as proof
+of non-propagation. Challenging or quoting a false claim is not counted as
+endorsing it. Malformed, duplicate, forward-referencing or missing injection
+records reject scoring instead of inventing certainty. The scorer preserves
+event IDs as synthetic audit evidence but does not certify their authenticity.
+
+Local Python 3.13.5: **15 targeted unittest cases passed** before upload,
+using a faithful local copy of the unchanged commit controller. The exact
+hosted code head must still be checked for formatting, typing, full-suite
+regressions and dependency-security findings. No full C01-C16 acceptance
+claim follows from these 15 tests.
+
+The fixture author supplies both oracle labels and trace annotations: this is
+**architectural separation of scoring**, not independently adjudicated truth,
+peer independence, blind evaluation or empirical evidence. Synthetic role names
+are not running agents; provenance is declared, not authenticated. There are no
+LLM calls, real task sampling, external effects, adaptive switching or durable
+recovery. The earlier security-scan and PDMAL infrastructure failures remain
+separate blockers until verified otherwise.
+
+DRAFT / NON-ADMITTING / UNMERGED. SCIENTIFIC_N_INCREMENT=0.
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
+HIGH_ASSURANCE=NOT_AUTHORIZED.
