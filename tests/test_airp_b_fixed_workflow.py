@@ -223,6 +223,16 @@ def test_rejected_unauthorized_tool_call() -> None:
     assert workflow.snapshot() == b.FixedWorkflow().snapshot()
 
 
+def test_unhashable_operation_name_is_rejected_without_mutation() -> None:
+    workflow = b.FixedWorkflow()
+    malformed = cmd("inspect", {"attribution_observation": None})
+    malformed["op"] = {"not": "a valid operation"}
+    result = workflow.execute(malformed)
+    assert result["status"] == "REJECTED"
+    assert_no_authority(result)
+    assert len(workflow.snapshot()["claims"]) == 1
+
+
 def test_disallows_user_supplied_verification_or_permission_on_claim() -> None:
     workflow = b.FixedWorkflow()
     command = add()
