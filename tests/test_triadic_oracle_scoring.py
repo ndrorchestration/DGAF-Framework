@@ -110,14 +110,18 @@ class OracleScoringTests(unittest.TestCase):
     def test_duplicate_ids_and_forward_parents_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "DUPLICATE_EVENT"):
             self.oracle.score(self.observe("C10", trace=self.trace() + (self.trace()[2],)))
-        bad = (TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
-               TraceEvent("relay", "Governor", ("bad-arithmetic",), "ASSERT", ("future",)))
+        bad = (
+            TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
+            TraceEvent("relay", "Governor", ("bad-arithmetic",), "ASSERT", ("future",)),
+        )
         with self.assertRaisesRegex(ValueError, "UNKNOWN_OR_FORWARD_PARENT"):
             self.oracle.score(self.observe("C10", trace=bad))
 
     def test_unknown_stance_and_bad_claim_data_are_rejected(self):
-        bad = (TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
-               TraceEvent("relay", "Governor", ("bad-arithmetic",), "ENDORSE", ("injected",)))
+        bad = (
+            TraceEvent("injected", "fixture", ("bad-arithmetic",), "ASSERT"),
+            TraceEvent("relay", "Governor", ("bad-arithmetic",), "ENDORSE", ("injected",)),
+        )
         with self.assertRaisesRegex(ValueError, "MALFORMED_TRACE"):
             self.oracle.score(self.observe("C10", trace=bad))
         duplicate_claim = (TraceEvent("injected", "fixture", ("bad-arithmetic", "bad-arithmetic"), "ASSERT"),)
