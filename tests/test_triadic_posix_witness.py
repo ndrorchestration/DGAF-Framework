@@ -1,6 +1,5 @@
 """Cross-process POSIX fixture witness tests, not external custody validation."""
 
-import os
 import subprocess
 import sys
 import tempfile
