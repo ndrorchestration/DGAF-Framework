@@ -155,3 +155,110 @@ def test_existing_fixed_attribution_workflow_matches_direct_controls(
             ]  # reported label, NOT independent verification
     assert graph == graph_before  # no persistent mutation
     assert observation == observation_before
+
+
+
+@pytest.mark.parametrize(
+    "case_id",
+    [
+        "CHALLENGED_WITH_COUNTEREVIDENCE",
+        "STALE_SUPPORT_PROPOSED",
+        "CORRELATED_SUPPORT_ROOTS",
+    ],
+)
+def test_complete_attribution_is_only_metadata_coverage(case_id: str) -> None:
+    """Completeness is not epistemic validity, provenance custody, or authority.
+
+    Internal synthetic regression, NOT an AI-agent diagnostic trial or
+    independently adjudicated evidence. Uses the unmodified incumbent query.
+    """
+    assert _git_blob(QUERY_PATH) == QUERY_GIT_BLOB
+    graph, observation = _task("ATTR-01")
+    if case_id == "STALE_SUPPORT_PROPOSED":
+        # Schema-valid proposed claim whose listed support is explicitly stale.
+        graph["claims"][0]["epistemic_state"] = "PROPOSED"
+        graph["evidence"][0]["validity"]["state"] = "STALE"
+    elif case_id == "CORRELATED_SUPPORT_ROOTS":
+        # Two support IDs share one source, with the required dependence edge.
+        alias = copy.deepcopy(graph["evidence"][0])
+        alias["evidence_id"] = "EVID-AB-DIAGNOSTIC-ALIAS"
+        alias["provenance_ref"] = "fixture://diagnostic-alias"
+        graph["evidence"].append(alias)
+        graph["claims"][0]["supporting_evidence_ids"].append(alias["evidence_id"])
+        graph["relations"].extend(
+            [
+                {
+                    "relation_id": "REL-AB-DIAGNOSTIC-SUPPORT",
+                    "relation_type": "SUPPORTS",
+                    "source_id": alias["evidence_id"],
+                    "target_id": graph["claims"][0]["claim_id"],
+                    "scope": "synthetic metadata completeness only",
+                },
+                {
+                    "relation_id": "REL-AB-DIAGNOSTIC-SHARED-ROOT",
+                    "relation_type": "SHARES_SOURCE_ROOT",
+                    "source_id": graph["evidence"][0]["evidence_id"],
+                    "target_id": alias["evidence_id"],
+                    "scope": "one underlying source, not corroboration",
+                },
+            ]
+        )
+        alias_record = copy.deepcopy(observation["records"][0])
+        alias_record["evidence_id"] = alias["evidence_id"]
+        observation["records"].append(alias_record)
+
+    before_graph = copy.deepcopy(graph)
+    before_observation = copy.deepcopy(observation)
+    validate_claim_graph(graph)
+    receipt = query_attribution(graph, observation)
+    assert receipt["completeness"] == "COMPLETE_FOR_SUPPORTING_EVIDENCE"
+    assert receipt["mapped_supporting_evidence_count"] == receipt["supporting_evidence_count"]
+    assert receipt["observation_authority"] == "CALLER_SUPPLIED_NOT_REVERIFIED"
+    assert receipt["truth_effect"] == "NONE"
+    assert receipt["authorization_effect"] == "NONE"
+    assert receipt["independence_effect"] == "NONE"
+    assert receipt["claims_with_reported_independently_adjudicated_support"] == []
+    assert graph["claims"][0]["applicability_state"] == "CHALLENGED"
+    if case_id == "STALE_SUPPORT_PROPOSED":
+        assert graph["evidence"][0]["validity"]["state"] == "STALE"
+        assert graph["claims"][0]["epistemic_state"] == "PROPOSED"
+    elif case_id == "CORRELATED_SUPPORT_ROOTS":
+        assert receipt["supporting_evidence_count"] == 2
+        assert graph["evidence"][0]["source_roots"] == graph["evidence"][-1]["source_roots"]
+        assert any(r["relation_type"] == "SHARES_SOURCE_ROOT" for r in graph["relations"])
+    else:
+        assert graph["claims"][0]["contradicting_evidence_ids"]
+    assert graph == before_graph
+    assert observation == before_observation
+
+
+def test_cli_complete_exit_zero_does_not_admit_stale_proposed_claim(tmp_path: Path) -> None:
+    """The fixed CLI's exit 0 is metadata completeness, not policy admission."""
+    assert _git_blob(QUERY_PATH) == QUERY_GIT_BLOB
+    graph, observation = _task("ATTR-01")
+    graph["claims"][0]["epistemic_state"] = "PROPOSED"
+    graph["evidence"][0]["validity"]["state"] = "STALE"
+    validate_claim_graph(graph)
+
+    graph_file = tmp_path / "candidate.json"
+    observation_file = tmp_path / "attribution.json"
+    graph_file.write_text(json.dumps(graph, sort_keys=True), encoding="utf-8")
+    observation_file.write_text(json.dumps(observation, sort_keys=True), encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, str(QUERY_PATH), str(graph_file), str(observation_file)],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert result.returncode == 0, (result.stdout[-500:], result.stderr[-500:])
+    assert not result.stderr.strip()
+    receipt = json.loads(result.stdout)
+    assert receipt == query_attribution(graph, observation)
+    assert receipt["completeness"] == "COMPLETE_FOR_SUPPORTING_EVIDENCE"
+    assert receipt["observation_authority"] == "CALLER_SUPPLIED_NOT_REVERIFIED"
+    for effect in ("truth_effect", "authorization_effect", "independence_effect"):
+        assert receipt[effect] == "NONE"
+    assert graph["claims"][0]["epistemic_state"] == "PROPOSED"
+    assert graph["evidence"][0]["validity"]["state"] == "STALE"
