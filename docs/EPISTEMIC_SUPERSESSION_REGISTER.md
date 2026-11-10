@@ -8,7 +8,7 @@
 
 Project artifacts must distinguish among:
 
-**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
+Evidence-state sequence: `DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`.
 
 These labels describe evidence state, not prestige. A project-local definition is not an external standard. A computed result is not automatically independently verified. A CI pass is evidence of the checks that ran, not certification. A historical artifact remains historical unless its underlying claim is re-established.
 
@@ -93,7 +93,7 @@ Known affected historical/current-surface artifacts include:
 
 Treatment:
 
-**RETAIN PROVENANCE → CLASSIFY SEMANTICS → SUPERSEDE INCORRECT IDENTIFICATION → PREVENT DOWNSTREAM MISUSE**
+Required treatment sequence: `RETAIN PROVENANCE → CLASSIFY SEMANTICS → SUPERSEDE INCORRECT IDENTIFICATION → PREVENT DOWNSTREAM MISUSE`.
 
 Do not silently delete historical evidence. Any artifact that presents `1.7747`/`1.77473` as the plastic constant, or assigns it an unsupported current mathematical authority, must be revised or explicitly marked historical/superseded. Artifacts using the value for the defined hendecagon circumradius may retain it when explicitly labeled **pP / Platinum Mean** and given its defining equation. Until that semantic remediation is complete, affected material remains a documentation-consistency finding and must not be used to support unrelated current mathematical claims.
 
