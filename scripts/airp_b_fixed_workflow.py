@@ -124,7 +124,7 @@ class FixedWorkflow:
             op = command["op"]
             branch = command["branch"]
             request_id = command["request_id"]
-            if op not in OPS or not isinstance(branch, str) or not isinstance(request_id, str):
+            if not isinstance(op, str) or op not in OPS or not isinstance(branch, str) or not isinstance(request_id, str):
                 return self._reject("UNSUPPORTED_OPERATION_OR_IDENTITY")
             if not BRANCH_PATTERN.fullmatch(branch) or not ID_PATTERN.fullmatch(request_id):
                 return self._reject("INVALID_BRANCH_OR_REQUEST_ID")
