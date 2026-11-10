@@ -34,6 +34,4 @@ def test_current_project_defined_pp_references_are_consistent():
     for relative_path in CURRENT_REFERENCES:
         content = (ROOT / relative_path).read_text(encoding="utf-8")
         assert DISPLAY_DECIMAL in content, f"Expected pP decimal missing: {relative_path}"
-        assert SUPERSEDED_DECIMAL not in content, (
-            f"Superseded pP decimal still present: {relative_path}"
-        )
+        assert SUPERSEDED_DECIMAL not in content, f"Superseded pP decimal still present: {relative_path}"
