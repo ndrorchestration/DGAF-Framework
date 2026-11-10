@@ -52,9 +52,34 @@ Pattern Commons: PC-GOV-001 capability is not authority; PC-EVP-002 exact revisi
 
 NDR P-37 and P-40 are separate family entries, not equivalent or aliases of DGAF P-SAGA-001 or P-TX-001. No pattern promotion.
 
+
+## 2026-11-10 — Phase 2 exact-head implementation and CI evidence (non-admitting)
+
+**Source-tested executable head:** [e70ac83f9c58919d9642354c48c4ab0f3edc5ab2](https://github.com/ndrorchestration/DGAF-Framework/commit/e70ac83f9c58919d9642354c48c4ab0f3edc5ab2) of [draft PR #1582](https://github.com/ndrorchestration/DGAF-Framework/pull/1582). **Protected-main base:** 1a95b94332dffb404c5a3ce026d70781a8c10b90 (unchanged). This entry is a historical exact-head snapshot; a later documentation-only commit does not inherit the label "tested exact head" without its own checks.
+
+| Evidence lane | Outcome at source-tested head | Bounded meaning |
+| --- | --- | --- |
+| [Python 3.10 job](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/42760337449/job/129644281628) | SUCCESS; 20/20 new AIRP tests passed; 2070 pytest passed, 5 skipped, 64 subtests passed | Internal synthetic engineering checks only |
+| [Python 3.11 job](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/42760337449/job/129644281789) | SUCCESS; 20/20 new tests passed; 2070 pytest passed, 5 skipped, 64 subtests passed | Internal synthetic engineering checks only |
+| [Python 3.12 job](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/42760337449/job/129644281477) | SUCCESS; 20/20 new tests passed; 2070 pytest passed, 5 skipped, 64 subtests passed, 7 warnings | Internal synthetic engineering checks only |
+| Integration tests | SUCCESS | Not a scientific or independent review |
+| Changed-file flake8, Black, isort, mypy; Bandit blocking threshold | PASS | Does not clear installed dependency risk |
+| [Python Tests & Quality Checks](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/42760337449) | **FAIL** at security-scan installed-environment pip-audit, 19 reported vulnerabilities in five packages | No waiver; dependency remediation separately scoped |
+| [PDMAL Harness](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/42760337463) | **FAIL** at Python 3.12.0 setup before contract tests | Do not infer code failure or inheritance from main |
+| [PDMAL Pre-Freeze Runner](https://github.com/ndrorchestration/DGAF-Framework/actions/runs/42760337538) | **FAIL** at Python 3.12.0 setup before contract tests | Do not infer code failure or inheritance from main |
+| Other associated workflow families | 17 SUCCESS, 3 FAILURE, 0 PENDING at last settled snapshot | Overall PR is **NOT GREEN** |
+
+**Disposition:** 20 synthetic positive/negative checks passed on each of three Python environments; B-FIXED is **ENGINEERING-TESTED IN DRAFT SCOPE**. No agents were evaluated, no C-INSTRUMENT was implemented, no A/B/C equivalence was demonstrated and no independent receiver or custody was established. An in-process version/replay record is not a durable cross-invocation transaction. Git SHA-1 blob locking uses \`usedforsecurity=False\` to identify historic source bytes, not to authenticate producers or establish independent provenance.
+
+**Outstanding go/no-go criteria:** classify 19 dependency findings and separately fix/test without bypassing the gate; resolve/disposition Python 3.12.0 setup failures in their owning PDMAL CI lanes; perform full capability-equivalence contract review for A-DIRECT vs B-FIXED; source-lock and prospective-freeze new held-out evaluation tasks/oracles before any future scientific work; preserve PR draft/unmerged and no governance promotion. Prior synthetic fixtures are development-visible and are **not** held-out evaluation cases. There is no authorization to run an efficacy study.
+
+**Related research branches:** [terminology/protocol draft PR #1570](https://github.com/ndrorchestration/DGAF-Framework/pull/1570) and [synthetic A/B ClaimGraph smoke draft PR #1575](https://github.com/ndrorchestration/DGAF-Framework/pull/1575) remain separate draft/unmerged lanes; current heads must be inspected independently. The existing structural validation, Evidence Gate and attribution query remain the owning implementations.
+
+**Research-state invariants:** \`SCIENTIFIC_N_INCREMENT=0\`; \`INDEPENDENT_VALIDATION=NOT_ESTABLISHED\`; \`CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED\`; \`HIGH_ASSURANCE=NOT_AUTHORIZED\`; \`AUTHORIZATION_EFFECT=NONE\`; \`PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED\`. No permission to merge, deploy, release, mutate canonical evidence or change DGAF governance.
+
 ## Acceptance and blockers
 
-The positive and negative test module covers all six steps, branch isolation, stale versions, exact retry and collision, Evidence Gate digest rejection, malformed evidence bytes, no unauthorized tools, attribution classification, unmodified snapshots, source drift and stop-on-error. Verify final branch-head CI, and distinguish passing pytest subjobs from security-scan or environment setup failures.
+The positive and negative test module covers all six steps, branch isolation, stale versions, exact retry and collision, Evidence Gate digest rejection, malformed evidence bytes, no unauthorized tools, attribution classification, unmodified snapshots, source drift and stop-on-error. See the exact-head evidence ledger below. Do not transfer test results automatically to newer commits or conflate passing pytest subjobs with a green workflow.
 
 This is not an operational equivalence study. A-DIRECT and future C-INSTRUMENT still need strictly matched model, permissions, source locks, task budget, evaluator, data and oracle. There is no held-out agent trial, durability, independent evidence identity attestation, measured benefit, or scientific N increment.
 
