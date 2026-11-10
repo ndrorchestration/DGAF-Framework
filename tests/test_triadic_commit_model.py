@@ -11,6 +11,7 @@ from threading import Barrier
 SPEC = importlib.util.spec_from_file_location(
     "triadic_commit_model", Path(__file__).resolve().parents[1] / "scripts/triadic_commit_model.py"
 )
+assert SPEC is not None and SPEC.loader is not None
 MODEL = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MODEL
 SPEC.loader.exec_module(MODEL)
