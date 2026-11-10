@@ -228,10 +228,11 @@ Local Python 3.12.14: **9 tests passed**. No LLM calls or scientific samples.
 Local Black/flake8 are unavailable; hosted quality and full-repository checks
 must be assessed at the resulting PR head before claiming wider verification.
 
-The model uses trusted fixture inputs, a single in-process lock, frozen proposal
-and receipt objects, and in-memory operation deduplication. It supports no real
-authority issuer, authenticated peer messages, external effects, persistence,
-LLM reasoning or adaptive mode. Epoch invalidation is fault injection only.
+The commit model uses trusted fixture inputs, a single in-process lock,
+frozen proposal and receipt objects, and in-memory operation deduplication.
+It supports no real authority issuer, external effects, persistence, LLM
+reasoning or adaptive mode. A separate experimental message boundary adds
+fixture-key MAC checks but not production authentication or orchestration. Epoch invalidation is fault injection only.
 Caller-provided time models a trusted clock; clock authentication is absent.
 
 | Cases | Narrow modeled coverage | Remaining gap |
@@ -297,6 +298,55 @@ are not running agents; provenance is declared, not authenticated. There are no
 LLM calls, real task sampling, external effects, adaptive switching or durable
 recovery. The earlier security-scan and PDMAL infrastructure failures remain
 separate blockers until verified otherwise.
+
+DRAFT / NON-ADMITTING / UNMERGED. SCIENTIFIC_N_INCREMENT=0.
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED.
+HIGH_ASSURANCE=NOT_AUTHORIZED.
+
+## Fixture-authenticated message boundary — 2026-11-10
+
+Implementation: `scripts/triadic_message_boundary.py`.
+Tests: `tests/test_triadic_message_boundary.py`.
+Run: `python -m unittest discover -s tests -p test_triadic_message_boundary.py -v`.
+
+This is a **separate research-only, in-memory message admission component**:
+it is not attached to the synthetic commit controller or any repository,
+deployment or external executor. A manifest pins one run ID, three distinct
+fixture identities, explicit Generator/Critic/Governor roles, per-identity
+32-byte-or-longer HMAC-SHA256 fixture keys, and candidate/evidence/policy
+digests. The signed canonical JSON binds sender, role, recipient, message ID,
+kind, epoch, predecessor, deadline and UTF-8 content digest. Message content
+itself is also hashed and checked; signatures are checked with constant-time
+MAC comparison against a key selected by the trusted fixture identity map.
+
+The permitted independent-mode edges are **only to the synthetic controller**:
+Generator may send CANDIDATE; Critic may send ASSESSMENT or OBJECTION; Governor
+may send RESOLUTION. No signed role may independently authorize a commit or
+an adaptive switch. Signed wrong-run/version messages are rejected before
+operation-ID reservation. A message ID replay returns the original receipt
+without another admission; conflicting, correctly signed bytes for an existing
+ID return ID_CONFLICT. Unknown senders, bad MACs, revoked senders, role
+spoofing, stale epochs/predecessors, altered run digests, expired deadlines and
+unapproved message kinds all fail closed. A capacity limit bounds the
+in-memory receipt ledger; exhaustion yields HOLD, not eviction.
+
+**Security and evidence boundary:** HMAC authenticates only relative to
+fixture-held shared secrets. It does not verify an agent's real-world identity,
+proof of possession on a secure device, independence, permission issuer,
+key lifecycle or message transport. A fixture actor able to sign arbitrary
+content can still submit a false claim; C02 oracle scoring remains external
+and post hoc. Role mapping and clock are trusted configuration. This module
+has no persistent receipts, authenticated peer execution, restart recovery,
+governed topology switch, real agent communication or scientific sample.
+An ACK for admission does not establish evidential validity or permission
+to act.
+
+These tests cover a **narrow message-layer subset** of the planned C04/C05,
+C08 and C11 mechanisms. They do not satisfy full system acceptance for those
+cases, C14 durable recovery, C15 persona-permutation authorization, or the
+C01-C16 suite. Hosted quality and repository CI results must be bound to the
+resulting exact PR head before assigning any PASS checkpoint.
 
 DRAFT / NON-ADMITTING / UNMERGED. SCIENTIFIC_N_INCREMENT=0.
 INDEPENDENT_VALIDATION=NOT_ESTABLISHED.
