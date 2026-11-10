@@ -50,7 +50,7 @@ class PosixFileWitness(FixtureMonotonicWitness):
 
     def __init__(self, path: Path, stream_id: str, key: bytes):
         if (
-            type(path) is not Path
+            not isinstance(path, Path)
             or type(stream_id) is not str
             or not stream_id
             or type(key) is not bytes
