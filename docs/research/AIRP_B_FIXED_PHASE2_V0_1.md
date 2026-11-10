@@ -52,7 +52,6 @@ Pattern Commons: PC-GOV-001 capability is not authority; PC-EVP-002 exact revisi
 
 NDR P-37 and P-40 are separate family entries, not equivalent or aliases of DGAF P-SAGA-001 or P-TX-001. No pattern promotion.
 
-
 ## 2026-11-10 — Phase 2 exact-head implementation and CI evidence (non-admitting)
 
 **Source-tested executable head:** [e70ac83f9c58919d9642354c48c4ab0f3edc5ab2](https://github.com/ndrorchestration/DGAF-Framework/commit/e70ac83f9c58919d9642354c48c4ab0f3edc5ab2) of [draft PR #1582](https://github.com/ndrorchestration/DGAF-Framework/pull/1582). **Protected-main base:** 1a95b94332dffb404c5a3ce026d70781a8c10b90 (unchanged). This entry is a historical exact-head snapshot; a later documentation-only commit does not inherit the label "tested exact head" without its own checks.
