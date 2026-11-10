@@ -32,6 +32,7 @@ from components.evidence_gate import (  # noqa: E402
 )
 from scripts.claimgraph_attribution_query import query_attribution  # noqa: E402
 from scripts.validate_structural_epistemics_claim_graph import validate_claim_graph  # noqa: E402
+
 # isort: on
 
 PROTECTED_MAIN = "1a95b94332dffb404c5a3ce026d70781a8c10b90"
