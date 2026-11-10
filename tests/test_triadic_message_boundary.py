@@ -100,7 +100,7 @@ class SignedMessageBoundaryTests(unittest.TestCase):
         oversized_content = "X" * 4097
         oversized = self.message(content=oversized_content, content_digest=auth.digest_text(oversized_content))
         self.assertEqual(self.boundary.admit(oversized, 1).reason, "OVERSIZED_CONTENT")
-        malformed = self.message(content="\\ud800")
+        malformed = self.message(content="\ud800")
         self.assertEqual(self.boundary.admit(malformed, 1).reason, "MALFORMED")
 
     def test_unknown_identity_cannot_reserve_message_id(self):
