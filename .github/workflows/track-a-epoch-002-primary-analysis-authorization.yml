@@ -5,7 +5,10 @@ on:
     paths:
       - ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
       - "requirements-ci.txt"
+      - "requirements-ci-py310-ubuntu2404-x64.lock"
+      - "requirements-ci-py311-ubuntu2404-x64.lock"
       - "requirements-ci-py312-ubuntu2404-x64.lock"
+      - "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
       - "scripts/bootstrap_ci_pip.sh"
       - "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
       - "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
@@ -24,7 +27,10 @@ on:
     paths:
       - ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
       - "requirements-ci.txt"
+      - "requirements-ci-py310-ubuntu2404-x64.lock"
+      - "requirements-ci-py311-ubuntu2404-x64.lock"
       - "requirements-ci-py312-ubuntu2404-x64.lock"
+      - "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
       - "scripts/bootstrap_ci_pip.sh"
       - "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
       - "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"

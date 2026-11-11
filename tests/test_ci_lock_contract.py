@@ -443,3 +443,39 @@ def test_track_a_coordinated_dependency_maintenance_is_exact_bundle_only() -> No
         assert "coordinated_bundle=(" not in after
         observed = tuple(line.strip().strip("'\\\"") for line in body.splitlines() if line.strip())
         assert observed == expected, workflow
+
+
+def test_track_a_epoch002_lock_only_event_triggers_cover_all_admitted_locks() -> None:
+    """Check exact path filters; this is not a hosted lock-only webhook test."""
+    locks = (
+        "requirements-ci-py310-ubuntu2404-x64.lock",
+        "requirements-ci-py311-ubuntu2404-x64.lock",
+        "requirements-ci-py312-ubuntu2404-x64.lock",
+        "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
+    )
+    workflows = (
+        ("track-a-epoch-002-primary-analysis-authorization.yml", ("pull_request", "push")),
+        ("track-a-epoch-002-dataset-lock.yml", ("pull_request",)),
+        ("track-a-epoch-002-materialization.yml", ("pull_request", "push")),
+    )
+    for filename, events in workflows:
+        source = (ROOT / ".github" / "workflows" / filename).read_text(
+            encoding="utf-8"
+        )
+        trigger_source = source.split("\njobs:\n", 1)[0]
+        for event in events:
+            delimiter = f"\n  {event}:\n"
+            assert delimiter in trigger_source, (filename, event)
+            event_body = trigger_source.split(delimiter, 1)[1].split("\n  ", 1)[0]
+            assert "\n    paths:\n" in event_body, (filename, event)
+            paths_body = event_body.split("\n    paths:\n", 1)[1].split("\n    ", 1)[0]
+            paths = [
+                line.strip()[2:].strip("'\"")
+                for line in paths_body.splitlines()
+                if line.strip().startswith("- ")
+            ]
+            for lock in locks:
+                assert paths.count(lock) == 1, (filename, event, lock)
+            assert "requirements-ci-rogue.lock" not in paths
+        if events == ("pull_request",):
+            assert "\n  push:\n" not in trigger_source

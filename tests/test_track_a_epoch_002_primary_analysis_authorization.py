@@ -622,7 +622,7 @@ def test_ci_workflow_uses_hash_locked_dependencies_without_cross_lane_trigger() 
         "requirements-ci-py311-ubuntu2404-x64.lock",
         "requirements-ci-control-plane-py312-ubuntu2404-x64.lock",
     ):
-        assert maintenance_lock not in trigger_section
+        assert trigger_section.count(f'      - "{maintenance_lock}"') == 2
         assert f'            "{maintenance_lock}"' in source
     assert source.count('      - "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
     assert source.count('            "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
