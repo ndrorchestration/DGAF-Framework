@@ -464,9 +464,9 @@ def test_track_a_epoch002_lock_only_event_triggers_cover_all_admitted_locks() ->
         for event in events:
             delimiter = f"\n  {event}:\n"
             assert delimiter in trigger_source, (filename, event)
-            event_body = trigger_source.split(delimiter, 1)[1].split("\n  ", 1)[0]
+            event_body = re.split(r"\n  (?!  )", trigger_source.split(delimiter, 1)[1], maxsplit=1)[0]
             assert "    paths:\n" in event_body, (filename, event)
-            paths_body = event_body.split("    paths:\n", 1)[1].split("\n    ", 1)[0]
+            paths_body = event_body.split("    paths:\n", 1)[1]
             paths = [line.strip()[2:].strip("'\"") for line in paths_body.splitlines() if line.strip().startswith("- ")]
             for lock in locks:
                 assert paths.count(lock) == 1, (filename, event, lock)
