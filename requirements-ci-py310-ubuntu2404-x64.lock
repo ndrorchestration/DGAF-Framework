@@ -116,3 +116,4 @@ typing-inspection==0.4.5 \
     --hash=sha256:bc210535442b39e1bf2805e0c7a17dfd6a4ace760c84c7f7d16245d23a6b1c39
 urllib3==2.8.0 \
     --hash=sha256:0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3
+# NON-ADMITTING lock-only pull_request dispatch probe for issue #1512; intentionally invalid exact-lock identity; DO NOT MERGE
