@@ -459,9 +459,7 @@ def test_track_a_epoch002_lock_only_event_triggers_cover_all_admitted_locks() ->
         ("track-a-epoch-002-materialization.yml", ("pull_request", "push")),
     )
     for filename, events in workflows:
-        source = (ROOT / ".github" / "workflows" / filename).read_text(
-            encoding="utf-8"
-        )
+        source = (ROOT / ".github" / "workflows" / filename).read_text(encoding="utf-8")
         trigger_source = source.split("\njobs:\n", 1)[0]
         for event in events:
             delimiter = f"\n  {event}:\n"
@@ -469,11 +467,7 @@ def test_track_a_epoch002_lock_only_event_triggers_cover_all_admitted_locks() ->
             event_body = trigger_source.split(delimiter, 1)[1].split("\n  ", 1)[0]
             assert "\n    paths:\n" in event_body, (filename, event)
             paths_body = event_body.split("\n    paths:\n", 1)[1].split("\n    ", 1)[0]
-            paths = [
-                line.strip()[2:].strip("'\"")
-                for line in paths_body.splitlines()
-                if line.strip().startswith("- ")
-            ]
+            paths = [line.strip()[2:].strip("'\"") for line in paths_body.splitlines() if line.strip().startswith("- ")]
             for lock in locks:
                 assert paths.count(lock) == 1, (filename, event, lock)
             assert "requirements-ci-rogue.lock" not in paths
