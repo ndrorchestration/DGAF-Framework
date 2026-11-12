@@ -147,3 +147,4 @@ tzdata==2026.6 \
     --hash=sha256:0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec
 urllib3==2.8.0 \
     --hash=sha256:0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3
+# NON-ADMITTING ONLY-CONTROL single-lock pull_request dispatch probe #1512 (DO NOT MERGE; exact-lock identity deliberately invalid)
