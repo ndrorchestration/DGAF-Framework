@@ -142,6 +142,8 @@ The earlier provider-neutral capability-governance proposal in **PR #1041** is n
 
 ## Executive boundary
 
+> **Source-identity clarification (2026-11-14; documentation only):** The frontmatter `reconciliation_input_main=abcf09d3c8fa4784023d23c9265d3cacf706a4ab` and the executive table's `86120d604d9eb747a722c33a299898f79808f6ef` are **different historical Git identities**. GitHub resolves both commits, but they must not be treated as the current protected-main ref or as interchangeable source bindings. At this bounded read, `main=1a95b94332dffb404c5a3ce026d70781a8c10b90`. Their event-specific reconciliation roles require separate source/history review before any consequential use; this note does not establish a whole-record re-audit and intentionally leaves `last_verified: 2026-10-15` and all scientific/authorization fields unchanged.
+
 | Area | Current state |
 |---|---|
 | Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `86120d604d9eb747a722c33a299898f79808f6ef` |
