@@ -34,7 +34,7 @@ Consider an AI coding agent requesting a change to a repository.
 4. **Receipt and verification:** A receipt records what occurred and whether the defined postcondition was verified. The receipt is **evidence, not permission**.
 5. **Next action:** The agent cannot reuse the prior receipt as authority. A subsequent consequential action requires **fresh adjudication and applicable authority**.
 
-If the scope is revoked before admission, the action is denied without executing the effect. The public demonstration illustrates both cases in a constrained setting.
+If the scope is revoked before admission, the action is denied without executing the effect. The documented bounded demonstration illustrates both cases in a constrained setting.
 
 ## How the governed-action lifecycle works
 
@@ -68,12 +68,14 @@ A related idea is **epistemic transition control**: governing when the available
 
 | Path | Best for | Evidentiary meaning |
 | --- | --- | --- |
-| **[Public bounded demonstration](https://project-7ybao.vercel.app/demo)** | A first look without setup | A bounded, same-system allowed/denied action demonstration |
+| **[Hosted bounded demonstration](https://project-7ybao.vercel.app/demo)** | Guided example; access may be restricted | A bounded, same-system allowed/denied action demonstration; public reachability is not established |
 | [Demo walkthrough and proof identity](docs/DEMO_WALKTHROUGH.md) | Understanding the receipt, denial codes, and replay-only trace | Explains the scope and precise proof identity; not new validation |
 | [Local operator self-test](docs/qa/DGAF_OPERATOR_SELFTEST.md) | Developers testing a clean checkout | Internal engineering evidence for the exact tested setup |
 | [Outside-operator trial protocol](docs/governance/GOVERNED_REPO_OUTSIDE_OPERATOR_TRIAL_V0.md) | A qualifying uninvolved technical operator | A proposed bounded usability check; [#1210](https://github.com/ndrorchestration/DGAF-Framework/issues/1210) remains unsatisfied |
 
-In the live demonstration, valid scoped authority admits a bounded **ephemeral audit-counter effect** and produces an execution receipt with `postcondition=VERIFIED`, `authority_effect=NONE`, and `follow_on_authority=FRESH_ADJUDICATION_REQUIRED`. Revoked authority produces `AUTHORIZATION_REVOKED` **without an execution receipt**.
+In the documented demo scenario, valid scoped authority admits a bounded **ephemeral audit-counter effect** and produces an execution receipt with `postcondition=VERIFIED`, `authority_effect=NONE`, and `follow_on_authority=FRESH_ADJUDICATION_REQUIRED`. Revoked authority produces `AUTHORIZATION_REVOKED` **without an execution receipt**.
+
+**Access boundary:** The linked deployment address is an intended demo entrypoint, not proof of unauthenticated access, uptime, or current runtime behavior. Verify its access settings separately from repository and CI evidence.
 
 The accompanying **DGAF-to-ACP cross-system trace is replay-only**. It explains the proposed responsibility boundary; it is **not** a second live cross-system execution or proof of general authorization enforcement. See the [walkthrough](docs/DEMO_WALKTHROUGH.md).
 
