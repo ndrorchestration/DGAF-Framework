@@ -142,6 +142,8 @@ The earlier provider-neutral capability-governance proposal in **PR #1041** is n
 
 ## Executive boundary
 
+> **Source-identity clarification (2026-11-14; documentation only):** The frontmatter `reconciliation_input_main=abcf09d3c8fa4784023d23c9265d3cacf706a4ab` and the executive table's `86120d604d9eb747a722c33a299898f79808f6ef` are **different historical Git identities**. GitHub resolves both commits, but they must not be treated as the current protected-main ref or as interchangeable source bindings. At this bounded read, `main=1a95b94332dffb404c5a3ce026d70781a8c10b90`. Their event-specific reconciliation roles require separate source/history review before any consequential use; this note does not establish a whole-record re-audit and intentionally leaves `last_verified: 2026-10-15` and all scientific/authorization fields unchanged.
+
 | Area | Current state |
 |---|---|
 | Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `86120d604d9eb747a722c33a299898f79808f6ef` |
@@ -189,6 +191,18 @@ The earlier provider-neutral capability-governance proposal in **PR #1041** is n
 Issue #1210 has satisfied its trial-launch preconditions: the public packet is accepted and binds the exact Governed Repo source above. The remaining gate is execution by one eligible, uninvolved, uncoached technically capable human operator. Same-owner automation, ChatGPT execution, and implementation-author execution do not satisfy this gate. A successful run can establish only bounded outside-operator usability for that operator, documented path, and tested environment; it does not increment canonical scientific N or establish independent scientific validation, canonical DGAF efficacy, production security, or High-Assurance authorization.
 
 No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt and creation-only interpretation note establish bounded, same-system/nonindependent interpretation; they do not establish canonical DGAF efficacy, independent validation, or High-Assurance authorization. The #1022 self-application chain through #1049 is internal same-system engineering evidence only; independent replay and external validation remain outstanding under #929.
+
+## Scoped release-readiness and prototype-limit visibility — 2026-11-06
+
+**Documentation-only reconciliation, not canonical state admission.** The `last_verified: 2026-10-15` frontmatter above is intentionally **not** advanced: the review checked the following controlling GitHub records, not every assertion, evidence hash, deployment or scientific identity in this 500+ line current-state summary. For an exact release or authorization decision, retrieve live issue status and current protected-main source identity again.
+
+- **DGAF v1 release:** [Gate 0 controller #1421](https://github.com/ndrorchestration/DGAF-Framework/issues/1421) remains open; independent acceptance and protected-main release admission are outstanding; `DGAF_V1_RELEASE=HOLD`. Engineering test successes do not substitute for the frozen release gates.
+- **Independent assessment:** [AOSS external review #929](https://github.com/ndrorchestration/DGAF-Framework/issues/929), [comparative benchmark reproduction #1067](https://github.com/ndrorchestration/DGAF-Framework/issues/1067), and [uninvolved Governed Repo operator trial #1210](https://github.com/ndrorchestration/DGAF-Framework/issues/1210) remain open. Each measures a **different** claim boundary; none silently satisfies another.
+- **Repeated-expansion accounting:** [#1548](https://github.com/ndrorchestration/DGAF-Framework/issues/1548) describes a reproduced concurrency/resource-ledger leak; [PR #1563](https://github.com/ndrorchestration/DGAF-Framework/pull/1563) proposes remediation. No claimed unauthorized effect or independent verification follows from that finding alone.
+- **Sealed PASS semantics:** [PR #1561](https://github.com/ndrorchestration/DGAF-Framework/pull/1561) characterizes insufficient negative admission checks; [PR #1562](https://github.com/ndrorchestration/DGAF-Framework/pull/1562) proposes rejection hardening. Unmerged corrections must not be treated as protected-main guarantees.
+- **Legacy API prototype:** [#1551](https://github.com/ndrorchestration/DGAF-Framework/issues/1551) records misleading approval-like `PASS` and a non-cryptographic purported seal in a legacy route; production reachability was not established. [PR #1553](https://github.com/ndrorchestration/DGAF-Framework/pull/1553) proposes fail-closed labeling/behavior.
+
+These are current-facing **issue-discovery and documentation boundaries**, not a change to frozen Track A evidence, High-Assurance status, canonical efficacy, scientific N, independent-validation predicates, Gate 0 admission, or actual deployment assurance. See the reader-focused [README](../README.md), [prototype maturity map](PROTOTYPE_MATURITY_MAP.md), and [research explainer](RESEARCH_PROGRAM_EXPLAINER.md).
 
 ## AOSS v0.6 Stage A — current execution-admission frontier
 

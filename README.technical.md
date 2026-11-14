@@ -8,6 +8,10 @@ DGAF is a framework for governed agent orchestration, evaluation, provenance, an
 
 For industry-neutral explanations of DGAF-specific terminology, start with [`docs/PUBLIC_TRANSLATION_LAYER.md`](./docs/PUBLIC_TRANSLATION_LAYER.md). For live state, use [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md).
 
+## Evaluation orientation
+
+Start with the [public README](README.md) for the practical problem and bounded demonstration. The [prototype maturity map](docs/PROTOTYPE_MATURITY_MAP.md) distinguishes executable source, same-system tests, replay-only traces, local research execution, and independently established evidence; the [research explainer](docs/RESEARCH_PROGRAM_EXPLAINER.md) defines the statistical/custody/claim boundaries. **Current DGAF v1 release remains HOLD** under [Gate 0 #1421](https://github.com/ndrorchestration/DGAF-Framework/issues/1421); source implementation and passing tests alone do not authorize release.
+
 ## Architecture at a glance
 
 DGAF's implementation surfaces include:
