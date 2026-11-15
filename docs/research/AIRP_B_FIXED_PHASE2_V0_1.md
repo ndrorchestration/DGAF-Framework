@@ -85,3 +85,23 @@ This is not an operational equivalence study. A-DIRECT and future C-INSTRUMENT s
 **Global boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED; SCIENTIFIC_N_INCREMENT=0; INDEPENDENT_VALIDATION=NOT_ESTABLISHED; CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED; HIGH_ASSURANCE=NOT_AUTHORIZED; AUTHORIZATION_EFFECT=NONE. No merge or release implied.
 
 References: [Agent Instrument research owner](https://app.notion.com/p/413f5bad238b8141a3e8f322404fc2dd), [Pattern Commons promotion rules](https://app.notion.com/p/3ebf5bad238b81999758d01a0b793eb5), [DGAF orchestration registry](https://github.com/ndrorchestration/DGAF-Framework/blob/main/registry/PATTERN_REGISTRY_v2.md).
+
+
+## 2026-11-15 — Direct-vs-B-FIXED inspect parity: Pilot 0 engineering preflight
+
+**Research classification:** implementation in a separate unmerged draft; not a model trial, fair performance benchmark, scientific preregistration, or independent validation. The existing B-FIXED runner (six synthetic operations) is the owning B comparator. The new `tests/test_airp_b_fixed_direct_inspect_parity.py` covers six **development-visible** A-DIRECT versus B-FIXED `inspect` cases without introducing a new engine, state store, agent, authority, or C interface. **CI execution must be evaluated at the exact changed head before calling the cases tested.**
+
+**A condition:** call the existing `query_attribution` on a defensive copy of the source-locked reference ClaimGraph and caller-supplied attribution observation. **B condition:** call existing `FixedWorkflow.execute(inspect)` over the same initial graph and observation. The B runner delegates to the same `query_attribution`. Both read-only operations must preserve the graph and observation and expose unchanged `truth_effect=NONE`, `authorization_effect=NONE`, `independence_effect=NONE`. The test compares *semantics and error classifications*, not latency or AI-agent comprehension. A invokes one validator via `query_attribution`; B invokes graph validation explicitly and again via the same query, so raw execution cost parity is **not established**.
+
+| Development-visible case | Intended oracle / non-promotion distinction |
+| --- | --- |
+| COMPLETE_INTERNAL_CHALLENGED | Metadata completeness remains compatible with the reference claim's `CHALLENGED` applicability |
+| PARTIAL_METADATA | Missing attribution rows produce `PARTIAL`, not complete or authorization |
+| REPORTED_INDEPENDENCE | Caller-reported external independence does not change `independence_effect=NONE` |
+| FORGED_INTERNAL_INDEPENDENCE | Invalid internal independence claim rejects in both A and B |
+| UNKNOWN_EVIDENCE | Unknown evidence identifier rejects in both A and B |
+| DUPLICATE_ATTRIBUTION | Repeated metadata row rejects in both A and B |
+
+**Comparative ceiling and next study gate:** Matching a deterministic read-only incumbent is a prerequisite for an agent-facing comparison, but **not evidence of agent reliability improvement**. All six cases and error strings are now development-visible and are forbidden as blind held-out trials. For a future prospective agent/operator test: use separate new source-root-disjoint cases and an externally controlled answer key; predeclare arm and task randomization, exact model/configuration, identical prompt/evidence/feedback permissions, memory/history isolation, time/tokens/tools/attempt budgets, adjudicator identity, accuracy and overclaim criteria, and a safety stopping rule. If A and B afford the same diagnostic understanding—or a clearer fixed CLI explanation solves the issue at less complexity—record **NO C BUILD**. No assessment of transfer, independently adjudicated truth, actual external authorization, or high assurance is licensed.
+
+**Evidence boundaries:** protected main `1a95b94332dffb404c5a3ce026d70781a8c10b90` remains the source lock; commit verification, review and required CI failures remain distinct. `SCIENTIFIC_N_INCREMENT=0`; `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`; `CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`; `HIGH_ASSURANCE=NOT_AUTHORIZED`.
