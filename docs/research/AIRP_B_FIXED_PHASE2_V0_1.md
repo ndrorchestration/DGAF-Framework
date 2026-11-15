@@ -86,7 +86,6 @@ This is not an operational equivalence study. A-DIRECT and future C-INSTRUMENT s
 
 References: [Agent Instrument research owner](https://app.notion.com/p/413f5bad238b8141a3e8f322404fc2dd), [Pattern Commons promotion rules](https://app.notion.com/p/3ebf5bad238b81999758d01a0b793eb5), [DGAF orchestration registry](https://github.com/ndrorchestration/DGAF-Framework/blob/main/registry/PATTERN_REGISTRY_v2.md).
 
-
 ## 2026-11-15 — Direct-vs-B-FIXED inspect parity: Pilot 0 engineering preflight
 
 **Research classification:** implementation in a separate unmerged draft; not a model trial, fair performance benchmark, scientific preregistration, or independent validation. The existing B-FIXED runner (six synthetic operations) is the owning B comparator. The new `tests/test_airp_b_fixed_direct_inspect_parity.py` covers six **development-visible** A-DIRECT versus B-FIXED `inspect` cases without introducing a new engine, state store, agent, authority, or C interface. **CI execution must be evaluated at the exact changed head before calling the cases tested.**
