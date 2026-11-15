@@ -10,7 +10,10 @@ from pathlib import Path
 
 from scripts.triadic_commit_model import Proposal
 from scripts.triadic_durable_receipts import SimulatedCrash
-from scripts.triadic_monotonic_custody import CustodyMismatch, WitnessedSyntheticController
+from scripts.triadic_monotonic_custody import (
+    CustodyMismatch,
+    WitnessedSyntheticController,
+)
 from scripts.triadic_posix_witness import PosixFileWitness
 
 
@@ -39,7 +42,11 @@ class FileWitnessTests(unittest.TestCase):
 
     def recover(self, witness=None):
         return WitnessedSyntheticController.recover(
-            self.journal, self.run_id, "evidence-v1", "policy-v1", self.key,
+            self.journal,
+            self.run_id,
+            "evidence-v1",
+            "policy-v1",
+            self.key,
             witness if witness is not None else self.open_witness(),
         )
 
@@ -194,9 +201,14 @@ class FileWitnessTests(unittest.TestCase):
             "    print(str(exc))\n"
         )
         argv = [
-            sys.executable, "-c", code, str(self.anchor),
-            self.run_id, self.witness_key.hex(),
-            str(current.sequence), current.journal_digest,
+            sys.executable,
+            "-c",
+            code,
+            str(self.anchor),
+            self.run_id,
+            self.witness_key.hex(),
+            str(current.sequence),
+            current.journal_digest,
         ]
         root = Path(__file__).resolve().parents[1]
         first = subprocess.Popen(argv + ["a" * 64], cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
