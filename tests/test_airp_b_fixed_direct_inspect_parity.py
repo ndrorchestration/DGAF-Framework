@@ -8,6 +8,7 @@ No additional authority, truth, or side effects are created.
 from __future__ import annotations
 
 import copy
+from typing import Any
 
 import pytest
 
@@ -27,7 +28,7 @@ def _observation(case: str, graph_id: str) -> dict:
         "independence_adjudication_state": "NOT_EXECUTED",
         "adjudication_ref": None,
     }
-    observation = {
+    observation: dict[str, Any] = {
         "record_class": "CLAIMGRAPH_ATTRIBUTION_OBSERVATION_V0",
         "graph_id": graph_id,
         "records": [record],
