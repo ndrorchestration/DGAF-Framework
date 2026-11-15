@@ -4,11 +4,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HARN = ROOT / ".github" / "workflows" / "pdmal-harness-validation.yml"
+PREAUTH = ROOT / ".github" / "workflows" / "pdmal-preauth-security.yml"
 PREFREEZE = ROOT / ".github" / "workflows" / "pdmal-pre-freeze-runner.yml"
 
 
 def test_pdmal_contract_workflows_use_compatible_pinned_runner():
-    for path in (HARN, PREFREEZE):
+    for path in (HARN, PREFREEZE, PREAUTH):
         content = path.read_text(encoding="utf-8")
         assert "runs-on: ubuntu-24.04" in content
         assert "runs-on: ubuntu-latest" not in content
@@ -31,3 +32,20 @@ def test_pdmal_prefreeze_historical_checks_remain_enforced():
     assert "test_pilot_artifact_schema.py test_security_controls.py" in content
     assert "pilot execution prohibited" in content
     assert "FINAL_CANDIDATE_STATUS" in content
+
+
+def test_pdmal_preauth_controls_remain_enforced():
+    content = PREAUTH.read_text(encoding="utf-8")
+    assert "--require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt" in content
+    for suite in (
+        "test_security_controls.py",
+        "test_solo_pilot_track.py",
+        "test_analysis.py",
+        "test_pilot_artifact_schema.py",
+        "test_execution_contract.py",
+        "test_durable_retention.py",
+    ):
+        assert f"python -m pytest experiments/pdmal_pilot/{suite} -q" in content
+    assert "PDMAL_MODE: contract" in content
+    assert "contents: read" in content
+    assert "run_pilot.py --seeds 2" in content
