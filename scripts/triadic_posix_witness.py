@@ -128,9 +128,7 @@ class PosixFileWitness(FixtureMonotonicWitness):
             body, mac = event["body"], event["mac"]
             if type(body) is not dict or type(mac) is not str or not _is_digest(mac):
                 raise CustodyMismatch("BAD_WITNESS_ENVELOPE")
-            if set(body) != {
-                "format", "stream_id", "sequence", "journal_digest", "previous_line_digest"
-            }:
+            if set(body) != {"format", "stream_id", "sequence", "journal_digest", "previous_line_digest"}:
                 raise CustodyMismatch("BAD_WITNESS_SCHEMA")
             if (
                 body["format"] != FORMAT
@@ -199,9 +197,7 @@ class PosixFileWitness(FixtureMonotonicWitness):
             if self._path.stat().st_size + len(appended) > MAX_BYTES:
                 raise CustodyMismatch("WITNESS_CAPACITY")
             try:
-                fd = os.open(
-                    self._path, os.O_WRONLY | os.O_APPEND | getattr(os, "O_NOFOLLOW", 0)
-                )
+                fd = os.open(self._path, os.O_WRONLY | os.O_APPEND | getattr(os, "O_NOFOLLOW", 0))
                 with os.fdopen(fd, "ab") as handle:
                     handle.write(appended)
                     handle.flush()
