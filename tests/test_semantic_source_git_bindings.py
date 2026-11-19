@@ -28,9 +28,11 @@ def init_repo(root: Path) -> tuple[Path, str, str]:
     git(repo, "init")
     git(repo, "config", "user.email", "test@example.com")
     git(repo, "config", "user.name", "Semantic Binding Test")
+    # The manifest binds Git object bytes; do not inherit host EOL filters.
+    git(repo, "config", "core.autocrlf", "false")
 
     artifact = repo / "artifact.txt"
-    artifact.write_text("alpha\n", encoding="utf-8")
+    artifact.write_bytes(b"alpha\n")
     git(repo, "add", "artifact.txt")
     git(repo, "commit", "-m", "seed")
 
@@ -98,6 +100,23 @@ class SemanticSourceGitBindingTests(unittest.TestCase):
             expected = hashlib.sha1(header + payload, usedforsecurity=False).hexdigest()
             self.assertEqual(blob, expected)
             self.assertEqual(verify_manifest_bindings(manifest(commit, blob), repo), [])
+
+    def test_crlf_blob_does_not_satisfy_lf_source_manifest(self):
+        # Preserve the actual Git object distinction even on Windows hosts.
+        with tempfile.TemporaryDirectory() as temp:
+            repo, _, lf_blob = init_repo(Path(temp))
+            (repo / "artifact.txt").write_bytes(b"alpha\r\n")
+            git(repo, "add", "artifact.txt")
+            git(repo, "commit", "-m", "record deliberate CRLF bytes")
+
+            crlf_commit = git(repo, "rev-parse", "HEAD")
+            crlf_blob = git(repo, "rev-parse", "HEAD:artifact.txt")
+            self.assertNotEqual(crlf_blob, lf_blob)
+
+            errors = verify_manifest_bindings(manifest(crlf_commit, lf_blob), repo)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("does not match", errors[0])
+            self.assertIn(crlf_blob, errors[0])
 
 
 if __name__ == "__main__":
