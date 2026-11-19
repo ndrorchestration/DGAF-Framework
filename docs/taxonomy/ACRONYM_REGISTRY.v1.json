@@ -58,6 +58,12 @@
       "status": "current"
     },
     {
+      "token": "AKDC",
+      "expansion": "AKDC research namespace identifier; authoritative full-form expansion not established",
+      "classification": "identifier",
+      "status": "current"
+    },
+    {
       "token": "AOGA",
       "expansion": "Agentic Orchestration and Governance Architecture",
       "classification": "acronym",
@@ -97,6 +103,18 @@
       "token": "BFT",
       "expansion": "Byzantine Fault Tolerance",
       "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "BKRC",
+      "expansion": "Scope-ambiguous research identifier; BKRC-001 falsification protocol and separate architecture hypothesis must not be conflated",
+      "classification": "identifier",
+      "status": "current"
+    },
+    {
+      "token": "BKRC-001",
+      "expansion": "Falsification protocol ID titled Boundary, Evidence, Conflict and Effect Conformance; separate from the BKRC architecture hypothesis",
+      "classification": "identifier",
       "status": "current"
     },
     {
