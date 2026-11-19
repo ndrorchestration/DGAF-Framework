@@ -105,6 +105,7 @@ def test_accepted_ontology_cannot_reclassify_ionia_state_as_seat() -> None:
     errors = validate_matrix(_matrix(), ontology_adjudication=ontology)
     assert any("IONIA_STATE must not consume" in error for error in errors)
 
+
 def test_ontology_binding_accepts_canonical_path_under_windows_semantics(monkeypatch):
     """Windows path separators must not reject a canonical repository path."""
     monkeypatch.setattr(

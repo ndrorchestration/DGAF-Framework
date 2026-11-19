@@ -43,6 +43,7 @@ def test_projection_is_deterministic_and_bounded_to_project_tokens():
     assert "**COLLEEN**" in projection
     assert "**HTTP**" not in projection
 
+
 def test_research_identifiers_preserve_ambiguity_and_do_not_gain_backronyms():
     entries = {entry["token"]: entry for entry in module.load()["entries"]}
     for token in ("AKDC", "BKRC", "BKRC-001"):
