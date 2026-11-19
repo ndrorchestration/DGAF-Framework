@@ -42,3 +42,13 @@ def test_projection_is_deterministic_and_bounded_to_project_tokens():
     assert "**AOSS**" in projection
     assert "**COLLEEN**" in projection
     assert "**HTTP**" not in projection
+
+
+def test_research_identifiers_preserve_ambiguity_and_do_not_gain_backronyms():
+    entries = {entry["token"]: entry for entry in module.load()["entries"]}
+    for token in ("AKDC", "BKRC", "BKRC-001"):
+        assert entries[token]["classification"] == "identifier"
+        assert entries[token]["status"] == "current"
+    assert "not established" in entries["AKDC"]["expansion"]
+    assert "must not be conflated" in entries["BKRC"]["expansion"]
+    assert "separate" in entries["BKRC-001"]["expansion"]

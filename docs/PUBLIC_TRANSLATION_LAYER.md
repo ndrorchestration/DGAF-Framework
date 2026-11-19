@@ -37,6 +37,18 @@ Machine-readable translation authority: `docs/VOCABULARY_TRANSLATION_MATRIX.json
 | **Primary-analysis authorization** | Separate permission to run the locked confirmatory analysis | Not exploratory pooling or canonical efficacy adjudication |
 | **High-Assurance** | Separate stricter assurance program | Not synonymous with Track A |
 
+## Source-scoped research terminology
+
+These descriptions translate research identifiers for external readers; they do not create accepted architecture components, change authority, or establish conformance with an external standard. The [machine-readable acronym and identifier registry](taxonomy/ACRONYM_REGISTRY.v1.json) distinguishes identifiers from acronyms with established expansions; its human-readable acronym projection does not enumerate these scoped research identifiers.
+
+| Project-local identifier | Functional description | Scope and limits |
+|---|---|---|
+| **AKDC** | Experimental agent-protocol observation, replay/idempotency, and identity-bound request research | Full-form expansion **not established**. [Gate 3](https://github.com/ndrorchestration/DGAF-Framework/pull/1520) treats observations as record-only, not permission; [Gate 18](https://github.com/ndrorchestration/DGAF-Framework/pull/1545) tests synthetic certificate/principal and operation binding. No production authorization or real-effect guarantee. |
+| **BKRC-001** | Candidate *Boundary, Evidence, Conflict and Effect Conformance* falsification protocol | The [protocol's named scope](https://app.notion.com/p/3fef5bad238b8125b897ff011009ed2f) tests whether policy decisions can be distinguished from enforcement and observed effects. Its [draft first slice](https://github.com/ndrorchestration/DGAF-Framework/pull/1403) observes synthetic decisions, not externally verified effect prevention. |
+| **BKRC** (architecture hypothesis) | Separately documented *Boundary–Knowledge–Reconciliation Conformance* research hypothesis | This [architecture research usage](https://app.notion.com/p/3e9f5bad238b81bb820dc5f62f1c5b5b) is **not** an alias for BKRC-001, an accepted component, or a separate authority plane. Do not silently expand bare BKRC without its source context. |
+
+These are functional translations and scope notes, not claims that DGAF implements an industry-standard access-control, transaction, consensus, provenance, or attestation protocol. Any future canonical rename or acronym expansion requires its own source- and owner-bound terminology decision.
+
 ## Vocabulary model
 
 Keep these objects distinct:

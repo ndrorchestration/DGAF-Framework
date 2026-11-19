@@ -87,7 +87,7 @@ def validate_matrix(
     if not isinstance(coverage, dict):
         errors.append("coverage_policy must be an object")
     else:
-        if coverage.get("ontology_adjudication") != str(ONTOLOGY_ADJUDICATION_PATH):
+        if coverage.get("ontology_adjudication") != ONTOLOGY_ADJUDICATION_PATH.as_posix():
             errors.append("coverage_policy must bind accepted ontology adjudication")
     change_control = matrix.get("change_control")
     if not isinstance(change_control, dict) or "MOVING_STATE_PROHIBITED" not in change_control:
