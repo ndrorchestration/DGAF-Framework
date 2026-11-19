@@ -39,7 +39,7 @@ Machine-readable translation authority: `docs/VOCABULARY_TRANSLATION_MATRIX.json
 
 ## Source-scoped research terminology
 
-These descriptions translate research identifiers for external readers; they do not create accepted architecture components, change authority, or establish conformance with an external standard. The repository's [acronym registry](taxonomy/NDR_ACRONYM_REGISTRY.md) distinguishes an identifier from an acronym whose expansion is established.
+These descriptions translate research identifiers for external readers; they do not create accepted architecture components, change authority, or establish conformance with an external standard. The [machine-readable acronym and identifier registry](taxonomy/ACRONYM_REGISTRY.v1.json) distinguishes identifiers from acronyms with established expansions; its human-readable acronym projection does not enumerate these scoped research identifiers.
 
 | Project-local identifier | Functional description | Scope and limits |
 |---|---|---|
