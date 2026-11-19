@@ -1,7 +1,8 @@
 import copy
 import json
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
+import scripts.validate_vocabulary_translation_matrix as vocabulary_validator
 from scripts.validate_vocabulary_translation_matrix import validate_matrix
 
 MATRIX_PATH = Path("docs/VOCABULARY_TRANSLATION_MATRIX.json")
@@ -103,3 +104,18 @@ def test_accepted_ontology_cannot_reclassify_ionia_state_as_seat() -> None:
     ontology["distinct_objects"]["ionia"]["state.ionia-0hz"]["canonical_seat"] = "A-13"
     errors = validate_matrix(_matrix(), ontology_adjudication=ontology)
     assert any("IONIA_STATE must not consume" in error for error in errors)
+
+def test_ontology_binding_accepts_canonical_path_under_windows_semantics(monkeypatch):
+    """Windows path separators must not reject a canonical repository path."""
+    monkeypatch.setattr(
+        vocabulary_validator,
+        "ONTOLOGY_ADJUDICATION_PATH",
+        PureWindowsPath("registry/agent_ontology_adjudication.v1.json"),
+    )
+    errors = vocabulary_validator.validate_matrix(
+        _matrix(),
+        PUBLIC_LAYER_PATH.read_text(encoding="utf-8"),
+        _manifest(),
+        _ontology(),
+    )
+    assert errors == []
