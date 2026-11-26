@@ -9,6 +9,8 @@ DGAF-governed · functional authority resolves through the role/capability regis
 
 ## Compatibility identity boundary
 
+Agentic Governance Orchestrator is the proposed successor display name for DGAF. This naming candidate does not change the Phi-Pentagon Topology Lab, its treatment/node labels, source paths, authority contracts, or scientific evidence.
+
 The names `Apogee`, `Reson`, `Sentinel`, `DemiJoule`, and `Herald` in the PPTL topology are **stable experimental/compatibility node identifiers**. They are retained because experiment fixtures, routing tests, and APIs consume them as treatment/node labels. They do **not** create current governance authority.
 
 Current executable authority resolves through `governance/role_capability_registry.v1.json`; identity lineage resolves through `governance/persona_role_lineage.v1.json`. In particular, bare `Sentinel` remains a historical/compatibility label and must not be interpreted as an active authority seat. Any future node rename requires explicit compatibility and experiment-equivalence evidence rather than bulk textual substitution.
