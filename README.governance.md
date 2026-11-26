@@ -10,7 +10,7 @@
 
 ## Scope and Evidence Boundary
 
-The **Dynamic Governance Agentic Formation (DGAF)** is a structured multi-agent governance research and implementation framework. The repository contains governance specifications, selected executable controls, CI gates, role/authority contracts, audit records, evidence/provenance mechanisms, presentation-layer governance projections, and a bounded machine-readable recurring-assurance catalog.
+The **Agentic Governance Orchestrator** is the proposed successor display name for Dynamic Governance Agentic Formation (DGAF), a structured multi-agent governance research and implementation system. The name proposal does not alter the governing contracts or evidence boundaries. The repository contains governance specifications, selected executable controls, CI gates, role/authority contracts, audit records, evidence/provenance mechanisms, presentation-layer governance projections, and a bounded machine-readable recurring-assurance catalog.
 
 Some DGAF artifacts are **mapped** to concepts in the NIST AI Risk Management Framework (AI RMF), Regulation (EU) 2024/1689 (the EU AI Act), ISO/IEC 42001, and the OWASP Top 10 for Agentic Applications. These mappings are project-local traceability aids. They are **not** a legal-compliance determination, certification, conformity assessment, security certification, or claim that every external requirement has been implemented or independently validated.
 
