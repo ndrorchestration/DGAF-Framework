@@ -1,9 +1,9 @@
 
-# Agentic Governance Orchestrator (AGO)
+# Agentic Governance Orchestrator
 
 > **Identity transition candidate — not yet adopted.** This branch proposes a new display name for the existing DGAF project. Repository paths, identifiers, historical records, scientific status, and authorization contracts are unchanged. No claim of trademark clearance or orchestration maturity follows from this proposal.
 
-**Agentic Governance Orchestrator (AGO), formerly Dynamic Governance Agentic Formation (DGAF),** is an experimental evidence-bound agentic governance and orchestration system. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
+**Agentic Governance Orchestrator, formerly Dynamic Governance Agentic Formation (DGAF),** is an experimental evidence-bound agentic governance and orchestration system. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
 
 In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
