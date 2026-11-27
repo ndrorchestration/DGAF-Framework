@@ -17,6 +17,18 @@ Current executable authority resolves through `governance/role_capability_regist
 
 ---
 
+## Topology representation and research evidence boundary
+
+The `PHI` constant in `topology.py` is the golden-ratio reciprocal (approximately 0.618034), not the positive golden ratio (approximately 1.618034). Writing `r = (sqrt(5) - 1) / 2` and `Phi = (1 + sqrt(5)) / 2`, the identities are `r*r + r = 1` and `1/r = 1 + r = Phi`.
+
+`PENTAGON_EDGES` contains ten ordered endpoint tuples representing nine distinct unordered vertex pairs. The Herald–Apogee pair has entries in both directions with different weights; the Apogee–DemiJoule pair is absent. This is a historical weighted representation, not evidence of a regular undirected pentagonal ring, a complete undirected five-node graph, or live message routing. The operational meaning and intended directionality of these weights require explicit review before any change. Preserve the existing constants and compatibility identifiers.
+
+The PDMAL experimental adapters import the shared `pptl.triadic_governance_loop` module, and `pptl/__init__.py` imports the topology constants. This import dependency is not evidence that PDMAL consensus uses the pentagonal edge weights. Preserve the source and treatment boundaries of existing experiments; local topology research does not amend their protocols or authorize execution.
+
+The historical H4 artifacts are synthetic, with incomplete retained data and contradicted runner binding; see [H4 evidence status](experiments/EVIDENCE_STATUS.md). The currently retained simulator fixes topology and assigns mode-dependent baseline scores and noise degradation. Its computed offset `(PHI - 1.0) * 0.04` is negative with the actual constant, contrary to its historical bonus comment. The verdict-logic test fixture in `tests/test_h4_task_stratified.py` substitutes the positive golden ratio; it does not validate actual imported score arithmetic. These are source observations, not new experiment outcomes or comparative efficacy evidence.
+
+---
+
 ## Module Map
 
 | Module | Role | Size |
@@ -76,21 +88,9 @@ retired and are not compatibility entry points.
 
 ---
 
-## Wire to Live Dashboard
+## Dashboard and historical simulator
 
-```bash
-# 1. Set env var
-export HERALD_N8N_WEBHOOK_URL=https://your-dashboard.vercel.app/api/herald-ingest
-export HERALD_N8N_HMAC_SECRET=your-hmac-secret-here
-
-# 2. Run with live sink (dry_run=False in N8nHeraldSink)
-python -m pptl.experiments.h4_task_stratified
-
-# 3. Backfill Postgres from existing audit JSONL
-INGEST_URL=https://your-dashboard.vercel.app/api/herald-ingest \
-npx ts-node ../../pptl-governance-dashboard/scripts/replay-jsonl.ts \
-  output/herald_audit.jsonl
-```
+The dashboard is a separate projection surface. The historical `h4_task_stratified.py` simulator writes synthetic local outputs; setting webhook environment variables does not turn that simulator into a verified live trace producer. Do not use it as a live-ingest or empirical collection recipe. See the [historical evidence notice](experiments/EVIDENCE_STATUS.md) and the separately maintained dashboard repository for scoped integration requirements.
 
 ---
 
@@ -113,7 +113,7 @@ provider integration path.
 3. **Sink isolation** — `HeraldAgent` must catch per-sink exceptions and route to dead-letter. One crashing sink must never block trace emission to others.
 4. **Single source of truth for signal corpora** — `BYPASS_SIGNALS` and `HALLU_SIGNALS` live in `rag_verifier.py` only. Tests import from there; never duplicate in test files.
 5. **Parametrize over corpora, not instances** — `@pytest.mark.parametrize` over the corpus list. Adding a signal to the source auto-expands the test suite with zero test-code changes.
-6. **Phi edge weights are architectural constants** — `PENTAGON_EDGES` in `topology.py` is the only source. Routing tests assert exact float equality from that source.
+6. **Preserve topology compatibility constants** — `PENTAGON_EDGES` in `topology.py` retains historical weighted tuples. The topology tests check entry count, known labels and weight bounds; they do not establish complete undirected coverage or live routing.
 7. **Fresh fixture per test** — `fresh_orch` fixture recreates `HeraldAgent` + `CaptureSink` per test function. No shared state across parametrize runs.
 8. **Governance marker = merge gate** — `@pytest.mark.governance` tests are the CI blocker. `unit` and `integration` are informational on first failure.
 9. **Tri-phase CI matrix** — `unit → governance → integration`, `fail-fast: false`. All three report independently so regressions are locatable without re-running.
