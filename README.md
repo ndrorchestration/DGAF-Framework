@@ -1,15 +1,17 @@
 
-# DGAF-Framework
+# Agentic Governance Orchestrator
 
-**Dynamic Governance Agentic Formation (DGAF)** is an experimental framework for governed multi-agent AI systems. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
+> **Identity transition candidate — not yet adopted.** This branch proposes a new display name for the existing DGAF project. Repository paths, identifiers, historical records, scientific status, and authorization contracts are unchanged. No claim of trademark clearance or orchestration maturity follows from this proposal.
+
+**Agentic Governance Orchestrator** is the proposed successor display name for Dynamic Governance Agentic Formation (DGAF), an experimental evidence-bound agentic governance and orchestration system. The formal identity cutover remains pending; current repository and machine-readable identifiers remain controlling. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
 
 In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
 ## Current positioning
 
-**DGAF — evidence-bound assurance for agentic AI.**
+**Agentic Governance Orchestrator — evidence-bound governance and assurance for agentic AI.**
 
-For current public and product positioning, DGAF is framed within **Agentic AI Assurance / AI Governance & Assurance**: an experimental **Evidence & Authorization Assurance Layer** with an **Assurance Control Plane** architecture, **evidence-bound Governance-as-Code** implementation model, and **epistemic transition control** as its technical thesis.
+For proposed public and product positioning, the Agentic Governance Orchestrator is framed within **Agentic AI Assurance / AI Governance & Assurance**: an experimental **Evidence & Authorization Assurance Layer** with an **Assurance Control Plane** architecture, **evidence-bound Governance-as-Code** implementation model, and **epistemic transition control** as its technical thesis.
 
 This is a positioning/classification statement, not evidence of efficacy or superiority. A stronger conventional policy-as-code comparator matched the bounded DGAF decision model on **13/13 fixed fixtures** and produced **zero allow/deny differences across 112,200 systematically enumerated bounded states**. DGAF is therefore **not** presented as a uniquely superior policy engine. The incremental value under evaluation is the surrounding assurance lifecycle: evidence admissibility, provenance continuity, bounded transfer, lifecycle integrity, reconstructability, explicit authority, and whether the available evidence actually justifies the next consequential transition. See [comparative controller #1061](https://github.com/ndrorchestration/DGAF-Framework/issues/1061) and [independent reproduction gate #1067](https://github.com/ndrorchestration/DGAF-Framework/issues/1067).
 
@@ -17,7 +19,7 @@ This positioning does not establish certification/compliance, production assuran
 
 ## Choose an evaluation path
 
-You do not need to read the full repository history before testing DGAF. Pick the depth that matches what you want to inspect:
+You do not need to read the full repository history before evaluating the system. Pick the depth that matches what you want to inspect:
 
 | Goal | Path | What it establishes |
 | --- | --- | --- |
@@ -46,9 +48,9 @@ For the short evaluator walkthrough and retained proof identity, see [`docs/DEMO
 
 ## Five-minute evaluator orientation
 
-If you are evaluating DGAF as an AI-systems, governance, or research-engineering portfolio artifact, use this path before reading the full control history.
+If you are evaluating the Agentic Governance Orchestrator as an AI-systems, governance, or research-engineering portfolio artifact, use this path before reading the full control history.
 
-**1. Start with the problem.** DGAF asks whether an AI system's current evidence and authority actually support the claim or action it is about to make. Capability alone does not grant permission, and passing engineering checks does not establish empirical efficacy.
+**1. Start with the problem.** The Agentic Governance Orchestrator asks whether an AI system's current evidence and authority actually support the claim or action it is about to make. Capability alone does not grant permission, and passing engineering checks does not establish empirical efficacy.
 
 **2. Inspect what is implemented.** The repository contains governance logic, provenance/source binding, deterministic validators, negative controls, CI, experimental tooling, custody machinery, blinded-data infrastructure, a decomposed Governance Command Center, and a machine-readable partial assurance catalog. For implementation detail, start with [`README.technical.md`](README.technical.md) and [`README.governance.md`](README.governance.md).
 
@@ -113,7 +115,7 @@ DGAF focuses on an additional question:
 
 > **Given the evidence and authority that exist right now, what is this system actually entitled to claim, authorize, and execute?**
 
-DGAF explores this through:
+The system explores this through:
 
 - **Governed orchestration** — specialized agents operate under explicit roles, boundaries, and escalation rules.
 - **Evidence-aware authorization** — technical capability does not automatically grant permission.
@@ -126,7 +128,7 @@ DGAF explores this through:
 
 ## The core model
 
-A simplified DGAF control loop is:
+A simplified governance and orchestration control loop is:
 
 ```text
 Evidence + provenance
@@ -149,7 +151,7 @@ The same rule applies to presentation and assurance inventory: **UI state does n
 
 ## Current research program
 
-DGAF separates prospective evaluation by workload instead of treating one experiment as proof of the entire framework.
+The research program separates prospective evaluation by workload instead of treating one experiment as proof of the entire system.
 
 | Track | Plain-English purpose | Current boundary |
 | --- | --- | --- |

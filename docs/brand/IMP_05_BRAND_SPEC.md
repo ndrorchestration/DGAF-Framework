@@ -45,6 +45,10 @@ This repository references the [DGAF-Framework](https://github.com/ndrorchestrat
 
 If a repository merely reuses DGAF patterns without a project-local governance binding, describe DGAF as a **pattern/reference source**, not as the repository's governing authority.
 
+## Proposed successor identity — review only
+
+The Agentic Governance Orchestrator is the proposed successor display name for the existing DGAF project. Pending coordinated identity admission, the naming rule below remains controlling; review-only migration candidates may qualify the proposed full name alongside historical DGAF lineage. Retain existing source URLs, stable identifiers, copyright and license notices, treatment labels and machine-readable contracts. Do not introduce an unregistered abbreviation or claim trademark clearance. A future admitted naming-rule amendment must reconcile all affected generators, checks and public projections without transferring evidence or authority.
+
 ## Naming Convention — DGAF References
 
 All references to the governance framework must use DGAF, not any prior acronym:

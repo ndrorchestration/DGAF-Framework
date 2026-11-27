@@ -4,7 +4,7 @@
 >
 > **Evidence boundary:** This reference describes project architecture and implementation surfaces. A design, implementation, passing test, mathematical result, historical attestation, independently validated result, and successful deployment are different evidence states.
 
-DGAF is a framework for governed agent orchestration, evaluation, provenance, and control design. This document provides a technical map; authoritative specifications and current experimental status remain in the linked records.
+The proposed successor display name for DGAF is **Agentic Governance Orchestrator**, an experimental system for governed agent orchestration, evaluation, provenance, and control design. This documentation candidate does not establish identity admission, new runtime capability, or legal clearance. This document provides a technical map; authoritative specifications and current experimental status remain in the linked records.
 
 For industry-neutral explanations of DGAF-specific terminology, start with [`docs/PUBLIC_TRANSLATION_LAYER.md`](./docs/PUBLIC_TRANSLATION_LAYER.md). For live state, use [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md).
 

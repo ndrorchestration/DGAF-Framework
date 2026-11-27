@@ -4,6 +4,8 @@ This document translates DGAF's project-local vocabulary into plain, industry-ne
 
 The goal is **translation, not renaming**. Internal names remain useful inside DGAF, while public documentation leads with the function an external reader needs to understand.
 
+**Proposed display-name transition:** Agentic Governance Orchestrator is the proposed successor name for Dynamic Governance Agentic Formation (DGAF). This is a review-only identity overlay, not an amendment to the canonical translation matrix, vocabulary, architecture or authorization contracts. Retain current identifiers until coordinated admission.
+
 Machine-readable translation authority: `docs/VOCABULARY_TRANSLATION_MATRIX.json`. Process rules: `docs/VOCABULARY_GOVERNANCE.md`. Identity disputes are resolved by `docs/agents/AGENT_ROSTER.md` plus `registry/agent_ontology_adjudication.v1.json`; the translation layer does not decide sovereign identity.
 
 ## One-sentence description
